@@ -1128,7 +1128,7 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <h2>문자 발송</h2>
@@ -1138,7 +1138,7 @@ body {
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item" onclick="window.location.href='message-send-general.html'">일반문자 발송</button>
                     <button class="tab-item active" onclick="window.location.href='message-send-ad.html'">광고문자 발송</button>
@@ -1148,7 +1148,7 @@ body {
             </div>
 
             <!-- 법적 안내사항 -->
-            <div class="legal-notice">
+            <div class="legal-notice" id="legalNotice">
                 <h4>⚠️ 광고성 정보 전송 규정 안내</h4>
                 <ul>
                     <li>광고문자는 수신자 사전 동의가 필요합니다</li>
@@ -1163,7 +1163,7 @@ body {
                 <div class="card">
                     <form id="sendForm">
                         <!-- 발신번호 설정 -->
-                        <div class="form-group">
+                        <div class="form-group" id="callerNumberGroup">
                             <label class="form-label required">발신번호</label>
                             <select class="form-select" id="senderNumber" required onchange="updateRejectNumber()">
                                 <option value="">발신번호를 선택하세요</option>
@@ -1172,7 +1172,7 @@ body {
                             </select>
                         </div>
                         <div style="margin-top: 16px; margin-bottom: 24px; display: flex; align-items: center; justify-content: flex-end;">
-                            <a href="mypage-caller-number.html" class="btn btn-primary btn-lg">새 발신번호 등록하기</a>
+                            <a href="mypage-caller-number.html" class="btn btn-primary btn-lg" id="newCallerNumberBtn">새 발신번호 등록하기</a>
                         </div>
 
                         <!-- 수신번호 설정 -->
@@ -1183,18 +1183,18 @@ body {
                                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
                                     <div style="display: flex; gap: 8px;">
                                         <input type="file" id="recipientExcelFileInput" class="form-input" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleRecipientExcelFileSelect(event)">
-                                        <button type="button" class="btn btn-primary" onclick="document.getElementById('recipientExcelFileInput').click()">엑셀업로드</button>
-                                        <button type="button" class="btn btn-outline" onclick="downloadSampleFile()">엑셀샘플 다운로드</button>
+                                        <button type="button" class="btn btn-primary" id="excelUploadBtn" onclick="document.getElementById('recipientExcelFileInput').click()">엑셀업로드</button>
+                                        <button type="button" class="btn btn-outline" id="excelSampleDownloadBtn" onclick="downloadSampleFile()">엑셀샘플 다운로드</button>
                                     </div>
                                     <div style="display: flex; gap: 8px;">
-                                        <button type="button" class="btn btn-outline btn-sm" onclick="loadRecipientAddressBook()">주소록 불러오기</button>
+                                        <button type="button" class="btn btn-outline btn-sm" id="loadAddressBookBtn" onclick="loadRecipientAddressBook()">주소록 불러오기</button>
                                         <select class="form-select" style="width: 120px;" id="recipientGroupSelect">
                                             <option value="">그룹선택</option>
                                             <option value="group1">VIP 고객</option>
                                             <option value="group2">일반 고객</option>
                                             <option value="group3">신규 고객</option>
                                         </select>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="addToAddressBook()">주소록에 추가</button>
+                                        <button type="button" class="btn btn-primary btn-sm" id="addToAddressBookBtn" onclick="addToAddressBook()">주소록에 추가</button>
                                     </div>
                                 </div>
                                 
@@ -1203,7 +1203,7 @@ body {
                                     <div style="padding: 20px;">
                                         <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
                                             <div style="overflow-x: auto; overflow-y: auto; max-height: 500px;">
-                                                <table class="data-table" id="recipientDataTable" style="width: 100%; border-collapse: collapse;">
+                                                <table class="data-table" id="recipientDataTable" style="width: 100%; border-collapse: collapse; position: relative;">
                                                     <thead style="background-color: var(--bg-color); position: sticky; top: 0; z-index: 10;">
                                                         <tr>
                                                             <th style="padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); min-width: 50px;">
@@ -1226,15 +1226,15 @@ body {
                                     </div>
                                     
                                     <!-- 하단 버튼 영역 -->
-                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-top: 1px solid var(--border-color);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-top: 1px solid var(--border-color);" id="recipientButtonArea">
                                         <div style="display: flex; gap: 8px;">
-                                            <button type="button" class="btn btn-outline btn-sm" onclick="addRecipientRow()">행 추가</button>
-                                            <button type="button" class="btn btn-outline btn-sm" onclick="deleteSelectedRecipientRows()">선택 행 삭제</button>
-                                            <button type="button" class="btn btn-outline btn-sm" onclick="deleteAllRecipientRows()">전체삭제</button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="addRecipientRowBtn" onclick="addRecipientRow()">행 추가</button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="deleteSelectedRecipientRowsBtn" onclick="deleteSelectedRecipientRows()">선택 행 삭제</button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="deleteAllRecipientRowsBtn" onclick="deleteAllRecipientRows()">전체삭제</button>
                                         </div>
                                         <div style="display: flex; gap: 8px;">
-                                            <button type="button" class="btn btn-outline btn-sm" onclick="removeDuplicateRecipientNumbers()">중복번호 삭제</button>
-                                            <button type="button" class="btn btn-outline btn-sm" onclick="removeRejectRecipientNumbers()">수신거부번호 삭제</button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="removeDuplicateRecipientNumbersBtn" onclick="removeDuplicateRecipientNumbers()">중복번호 삭제</button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="removeRejectRecipientNumbersBtn" onclick="removeRejectRecipientNumbers()">수신거부번호 삭제</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1246,7 +1246,7 @@ body {
                         </div>
 
                         <!-- 메시지 타입 -->
-                        <div class="form-group">
+                        <div class="form-group" id="messageTypeGroup">
                             <label class="form-label required">메시지 타입</label>
                             <div class="flex gap-2">
                                 <label style="display: flex; align-items: center; gap: 8px;">
@@ -1271,17 +1271,17 @@ body {
                         </div>
 
                         <!-- 메시지 내용 -->
-                        <div class="form-group">
+                        <div class="form-group" id="messageContentGroup">
                             <label class="form-label required">메시지 내용</label>
-                            <div class="flex gap-2 mb-1">
+                            <div class="flex gap-2 mb-1" id="variableButtons">
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{이름}')">#{이름}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{전화번호}')">#{전화번호}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수1}')">#{변수1}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수2}')">#{변수2}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수3}')">#{변수3}</button>
-                                <button type="button" class="btn btn-sm btn-outline" onclick="openModal('templateSelectModal')">템플릿 선택</button>
+                                <button type="button" class="btn btn-sm btn-outline" id="templateSelectBtn" onclick="openModal('templateSelectModal')">템플릿 선택</button>
                             </div>
-                            <div class="form-group" style="margin-bottom: 12px;">
+                            <div class="form-group" style="margin-bottom: 12px;" id="adPrefixGroup">
                                 <label class="form-label required">(광고) 옆 문구</label>
                                 <input type="text" class="form-input" id="adPrefixText" placeholder="(광고) 옆에 표시할 문구를 입력하세요" oninput="updateAdPrefixPreview()" required>
                                 <div class="form-help">(광고) 문구 옆에 추가로 표시할 내용을 입력하세요 (필수사항)</div>
@@ -1292,7 +1292,7 @@ body {
                         </div>
 
                         <!-- 080 수신거부 번호 (고정값) -->
-                        <div class="form-group">
+                        <div class="form-group" id="rejectNumberGroup">
                             <label class="form-label required">080 수신거부 번호</label>
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <span style="font-weight: 600;">080-123-4567</span>
@@ -1310,7 +1310,7 @@ body {
                         </div>
 
                         <!-- 발송 시간 -->
-                        <div class="form-group">
+                        <div class="form-group" id="sendTimeGroup">
                             <label class="form-label required">발송 시간</label>
                             <div class="flex gap-2">
                                 <label style="display: flex; align-items: center; gap: 8px;">
@@ -1356,10 +1356,10 @@ body {
                         </div>
 
                         <!-- 액션 버튼 -->
-                        <div class="flex gap-2 mt-3">
-                            <button type="button" class="btn btn-outline" onclick="testSend()">테스트 발송</button>
-                            <button type="button" class="btn btn-outline" onclick="saveTemplate()">템플릿으로 저장</button>
-                            <button type="submit" class="btn btn-primary" style="margin-left: auto;">발송하기</button>
+                        <div class="flex gap-2 mt-3" id="actionButtons">
+                            <button type="button" class="btn btn-outline" id="testSendBtn" onclick="testSend()">테스트 발송</button>
+                            <button type="button" class="btn btn-outline" id="saveTemplateBtn" onclick="saveTemplate()">템플릿으로 저장</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn" style="margin-left: auto;">발송하기</button>
                         </div>
                     </form>
                 </div>
@@ -3595,6 +3595,284 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        // 화면설계 데이터 정의
+        const specData = [
+            {
+                selector: '#pageHeader',
+                title: '페이지 헤더',
+                position: { top: '10px', left: '-15px' },
+                description: '광고문자 발송 페이지의 타이틀 영역',
+                function: '현재 페이지 제목과 설명 표시',
+                design: ['폰트 크기: 28px, Bold', '색상: #1e293b']
+            },
+            {
+                selector: '#tabMenu',
+                title: '탭 메뉴',
+                position: { top: '-10px', left: '50%', transform: 'translateX(-50%)' },
+                description: '문자 발송 관련 기능 탭 전환',
+                function: '일반문자/광고문자/템플릿 페이지 전환',
+                behavior: [
+                    '일반문자 발송 → message-send-general.html',
+                    '광고문자 발송 → message-send-ad.html',
+                    '일반문자 템플릿 → template-message.html',
+                    '광고문자 템플릿 → template-message-ad.html'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '#legalNotice',
+                title: '법적 안내사항',
+                position: { top: '10px', left: '-15px' },
+                description: '광고문자 발송 시 준수해야 할 법적 규정 안내',
+                function: '정보통신망법에 따른 광고성 정보 전송 규정 고지',
+                behavior: [
+                    '수신자 사전 동의 필요',
+                    '발송 가능 시간: 평일 오전 8시 ~ 오후 9시',
+                    '(광고) 문구 및 080 수신거부 번호 자동 포함'
+                ],
+                tags: [{ text: '정보', type: 'optional' }]
+            },
+            {
+                selector: '#callerNumberGroup',
+                title: '발신번호 선택',
+                position: { top: '-10px', right: '10px' },
+                description: '등록된 발신번호 중 선택',
+                function: '메시지 발송 시 사용할 발신번호 지정',
+                behavior: [
+                    '드롭다운에서 등록된 발신번호 선택',
+                    '발신번호 선택 시 080 수신거부 번호 자동 연동'
+                ],
+                api: 'GET /api/caller-numbers',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '#newCallerNumberBtn',
+                title: '새 발신번호 등록하기 버튼',
+                position: { top: '-10px', left: '-15px' },
+                description: '새로운 발신번호를 등록하는 페이지로 이동',
+                function: '발신번호 등록 기능 접근',
+                behavior: ['클릭 시 mypage-caller-number.html 페이지로 이동'],
+                tags: [{ text: '기능', type: 'optional' }]
+            },
+            {
+                selector: '#excelUploadBtn',
+                title: '엑셀 업로드 버튼',
+                position: { top: '-10px', left: '-15px' },
+                description: '수신번호를 엑셀 파일로 업로드',
+                function: '대량 수신번호 등록',
+                behavior: ['클릭 시 파일 선택 대화상자 열림', 'xlsx, xls, csv 형식 지원'],
+                tags: [{ text: '기능', type: 'optional' }]
+            },
+            {
+                selector: '#excelSampleDownloadBtn',
+                title: '엑셀샘플 다운로드 버튼',
+                position: { top: '-10px', left: '-15px' },
+                description: '수신번호 엑셀 업로드 양식 다운로드',
+                function: '올바른 형식의 엑셀 파일 제공',
+                behavior: ['클릭 시 샘플 엑셀 파일 다운로드'],
+                tags: [{ text: '기능', type: 'optional' }]
+            },
+            {
+                selector: '#loadAddressBookBtn',
+                title: '주소록 불러오기 버튼',
+                position: { top: '-10px', left: '-15px' },
+                description: '저장된 주소록에서 수신번호 불러오기',
+                function: '기존 주소록 활용',
+                behavior: ['클릭 시 주소록 선택 모달 열림'],
+                api: 'GET /api/addressbook',
+                tags: [{ text: '기능', type: 'optional' }]
+            },
+            {
+                selector: '#recipientGroupSelect',
+                title: '그룹 선택 드롭다운',
+                position: { top: '-10px', right: '-15px' },
+                description: '주소록 그룹 선택',
+                function: '특정 그룹의 수신자만 필터링',
+                behavior: ['드롭다운에서 그룹 선택 시 해당 그룹의 수신자 표시'],
+                tags: [{ text: '기능', type: 'optional' }]
+            },
+            {
+                selector: '#addToAddressBookBtn',
+                title: '주소록에 추가 버튼',
+                position: { top: '-10px', right: '-15px' },
+                description: '현재 수신번호 목록을 주소록에 저장',
+                function: '새로운 주소록 생성 또는 기존 주소록에 추가',
+                behavior: ['클릭 시 주소록 추가 모달 열림'],
+                api: 'POST /api/addressbook',
+                tags: [{ text: '기능', type: 'optional' }]
+            },
+            {
+                selector: '#recipientDataTable',
+                title: '수신번호 테이블',
+                position: { top: '10px', left: '10px' },
+                description: '수신자 정보 표시 및 편집',
+                function: '발송 대상 수신번호와 변수 데이터 관리',
+                behavior: [
+                    '순번, 이름, 전화번호, 변수1~3 컬럼',
+                    '체크박스로 다중 선택 가능',
+                    '각 셀 직접 편집 가능',
+                    '최대 50,000건 지원'
+                ],
+                design: ['테이블 헤더 고정', '스크롤 가능'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '#recipientButtonArea',
+                title: '수신번호 관리 버튼 영역',
+                position: { top: '10px', left: '-15px' },
+                description: '수신번호 데이터 관리 버튼들',
+                function: '행 추가/삭제, 중복/수신거부 번호 삭제',
+                behavior: [
+                    '행 추가: 빈 행 추가',
+                    '선택 행 삭제: 체크된 행 삭제',
+                    '전체삭제: 모든 행 삭제',
+                    '중복번호 삭제: 중복 전화번호 제거',
+                    '수신거부번호 삭제: 수신거부 목록과 대조하여 삭제'
+                ],
+                tags: [{ text: '기능', type: 'optional' }]
+            },
+            {
+                selector: '#messageTypeGroup',
+                title: '메시지 타입 선택',
+                position: { top: '-10px', left: '-15px' },
+                description: 'SMS/LMS/MMS 중 선택',
+                function: '발송할 메시지 유형 결정',
+                behavior: [
+                    'SMS: 90바이트 이하 단문',
+                    'LMS: 2,000바이트 이하 장문',
+                    'MMS: 이미지 포함 멀티미디어'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '#variableButtons',
+                title: '변수 삽입 버튼 그룹',
+                position: { top: '-10px', left: '-15px' },
+                description: '메시지 내용에 변수 삽입',
+                function: '개인화된 메시지 발송',
+                behavior: ['클릭 시 #{변수명} 형태로 메시지 내용에 삽입'],
+                tags: [{ text: '기능', type: 'optional' }]
+            },
+            {
+                selector: '#adPrefixGroup',
+                title: '(광고) 옆 문구 입력',
+                position: { top: '-10px', left: '-15px' },
+                description: '광고 문구 옆에 표시할 업체명/서비스명',
+                function: '(광고) 표기 옆에 발신자 정보 표시',
+                behavior: ['필수 입력 사항', '입력 시 미리보기에 즉시 반영'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '#messageContent',
+                title: '메시지 내용 입력',
+                position: { top: '-10px', right: '10px' },
+                description: '발송할 메시지 본문 작성',
+                function: '메시지 내용 입력 및 변수 삽입',
+                behavior: [
+                    '변수 버튼 클릭으로 #{이름}, #{전화번호} 등 삽입',
+                    '바이트 수 실시간 카운트'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '#byteCounter',
+                title: '바이트 카운터',
+                position: { top: '-5px', left: '-15px' },
+                description: '입력된 메시지의 바이트 수 표시',
+                function: '실시간 바이트 계산 및 경고',
+                behavior: [
+                    '한글 2바이트, 영문/숫자 1바이트 계산',
+                    '90바이트 초과 시 주황색 경고'
+                ]
+            },
+            {
+                selector: '#rejectNumberGroup',
+                title: '080 수신거부 번호',
+                position: { top: '-10px', left: '-15px' },
+                description: '광고문자 발송 시 필수로 포함되는 수신거부 번호',
+                function: '수신거부 안내 번호 자동 표시',
+                behavior: [
+                    '발신번호 선택 시 연동된 080 번호 자동 표시',
+                    '메시지 미리보기에 자동 포함'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '#sendTimeGroup',
+                title: '발송 시간 설정',
+                position: { top: '-10px', left: '-15px' },
+                description: '즉시 발송 또는 예약 발송 선택',
+                function: '메시지 발송 시점 결정',
+                behavior: [
+                    '즉시 발송: 확인 후 바로 발송',
+                    '예약 발송: 날짜 및 시간 지정',
+                    '광고문자는 평일 08:00~21:00만 발송 가능'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '.cost-info',
+                title: '발송 비용 정보',
+                position: { top: '10px', left: '-15px' },
+                description: '예상 발송 비용 및 잔여 포인트 정보',
+                function: '발송 전 비용 예측 및 잔액 확인',
+                behavior: [
+                    '수신번호 개수, 메시지 타입, 단가, 예상 비용 표시',
+                    '입력값 변경 시 실시간 업데이트'
+                ],
+                tags: [{ text: '정보', type: 'optional' }]
+            },
+            {
+                selector: '#testSendBtn',
+                title: '테스트 발송 버튼',
+                position: { top: '-10px', left: '-15px' },
+                description: '테스트 번호로 메시지 1건 발송',
+                function: '메시지 내용 및 형식 사전 확인',
+                behavior: ['클릭 시 테스트 발송 모달 열림'],
+                tags: [{ text: '기능', type: 'optional' }]
+            },
+            {
+                selector: '#saveTemplateBtn',
+                title: '템플릿으로 저장 버튼',
+                position: { top: '-10px', left: '50%' },
+                description: '현재 작성된 메시지를 템플릿으로 저장',
+                function: '자주 사용하는 메시지 템플릿 관리',
+                behavior: ['클릭 시 템플릿 저장 모달 열림'],
+                tags: [{ text: '기능', type: 'optional' }]
+            },
+            {
+                selector: '#submitBtn',
+                title: '발송하기 버튼',
+                position: { top: '-10px', right: '-15px' },
+                description: '작성된 메시지를 수신번호로 발송',
+                function: '메시지 발송 실행',
+                behavior: [
+                    '클릭 시 발송 확인 모달 열림',
+                    '필수값 검증 및 잔액 확인 후 API 호출'
+                ],
+                api: 'POST /api/send-message',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '.preview-section',
+                title: '미리보기 영역',
+                position: { top: '10px', right: '10px' },
+                description: '발송될 메시지의 미리보기',
+                function: '실제 발송 전 메시지 내용 및 형식 확인',
+                behavior: [
+                    '휴대폰 목업 형태로 표시',
+                    '(광고) 문구, 메시지 내용, 수신거부 안내 표시',
+                    '입력값 변경 시 실시간 업데이트'
+                ],
+                tags: [{ text: '정보', type: 'optional' }]
+            }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

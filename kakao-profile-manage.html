@@ -804,13 +804,13 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <h2>카카오톡 발송</h2>
                 <p class="page-description">카카오톡 채널(카카오톡 발신 프로필)을 등록하고 관리합니다</p>
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item" onclick="window.location.href='kakao-send-alimtalk.html'">알림톡 발송</button>
                     <button class="tab-item" onclick="window.location.href='kakao-send-brandtalk.html'">브랜드 메시지 발송</button>
@@ -821,7 +821,7 @@ body {
             </div>
 
             <!-- 안내 영역 -->
-            <div class="alert alert-info">
+            <div class="alert alert-info" id="infoAlert">
                 <div class="flex-between">
                     <div>
                         <strong>💡 카카오톡 채널(<a href="https://center-pf.kakao.com" target="_blank" style="color: var(--primary-color); text-decoration: underline;">https://center-pf.kakao.com</a>)에서 비즈니스 채널로 등록된 카카오톡 채널(카카오톡 발신 프로필)만 등록 가능합니다.</strong>
@@ -830,7 +830,7 @@ body {
             </div>
 
             <!-- 검색 및 필터 -->
-            <div class="card" style="margin-bottom: 24px;">
+            <div class="card" style="margin-bottom: 24px;" id="searchSection">
                 <div class="flex-between" style="margin-bottom: 16px;">
                     <h3 style="margin: 0; font-size: 18px; font-weight: 600;">카카오톡 발신 프로필 목록</h3>
                     <button class="btn btn-primary" onclick="openModal('registerModal')">신규 등록</button>
@@ -855,7 +855,7 @@ body {
             </div>
 
             <!-- 카카오톡 발신 프로필 목록 -->
-            <div class="card">
+            <div class="card" id="profileListSection">
                 <div class="table-container">
                     <table class="table">
                         <thead>
@@ -1598,6 +1598,48 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '발신프로필 관리 페이지 제목' },
+            // 2. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '카카오톡 탭 전환' },
+            // 3. 알림톡 발송 탭
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '알림톡 발송 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 발송 페이지' },
+            // 4. 브랜드 메시지 탭
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '브랜드 메시지 탭', position: { top: '-5px', left: '-10px' }, function: '브랜드 메시지 페이지' },
+            // 5. 발신프로필 탭
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '발신프로필 탭', position: { top: '-5px', left: '-10px' }, function: '발신프로필 관리 (현재)' },
+            // 6. 알림톡 템플릿 탭
+            { selector: '#tabMenu .tab-item:nth-child(4)', title: '알림톡 템플릿 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 템플릿' },
+            // 7. 브랜드 템플릿 탭
+            { selector: '#tabMenu .tab-item:nth-child(5)', title: '브랜드 템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '브랜드 템플릿' },
+            // 8. 안내 영역
+            { selector: '#infoAlert', title: '안내 메시지', position: { top: '10px', left: '-15px' }, function: '채널 등록 안내' },
+            // 9. 프로필 등록 버튼
+            { selector: '#addProfileBtn', title: '프로필 등록', position: { top: '-5px', left: '-10px' }, function: '새 발신프로필 등록', api: 'POST /api/kakao/profiles' },
+            // 10. 검색 섹션
+            { selector: '#searchSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, function: '프로필 검색/필터' },
+            // 11. 검색 입력
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '프로필ID/채널명 검색' },
+            // 12. 상태 필터
+            { selector: '#statusFilter', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '상태별 필터링' },
+            // 13. 검색 버튼
+            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 실행', api: 'GET /api/kakao/profiles' },
+            // 14. 프로필 목록 테이블
+            { selector: '#profileListSection .table', title: '프로필 목록', position: { top: '10px', left: '10px' }, function: '등록된 프로필 목록' },
+            // 15. 상세보기 버튼
+            { selector: '.btn-view', title: '상세보기', position: { top: '-5px', left: '-10px' }, function: '프로필 상세 정보' },
+            // 16. 삭제 버튼
+            { selector: '.btn-delete', title: '삭제', position: { top: '-5px', right: '-10px' }, function: '프로필 삭제', api: 'DELETE /api/kakao/profiles/:id' },
+            // 17. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

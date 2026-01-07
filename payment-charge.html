@@ -1071,7 +1071,7 @@ body {
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="paymentTabs">
                 <div class="tab-list">
                     <button class="tab-item active" onclick="window.location.href='payment-charge.html'">충전하기</button>
                     <button class="tab-item" onclick="window.location.href='payment-history.html'">충전 내역</button>
@@ -1084,14 +1084,14 @@ body {
                 <div class="card">
                     <form id="chargeForm">
                         <!-- 현재 잔액 -->
-                        <div class="alert alert-info">
+                        <div class="alert alert-info" id="currentPointsAlert">
                             <strong>현재 보유 포인트: 1,000,000포인트</strong>
                         </div>
 
                         <!-- 충전 포인트 선택 -->
-                        <div class="form-group">
+                        <div class="form-group" id="chargePointGroup">
                             <label class="form-label required">충전 포인트</label>
-                            <div class="amount-buttons">
+                            <div class="amount-buttons" id="amountButtons">
                                 <div class="amount-btn" onclick="selectAmount(50000)">
                                     <div class="amount-btn-value">5만</div>
                                 </div>
@@ -1117,9 +1117,9 @@ body {
                         </div>
 
                         <!-- 결제 수단 선택 -->
-                        <div class="form-group">
+                        <div class="form-group" id="paymentMethodGroup">
                             <label class="form-label required">결제 수단</label>
-                            <div class="payment-methods">
+                            <div class="payment-methods" id="paymentMethods">
                                 <div class="payment-method selected" onclick="selectPayment('card')">
                                     <div class="payment-icon" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1237,9 +1237,9 @@ body {
 
                 <!-- 요금 안내 -->
                 <div>
-                    <div class="fee-guide">
+                    <div class="fee-guide" id="feeGuide">
                         <h3 class="card-title">요금 안내</h3>
-                        <table class="fee-table">
+                        <table class="fee-table" id="feeTable">
                             <thead>
                                 <tr>
                                     <th>메시지 타입</th>
@@ -1272,7 +1272,7 @@ body {
                     </div>
 
                     <!-- 충전 금액 계산기 -->
-                    <div class="fee-guide" style="margin-top: 24px;">
+                    <div class="fee-guide" style="margin-top: 24px;" id="chargeCalculator">
                         <h3 class="card-title">충전 금액 계산기</h3>
                         <div class="form-group">
                             <label class="form-label">SMS 건수</label>
@@ -1821,6 +1821,151 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 탭 메뉴
+            {
+                selector: '#paymentTabs',
+                title: '탭 메뉴',
+                position: { top: '-5px', left: '-10px' },
+                function: '결제 관련 페이지 이동'
+            },
+            // 2. 충전하기 탭
+            {
+                selector: '#paymentTabs .tab-item:nth-child(1)',
+                title: '충전하기 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '포인트 충전 페이지 (현재)'
+            },
+            // 3. 충전내역 탭
+            {
+                selector: '#paymentTabs .tab-item:nth-child(2)',
+                title: '충전내역 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '충전 이력 조회'
+            },
+            // 4. 세금계산서 탭
+            {
+                selector: '#paymentTabs .tab-item:nth-child(3)',
+                title: '세금계산서 탭',
+                position: { top: '-5px', right: '-10px' },
+                function: '세금계산서 발행'
+            },
+            // 5. 현재 보유 포인트
+            {
+                selector: '#currentPointsAlert',
+                title: '현재 보유 포인트',
+                position: { top: '10px', left: '10px' },
+                function: '사용자 포인트 잔액 표시',
+                api: 'GET /api/users/me/balance'
+            },
+            // 6. 충전 포인트 선택 그룹
+            {
+                selector: '#chargePointGroup',
+                title: '충전 포인트 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '충전할 금액 선택'
+            },
+            // 7. 금액 선택 버튼들
+            {
+                selector: '.amount-button:nth-child(1)',
+                title: '1만원 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '10,000원 선택'
+            },
+            // 8. 직접 입력 필드
+            {
+                selector: '#customAmount',
+                title: '직접 입력',
+                position: { top: '-5px', right: '-10px' },
+                function: '원하는 금액 직접 입력',
+                behavior: ['최소 10,000원 이상']
+            },
+            // 9. 결제 수단 선택 그룹
+            {
+                selector: '#paymentMethodGroup',
+                title: '결제 수단 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '결제 방법 선택'
+            },
+            // 10. 신용카드 선택
+            {
+                selector: 'input[name="paymentMethod"][value="card"]',
+                title: '신용카드',
+                position: { top: '-5px', left: '-10px' },
+                function: '신용카드 결제',
+                behavior: ['PG사 결제창 연동']
+            },
+            // 11. 가상계좌 선택
+            {
+                selector: 'input[name="paymentMethod"][value="virtual"]',
+                title: '가상계좌',
+                position: { top: '-5px', left: '-10px' },
+                function: '가상계좌 발급',
+                behavior: ['입금 후 자동 충전']
+            },
+            // 12. 실시간 계좌이체 선택
+            {
+                selector: 'input[name="paymentMethod"][value="realtime"]',
+                title: '실시간 계좌이체',
+                position: { top: '-5px', left: '-10px' },
+                function: '실시간 이체 결제'
+            },
+            // 13. 전용계좌 선택
+            {
+                selector: 'input[name="paymentMethod"][value="dedicated"]',
+                title: '전용계좌',
+                position: { top: '-5px', right: '-10px' },
+                function: '전용계좌 발급/사용',
+                behavior: ['은행별 전용계좌 발급']
+            },
+            // 14. 전용계좌 발급 섹션
+            {
+                selector: '#dedicatedAccountSection',
+                title: '전용계좌 발급',
+                position: { top: '10px', left: '10px' },
+                function: '전용계좌 은행 선택 및 발급',
+                api: 'POST /api/payment/dedicated-account'
+            },
+            // 15. 결제 금액 정보
+            {
+                selector: '#priceInfoSection',
+                title: '결제 금액 정보',
+                position: { top: '10px', left: '10px' },
+                function: '충전 포인트, 부가세, 총액 표시',
+                behavior: ['선택 금액에 따른 실시간 계산']
+            },
+            // 16. 충전하기 버튼
+            {
+                selector: '#chargeButton',
+                title: '충전하기 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '결제 진행',
+                behavior: ['최소 금액 검증', 'PG 결제 모듈 호출'],
+                api: 'POST /api/payment/charge',
+                tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
+            },
+            // 17. 요금 안내 테이블
+            {
+                selector: '#feeGuide',
+                title: '요금 안내',
+                position: { top: '10px', left: '10px' },
+                function: '메시지 타입별 단가 안내',
+                behavior: ['SMS', 'LMS', 'MMS', '알림톡', '브랜드메시지 요금']
+            },
+            // 18. 충전 금액 계산기
+            {
+                selector: '#chargeCalculator',
+                title: '충전 금액 계산기',
+                position: { top: '10px', left: '10px' },
+                function: '예상 발송량 기반 필요 금액 계산',
+                behavior: ['메시지 타입별 건수 입력', '실시간 합계 표시']
+            }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

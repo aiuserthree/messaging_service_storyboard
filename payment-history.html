@@ -994,7 +994,7 @@ body {
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="paymentTabs">
                 <div class="tab-list">
                     <button class="tab-item" onclick="window.location.href='payment-charge.html'">충전하기</button>
                     <button class="tab-item active" onclick="window.location.href='payment-history.html'">충전 내역</button>
@@ -1003,15 +1003,15 @@ body {
             </div>
 
             <!-- 조회 기간 -->
-            <div class="card search-filter-card">
+            <div class="card search-filter-card" id="searchFilterCard">
                 <div class="search-filter-section">
-                    <div class="flex gap-2">
+                    <div class="flex gap-2" id="periodButtons">
                         <button class="btn btn-sm btn-outline" onclick="setPeriod('week')">1주일</button>
                         <button class="btn btn-sm btn-outline" onclick="setPeriod('month')">1개월</button>
                         <button class="btn btn-sm btn-outline" onclick="setPeriod('3month')">3개월</button>
                         <button class="btn btn-sm btn-outline" onclick="setPeriod('6month')">6개월</button>
                     </div>
-                    <div class="date-range-group">
+                    <div class="date-range-group" id="dateRangeGroup">
                         <div class="date-input-wrapper">
                             <input type="date" class="form-input" id="startDate">
                         </div>
@@ -1020,16 +1020,16 @@ body {
                             <input type="date" class="form-input" id="endDate">
                         </div>
                     </div>
-                    <button class="btn btn-primary">조회</button>
+                    <button class="btn btn-primary" id="searchBtn">조회</button>
                 </div>
             </div>
 
             <!-- 충전내역 -->
-            <div class="card">
+            <div class="card" id="historyCard">
                 <!-- 충전내역 -->
                 <div id="chargeTab" class="tab-content active">
-                    <div class="table-container">
-                        <table class="table">
+                    <div class="table-container" id="historyTableContainer">
+                        <table class="table" id="historyTable">
                             <thead>
                                 <tr>
                                     <th>날짜</th>
@@ -1589,6 +1589,47 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 탭 메뉴
+            { selector: '#paymentTabs', title: '탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '결제 관련 페이지 이동' },
+            // 2. 충전하기 탭
+            { selector: '#paymentTabs .tab-item:nth-child(1)', title: '충전하기 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 충전 페이지' },
+            // 3. 충전내역 탭
+            { selector: '#paymentTabs .tab-item:nth-child(2)', title: '충전내역 탭', position: { top: '-5px', left: '-10px' }, function: '충전 이력 페이지 (현재)' },
+            // 4. 세금계산서 탭
+            { selector: '#paymentTabs .tab-item:nth-child(3)', title: '세금계산서 탭', position: { top: '-5px', right: '-10px' }, function: '세금계산서 발행' },
+            // 5. 기간 단축 버튼 영역
+            { selector: '#periodButtons', title: '기간 단축 버튼', position: { top: '-5px', left: '-10px' }, function: '빠른 기간 설정' },
+            // 6. 1주일 버튼
+            { selector: '#periodButtons button:nth-child(1)', title: '1주일', position: { top: '-5px', left: '-10px' }, function: '최근 1주일 조회' },
+            // 7. 1개월 버튼
+            { selector: '#periodButtons button:nth-child(2)', title: '1개월', position: { top: '-5px', left: '-10px' }, function: '최근 1개월 조회' },
+            // 8. 3개월 버튼
+            { selector: '#periodButtons button:nth-child(3)', title: '3개월', position: { top: '-5px', left: '-10px' }, function: '최근 3개월 조회' },
+            // 9. 6개월 버튼
+            { selector: '#periodButtons button:nth-child(4)', title: '6개월', position: { top: '-5px', right: '-10px' }, function: '최근 6개월 조회' },
+            // 10. 날짜 범위 그룹
+            { selector: '#dateRangeGroup', title: '날짜 범위', position: { top: '-5px', left: '-10px' }, function: '시작일/종료일 직접 선택' },
+            // 11. 시작일
+            { selector: '#startDate', title: '시작일', position: { top: '-5px', left: '-10px' }, function: '조회 시작 날짜' },
+            // 12. 종료일
+            { selector: '#endDate', title: '종료일', position: { top: '-5px', left: '-10px' }, function: '조회 종료 날짜' },
+            // 13. 조회 버튼
+            { selector: '#searchBtn', title: '조회 버튼', position: { top: '-5px', right: '-10px' }, function: '충전 내역 검색', api: 'GET /api/payment/history' },
+            // 14. 충전 내역 테이블
+            { selector: '#historyTableContainer', title: '충전 내역 테이블', position: { top: '10px', left: '10px' }, function: '충전 내역 목록', behavior: ['날짜', '충전포인트', '충전방법', '상태'] },
+            // 15. 영수증 버튼
+            { selector: '#historyTableContainer .btn-sm', title: '영수증 버튼', position: { top: '-5px', right: '-10px' }, function: '영수증 상세 확인' },
+            // 16. 엑셀 다운로드
+            { selector: '#excelDownloadBtn', title: '엑셀 다운로드', position: { top: '-5px', left: '-10px' }, function: '충전 내역 엑셀 내보내기' },
+            // 17. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

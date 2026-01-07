@@ -940,13 +940,13 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <h2>선거문자</h2>
                 <p class="page-description">선거문자 수신거부를 요청한 고객의 전화번호를 관리합니다</p>
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item" onclick="window.location.href='message-send-election.html'">선거문자 발송</button>
                     <button class="tab-item" onclick="window.location.href='election-addressbook.html'">선거문자 주소록</button>
@@ -956,7 +956,7 @@ body {
             </div>
 
             <!-- 통계 요약 -->
-            <div class="dashboard-grid" style="margin-bottom: 24px;">
+            <div class="dashboard-grid" style="margin-bottom: 24px;" id="statsSection">
                 <div class="stat-card">
                     <div class="stat-icon red">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -993,8 +993,8 @@ body {
             </div>
 
             <!-- 검색 및 필터 -->
-            <div class="card" style="padding: 16px 24px; margin-bottom: 32px;">
-                <div class="search-filter-section">
+            <div class="card" style="padding: 16px 24px; margin-bottom: 32px;" id="searchSection">
+                <div class="search-filter-section" id="searchFilterSection">
                     <div style="flex: 1; min-width: 200px;">
                         <input type="text" class="form-input" placeholder="전화번호로 검색">
                     </div>
@@ -1004,7 +1004,7 @@ body {
             </div>
 
             <!-- 수신거부 목록 -->
-            <div class="card">
+            <div class="card" id="rejectListSection">
 
                 <div class="table-container">
                     <table class="table">
@@ -1907,6 +1907,46 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '선거문자 수신거부 페이지 제목' },
+            // 2. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '선거문자 탭 전환' },
+            // 3. 선거문자 발송 탭
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '선거문자 발송 탭', position: { top: '-5px', left: '-10px' }, function: '선거문자 발송 페이지' },
+            // 4. 주소록 탭
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '주소록 탭', position: { top: '-5px', left: '-10px' }, function: '주소록 관리' },
+            // 5. 수신거부 탭
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '수신거부 탭', position: { top: '-5px', left: '-10px' }, function: '수신거부 관리 (현재)' },
+            // 6. 템플릿 탭
+            { selector: '#tabMenu .tab-item:nth-child(4)', title: '템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '선거문자 템플릿' },
+            // 7. 통계 섹션
+            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, function: '수신거부 현황 통계' },
+            // 8. 검색 섹션
+            { selector: '#searchSection', title: '검색 영역', position: { top: '10px', left: '-15px' }, function: '수신거부 검색' },
+            // 9. 검색 입력
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '전화번호로 검색' },
+            // 10. 검색 버튼
+            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, function: '검색 실행', api: 'GET /api/election/reject' },
+            // 11. 수신거부 추가
+            { selector: '#addRejectBtn', title: '수신거부 추가', position: { top: '-5px', left: '-10px' }, function: '번호 직접 추가' },
+            // 12. 엑셀 업로드
+            { selector: '#excelUploadBtn', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, function: '엑셀로 대량 등록' },
+            // 13. 수신거부 테이블
+            { selector: '#rejectListSection .table', title: '수신거부 테이블', position: { top: '10px', left: '10px' }, function: '수신거부 목록', behavior: ['전화번호', '발신번호', '등록일', '경로'] },
+            // 14. 전체 선택
+            { selector: '#selectAll', title: '전체 선택', position: { top: '-5px', left: '-10px' }, function: '모든 항목 선택' },
+            // 15. 선택 삭제 버튼
+            { selector: '#selectDeleteBtn', title: '선택 삭제', position: { top: '-10px', left: '-15px' }, function: '선택 항목 일괄 삭제', api: 'DELETE /api/election/reject' },
+            // 16. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

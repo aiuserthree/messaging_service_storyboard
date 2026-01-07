@@ -1105,13 +1105,13 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <h2>발송 관리</h2>
                 <p class="page-description">발송한 메시지의 결과를 조회하고 분석합니다</p>
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item active" data-tab="send-result" onclick="switchTab('send-result', 'send-management-tabs')">발송결과</button>
                     <button class="tab-item" data-tab="send-reservation" onclick="window.location.href='send-reservation.html'">예약내역</button>
@@ -1123,7 +1123,7 @@ body {
                 <!-- 발송결과 탭 -->
                 <div id="send-result" class="tab-content active">
                     <!-- 필터 섹션 -->
-            <div class="filter-section">
+            <div class="filter-section" id="filterSection">
                 <div class="filter-row">
                     <div class="filter-group date-range-group-wrapper">
                         <label class="form-label">조회 기간</label>
@@ -2370,6 +2370,150 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            {
+                selector: '#pageHeader',
+                title: '페이지 헤더',
+                position: { top: '10px', left: '-15px' },
+                function: '발송결과 조회 페이지 제목'
+            },
+            // 2. 탭 메뉴
+            {
+                selector: '#tabMenu',
+                title: '탭 메뉴',
+                position: { top: '-10px', left: '10px' },
+                function: '발송결과/예약내역 탭 전환',
+                behavior: ['발송결과 탭', '예약내역 탭']
+            },
+            // 3. 발송결과 탭
+            {
+                selector: '#tabMenu .tab-item:first-child',
+                title: '발송결과 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '완료된 발송 내역 조회'
+            },
+            // 4. 예약내역 탭
+            {
+                selector: '#tabMenu .tab-item:nth-child(2)',
+                title: '예약내역 탭',
+                position: { top: '-5px', right: '-10px' },
+                function: '예약된 발송 내역 조회'
+            },
+            // 5. 필터 섹션
+            {
+                selector: '#filterSection',
+                title: '필터 섹션',
+                position: { top: '10px', left: '-15px' },
+                function: '발송결과 검색 및 필터링'
+            },
+            // 6. 검색 입력
+            {
+                selector: '#searchInput',
+                title: '검색 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '수신번호/메시지 내용 검색'
+            },
+            // 7. 메시지 타입 필터
+            {
+                selector: '#messageTypeFilter',
+                title: '메시지 타입',
+                position: { top: '-5px', left: '-10px' },
+                function: 'SMS/LMS/MMS/알림톡 필터',
+                behavior: ['전체', 'SMS', 'LMS', 'MMS', '알림톡', '브랜드메시지']
+            },
+            // 8. 상태 필터
+            {
+                selector: '#statusFilter',
+                title: '상태 필터',
+                position: { top: '-5px', left: '-10px' },
+                function: '발송상태 필터링',
+                behavior: ['전체', '성공', '실패', '대기', '발송중']
+            },
+            // 9. 발신번호 필터
+            {
+                selector: '#callerNumberFilter',
+                title: '발신번호 필터',
+                position: { top: '-5px', left: '-10px' },
+                function: '발신번호별 필터링'
+            },
+            // 10. 시작일 선택
+            {
+                selector: '#startDate',
+                title: '시작일',
+                position: { top: '-5px', left: '-10px' },
+                function: '조회 시작일 선택'
+            },
+            // 11. 종료일 선택
+            {
+                selector: '#endDate',
+                title: '종료일',
+                position: { top: '-5px', left: '-10px' },
+                function: '조회 종료일 선택'
+            },
+            // 12. 검색 버튼
+            {
+                selector: '#filterSection .btn-primary',
+                title: '검색 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '필터 조건으로 검색',
+                api: 'GET /api/messages/results'
+            },
+            // 13. 초기화 버튼
+            {
+                selector: '#filterSection .btn-outline',
+                title: '초기화 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '필터 조건 초기화'
+            },
+            // 14. 통계 영역
+            {
+                selector: '.stats-grid',
+                title: '통계 영역',
+                position: { top: '10px', left: '10px' },
+                function: '발송 통계 요약',
+                behavior: ['전체발송', '성공', '실패', '성공률', '사용포인트']
+            },
+            // 15. 발송결과 테이블
+            {
+                selector: '.result-list-table',
+                title: '발송결과 테이블',
+                position: { top: '10px', left: '10px' },
+                function: '발송 결과 목록',
+                behavior: ['발송일시', '발신번호', '메시지타입', '건수', '상태'],
+                api: 'GET /api/messages/results'
+            },
+            // 16. 상세보기 버튼
+            {
+                selector: '.result-list-table .btn-sm',
+                title: '상세보기 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '발송 상세 내역 확인',
+                behavior: ['아코디언 펼치기', '수신번호별 결과 표시']
+            },
+            // 17. 엑셀 다운로드 버튼
+            {
+                selector: '.action-buttons .btn-outline',
+                title: '엑셀 다운로드',
+                position: { top: '-5px', left: '-10px' },
+                function: '발송결과 엑셀 파일 다운로드',
+                api: 'GET /api/messages/results/export'
+            },
+            // 18. 페이지네이션
+            {
+                selector: '#pagination',
+                title: '페이지네이션',
+                position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' },
+                function: '결과 목록 페이지 이동',
+                behavior: ['이전', '페이지 번호', '다음']
+            }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

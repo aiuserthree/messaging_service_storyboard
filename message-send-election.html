@@ -1145,7 +1145,7 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <h2>선거문자</h2>
@@ -1155,7 +1155,7 @@ body {
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item active" onclick="window.location.href='message-send-election.html'">선거문자 발송</button>
                     <button class="tab-item" onclick="window.location.href='election-addressbook.html'">선거문자 주소록</button>
@@ -1164,7 +1164,7 @@ body {
                 </div>
             </div>
             <!-- 법적 안내사항 -->
-            <div class="legal-notice">
+            <div class="legal-notice" id="legalNotice">
                 <h4>⚠️ 공직선거법 준수 안내</h4>
                 <ul>
                     <li>공직선거법 제82조의4(전화·문자메시지 등을 이용한 선거운동) 준수 필수</li>
@@ -1180,7 +1180,7 @@ body {
                 <div class="card">
                     <form id="sendForm">
                         <!-- 발신번호 설정 -->
-                        <div class="form-group">
+                        <div class="form-group" id="callerNumberGroup">
                             <label class="form-label required">발신번호</label>
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <span style="font-weight: 600;">010-1234-5678</span>
@@ -1191,7 +1191,7 @@ body {
                         </div>
 
                         <!-- 수신번호 설정 -->
-                        <div class="form-group">
+                        <div class="form-group" id="recipientGroup">
                             <label class="form-label required">수신번호</label>
                             <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
                                 <!-- 상단 탭 및 주소록 버튼 영역 -->
@@ -1252,7 +1252,7 @@ body {
                         </div>
 
                         <!-- 메시지 타입 -->
-                        <div class="form-group">
+                        <div class="form-group" id="messageTypeGroup">
                             <label class="form-label required">메시지 타입</label>
                             <div class="flex gap-2">
                                 <label style="display: flex; align-items: center; gap: 8px;">
@@ -1271,7 +1271,7 @@ body {
                         </div>
 
                         <!-- 선거운동정보 입력 -->
-                        <div class="form-group">
+                        <div class="form-group" id="electionInfoGroup">
                             <label class="form-label required">선거운동정보</label>
                             <input type="text" class="form-input" id="candidateNameInput" placeholder="선거운동정보를 입력하세요 (최대 40바이트)" required oninput="validateElectionInfo(); updatePreview(); updateByteCounter();">
                             <div class="form-help">(선거운동정보) 옆에 표시될 내용을 입력하세요</div>
@@ -1285,12 +1285,12 @@ body {
                         </div>
 
                         <!-- 메시지 내용 -->
-                        <div class="form-group">
+                        <div class="form-group" id="messageContentGroup">
                             <label class="form-label required">메시지 내용</label>
-                            <div class="flex gap-2 mb-1">
+                            <div class="flex gap-2 mb-1" id="variableButtons">
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{이름}')">#{이름}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{전화번호}')">#{전화번호}</button>
-                                <button type="button" class="btn btn-sm btn-outline" onclick="openModal('templateSelectModal')">템플릿 선택</button>
+                                <button type="button" class="btn btn-sm btn-outline" id="templateSelectBtn" onclick="openModal('templateSelectModal')">템플릿 선택</button>
                             </div>
                             <textarea class="form-textarea" id="messageContent" rows="6" placeholder="메시지 내용을 입력하세요" required oninput="updatePreview(); checkForbiddenWords(); updateByteCounter();"></textarea>
                             <div class="byte-counter" id="byteCounter">0 / 90 바이트</div>
@@ -1310,7 +1310,7 @@ body {
                         </div>
 
                         <!-- 발송 시간 -->
-                        <div class="form-group">
+                        <div class="form-group" id="sendTimeGroup">
                             <label class="form-label required">발송 시간</label>
                             <div class="flex gap-2">
                                 <label style="display: flex; align-items: center; gap: 8px;">
@@ -4248,6 +4248,56 @@ if (document.readyState === 'loading') {
                 }
             }, 1000);
         });
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '선거문자 발송 페이지 제목' },
+            // 2. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '선거문자 탭 전환' },
+            // 3. 선거문자 발송 탭
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '선거문자 발송 탭', position: { top: '-5px', left: '-10px' }, function: '선거문자 발송 (현재)' },
+            // 4. 주소록 탭
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '주소록 탭', position: { top: '-5px', left: '-10px' }, function: '선거용 주소록 관리' },
+            // 5. 수신거부 탭
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '수신거부 탭', position: { top: '-5px', left: '-10px' }, function: '수신거부 관리' },
+            // 6. 템플릿 탭
+            { selector: '#tabMenu .tab-item:nth-child(4)', title: '템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '선거문자 템플릿' },
+            // 7. 법적 안내사항
+            { selector: '#legalNotice', title: '법적 안내사항', position: { top: '10px', left: '-15px' }, function: '공직선거법 준수 안내', behavior: ['07:00~23:00', '투표일 발송 불가'] },
+            // 8. 발신번호 그룹
+            { selector: '#callerNumberGroup', title: '발신번호', position: { top: '-10px', right: '10px' }, function: '선관위 등록 발신번호', tags: [{ text: '필수', type: 'required' }] },
+            // 9. 발신번호 선택
+            { selector: '#callerNumber', title: '발신번호 선택', position: { top: '-5px', left: '-10px' }, function: '등록된 발신번호 선택' },
+            // 10. 수신번호 영역
+            { selector: '#recipientGroup', title: '수신번호 영역', position: { top: '-10px', left: '-15px' }, function: '수신자 번호 관리' },
+            // 11. 엑셀 업로드
+            { selector: '#excelUploadBtn', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, function: '엑셀로 대량 등록' },
+            // 12. 주소록 불러오기
+            { selector: '#loadAddressBtn', title: '주소록 불러오기', position: { top: '-5px', left: '-10px' }, function: '주소록에서 수신자 선택' },
+            // 13. 메시지 타입 그룹
+            { selector: '#messageTypeGroup', title: '메시지 타입', position: { top: '-10px', left: '-15px' }, function: 'SMS/LMS/MMS 선택' },
+            // 14. 선거운동정보 입력
+            { selector: '#electionInfoGroup', title: '선거운동정보', position: { top: '-10px', left: '-15px' }, function: '(선거운동정보) 입력', behavior: ['최대 40바이트'], tags: [{ text: '필수', type: 'required' }] },
+            // 15. 변수 삽입 버튼
+            { selector: '#variableButtons', title: '변수 삽입', position: { top: '-10px', left: '-15px' }, function: '개인화 변수 삽입' },
+            // 16. 메시지 내용
+            { selector: '#messageContent', title: '메시지 내용', position: { top: '-10px', right: '10px' }, function: '메시지 본문 작성', behavior: ['실시간 바이트 카운트', '금지어 검사'] },
+            // 17. 템플릿 선택 버튼
+            { selector: '#templateSelectBtn', title: '템플릿 선택', position: { top: '-5px', left: '-10px' }, function: '저장된 템플릿 불러오기' },
+            // 18. 발송 시간 설정
+            { selector: '#sendTimeGroup', title: '발송 시간', position: { top: '-10px', left: '-15px' }, function: '즉시/예약 발송', behavior: ['07:00~23:00 제한'] },
+            // 19. 발송 비용 정보
+            { selector: '.cost-info', title: '발송 비용', position: { top: '10px', left: '-15px' }, function: '예상 비용 및 잔여 포인트' },
+            // 20. 미리보기 영역
+            { selector: '.preview-section', title: '미리보기', position: { top: '10px', right: '10px' }, function: '메시지 미리보기' },
+            // 21. 발송 버튼
+            { selector: '#sendBtn', title: '발송하기 버튼', position: { top: '-5px', right: '-10px' }, function: '선거문자 발송 실행', api: 'POST /api/election/send' }
+        ];
+        initSpecOverlay(specData);
     </script>
             </div>
 </body>

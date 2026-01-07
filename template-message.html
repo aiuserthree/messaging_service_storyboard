@@ -1071,13 +1071,13 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <h2>문자발송</h2>
                 <p class="page-description">일반문자 템플릿을 저장하고 관리합니다</p>
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item" onclick="window.location.href='message-send-general.html'">일반문자 발송</button>
                     <button class="tab-item" onclick="window.location.href='message-send-ad.html'">광고문자 발송</button>
@@ -1087,7 +1087,7 @@ body {
             </div>
 
             <!-- 통계 요약 -->
-            <div class="dashboard-grid" style="margin-bottom: 24px;">
+            <div class="dashboard-grid" style="margin-bottom: 24px;" id="statsSection">
                 <div class="stat-card">
                     <div class="stat-icon blue">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -1135,8 +1135,8 @@ body {
             </div>
 
             <!-- 검색 및 필터 -->
-            <div class="card" style="padding: 16px 24px; margin-bottom: 20px;">
-                <div class="search-filter-section">
+            <div class="card" style="padding: 16px 24px; margin-bottom: 20px;" id="searchSection">
+                <div class="search-filter-section" id="searchFilterSection">
                     <div style="flex: 1; min-width: 200px;">
                         <input type="text" class="form-input" placeholder="템플릿명 또는 내용으로 검색">
                     </div>
@@ -1154,19 +1154,19 @@ body {
             </div>
 
             <!-- 템플릿 목록 -->
-            <div class="card">
-                <div class="template-actions">
+            <div class="card" id="templateListSection">
+                <div class="template-actions" id="templateActions">
                     <div>
-                        <button class="btn btn-primary" onclick="openModal('addTemplateModal')">새 템플릿 등록</button>
+                        <button class="btn btn-primary" id="addTemplateBtn" onclick="openModal('addTemplateModal')">새 템플릿 등록</button>
                     </div>
                     <div class="flex gap-2">
-                        <button class="btn btn-outline btn-sm">일괄 삭제</button>
-                        <button class="btn btn-outline btn-sm">내보내기</button>
+                        <button class="btn btn-outline btn-sm" id="batchDeleteBtn">일괄 삭제</button>
+                        <button class="btn btn-outline btn-sm" id="exportBtn">내보내기</button>
                     </div>
                 </div>
 
                 <!-- 템플릿 카드 그리드 -->
-                <div class="template-card">
+                <div class="template-card" id="templateGrid">
                     <div class="template-item" onclick="viewTemplate(1)">
                         <div class="template-header">
                             <div>
@@ -1865,6 +1865,54 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '일반문자 템플릿 페이지 제목' },
+            // 2. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '문자발송 탭 전환' },
+            // 3. 일반문자 탭
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '일반문자 탭', position: { top: '-5px', left: '-10px' }, function: '일반문자 발송 페이지' },
+            // 4. 광고문자 탭
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '광고문자 탭', position: { top: '-5px', left: '-10px' }, function: '광고문자 발송 페이지' },
+            // 5. 템플릿 탭
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '템플릿 관리 (현재)' },
+            // 6. 통계 섹션
+            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, function: '템플릿 현황 통계' },
+            // 7. 전체 통계
+            { selector: '#statsSection .stat-card:nth-child(1)', title: '전체 템플릿', position: { top: '-5px', left: '-10px' }, function: '전체 템플릿 수' },
+            // 8. SMS 통계
+            { selector: '#statsSection .stat-card:nth-child(2)', title: 'SMS 템플릿', position: { top: '-5px', left: '-10px' }, function: 'SMS 템플릿 수' },
+            // 9. LMS 통계
+            { selector: '#statsSection .stat-card:nth-child(3)', title: 'LMS 템플릿', position: { top: '-5px', left: '-10px' }, function: 'LMS 템플릿 수' },
+            // 10. MMS 통계
+            { selector: '#statsSection .stat-card:nth-child(4)', title: 'MMS 템플릿', position: { top: '-5px', right: '-10px' }, function: 'MMS 템플릿 수' },
+            // 11. 검색 섹션
+            { selector: '#searchSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, function: '템플릿 검색/필터' },
+            // 12. 검색 입력
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '템플릿명/내용 검색' },
+            // 13. 타입 필터
+            { selector: '#typeFilter', title: '타입 필터', position: { top: '-5px', left: '-10px' }, function: 'SMS/LMS/MMS 필터' },
+            // 14. 검색 버튼
+            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 실행', api: 'GET /api/templates' },
+            // 15. 새 템플릿 등록
+            { selector: '#addTemplateBtn', title: '새 템플릿 등록', position: { top: '-10px', left: '-15px' }, function: '템플릿 등록 모달', api: 'POST /api/templates' },
+            // 16. 일괄 삭제
+            { selector: '#batchDeleteBtn', title: '일괄 삭제', position: { top: '-10px', left: '-15px' }, function: '선택 템플릿 삭제', api: 'DELETE /api/templates/batch' },
+            // 17. 내보내기
+            { selector: '#exportBtn', title: '내보내기', position: { top: '-10px', right: '-15px' }, function: '템플릿 데이터 내보내기' },
+            // 18. 템플릿 그리드
+            { selector: '#templateGrid', title: '템플릿 카드 목록', position: { top: '10px', left: '10px' }, function: '템플릿 카드 표시' },
+            // 19. 템플릿 카드
+            { selector: '#templateGrid .template-card:first-child', title: '템플릿 카드', position: { top: '-5px', left: '-10px' }, function: '개별 템플릿 정보', behavior: ['미리보기', '수정', '복사', '삭제'] },
+            // 20. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

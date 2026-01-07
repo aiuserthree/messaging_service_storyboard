@@ -909,13 +909,13 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <h2>발송 관리</h2>
                 <p class="page-description">예약한 메시지 발송 내역을 조회하고 관리합니다</p>
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item" data-tab="send-result" onclick="window.location.href='send-result.html'">발송결과</button>
                     <button class="tab-item active" data-tab="send-reservation" onclick="switchTab('send-reservation', 'send-management-tabs')">예약내역</button>
@@ -1462,6 +1462,48 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '예약내역 페이지 제목' },
+            // 2. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '발송관리 탭 전환' },
+            // 3. 발송결과 탭
+            { selector: '#tabMenu .tab-item:first-child', title: '발송결과 탭', position: { top: '-5px', left: '-10px' }, function: '발송결과 조회 페이지' },
+            // 4. 예약내역 탭
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '예약내역 탭', position: { top: '-5px', right: '-10px' }, function: '예약내역 페이지 (현재)' },
+            // 5. 안내 메시지
+            { selector: '.alert-info', title: '안내 메시지', position: { top: '10px', left: '-15px' }, function: '예약 관련 안내사항' },
+            // 6. 조회 조건 영역
+            { selector: '.search-filter-section', title: '조회 조건', position: { top: '10px', left: '-15px' }, function: '예약내역 검색 조건' },
+            // 7. 기간 선택
+            { selector: '#dateRange', title: '기간 선택', position: { top: '-5px', left: '-10px' }, function: '조회 기간 설정' },
+            // 8. 시작일
+            { selector: '#startDate', title: '시작일', position: { top: '-5px', left: '-10px' }, function: '조회 시작 날짜' },
+            // 9. 종료일
+            { selector: '#endDate', title: '종료일', position: { top: '-5px', left: '-10px' }, function: '조회 종료 날짜' },
+            // 10. 메시지 타입
+            { selector: '#messageType', title: '메시지 타입', position: { top: '-5px', left: '-10px' }, function: 'SMS/LMS/MMS 필터' },
+            // 11. 검색 입력
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '내용으로 검색' },
+            // 12. 검색 버튼
+            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 실행', api: 'GET /api/reservations' },
+            // 13. 예약내역 테이블
+            { selector: '.table', title: '예약내역 테이블', position: { top: '10px', left: '10px' }, function: '예약 목록 표시', behavior: ['등록일', '발송예정일', '내용', '상태'] },
+            // 14. 전체 선택
+            { selector: '#selectAll', title: '전체 선택', position: { top: '-5px', left: '-10px' }, function: '모든 예약 선택' },
+            // 15. 수정 버튼
+            { selector: '.btn-edit', title: '수정 버튼', position: { top: '-5px', left: '-10px' }, function: '예약 내용 수정' },
+            // 16. 취소 버튼
+            { selector: '.btn-cancel', title: '취소 버튼', position: { top: '-5px', right: '-10px' }, function: '예약 취소', api: 'DELETE /api/reservations/:id' },
+            // 17. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

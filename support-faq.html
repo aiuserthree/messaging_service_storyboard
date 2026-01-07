@@ -380,7 +380,7 @@
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="support-tabs">
+            <div class="support-tabs" id="supportTabs">
                 <a href="support-notice.html" class="support-tab">공지사항</a>
                 <a href="support-event.html" class="support-tab">이벤트</a>
                 <a href="support-faq.html" class="support-tab active">FAQ</a>
@@ -388,7 +388,7 @@
             </div>
 
             <!-- 검색바 -->
-            <div class="search-bar">
+            <div class="search-bar" id="searchBar">
                 <div class="search-input-wrapper">
                     <input type="text" class="search-input" placeholder="궁금한 내용을 검색해보세요">
                     <span class="search-icon">
@@ -401,9 +401,9 @@
             </div>
 
             <!-- 인기 질문 -->
-            <div class="popular-section">
+            <div class="popular-section" id="popularSection">
                 <h3 class="section-title">인기 질문</h3>
-                <div class="popular-questions">
+                <div class="popular-questions" id="popularQuestions">
                     <a href="#faq1" class="popular-item" onclick="openFaq('faq1')">
                         <span class="popular-number">1</span>
                         <span class="popular-text">문자 발송 요금은 어떻게 되나요?</span>
@@ -424,7 +424,7 @@
             </div>
 
             <!-- 카테고리 필터 -->
-            <div class="category-filters">
+            <div class="category-filters" id="categoryFilters">
                 <button class="category-btn active" onclick="filterCategory('all')">전체</button>
                 <button class="category-btn" onclick="filterCategory('account')">회원/계정</button>
                 <button class="category-btn" onclick="filterCategory('payment')">결제/포인트</button>
@@ -434,7 +434,7 @@
             </div>
 
             <!-- FAQ 목록 -->
-            <div class="faq-list">
+            <div class="faq-list" id="faqList">
                 <!-- FAQ 1 -->
                 <div class="faq-item" id="faq1" data-category="payment">
                     <div class="faq-question" onclick="toggleFaq(this)">
@@ -800,6 +800,45 @@
     <script src="js/footer.js"></script>
     <script>
         document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 탭 메뉴
+            { selector: '#supportTabs', title: '탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '고객센터 페이지 이동' },
+            // 2. 공지사항 탭
+            { selector: '#supportTabs .support-tab:nth-child(1)', title: '공지사항 탭', position: { top: '-5px', left: '-10px' }, function: '공지사항 페이지' },
+            // 3. 이벤트 탭
+            { selector: '#supportTabs .support-tab:nth-child(2)', title: '이벤트 탭', position: { top: '-5px', left: '-10px' }, function: '이벤트 페이지' },
+            // 4. FAQ 탭
+            { selector: '#supportTabs .support-tab:nth-child(3)', title: 'FAQ 탭', position: { top: '-5px', left: '-10px' }, function: 'FAQ 페이지 (현재)' },
+            // 5. 1:1 문의 탭
+            { selector: '#supportTabs .support-tab:nth-child(4)', title: '1:1 문의 탭', position: { top: '-5px', right: '-10px' }, function: '1:1 문의 페이지' },
+            // 6. 검색바
+            { selector: '#searchBar', title: '검색바', position: { top: '-5px', left: '-10px' }, function: 'FAQ 검색' },
+            // 7. 검색 입력
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '키워드 입력' },
+            // 8. 검색 버튼
+            { selector: '.search-btn', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, function: '검색 실행' },
+            // 9. 인기 질문 섹션
+            { selector: '#popularSection', title: '인기 질문', position: { top: '10px', left: '10px' }, function: '자주 묻는 질문 표시', behavior: ['클릭 시 해당 FAQ로 이동'] },
+            // 10. 인기 질문 항목
+            { selector: '#popularSection .popular-item:first-child', title: '인기 질문 항목', position: { top: '-5px', left: '-10px' }, function: '개별 인기 질문' },
+            // 11. 카테고리 필터
+            { selector: '#categoryFilters', title: '카테고리 필터', position: { top: '-5px', left: '-10px' }, function: '카테고리별 필터링' },
+            // 12. 전체 필터
+            { selector: '#categoryFilters .filter-btn:first-child', title: '전체 필터', position: { top: '-5px', left: '-10px' }, function: '모든 FAQ 표시' },
+            // 13. 회원/계정 필터
+            { selector: '#categoryFilters .filter-btn:nth-child(2)', title: '회원/계정', position: { top: '-5px', left: '-10px' }, function: '회원 관련 FAQ' },
+            // 14. 결제/포인트 필터
+            { selector: '#categoryFilters .filter-btn:nth-child(3)', title: '결제/포인트', position: { top: '-5px', left: '-10px' }, function: '결제 관련 FAQ' },
+            // 15. FAQ 목록
+            { selector: '#faqList', title: 'FAQ 목록', position: { top: '10px', left: '10px' }, function: 'FAQ 아코디언 목록', api: 'GET /api/faq' },
+            // 16. FAQ 항목
+            { selector: '#faqList .faq-item:first-child', title: 'FAQ 항목', position: { top: '-5px', left: '-10px' }, function: '질문 클릭 시 답변 펼침', behavior: ['아코디언 토글'] }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

@@ -1095,13 +1095,13 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <h2>카카오톡 발송</h2>
                 <p class="page-description">카카오톡 알림톡 메시지를 발송합니다</p>
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item active" onclick="window.location.href='kakao-send-alimtalk.html'">알림톡 발송</button>
                     <button class="tab-item" onclick="window.location.href='kakao-send-brandtalk.html'">브랜드 메시지 발송</button>
@@ -1112,7 +1112,7 @@ body {
             </div>
 
             <!-- 템플릿 확인 영역 -->
-            <div id="templateCheckArea">
+            <div id="templateCheckArea" class="template-check-area">
                 <!-- 템플릿이 없는 경우 -->
                 <div class="template-check-alert" id="noTemplateAlert">
                     <div class="template-check-alert-icon">📋</div>
@@ -2313,6 +2313,48 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '알림톡 발송 페이지 제목' },
+            // 2. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '카카오톡 탭 전환' },
+            // 3. 알림톡 발송 탭
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '알림톡 발송 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 발송 (현재)' },
+            // 4. 브랜드 메시지 탭
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '브랜드 메시지 탭', position: { top: '-5px', left: '-10px' }, function: '브랜드 메시지 발송' },
+            // 5. 발신프로필 탭
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '발신프로필 탭', position: { top: '-5px', left: '-10px' }, function: '발신프로필 관리' },
+            // 6. 알림톡 템플릿 탭
+            { selector: '#tabMenu .tab-item:nth-child(4)', title: '알림톡 템플릿 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 템플릿' },
+            // 7. 브랜드 템플릿 탭
+            { selector: '#tabMenu .tab-item:nth-child(5)', title: '브랜드 템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '브랜드 템플릿' },
+            // 8. 템플릿 확인 영역
+            { selector: '#templateCheckArea', title: '템플릿 확인', position: { top: '10px', left: '-15px' }, function: '템플릿 등록 상태 확인' },
+            // 9. 발신 프로필 선택
+            { selector: '#senderProfile', title: '발신 프로필', position: { top: '-10px', right: '10px' }, function: '카카오톡 채널 선택', tags: [{ text: '필수', type: 'required' }] },
+            // 10. 템플릿 선택
+            { selector: '#selectedTemplate', title: '템플릿 선택', position: { top: '-10px', left: '-15px' }, function: '승인된 템플릿 선택', tags: [{ text: '필수', type: 'required' }] },
+            // 11. 변수 입력 영역
+            { selector: '#variableInputArea', title: '변수 입력', position: { top: '5px', left: '5px' }, function: '템플릿 변수값 입력' },
+            // 12. 수신번호 입력
+            { selector: '#recipientNumbers', title: '수신번호 입력', position: { top: '-10px', left: '-15px' }, function: '수신자 번호 입력', tags: [{ text: '필수', type: 'required' }] },
+            // 13. 주소록 불러오기
+            { selector: '#loadAddressBtn', title: '주소록 불러오기', position: { top: '-5px', left: '-10px' }, function: '주소록에서 수신자 선택' },
+            // 14. 엑셀 업로드
+            { selector: '#excelUploadBtn', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, function: '엑셀로 대량 등록' },
+            // 15. 대체문자 설정
+            { selector: '#fallbackToggle', title: '대체문자 설정', position: { top: '-10px', right: '-15px' }, function: '발송 실패시 문자 발송' },
+            // 16. 발송 버튼
+            { selector: '#sendBtn', title: '발송하기 버튼', position: { top: '-5px', right: '-10px' }, function: '알림톡 발송 실행', api: 'POST /api/kakao/alimtalk/send' },
+            // 17. 미리보기 영역
+            { selector: '#previewArea', title: '미리보기', position: { top: '10px', left: '10px' }, function: '메시지 미리보기' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

@@ -967,7 +967,7 @@ body {
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="mypageTabs">
                 <div class="tab-list">
                     <button class="tab-item active" onclick="window.location.href='mypage-profile.html'">내 정보 수정</button>
                     <button class="tab-item" onclick="window.location.href='mypage-password.html'">비밀번호 변경</button>
@@ -976,10 +976,10 @@ body {
             </div>
 
             <!-- 기본 정보 수정 -->
-            <div class="card">
+            <div class="card" id="profileCard">
                 <form id="profileForm">
                         <!-- 기본 정보 -->
-                        <div class="form-section">
+                        <div class="form-section" id="basicInfoSection">
                             <h3 class="form-section-title">기본 정보</h3>
                             <div class="form-group">
                                 <label class="form-label">아이디</label>
@@ -1031,7 +1031,7 @@ body {
                         </div>
 
                         <!-- 주소 정보 -->
-                        <div class="form-section">
+                        <div class="form-section" id="addressSection">
                             <h3 class="form-section-title">주소 정보</h3>
                             <div class="form-group">
                                 <label class="form-label">우편번호</label>
@@ -1051,7 +1051,7 @@ body {
                         </div>
 
                         <!-- 회원가입일 -->
-                        <div class="form-section">
+                        <div class="form-section" id="joinDateSection">
                             <div class="form-group">
                                 <label class="form-label">회원가입일</label>
                                 <input type="text" class="form-input" value="2024-01-01" disabled style="background: var(--bg-color);">
@@ -1059,18 +1059,18 @@ body {
                         </div>
 
                         <!-- 사업자 회원 전환 (개인 회원만 표시) -->
-                        <div class="form-section">
-                            <div class="alert alert-info">
+                        <div class="form-section" id="businessConvertSection">
+                            <div class="alert alert-info" id="businessConvertAlert">
                                 <strong>사업자 회원으로 전환하시겠습니까?</strong>
                                 <p style="margin-top: 8px; font-size: 12px;">사업자 회원으로 전환하면 세금계산서 발행이 가능합니다.</p>
-                                <button type="button" class="btn btn-primary" style="margin-top: 12px;" onclick="openModal('convertBusinessModal')">사업자 회원으로 전환</button>
+                                <button type="button" class="btn btn-primary" style="margin-top: 12px;" onclick="openModal('convertBusinessModal')" id="convertBusinessBtn">사업자 회원으로 전환</button>
                             </div>
                         </div>
 
                         <!-- 저장 버튼 -->
-                        <div class="flex gap-2 mt-3">
-                            <button type="submit" class="btn btn-primary">저장하기</button>
-                            <button type="button" class="btn btn-outline" onclick="resetForm()">취소</button>
+                        <div class="flex gap-2 mt-3" id="profileActions">
+                            <button type="submit" class="btn btn-primary" id="saveProfileBtn">저장하기</button>
+                            <button type="button" class="btn btn-outline" onclick="resetForm()" id="cancelProfileBtn">취소</button>
                         </div>
                     </form>
                 </div>
@@ -1581,6 +1581,204 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 탭 메뉴
+            {
+                selector: '#mypageTabs',
+                title: '탭 메뉴',
+                position: { top: '-5px', left: '-10px' },
+                function: '마이페이지 내 페이지 이동',
+                behavior: ['내 정보 수정', '비밀번호 변경', '발신번호 관리']
+            },
+            // 2. 프로필 카드
+            {
+                selector: '#profileCard',
+                title: '프로필 정보 카드',
+                position: { top: '10px', left: '10px' },
+                function: '회원 정보 수정 폼 영역'
+            },
+            // 3. 프로필 폼
+            {
+                selector: '#profileForm',
+                title: '프로필 폼',
+                position: { top: '10px', right: '10px' },
+                function: '회원정보 입력 폼',
+                behavior: ['Submit 시 유효성 검증', 'API 호출']
+            },
+            // 4. 기본 정보 섹션
+            {
+                selector: '#basicInfoSection',
+                title: '기본 정보 섹션',
+                position: { top: '-5px', left: '-10px' },
+                function: '회원 기본 정보 입력/수정'
+            },
+            // 5. 아이디 입력 필드 (비활성)
+            {
+                selector: '#basicInfoSection .form-group:nth-child(1) input',
+                title: '아이디 필드',
+                position: { top: '-5px', right: '-10px' },
+                function: '아이디 표시 (수정 불가)',
+                behavior: ['읽기 전용']
+            },
+            // 6. 이름 입력 필드
+            {
+                selector: '#basicInfoSection .form-group:nth-child(2) input',
+                title: '이름 입력',
+                position: { top: '-5px', right: '-10px' },
+                function: '회원 이름 수정',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 7. 생년월일 입력
+            {
+                selector: '#basicInfoSection .form-group:nth-child(3) input',
+                title: '생년월일 입력',
+                position: { top: '-5px', right: '-10px' },
+                function: '생년월일 선택',
+                tags: [{ text: '선택', type: 'optional' }]
+            },
+            // 8. 성별 선택
+            {
+                selector: '#basicInfoSection .form-group:nth-child(4)',
+                title: '성별 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '성별 라디오 버튼',
+                behavior: ['남성/여성/선택안함'],
+                tags: [{ text: '선택', type: 'optional' }]
+            },
+            // 9. 휴대폰번호 입력
+            {
+                selector: '#basicInfoSection .form-group:nth-child(5) input',
+                title: '휴대폰번호 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '휴대폰번호 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 10. 휴대폰 인증 버튼
+            {
+                selector: '#basicInfoSection .form-group:nth-child(5) .btn',
+                title: '휴대폰 인증 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '본인 인증 모달 열기',
+                behavior: ['인증번호 SMS 발송', '인증 확인'],
+                api: 'POST /api/auth/verify-phone'
+            },
+            // 11. 이메일 입력
+            {
+                selector: '#basicInfoSection .form-group:nth-child(6) input',
+                title: '이메일 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '이메일 주소 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 12. 이메일 중복확인 버튼
+            {
+                selector: '#basicInfoSection .form-group:nth-child(6) .btn',
+                title: '이메일 중복확인',
+                position: { top: '-5px', right: '-10px' },
+                function: '이메일 중복 여부 확인',
+                api: 'GET /api/users/check-email'
+            },
+            // 13. 주소 정보 섹션
+            {
+                selector: '#addressSection',
+                title: '주소 정보 섹션',
+                position: { top: '-5px', left: '-10px' },
+                function: '회원 주소 정보'
+            },
+            // 14. 우편번호 필드
+            {
+                selector: '#addressSection .form-group:nth-child(1) input',
+                title: '우편번호',
+                position: { top: '-5px', left: '-10px' },
+                function: '우편번호 표시',
+                behavior: ['읽기 전용']
+            },
+            // 15. 주소 검색 버튼
+            {
+                selector: '#addressSection .form-group:nth-child(1) .btn',
+                title: '주소 검색 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '다음 주소 검색 API 연동',
+                api: '다음 우편번호 서비스'
+            },
+            // 16. 주소 필드
+            {
+                selector: '#addressSection .form-group:nth-child(2) input',
+                title: '주소',
+                position: { top: '-5px', right: '-10px' },
+                function: '주소 표시',
+                behavior: ['읽기 전용']
+            },
+            // 17. 상세주소 입력
+            {
+                selector: '#addressSection .form-group:nth-child(3) input',
+                title: '상세주소 입력',
+                position: { top: '-5px', right: '-10px' },
+                function: '상세주소 입력'
+            },
+            // 18. 회원가입일 표시
+            {
+                selector: '#joinDateSection',
+                title: '회원가입일',
+                position: { top: '-5px', left: '-10px' },
+                function: '가입일 표시 (읽기 전용)'
+            },
+            // 19. 사업자 전환 안내
+            {
+                selector: '#businessConvertAlert',
+                title: '사업자 전환 안내',
+                position: { top: '-5px', left: '-10px' },
+                function: '사업자 회원 전환 안내',
+                behavior: ['세금계산서 발행 가능']
+            },
+            // 20. 사업자 전환 버튼
+            {
+                selector: '#convertBusinessBtn',
+                title: '사업자 전환 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '사업자 전환 모달 열기',
+                behavior: ['전환 후 되돌릴 수 없음']
+            },
+            // 21. 저장하기 버튼
+            {
+                selector: '#saveProfileBtn',
+                title: '저장하기 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '프로필 정보 저장',
+                api: 'PUT /api/users/me',
+                tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
+            },
+            // 22. 취소 버튼
+            {
+                selector: '#cancelProfileBtn',
+                title: '취소 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '수정 내용 초기화'
+            },
+            // 23. 휴대폰 인증 모달
+            {
+                selector: '#phoneVerifyModal',
+                title: '휴대폰 인증 모달',
+                position: { top: '10px', left: '10px' },
+                function: '휴대폰 본인 인증',
+                behavior: ['인증번호 6자리 입력', '3분 유효시간', '재전송 가능'],
+                api: 'POST /api/auth/verify-phone'
+            },
+            // 24. 사업자 전환 모달
+            {
+                selector: '#convertBusinessModal',
+                title: '사업자 전환 모달',
+                position: { top: '10px', left: '10px' },
+                function: '사업자 회원 전환 정보 입력',
+                behavior: ['기업유형 선택', '사업자등록증 업로드', '재직증명서 업로드(직원)'],
+                api: 'POST /api/users/convert-business'
+            }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

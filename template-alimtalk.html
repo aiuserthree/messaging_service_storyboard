@@ -948,13 +948,13 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <h2>카카오톡 발송</h2>
                 <p class="page-description">카카오 알림톡 발송을 위한 템플릿을 관리합니다</p>
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item" onclick="window.location.href='kakao-send-alimtalk.html'">알림톡 발송</button>
                     <button class="tab-item" onclick="window.location.href='kakao-send-brandtalk.html'">브랜드 메시지 발송</button>
@@ -1913,6 +1913,48 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '알림톡 템플릿 페이지 제목' },
+            // 2. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '카카오톡 탭 전환' },
+            // 3. 알림톡 발송 탭
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '알림톡 발송 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 발송 페이지' },
+            // 4. 브랜드 메시지 탭
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '브랜드 메시지 탭', position: { top: '-5px', left: '-10px' }, function: '브랜드 메시지 페이지' },
+            // 5. 발신프로필 탭
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '발신프로필 탭', position: { top: '-5px', left: '-10px' }, function: '발신프로필 관리' },
+            // 6. 알림톡 템플릿 탭
+            { selector: '#tabMenu .tab-item:nth-child(4)', title: '알림톡 템플릿 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 템플릿 (현재)' },
+            // 7. 브랜드 템플릿 탭
+            { selector: '#tabMenu .tab-item:nth-child(5)', title: '브랜드 템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '브랜드 템플릿 페이지' },
+            // 8. 발신프로필 선택
+            { selector: '#profileSelect', title: '발신프로필 선택', position: { top: '-10px', left: '-15px' }, function: '프로필별 템플릿 관리', tags: [{ text: '필수', type: 'required' }] },
+            // 9. 검색 필터 섹션
+            { selector: '#searchFilterSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, function: '템플릿 검색/필터' },
+            // 10. 검색 입력
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '템플릿명/코드 검색' },
+            // 11. 상태 필터
+            { selector: '#statusFilter', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '승인상태별 필터' },
+            // 12. 카테고리 필터
+            { selector: '#categoryFilter', title: '카테고리 필터', position: { top: '-5px', left: '-10px' }, function: '카테고리별 필터' },
+            // 13. 검색 버튼
+            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 실행', api: 'GET /api/kakao/templates/alimtalk' },
+            // 14. 새 템플릿 등록
+            { selector: '#addTemplateBtn', title: '새 템플릿 등록', position: { top: '-10px', left: '-15px' }, function: '알림톡 템플릿 등록', api: 'POST /api/kakao/templates/alimtalk' },
+            // 15. 템플릿 목록 섹션
+            { selector: '#templateListSection', title: '템플릿 목록', position: { top: '10px', left: '10px' }, function: '알림톡 템플릿 목록' },
+            // 16. 템플릿 테이블
+            { selector: '#templateTable', title: '템플릿 테이블', position: { top: '5px', left: '5px' }, function: '템플릿 정보 표시', behavior: ['템플릿명', '코드', '상태', '관리'] },
+            // 17. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

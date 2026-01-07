@@ -1040,7 +1040,7 @@ body {
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="mypageTabs">
                 <div class="tab-list">
                     <button class="tab-item" onclick="window.location.href='mypage-profile.html'">내 정보 수정</button>
                     <button class="tab-item" onclick="window.location.href='mypage-password.html'">비밀번호 변경</button>
@@ -1049,7 +1049,7 @@ body {
             </div>
 
             <!-- 안내 -->
-            <div class="alert alert-info">
+            <div class="alert alert-info" id="callerNumberNotice">
                 <strong>발신번호 사전등록제 안내</strong>
                 <p style="margin-top: 8px; font-size: 12px;">
                     정보통신망법에 따라 발신번호 사전 등록이 의무화되었습니다. 
@@ -1058,22 +1058,22 @@ body {
             </div>
 
             <!-- 발신번호 목록 -->
-            <div class="card">
+            <div class="card" id="callerNumberCard">
                 <div class="flex-between mb-2">
                     <h3 class="card-title">발신번호 목록</h3>
-                    <button class="btn btn-primary" onclick="openRegisterModal()">발신번호 등록</button>
+                    <button class="btn btn-primary" onclick="openRegisterModal()" id="registerCallerBtn">발신번호 등록</button>
                 </div>
 
                 <!-- 상태 필터 -->
-                <div class="status-filter">
+                <div class="status-filter" id="statusFilter">
                     <button class="status-filter-btn active" onclick="filterStatus('all')">전체</button>
                     <button class="status-filter-btn" onclick="filterStatus('pending')">승인대기</button>
                     <button class="status-filter-btn" onclick="filterStatus('approved')">승인완료</button>
                     <button class="status-filter-btn" onclick="filterStatus('rejected')">반려</button>
                 </div>
 
-                <div class="table-container">
-                    <table class="table">
+                <div class="table-container" id="callerNumberTableContainer">
+                    <table class="table" id="callerNumberTable">
                         <thead>
                             <tr>
                                 <th>발신번호</th>
@@ -2447,6 +2447,45 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 탭 메뉴
+            { selector: '#mypageTabs', title: '탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '마이페이지 내 이동' },
+            // 2. 내 정보 수정 탭
+            { selector: '#mypageTabs .tab-item:nth-child(1)', title: '내 정보 수정 탭', position: { top: '-5px', left: '-10px' }, function: '프로필 수정 페이지' },
+            // 3. 비밀번호 변경 탭
+            { selector: '#mypageTabs .tab-item:nth-child(2)', title: '비밀번호 변경 탭', position: { top: '-5px', left: '-10px' }, function: '비밀번호 변경 페이지' },
+            // 4. 발신번호 관리 탭
+            { selector: '#mypageTabs .tab-item:nth-child(3)', title: '발신번호 관리 탭', position: { top: '-5px', right: '-10px' }, function: '발신번호 관리 (현재)' },
+            // 5. 안내 메시지
+            { selector: '#callerNumberNotice', title: '사전등록제 안내', position: { top: '10px', left: '10px' }, function: '발신번호 등록 의무화 안내' },
+            // 6. 발신번호 등록 버튼
+            { selector: '#registerCallerBtn', title: '발신번호 등록', position: { top: '-5px', left: '-10px' }, function: '신규 발신번호 등록 시작', behavior: ['4단계 등록 프로세스'] },
+            // 7. 상태 필터
+            { selector: '#statusFilter', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '승인 상태별 필터링', behavior: ['전체', '승인대기', '승인완료', '반려'] },
+            // 8. 검색 입력
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '발신번호로 검색' },
+            // 9. 검색 버튼
+            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 실행' },
+            // 10. 발신번호 테이블
+            { selector: '#callerNumberTableContainer', title: '발신번호 테이블', position: { top: '10px', left: '10px' }, function: '등록된 발신번호 목록', api: 'GET /api/caller-numbers' },
+            // 11. 전체 선택
+            { selector: '#selectAllCallers', title: '전체 선택', position: { top: '-5px', left: '-10px' }, function: '모든 발신번호 선택' },
+            // 12. 발신번호 행
+            { selector: '#callerNumberTableContainer tbody tr:first-child', title: '발신번호 행', position: { top: '-5px', left: '-10px' }, function: '개별 발신번호 정보' },
+            // 13. 상세보기 버튼
+            { selector: '.btn-view', title: '상세보기', position: { top: '-5px', left: '-10px' }, function: '발신번호 상세 정보' },
+            // 14. 삭제 버튼
+            { selector: '.btn-delete', title: '삭제', position: { top: '-5px', right: '-10px' }, function: '발신번호 삭제', api: 'DELETE /api/caller-numbers/:id' },
+            // 15. 발신번호 등록 모달
+            { selector: '#registerCallerModal', title: '등록 모달', position: { top: '10px', left: '10px' }, function: '발신번호 등록 4단계 모달' },
+            // 16. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

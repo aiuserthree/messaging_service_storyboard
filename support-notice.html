@@ -254,7 +254,7 @@
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="support-tabs">
+            <div class="support-tabs" id="supportTabs">
                 <a href="support-notice.html" class="support-tab active">공지사항</a>
                 <a href="support-event.html" class="support-tab">이벤트</a>
                 <a href="support-faq.html" class="support-tab">FAQ</a>
@@ -262,7 +262,7 @@
             </div>
 
             <!-- 검색바 -->
-            <div class="search-bar">
+            <div class="search-bar" id="searchBar">
                 <div class="search-input-wrapper">
                     <input 
                         type="text" 
@@ -290,8 +290,8 @@
             </div>
 
             <!-- 공지사항 테이블 -->
-            <div class="table-container">
-                <table class="table">
+            <div class="table-container" id="noticeTableContainer">
+                <table class="table" id="noticeTable">
                     <thead>
                         <tr>
                             <th style="width: 80px;">번호</th>
@@ -366,7 +366,7 @@
             </div>
 
             <!-- 페이지네이션 -->
-            <div class="pagination">
+            <div class="pagination" id="pagination">
                 <button class="page-btn" disabled>이전</button>
                 <button class="page-btn active">1</button>
                 <button class="page-btn" onclick="goToPage(2)">2</button>
@@ -413,6 +413,137 @@
     <script src="js/footer.js"></script>
     <script>
         document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 탭 메뉴
+            {
+                selector: '#supportTabs',
+                title: '탭 메뉴',
+                position: { top: '-5px', left: '-10px' },
+                function: '고객센터 페이지 간 이동'
+            },
+            // 2. 공지사항 탭
+            {
+                selector: '#supportTabs .support-tab:nth-child(1)',
+                title: '공지사항 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '공지사항 페이지 (현재)',
+                behavior: ['활성 상태 표시']
+            },
+            // 3. 이벤트 탭
+            {
+                selector: '#supportTabs .support-tab:nth-child(2)',
+                title: '이벤트 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '이벤트 페이지 이동',
+                behavior: ['클릭 시 support-event.html 이동']
+            },
+            // 4. FAQ 탭
+            {
+                selector: '#supportTabs .support-tab:nth-child(3)',
+                title: 'FAQ 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: 'FAQ 페이지 이동',
+                behavior: ['클릭 시 support-faq.html 이동']
+            },
+            // 5. 1:1 문의 탭
+            {
+                selector: '#supportTabs .support-tab:nth-child(4)',
+                title: '1:1 문의 탭',
+                position: { top: '-5px', right: '-10px' },
+                function: '1:1 문의 페이지 이동',
+                behavior: ['클릭 시 support-inquiry.html 이동']
+            },
+            // 6. 검색바 영역
+            {
+                selector: '#searchBar',
+                title: '검색바',
+                position: { top: '-5px', left: '-10px' },
+                function: '공지사항 검색'
+            },
+            // 7. 검색 입력 필드
+            {
+                selector: '#searchInput',
+                title: '검색 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '검색어 입력',
+                behavior: ['Enter 키로 검색 실행']
+            },
+            // 8. 검색 버튼
+            {
+                selector: '.search-btn',
+                title: '검색 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '검색 실행',
+                api: 'GET /api/notices?search=keyword'
+            },
+            // 9. 새로고침 버튼
+            {
+                selector: '.refresh-btn',
+                title: '새로고침 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '검색 초기화 및 목록 새로고침'
+            },
+            // 10. 공지사항 테이블
+            {
+                selector: '#noticeTableContainer',
+                title: '공지사항 테이블',
+                position: { top: '10px', left: '10px' },
+                function: '공지사항 목록 표시',
+                behavior: ['번호', '제목', '등록일', '조회수 컬럼'],
+                api: 'GET /api/notices'
+            },
+            // 11. 테이블 헤더
+            {
+                selector: '#noticeTable thead',
+                title: '테이블 헤더',
+                position: { top: '-5px', left: '-10px' },
+                function: '컬럼명 표시',
+                behavior: ['정렬 기능 제공 가능']
+            },
+            // 12. 테이블 행
+            {
+                selector: '#noticeTable tbody tr:first-child',
+                title: '공지사항 행',
+                position: { top: '-5px', left: '-10px' },
+                function: '개별 공지사항 항목',
+                behavior: ['클릭 시 상세 페이지 이동']
+            },
+            // 13. 페이지네이션
+            {
+                selector: '#pagination',
+                title: '페이지네이션',
+                position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' },
+                function: '페이지 이동'
+            },
+            // 14. 이전 버튼
+            {
+                selector: '#pagination .page-btn:first-child',
+                title: '이전 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '이전 페이지로 이동',
+                behavior: ['첫 페이지에서 비활성화']
+            },
+            // 15. 다음 버튼
+            {
+                selector: '#pagination .page-btn:nth-last-child(2)',
+                title: '다음 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '다음 페이지로 이동',
+                behavior: ['마지막 페이지에서 비활성화']
+            },
+            // 16. 마지막 버튼
+            {
+                selector: '#pagination .page-btn:last-child',
+                title: '마지막 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '마지막 페이지로 이동'
+            }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

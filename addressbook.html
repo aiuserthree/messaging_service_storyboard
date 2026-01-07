@@ -1058,13 +1058,13 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <h2>주소록</h2>
                 <p class="page-description">수신자 주소록을 그룹별로 관리합니다</p>
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item active" onclick="window.location.href='addressbook.html'">주소록 관리</button>
                     <button class="tab-item" onclick="window.location.href='addressbook-reject.html'">수신거부관리</button>
@@ -1072,7 +1072,7 @@ body {
             </div>
 
             <!-- 통계 정보 -->
-            <div class="dashboard-grid" style="margin-bottom: 24px;">
+            <div class="dashboard-grid" style="margin-bottom: 24px;" id="statsSection">
                 <div class="stat-card">
                     <div class="stat-icon blue">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -1121,7 +1121,7 @@ body {
 
             <div class="addressbook-layout">
                 <!-- 그룹 사이드바 -->
-                <div class="group-sidebar">
+                <div class="group-sidebar" id="groupSidebar">
                     <div class="flex-between mb-2">
                         <h3 style="font-size: 16px; font-weight: 600;">그룹</h3>
                         <button class="btn btn-sm btn-primary" onclick="openModal('addGroupModal')">+ 추가</button>
@@ -2776,6 +2776,50 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '주소록 관리 페이지 제목' },
+            // 2. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '주소록/수신거부 전환' },
+            // 3. 주소록 탭
+            { selector: '#tabMenu .tab-item:first-child', title: '주소록 탭', position: { top: '-5px', left: '-10px' }, function: '주소록 관리 페이지' },
+            // 4. 수신거부 탭
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '수신거부 탭', position: { top: '-5px', right: '-10px' }, function: '수신거부 관리 페이지' },
+            // 5. 통계 섹션
+            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, function: '전체주소/그룹수/정상주소/수신거부 통계' },
+            // 6. 그룹 사이드바
+            { selector: '#groupSidebar', title: '그룹 사이드바', position: { top: '10px', left: '-15px' }, function: '주소록 그룹 목록' },
+            // 7. 그룹 추가 버튼
+            { selector: '#addGroupBtn', title: '그룹 추가', position: { top: '-5px', left: '-10px' }, function: '새 그룹 생성', api: 'POST /api/addressbook/groups' },
+            // 8. 그룹 검색
+            { selector: '#groupSearch', title: '그룹 검색', position: { top: '-5px', left: '-10px' }, function: '그룹명으로 검색' },
+            // 9. 그룹 목록
+            { selector: '#groupList', title: '그룹 목록', position: { top: '5px', left: '5px' }, function: '등록된 그룹 표시', behavior: ['클릭 시 그룹 선택', '우클릭 컨텍스트 메뉴'] },
+            // 10. 주소록 콘텐츠
+            { selector: '.addressbook-content', title: '주소록 콘텐츠', position: { top: '10px', left: '10px' }, function: '선택 그룹의 주소 목록' },
+            // 11. 주소 검색
+            { selector: '#addressSearch', title: '주소 검색', position: { top: '-5px', left: '-10px' }, function: '이름/전화번호 검색' },
+            // 12. 주소 추가 버튼
+            { selector: '#addAddressBtn', title: '주소 추가', position: { top: '-5px', left: '-10px' }, function: '새 주소 등록', api: 'POST /api/addressbook' },
+            // 13. 엑셀 업로드 버튼
+            { selector: '#excelUploadBtn', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, function: '엑셀 파일로 대량 등록' },
+            // 14. 엑셀 다운로드 버튼
+            { selector: '#excelDownloadBtn', title: '엑셀 다운로드', position: { top: '-5px', right: '-10px' }, function: '주소록 엑셀 내보내기' },
+            // 15. 주소 테이블
+            { selector: '#addressTable', title: '주소 테이블', position: { top: '10px', left: '10px' }, function: '주소 목록 표시', behavior: ['체크박스 다중 선택', '인라인 편집'] },
+            // 16. 전체 선택 체크박스
+            { selector: '#selectAllAddresses', title: '전체 선택', position: { top: '-5px', left: '-10px' }, function: '모든 주소 선택/해제' },
+            // 17. 선택 삭제 버튼
+            { selector: '#deleteSelectedBtn', title: '선택 삭제', position: { top: '-5px', left: '-10px' }, function: '선택한 주소 삭제', api: 'DELETE /api/addressbook' },
+            // 18. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

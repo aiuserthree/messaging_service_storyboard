@@ -302,7 +302,7 @@
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="support-tabs">
+            <div class="support-tabs" id="supportTabs">
                 <a href="support-notice.html" class="support-tab">공지사항</a>
                 <a href="support-event.html" class="support-tab">이벤트</a>
                 <a href="support-faq.html" class="support-tab">FAQ</a>
@@ -310,14 +310,14 @@
             </div>
 
             <!-- 문의 탭 -->
-            <div class="inquiry-tabs">
+            <div class="inquiry-tabs" id="inquiryTabs">
                 <button class="inquiry-tab active" onclick="switchInquiryTab('form')">1:1 문의하기</button>
                 <button class="inquiry-tab" onclick="switchInquiryTab('history')">1:1 문의내역</button>
             </div>
 
             <!-- 1:1 문의하기 -->
             <div id="inquiryForm" class="inquiry-tab-content">
-                <div class="inquiry-form">
+                <div class="inquiry-form" id="inquiryFormWrapper">
                     <form id="inquiryFormElement" onsubmit="handleSubmit(event)">
                         <div class="form-row">
                             <div class="form-group">
@@ -554,6 +554,49 @@
     <script src="js/footer.js"></script>
     <script>
         document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 탭 메뉴
+            { selector: '#supportTabs', title: '탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '고객센터 페이지 이동' },
+            // 2. 공지사항 탭
+            { selector: '#supportTabs .support-tab:nth-child(1)', title: '공지사항 탭', position: { top: '-5px', left: '-10px' }, function: '공지사항 페이지' },
+            // 3. 이벤트 탭
+            { selector: '#supportTabs .support-tab:nth-child(2)', title: '이벤트 탭', position: { top: '-5px', left: '-10px' }, function: '이벤트 페이지' },
+            // 4. FAQ 탭
+            { selector: '#supportTabs .support-tab:nth-child(3)', title: 'FAQ 탭', position: { top: '-5px', left: '-10px' }, function: 'FAQ 페이지' },
+            // 5. 1:1 문의 탭
+            { selector: '#supportTabs .support-tab:nth-child(4)', title: '1:1 문의 탭', position: { top: '-5px', right: '-10px' }, function: '1:1 문의 페이지 (현재)' },
+            // 6. 문의 탭 메뉴
+            { selector: '#inquiryTabs', title: '문의 상태 탭', position: { top: '-5px', left: '-10px' }, function: '문의하기/문의내역 전환' },
+            // 7. 문의하기 탭
+            { selector: '#inquiryTabs .tab-item:first-child', title: '문의하기 탭', position: { top: '-5px', left: '-10px' }, function: '새 문의 작성' },
+            // 8. 문의내역 탭
+            { selector: '#inquiryTabs .tab-item:nth-child(2)', title: '문의내역 탭', position: { top: '-5px', right: '-10px' }, function: '이전 문의 조회' },
+            // 9. 문의 폼
+            { selector: '#inquiryFormWrapper', title: '1:1 문의 폼', position: { top: '10px', left: '10px' }, function: '문의 작성 양식' },
+            // 10. 아이디 필드
+            { selector: '#inquiryUserId', title: '아이디', position: { top: '-5px', right: '-10px' }, function: '로그인 아이디 (읽기전용)' },
+            // 11. 이메일 필드
+            { selector: '#inquiryEmail', title: '이메일', position: { top: '-5px', right: '-10px' }, function: '답변 받을 이메일', tags: [{ text: '필수', type: 'required' }] },
+            // 12. 문의유형 선택
+            { selector: '#inquiryType', title: '문의유형', position: { top: '-5px', left: '-10px' }, function: '문의 카테고리 선택', tags: [{ text: '필수', type: 'required' }] },
+            // 13. 제목 입력
+            { selector: '#inquiryTitle', title: '제목', position: { top: '-5px', right: '-10px' }, function: '문의 제목 입력', tags: [{ text: '필수', type: 'required' }] },
+            // 14. 내용 입력
+            { selector: '#inquiryContent', title: '내용', position: { top: '5px', right: '5px' }, function: '문의 내용 작성', tags: [{ text: '필수', type: 'required' }] },
+            // 15. 파일 첨부
+            { selector: '#inquiryFile', title: '파일 첨부', position: { top: '-5px', left: '-10px' }, function: '첨부 파일 업로드 (5MB 이하)' },
+            // 16. 개인정보 동의
+            { selector: '#privacyAgree', title: '개인정보 동의', position: { top: '-5px', left: '-10px' }, function: '개인정보 수집 동의', tags: [{ text: '필수', type: 'required' }] },
+            // 17. 등록 버튼
+            { selector: '#submitInquiryBtn', title: '등록 버튼', position: { top: '-5px', right: '-10px' }, function: '문의 등록', api: 'POST /api/inquiries' },
+            // 18. 문의 내역 테이블
+            { selector: '#inquiryHistory', title: '문의 내역', position: { top: '10px', left: '10px' }, function: '이전 문의 목록', api: 'GET /api/inquiries' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

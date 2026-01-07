@@ -1813,22 +1813,22 @@ body {
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
             <!-- 환영 헤더 -->
-            <div class="welcome-header">
-                <div class="welcome-message">
+            <div class="welcome-header" id="welcomeHeader">
+                <div class="welcome-message" id="welcomeMessage">
                     안녕하세요, 조준형님! 메시지 발송을 시작해 보세요
                 </div>
-                <div class="quick-actions-header">
-                    <a href="message-send-general.html" class="quick-action-link">
+                <div class="quick-actions-header" id="quickActions">
+                    <a href="message-send-general.html" class="quick-action-link" id="quickSms">
                         <span>📧</span>
                         <span>문자</span>
                         <span>↗</span>
                     </a>
-                    <a href="kakao-send-alimtalk.html" class="quick-action-link">
+                    <a href="kakao-send-alimtalk.html" class="quick-action-link" id="quickAlimtalk">
                         <span>💬</span>
                         <span>알림톡</span>
                         <span>↗</span>
                     </a>
-                    <a href="kakao-send-brandtalk.html" class="quick-action-link">
+                    <a href="kakao-send-brandtalk.html" class="quick-action-link" id="quickBrandtalk">
                         <span>🏷️</span>
                         <span>브랜드 메시지</span>
                         <span>↗</span>
@@ -1837,7 +1837,7 @@ body {
             </div>
 
             <!-- 최근 30일 발송 성공률 카드 -->
-            <div class="success-rate-card">
+            <div class="success-rate-card" id="successRateCard">
                 <div class="card-header-info">
                     <span class="card-title-text">최근 30일 발송 성공률</span>
                     <span class="update-time" id="updateTime">25-12-08 15:23:10 업데이트</span>
@@ -1924,7 +1924,7 @@ body {
                                 <span class="stat-number" id="sendingCount">0</span>
                             </div>
                         </div>
-                        <a href="send-result.html" class="view-list-btn">
+                        <a href="send-result.html" class="view-list-btn" id="viewSendListBtn">
                             발송 목록 보기
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
@@ -1937,7 +1937,7 @@ body {
             <!-- 나의 사용 통계 & 상담 -->
             <div class="dashboard-grid-7-3">
                 <!-- 나의 사용 통계 -->
-                <div class="my-usage-stats-card">
+                <div class="my-usage-stats-card" id="myUsageStatsCard">
                     <div class="card-header">
                         <h3 class="card-title">나의 사용 통계</h3>
                         <div class="card-update-time" id="usageUpdateTime">25-12-08 15:42:39 업데이트</div>
@@ -1963,7 +1963,7 @@ body {
                 </div>
 
                 <!-- 상담 카드 -->
-                <div class="consultation-card">
+                <div class="consultation-card" id="consultationCard">
                     <div class="consultation-title-section">
                         <div class="consultation-title-line1">더 할인 받으려면?</div>
                         <div class="consultation-title-line2">대량 발송 상담 받아보세요</div>
@@ -1976,14 +1976,14 @@ body {
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="consultation-btn" onclick="openModal('consultationModal'); return false;">상담 신청서 작성하기</a>
+                    <a href="#" class="consultation-btn" id="consultationBtn" onclick="openModal('consultationModal'); return false;">상담 신청서 작성하기</a>
                 </div>
             </div>
 
             <!-- 마케팅 인사이트 & 공지사항 -->
             <div class="dashboard-grid" style="align-items: stretch;">
                 <!-- 마케팅 인사이트 롤링 배너 -->
-                <div class="banner-carousel">
+                <div class="banner-carousel" id="bannerCarousel">
                     <div class="banner-slides">
                         <!-- 배너 1: 사용자 가이드 -->
                         <div class="banner-slide active">
@@ -2027,10 +2027,10 @@ body {
                 </div>
 
                 <!-- 공지사항 카드 -->
-                <div class="notice-card">
+                <div class="notice-card" id="noticeCard">
                     <div class="card-header">
                         <h3 class="card-title">공지사항</h3>
-                        <a href="#" class="more-link">더보기 ></a>
+                        <a href="support-notice.html" class="more-link" id="noticeMoreLink">더보기 ></a>
                     </div>
                     <ul class="notice-list">
                         <li class="notice-item">
@@ -2058,7 +2058,7 @@ body {
             <!-- 포인트 & 최근 메시지 -->
             <div class="dashboard-grid-3-7">
                 <!-- 잔여 포인트 -->
-                <div class="points-card">
+                <div class="points-card" id="pointsCard">
                     <div class="balance-header">
                         <div class="balance-title">잔액</div>
                     </div>
@@ -2086,11 +2086,11 @@ body {
                             </div>
                         </div>
                     </div>
-                    <a href="payment-charge.html" class="points-btn-large">충전하기</a>
+                    <a href="payment-charge.html" class="points-btn-large" id="chargeBtn">충전하기</a>
                 </div>
 
                 <!-- 최근 30일 발송한 메시지 -->
-                <div class="message-stats-card">
+                <div class="message-stats-card" id="messageStatsCard">
                     <div class="card-header">
                         <h3 class="card-title">최근 30일 발송한 메시지</h3>
                         <div class="card-update-time">25-12-08 09:37:47 업데이트</div>
@@ -2465,6 +2465,149 @@ body {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        window.initSpecOverlay([
+            {
+                selector: '#welcomeHeader',
+                title: '환영 헤더',
+                description: '로그인한 사용자 환영 메시지 및 빠른 액션 영역',
+                function: '사용자 인사 및 주요 기능 바로가기 제공',
+                behavior: ['사용자 이름 동적 표시', '빠른 발송 메뉴 클릭 시 해당 페이지 이동'],
+                api: 'GET /users/me',
+                position: { top: '10px', left: '10px' }
+            },
+            {
+                selector: '#quickSms',
+                title: '문자 발송 바로가기',
+                description: '문자 발송 페이지 빠른 이동 버튼',
+                function: 'SMS/LMS/MMS 발송 페이지로 이동',
+                behavior: ['클릭 시 message-send-general.html 이동'],
+                position: { top: '-10px', left: '-15px' }
+            },
+            {
+                selector: '#quickAlimtalk',
+                title: '알림톡 발송 바로가기',
+                description: '카카오 알림톡 발송 페이지 빠른 이동 버튼',
+                function: '알림톡 발송 페이지로 이동',
+                behavior: ['클릭 시 kakao-send-alimtalk.html 이동'],
+                position: { top: '-10px', left: '-15px' }
+            },
+            {
+                selector: '#quickBrandtalk',
+                title: '브랜드 메시지 바로가기',
+                description: '카카오 브랜드 메시지 발송 페이지 빠른 이동 버튼',
+                function: '브랜드 메시지 발송 페이지로 이동',
+                behavior: ['클릭 시 kakao-send-brandtalk.html 이동'],
+                position: { top: '-10px', left: '-15px' }
+            },
+            {
+                selector: '#successRateCard',
+                title: '발송 성공률 카드',
+                description: '최근 30일 발송 성공률 게이지 및 통계',
+                function: '발송 현황 시각화 및 요약 정보 제공',
+                behavior: ['페이지 로드 시 게이지 애니메이션', '실시간 통계 업데이트 시간 표시', '전체 발송/성공/실패/대기/발송중 건수 표시'],
+                api: 'GET /statistics/send-rate?days=30',
+                position: { top: '50px', left: '20px' }
+            },
+            {
+                selector: '#viewSendListBtn',
+                title: '발송 목록 보기',
+                description: '발송 결과 상세 목록 페이지 이동 버튼',
+                function: '전체 발송 이력 확인 페이지로 이동',
+                behavior: ['클릭 시 send-result.html 이동'],
+                position: { top: '-10px', left: '-15px' }
+            },
+            {
+                selector: '#myUsageStatsCard',
+                title: '나의 사용 통계',
+                description: '사용자 개인 발송 통계 카드',
+                function: '개인 발송 현황 요약 정보 제공',
+                behavior: ['누적 발송 요청 수, SMS 발송 가능 수, 발송 주기, 관리 고객 수 표시', '각 카드 클릭 시 관련 페이지 이동'],
+                api: 'GET /users/me/statistics',
+                position: { top: '10px', left: '10px' }
+            },
+            {
+                selector: '#consultationCard',
+                title: '상담 안내 카드',
+                description: '대량 발송 상담 유도 카드',
+                function: '대량 발송 고객 전환 유도',
+                behavior: ['상담 신청 버튼 클릭 시 모달 표시'],
+                position: { top: '10px', left: '10px' }
+            },
+            {
+                selector: '#consultationBtn',
+                title: '상담 신청 버튼',
+                description: '상담 신청서 모달 호출 버튼',
+                function: '대량 발송 견적 상담 신청',
+                behavior: ['클릭 시 상담 신청서 모달 표시', '폼 제출 시 상담 요청 접수'],
+                api: 'POST /consultation/request',
+                position: { top: '-10px', left: '-15px' }
+            },
+            {
+                selector: '#bannerCarousel',
+                title: '마케팅 배너',
+                description: '이벤트 및 가이드 안내 롤링 배너',
+                function: '프로모션 및 사용자 가이드 안내',
+                behavior: ['5초 간격 자동 롤링', '좌우 버튼으로 수동 전환', '마우스 오버 시 자동 롤링 정지'],
+                position: { top: '20px', left: '20px' }
+            },
+            {
+                selector: '#noticeCard',
+                title: '공지사항 카드',
+                description: '최근 공지사항 목록',
+                function: '서비스 공지사항 빠른 확인',
+                behavior: ['최신 3개 공지 표시', '클릭 시 상세 페이지 이동', '더보기 클릭 시 전체 목록 이동'],
+                api: 'GET /notices?limit=3',
+                position: { top: '10px', left: '10px' }
+            },
+            {
+                selector: '#noticeMoreLink',
+                title: '더보기 링크',
+                description: '공지사항 전체 목록 페이지 이동',
+                function: '전체 공지사항 확인',
+                behavior: ['클릭 시 support-notice.html 이동'],
+                position: { top: '-10px', left: '-15px' }
+            },
+            {
+                selector: '#pointsCard',
+                title: '잔액 카드',
+                description: '포인트 및 마일리지 잔액 표시',
+                function: '현재 보유 포인트/마일리지 확인',
+                behavior: ['포인트(P), 마일리지(M) 별도 표시', '충전 버튼으로 충전 페이지 이동'],
+                api: 'GET /users/me/balance',
+                position: { top: '10px', left: '10px' }
+            },
+            {
+                selector: '#chargeBtn',
+                title: '충전하기 버튼',
+                description: '포인트 충전 페이지 이동 버튼',
+                function: '포인트 충전 페이지로 이동',
+                behavior: ['클릭 시 payment-charge.html 이동'],
+                position: { top: '-10px', left: '-15px' }
+            },
+            {
+                selector: '#messageStatsCard',
+                title: '메시지 통계 카드',
+                description: '최근 30일 메시지 유형별 발송 통계',
+                function: '메시지 유형별 발송 비율 시각화',
+                behavior: ['SMS, LMS, MMS, 알림톡, 브랜드 메시지 비율 표시', '프로그레스 바로 시각화'],
+                api: 'GET /statistics/messages?days=30',
+                position: { top: '10px', left: '10px' }
+            },
+            {
+                selector: '#consultationModal',
+                title: '상담 신청서 모달',
+                description: '대량 발송 상담 신청 폼',
+                function: '고객 정보 입력 및 상담 요청',
+                behavior: ['회사명, 담당자명, 연락처, 이메일 필수 입력', '메시지 유형 복수 선택 가능', '예상 발송량 선택', 'ESC 키로 닫기 가능'],
+                api: 'POST /consultation/request',
+                position: { top: '20px', left: '20px' }
+            }
+        ]);
     </script>
 </body>
 </html>

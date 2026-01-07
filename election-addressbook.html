@@ -1058,13 +1058,13 @@ body {
 
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <h2>선거문자</h2>
                 <p class="page-description">선거문자 발송을 위한 주소록을 그룹별로 관리합니다</p>
             </div>
 
             <!-- 탭 메뉴 -->
-            <div class="tabs">
+            <div class="tabs" id="tabMenu">
                 <div class="tab-list">
                     <button class="tab-item" onclick="window.location.href='message-send-election.html'">선거문자 발송</button>
                     <button class="tab-item active" onclick="window.location.href='election-addressbook.html'">선거문자 주소록</button>
@@ -1074,7 +1074,7 @@ body {
             </div>
 
             <!-- 통계 정보 -->
-            <div class="dashboard-grid" style="margin-bottom: 24px;">
+            <div class="dashboard-grid" style="margin-bottom: 24px;" id="statsSection">
                 <div class="stat-card">
                     <div class="stat-icon blue">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -1111,8 +1111,8 @@ body {
             </div>
 
             <!-- 주소록 목록 -->
-            <div class="card">
-                    <div class="addressbook-actions">
+            <div class="card" id="addressListSection">
+                    <div class="addressbook-actions" id="addressActions">
                         <div class="search-filter">
                             <input type="text" class="form-input" placeholder="이름 또는 전화번호로 검색" style="width: 300px;">
                             <select class="form-select" style="width: 150px;">
@@ -2902,6 +2902,48 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '선거문자 주소록 페이지 제목' },
+            // 2. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '선거문자 탭 전환' },
+            // 3. 선거문자 발송 탭
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '선거문자 발송 탭', position: { top: '-5px', left: '-10px' }, function: '선거문자 발송 페이지' },
+            // 4. 주소록 탭
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '주소록 탭', position: { top: '-5px', left: '-10px' }, function: '주소록 관리 (현재)' },
+            // 5. 수신거부 탭
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '수신거부 탭', position: { top: '-5px', left: '-10px' }, function: '수신거부 관리' },
+            // 6. 템플릿 탭
+            { selector: '#tabMenu .tab-item:nth-child(4)', title: '템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '선거문자 템플릿' },
+            // 7. 통계 섹션
+            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, function: '주소록 현황 통계' },
+            // 8. 주소록 관리 버튼 영역
+            { selector: '#addressActions', title: '관리 버튼', position: { top: '10px', left: '-15px' }, function: '주소록 검색/관리' },
+            // 9. 검색 입력
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '이름/전화번호 검색' },
+            // 10. 검색 버튼
+            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, function: '검색 실행', api: 'GET /api/election/addressbook' },
+            // 11. 주소 추가 버튼
+            { selector: '#addAddressBtn', title: '주소 추가', position: { top: '-5px', left: '-10px' }, function: '새 주소 등록' },
+            // 12. 엑셀 업로드
+            { selector: '#excelUploadBtn', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, function: '엑셀로 대량 등록' },
+            // 13. 문자 보내기
+            { selector: '#sendMessageBtn', title: '문자 보내기', position: { top: '-5px', right: '-10px' }, function: '선택자에게 문자 발송' },
+            // 14. 주소록 테이블
+            { selector: '#addressListSection .table', title: '주소록 테이블', position: { top: '10px', left: '10px' }, function: '주소 목록 표시', behavior: ['이름', '전화번호', '등록일', '상태'] },
+            // 15. 전체 선택
+            { selector: '#selectAll', title: '전체 선택', position: { top: '-5px', left: '-10px' }, function: '모든 주소 선택' },
+            // 16. 삭제 버튼
+            { selector: '.btn-delete', title: '삭제', position: { top: '-5px', right: '-10px' }, function: '주소 삭제' },
+            // 17. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>
