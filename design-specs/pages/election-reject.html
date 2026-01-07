@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>선거 수신거부 - 톡벨 화면설계서</title>
+    <link rel="stylesheet" href="../assets/common.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="../index.html" class="back-btn">← 목록으로</a>
+                <div class="page-info">
+                    <span class="page-id-badge">FE-P003-05</span>
+                    <span class="page-title-header">선거 수신거부</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-secondary" onclick="window.open('../../election-reject.html', '_blank')">🔗 실제 페이지</button>
+                <button class="btn btn-secondary" onclick="reloadIframe()">🔄 새로고침</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="mockup-panel">
+            <div class="mockup-canvas">
+                <div class="mockup-frame wide">
+                    <div class="browser-chrome">
+                        <div class="browser-dots">
+                            <div class="browser-dot red"></div>
+                            <div class="browser-dot yellow"></div>
+                            <div class="browser-dot green"></div>
+                        </div>
+                        <div class="browser-url">https://tokbell.co.kr/election-reject.html</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="iframe-container" style="height: 700px;">
+                            <iframe id="pageIframe" class="page-iframe" src="../../election-reject.html" style="height: 700px;" onload="hideLoading()"></iframe>
+                            <div class="iframe-loading" id="iframeLoading">
+                                <div class="iframe-loading-spinner"></div>
+                                <div>로딩 중...</div>
+                            </div>
+                            <div class="marker-overlay" id="markerOverlay">
+                                <div class="marker" data-id="1" style="top: 120px; right: 20px;">1</div>
+                                <div class="marker" data-id="2" style="top: 350px; right: 20px;">2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="description-panel">
+            <div class="desc-header">
+                <div class="desc-title">화면 설명서</div>
+                <div class="desc-subtitle">election-reject.html · 선거 수신거부 페이지</div>
+            </div>
+            <div class="desc-content">
+                <div class="desc-item expanded" data-id="1">
+                    <div class="desc-item-header">
+                        <div class="desc-number">1</div>
+                        <div class="desc-item-title">수신거부 등록</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">선거문자 수신거부 번호를 등록합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>방법</th><th>설명</th></tr>
+                            <tr><td>직접등록</td><td>개별 번호 등록</td></tr>
+                            <tr><td>엑셀업로드</td><td>대량 등록</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="2">
+                    <div class="desc-item-header">
+                        <div class="desc-number">2</div>
+                        <div class="desc-item-title">수신거부 목록</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">등록된 선거문자 수신거부 목록입니다.</div>
+                        <table class="desc-table">
+                            <tr><th>컬럼</th><th>설명</th></tr>
+                            <tr><td>전화번호</td><td>수신거부 번호</td></tr>
+                            <tr><td>등록일</td><td>등록 날짜</td></tr>
+                            <tr><td>관리</td><td>삭제 버튼</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/common.js"></script>
+    <script>
+        function hideLoading() {
+            document.getElementById('iframeLoading').style.display = 'none';
+        }
+        
+        function reloadIframe() {
+            const iframe = document.getElementById('pageIframe');
+            document.getElementById('iframeLoading').style.display = 'block';
+            iframe.src = iframe.src;
+        }
+    </script>
+</body>
+</html>

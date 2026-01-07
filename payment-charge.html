@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>충전하기 - 메시징 서비스</title>
+    <script src="js/header.js"></script>
+    <style>/* 공통 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --purple-color: #7c5cdb;
+    --purple-light: #a78bfa;
+    --purple-bg: linear-gradient(135deg, #e8e4f8 0%, #dcd6f0 50%, #d0c8eb 100%);
+    --bg-color: #f8fafc;
+    --surface-color: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 20px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-color);
+}
+
+/* 버튼 스타일 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    gap: 8px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background-color: var(--bg-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn-lg {
+    padding: 14px 28px;
+    font-size: 16px;
+}
+
+/* 입력 필드 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: var(--danger-color);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-error {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--danger-color);
+}
+
+.form-help {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 카드 */
+.card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2xl);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+}
+
+.card-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* 모달 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background-color: var(--surface-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* 배지 */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+}
+
+.badge-primary {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.badge-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.badge-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+.badge-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+/* 탭 */
+.tabs {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 24px;
+}
+
+.tab-list {
+    display: flex;
+    gap: 8px;
+}
+
+.tab-item {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.tab-item:hover {
+    color: var(--text-primary);
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 테이블 */
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table th {
+    background-color: var(--bg-color);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.table tbody tr:hover {
+    background-color: var(--bg-color);
+}
+
+/* 알림 */
+.alert {
+    padding: 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+}
+
+.alert-info {
+    background-color: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    color: var(--primary-color);
+}
+
+.alert-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    color: var(--warning-color);
+}
+
+.alert-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--danger-color);
+}
+
+.alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--success-color);
+}
+
+/* 유틸리티 */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+
+.flex {
+    display: flex;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gap-2 {
+    gap: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 검색/필터 섹션 */
+.search-filter-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-filter-section > div {
+    display: flex;
+    align-items: center;
+}
+
+/* 기간 선택 영역 */
+.date-range-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.date-range-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.date-input-wrapper {
+    min-width: 140px;
+    max-width: 160px;
+    flex-shrink: 0;
+}
+
+.date-input-wrapper input[type="date"] {
+    width: 100%;
+    min-width: 140px;
+}
+
+/* 필터 섹션 */
+.filter-section {
+    margin-bottom: 24px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1;
+}
+
+.filter-group .form-label {
+    margin-bottom: 8px;
+}
+
+.filter-group .flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group .flex input[type="date"] {
+    flex: 1;
+    min-width: 140px;
+}
+
+.filter-group .flex span {
+    flex-shrink: 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    .search-filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-filter-section > div {
+        width: 100%;
+    }
+    
+    .date-input-wrapper {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-group .flex {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group .flex input[type="date"] {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .date-range-separator {
+        display: none;
+    }
+}
+
+
+/* 레이아웃 스타일 */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 */
+.header {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.logo h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.logo a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.logo a:hover h1 {
+    opacity: 0.8;
+}
+
+.main-nav {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+    position: relative;
+}
+
+.nav-item {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-item:hover {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.nav-item.has-dropdown {
+    position: relative;
+}
+
+.nav-item.has-dropdown .nav-link::after {
+    content: '▼';
+    font-size: 10px;
+    margin-left: 4px;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.nav-item.has-dropdown.open .nav-link::after {
+    transform: rotate(180deg);
+}
+
+.nav-item.has-dropdown .nav-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+/* 드롭다운 메뉴 */
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.nav-item.open .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-dropdown-item {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.nav-dropdown-item:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.nav-dropdown-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.balance-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: var(--bg-color);
+    border-radius: var(--radius-md);
+}
+
+.balance-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.balance-amount {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 메인 컨텐츠 */
+.main-content {
+    flex: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.page-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* 대시보드 */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2xl);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-card);
+    transition: all 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.stat-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.stat-icon.blue {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+}
+
+.stat-icon.blue svg {
+    color: #2563eb;
+}
+
+.stat-icon.green {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+}
+
+.stat-icon.green svg {
+    color: #10b981;
+}
+
+.stat-icon.orange {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.stat-icon.orange svg {
+    color: #f59e0b;
+}
+
+.stat-icon.red {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+}
+
+.stat-icon.red svg {
+    color: #ef4444;
+}
+
+.stat-content h3 {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.quick-actions {
+    margin-top: 32px;
+}
+
+.quick-actions h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.action-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.action-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.action-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.action-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.action-card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 2단 레이아웃 */
+.two-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 24px;
+}
+
+@media (max-width: 1024px) {
+    .two-column-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        height: auto;
+        padding: 16px;
+    }
+
+    .main-nav {
+        flex-wrap: wrap;
+        margin: 16px 0;
+        width: 100%;
+    }
+
+    .nav-dropdown {
+        position: static;
+        margin-top: 4px;
+        width: 100%;
+        box-shadow: none;
+        border: none;
+        border-top: 1px solid var(--border-color);
+        border-radius: 0;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        display: none;
+    }
+
+    .nav-item.open .nav-dropdown {
+        display: block;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .main-content {
+        padding: 16px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+    <style>
+        .charge-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 24px;
+        }
+        .amount-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .amount-btn {
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            background: var(--surface-color);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-card);
+        }
+        .amount-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        .amount-btn.selected {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+        .amount-btn-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .amount-btn-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .payment-method {
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-card);
+        }
+        .payment-method:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        .payment-method.selected {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+        }
+        .price-info {
+            background: linear-gradient(135deg, #f8f9fb 0%, #f1f4f9 100%);
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .price-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .price-total {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .fee-guide {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-2xl);
+            padding: 28px;
+            box-shadow: var(--shadow-card);
+        }
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        .fee-table th,
+        .fee-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .fee-table th {
+            background: var(--bg-color);
+            font-weight: 600;
+        }
+        @media (max-width: 1024px) {
+            .charge-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader());
+        </script>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2>결제 관리</h2>
+                <p class="page-description">메시지 발송을 위한 포인트를 충전합니다</p>
+            </div>
+
+            <!-- 탭 메뉴 -->
+            <div class="tabs">
+                <div class="tab-list">
+                    <button class="tab-item active" onclick="window.location.href='payment-charge.html'">충전하기</button>
+                    <button class="tab-item" onclick="window.location.href='payment-history.html'">충전 내역</button>
+                    <button class="tab-item" onclick="window.location.href='payment-tax.html'">세금계산서 발행</button>
+                </div>
+            </div>
+
+            <div class="charge-layout">
+                <!-- 충전 폼 -->
+                <div class="card">
+                    <form id="chargeForm">
+                        <!-- 현재 잔액 -->
+                        <div class="alert alert-info">
+                            <strong>현재 보유 포인트: 1,000,000포인트</strong>
+                        </div>
+
+                        <!-- 충전 포인트 선택 -->
+                        <div class="form-group">
+                            <label class="form-label required">충전 포인트</label>
+                            <div class="amount-buttons">
+                                <div class="amount-btn" onclick="selectAmount(50000)">
+                                    <div class="amount-btn-value">5만</div>
+                                </div>
+                                <div class="amount-btn" onclick="selectAmount(100000)">
+                                    <div class="amount-btn-value">10만</div>
+                                </div>
+                                <div class="amount-btn" onclick="selectAmount(300000)">
+                                    <div class="amount-btn-value">30만</div>
+                                </div>
+                                <div class="amount-btn" onclick="selectAmount(500000)">
+                                    <div class="amount-btn-value">50만</div>
+                                </div>
+                                <div class="amount-btn" onclick="selectAmount(1000000)">
+                                    <div class="amount-btn-value">100만</div>
+                                </div>
+                                <div class="amount-btn" onclick="selectAmount(2000000)">
+                                    <div class="amount-btn-value">200만</div>
+                                </div>
+                                <div class="amount-btn" onclick="selectAmount(3000000)">
+                                    <div class="amount-btn-value">300만</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 결제 수단 선택 -->
+                        <div class="form-group">
+                            <label class="form-label required">결제 수단</label>
+                            <div class="payment-methods">
+                                <div class="payment-method selected" onclick="selectPayment('card')">
+                                    <div class="payment-icon" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                                        </svg>
+                                    </div>
+                                    <div style="font-weight: 600;">신용카드</div>
+                                </div>
+                                <div class="payment-method" onclick="selectPayment('virtual')">
+                                    <div class="payment-icon" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                        </svg>
+                                    </div>
+                                    <div style="font-weight: 600;">가상계좌</div>
+                                </div>
+                                <div class="payment-method" onclick="selectPayment('realtime')">
+                                    <div class="payment-icon" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 12h-8M3 12h8M12 3v18M21 5l-9-2-9 2M21 19l-9 2-9-2"></path>
+                                        </svg>
+                                    </div>
+                                    <div style="font-weight: 600;">실시간 계좌이체</div>
+                                </div>
+                                <div class="payment-method" onclick="selectPayment('transfer')">
+                                    <div class="payment-icon" style="background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        </svg>
+                                    </div>
+                                    <div style="font-weight: 600;">전용계좌</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 전용계좌 발급하기 영역 -->
+                        <div id="dedicatedAccountSection" class="form-group" style="display: none;">
+                            <div class="card" style="background: linear-gradient(135deg, #f8f9fb 0%, #f1f4f9 100%); border: 1px solid var(--border-color); padding: 28px; border-radius: var(--radius-2xl);">
+                                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 20px; color: var(--text-primary);">전용계좌 발급하기</h3>
+                                
+                                <!-- 발급된 계좌 정보 (발급 후 표시) -->
+                                <div id="issuedAccountInfo" style="display: none; margin-bottom: 20px; padding: 16px; background: var(--surface-color); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                        <span style="font-weight: 600; color: var(--text-primary);">발급된 계좌</span>
+                                        <span class="badge badge-success">발급완료</span>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <span style="color: var(--text-secondary); font-size: 13px;">은행</span>
+                                        <div style="font-weight: 600; margin-top: 4px;" id="issuedBankName">-</div>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <span style="color: var(--text-secondary); font-size: 13px;">계좌번호</span>
+                                        <div style="font-weight: 600; margin-top: 4px; font-family: monospace;" id="issuedAccountNumber">-</div>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <span style="color: var(--text-secondary); font-size: 13px;">예금주</span>
+                                        <div style="font-weight: 600; margin-top: 4px;" id="issuedAccountHolder">-</div>
+                                    </div>
+                                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+                                        <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+                                            <div>• 입금 확인 후 자동으로 충전됩니다.</div>
+                                            <div>• 입금자명은 반드시 회원명과 일치해야 합니다.</div>
+                                            <div>• 영업일 기준 1~2시간 이내 충전 처리됩니다.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 계좌 발급 폼 (발급 전 표시) -->
+                                <div id="accountIssueForm">
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label class="form-label required">은행 선택</label>
+                                        <select class="form-select" id="bankSelect" required>
+                                            <option value="">은행을 선택하세요</option>
+                                            <option value="kb">KB국민은행</option>
+                                            <option value="shinhan">신한은행</option>
+                                            <option value="woori">우리은행</option>
+                                            <option value="hana">하나은행</option>
+                                            <option value="nh">NH농협은행</option>
+                                            <option value="ibk">IBK기업은행</option>
+                                            <option value="keb">KEB하나은행</option>
+                                            <option value="citi">한국씨티은행</option>
+                                            <option value="kakao">카카오뱅크</option>
+                                            <option value="kbank">케이뱅크</option>
+                                            <option value="toss">토스뱅크</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" style="width: 100%;" onclick="issueDedicatedAccount()">전용계좌 발급하기</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 결제 금액 정보 -->
+                        <div class="price-info" id="priceInfoSection">
+                            <div class="price-row">
+                                <span>충전 포인트</span>
+                                <span id="chargeAmount">0포인트</span>
+                            </div>
+                            <div class="price-row">
+                                <span>부가세 (10%)</span>
+                                <span id="vatAmount">0원</span>
+                            </div>
+                            <div class="price-row price-total">
+                                <span>총 결제 금액</span>
+                                <span id="totalAmount">0원</span>
+                            </div>
+                        </div>
+
+                        <!-- 충전하기 버튼 -->
+                        <button type="submit" class="btn btn-primary btn-lg" id="chargeButton" style="width: 100%; margin-top: 24px;">충전하기</button>
+                    </form>
+                </div>
+
+                <!-- 요금 안내 -->
+                <div>
+                    <div class="fee-guide">
+                        <h3 class="card-title">요금 안내</h3>
+                        <table class="fee-table">
+                            <thead>
+                                <tr>
+                                    <th>메시지 타입</th>
+                                    <th>단가</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>SMS</td>
+                                    <td>20원</td>
+                                </tr>
+                                <tr>
+                                    <td>LMS</td>
+                                    <td>50원</td>
+                                </tr>
+                                <tr>
+                                    <td>MMS</td>
+                                    <td>200원</td>
+                                </tr>
+                                <tr>
+                                    <td>알림톡</td>
+                                    <td>30원</td>
+                                </tr>
+                                <tr>
+                                    <td>브랜드 메시지</td>
+                                    <td>30원</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 충전 금액 계산기 -->
+                    <div class="fee-guide" style="margin-top: 24px;">
+                        <h3 class="card-title">충전 금액 계산기</h3>
+                        <div class="form-group">
+                            <label class="form-label">SMS 건수</label>
+                            <input type="number" class="form-input" id="calcSMS" value="0" min="0" oninput="calculateCharge()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">LMS 건수</label>
+                            <input type="number" class="form-input" id="calcLMS" value="0" min="0" oninput="calculateCharge()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">MMS 건수</label>
+                            <input type="number" class="form-input" id="calcMMS" value="0" min="0" oninput="calculateCharge()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">알림톡 건수</label>
+                            <input type="number" class="form-input" id="calcAlimtalk" value="0" min="0" oninput="calculateCharge()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">브랜드 메시지 건수</label>
+                            <input type="number" class="form-input" id="calcBrandtalk" value="0" min="0" oninput="calculateCharge()">
+                        </div>
+                        <div class="price-info">
+                            <div class="price-row price-total">
+                                <span>합계</span>
+                                <span id="recommendedAmount">0원</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 견적 문의 모달 -->
+    <div class="modal-overlay" id="estimateModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">견적 문의</h3>
+                <button class="modal-close" onclick="closeModal('estimateModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="estimateForm">
+                    <div class="form-group">
+                        <label class="form-label required">회사명/단체명</label>
+                        <input type="text" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">담당자명</label>
+                        <input type="text" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">연락처</label>
+                        <input type="tel" class="form-input" placeholder="010-1234-5678" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">이메일</label>
+                        <input type="email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">월 예상 발송량</label>
+                        <input type="number" class="form-input" placeholder="건">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">주요 사용 메시지 타입</label>
+                        <div class="flex gap-2" style="flex-wrap: wrap;">
+                            <label style="display: flex; align-items: center; gap: 4px;">
+                                <input type="checkbox" value="SMS"> SMS
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px;">
+                                <input type="checkbox" value="LMS"> LMS
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px;">
+                                <input type="checkbox" value="MMS"> MMS
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px;">
+                                <input type="checkbox" value="알림톡"> 알림톡
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 4px;">
+                                <input type="checkbox" value="브랜드 메시지"> 브랜드 메시지
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">문의 내용</label>
+                        <textarea class="form-textarea" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" required>
+                            <span>개인정보 수집 및 이용에 동의합니다</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('estimateModal')">취소</button>
+                <button class="btn btn-primary" onclick="submitEstimate()">제출하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>// 공통 JavaScript 함수
+
+// 모달 열기/닫기
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex'; // 인라인 스타일 제거 후 다시 설정
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+// ESC 키로 모달 닫기
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+        const activeModal = document.querySelector('.modal-overlay.active');
+        if (activeModal) {
+            const modalId = activeModal.id;
+            if (modalId && typeof closeModal === 'function') {
+                closeModal(modalId);
+            } else {
+                activeModal.classList.remove('active');
+                activeModal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+    }
+});
+
+// 모달 외부 클릭 시 닫기
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
+
+// 탭 전환
+function switchTab(tabId, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // 모든 탭 비활성화
+    container.querySelectorAll('.tab-item').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    container.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // 선택한 탭 활성화
+    const tab = document.querySelector(`[data-tab="${tabId}"]`);
+    const content = document.getElementById(tabId);
+    if (tab) tab.classList.add('active');
+    if (content) content.classList.add('active');
+}
+
+// 전화번호 포맷팅
+function formatPhoneNumber(value) {
+    const numbers = value.replace(/[^\d]/g, '');
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 7) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+}
+
+// 바이트 계산 (한글 3바이트, 영문/숫자 1바이트)
+function calculateByteLength(str) {
+    let byteLength = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charAt(i);
+        if (escape(char).length > 4) {
+            byteLength += 3; // 한글
+        } else {
+            byteLength += 1; // 영문/숫자
+        }
+    }
+    return byteLength;
+}
+
+// 토스트 메시지
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-lg);
+        z-index: 2000;
+        animation: slideIn 0.3s ease;
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// 날짜 포맷팅
+function formatDate(date, format = 'YYYY-MM-DD HH:mm') {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+
+    return format
+        .replace('YYYY', year)
+        .replace('MM', month)
+        .replace('DD', day)
+        .replace('HH', hours)
+        .replace('mm', minutes);
+}
+
+// 숫자 포맷팅 (천단위 콤마)
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// 파일 업로드 미리보기
+function previewFile(input, previewId) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById(previewId);
+        if (preview) {
+            if (file.type.startsWith('image/')) {
+                preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px;">`;
+            } else {
+                preview.textContent = file.name;
+            }
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// 드래그 앤 드롭
+function setupDragAndDrop(dropZone, callback) {
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && callback) {
+            callback(files[0]);
+        }
+    });
+}
+
+// 페이지네이션
+function createPagination(currentPage, totalPages, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let html = '<div class="pagination">';
+    
+    // 이전 버튼
+    if (currentPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">이전</button>`;
+    }
+
+    // 페이지 번호
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    if (startPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) html += '<span class="page-ellipsis">...</span>';
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += '<span class="page-ellipsis">...</span>';
+        html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+    }
+
+    // 다음 버튼
+    if (currentPage < totalPages) {
+        html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">다음</button>`;
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// CSS 애니메이션 추가
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    .drag-over {
+        border-color: var(--primary-color) !important;
+        background-color: rgba(37, 99, 235, 0.05) !important;
+    }
+    .pagination {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 24px;
+    }
+    .page-btn {
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        background-color: var(--surface-color);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .page-btn:hover {
+        background-color: var(--bg-color);
+    }
+    .page-btn.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    .page-ellipsis {
+        padding: 8px 4px;
+    }
+`;
+document.head.appendChild(style);
+
+// 드롭다운 메뉴 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initDropdownMenus();
+});
+
+</script>
+    <script>
+        let selectedAmount = 0;
+        let selectedPayment = 'card';
+
+        function selectAmount(amount) {
+            // 신용카드 선택 시 300만원 선택 불가
+            if (selectedPayment === 'card' && amount === 3000000) {
+                alert('신용카드로 결제 시 충전 금액은 최대 200만원입니다.');
+                return;
+            }
+            
+            selectedAmount = amount;
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            updatePrice();
+        }
+
+        function selectPayment(method) {
+            selectedPayment = method;
+            document.querySelectorAll('.payment-method').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // 전용계좌 선택 시 발급 영역 표시 및 결제 금액 정보, 충전하기 버튼 숨김
+            const dedicatedAccountSection = document.getElementById('dedicatedAccountSection');
+            const priceInfoSection = document.getElementById('priceInfoSection');
+            const chargeButton = document.getElementById('chargeButton');
+            
+            if (method === 'transfer') {
+                // 전용계좌 선택 시
+                if (dedicatedAccountSection) {
+                    dedicatedAccountSection.style.display = 'block';
+                }
+                if (priceInfoSection) {
+                    priceInfoSection.style.display = 'none';
+                }
+                if (chargeButton) {
+                    chargeButton.style.display = 'none';
+                }
+            } else {
+                // 실시간 계좌이체 및 기타 결제 수단
+                if (dedicatedAccountSection) {
+                    dedicatedAccountSection.style.display = 'none';
+                }
+                if (priceInfoSection) {
+                    priceInfoSection.style.display = 'block';
+                }
+                if (chargeButton) {
+                    chargeButton.style.display = 'block';
+                }
+            }
+            
+            // 신용카드로 변경 시 300만원이 선택되어 있으면 해제
+            if (method === 'card' && selectedAmount === 3000000) {
+                alert('신용카드로 결제 시 충전 금액은 최대 200만원입니다.');
+                selectedAmount = 0;
+                document.querySelectorAll('.amount-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                updatePrice();
+            }
+        }
+
+        function issueDedicatedAccount() {
+            const bankSelect = document.getElementById('bankSelect');
+
+            // 입력값 검증
+            if (!bankSelect.value) {
+                showToast('은행을 선택해주세요.', 'warning');
+                return;
+            }
+
+            // 은행명 매핑
+            const bankNames = {
+                'kb': 'KB국민은행',
+                'shinhan': '신한은행',
+                'woori': '우리은행',
+                'hana': '하나은행',
+                'nh': 'NH농협은행',
+                'ibk': 'IBK기업은행',
+                'keb': 'KEB하나은행',
+                'citi': '한국씨티은행',
+                'kakao': '카카오뱅크',
+                'kbank': '케이뱅크',
+                'toss': '토스뱅크'
+            };
+
+            // 발급 처리 (실제로는 API 호출하여 계좌 정보를 받아옴)
+            const bankName = bankNames[bankSelect.value];
+            // 예시 데이터 (실제로는 API 응답에서 받아옴)
+            const accountNum = '123-456-789012';
+            const holderName = '톡벨';
+
+            // 발급된 계좌 정보 표시
+            document.getElementById('issuedBankName').textContent = bankName;
+            document.getElementById('issuedAccountNumber').textContent = accountNum;
+            document.getElementById('issuedAccountHolder').textContent = holderName;
+
+            // 폼 숨기고 발급 정보 표시
+            document.getElementById('accountIssueForm').style.display = 'none';
+            document.getElementById('issuedAccountInfo').style.display = 'block';
+
+            showToast('전용계좌가 발급되었습니다.', 'success');
+        }
+
+
+        function updatePrice() {
+            const chargeAmount = selectedAmount;
+            const vatAmount = Math.floor(chargeAmount * 0.1);
+            const totalAmount = chargeAmount + vatAmount;
+
+            document.getElementById('chargeAmount').textContent = formatNumber(selectedAmount) + '포인트';
+            document.getElementById('vatAmount').textContent = formatNumber(vatAmount) + '원';
+            document.getElementById('totalAmount').textContent = formatNumber(totalAmount) + '원';
+        }
+
+        function calculateCharge() {
+            const sms = parseInt(document.getElementById('calcSMS').value) || 0;
+            const lms = parseInt(document.getElementById('calcLMS').value) || 0;
+            const mms = parseInt(document.getElementById('calcMMS').value) || 0;
+            const alimtalk = parseInt(document.getElementById('calcAlimtalk').value) || 0;
+            const brandtalk = parseInt(document.getElementById('calcBrandtalk').value) || 0;
+
+            const total = (sms * 20) + (lms * 50) + (mms * 200) + (alimtalk * 30) + (brandtalk * 30);
+            document.getElementById('recommendedAmount').textContent = formatNumber(total) + '원';
+        }
+
+        function applyRecommended() {
+            const recommended = document.getElementById('recommendedAmount').textContent.replace(/[^0-9]/g, '');
+            selectedAmount = parseInt(recommended);
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.getElementById('customAmount').value = recommended;
+            document.getElementById('customAmount').style.display = 'block';
+            updatePrice();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function submitEstimate() {
+            showToast('견적 문의가 접수되었습니다. 영업일 기준 1~2일 내 답변 드리겠습니다.', 'success');
+            closeModal('estimateModal');
+        }
+
+        // 폼 제출
+        document.getElementById('chargeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (selectedAmount < 10000) {
+                showToast('최소 충전 금액은 10,000원입니다.', 'warning');
+                return;
+            }
+            
+            if (selectedPayment === 'realtime') {
+                // 실시간 계좌이체 - PG사 연동하여 즉시 이체 처리
+                showToast('실시간 계좌이체 결제를 진행합니다.', 'info');
+                // PG사 실시간 계좌이체 모듈 호출
+                // 이체 완료 시 즉시 충전 처리
+            } else {
+                showToast('결제가 완료되었습니다. 디파짓에 충전되었습니다.', 'success');
+                // 실제 결제 처리
+                // 충전 금액을 디파짓에 저장
+            }
+        });
+    </script>
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+</body>
+</html>
+

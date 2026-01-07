@@ -1,0 +1,3707 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일반문자 발송 - 메시징 서비스</title>
+    <script src="js/header.js"></script>
+    <style>/* 공통 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --purple-color: #7c5cdb;
+    --purple-light: #a78bfa;
+    --purple-bg: linear-gradient(135deg, #e8e4f8 0%, #dcd6f0 50%, #d0c8eb 100%);
+    --bg-color: #f8fafc;
+    --surface-color: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 20px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-color);
+}
+
+/* 버튼 스타일 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    gap: 8px;
+}
+
+/* 데이터 테이블 스타일 */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table thead th {
+    background-color: var(--bg-color);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.data-table tbody tr:hover {
+    background-color: var(--bg-color);
+}
+
+.data-table input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.form-select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: white;
+    cursor: pointer;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background-color: var(--bg-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn-lg {
+    padding: 14px 28px;
+    font-size: 16px;
+}
+
+/* 입력 필드 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: var(--danger-color);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-error {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--danger-color);
+}
+
+.form-help {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 카드 */
+.card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2xl);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+}
+
+.card-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* 모달 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+    background-color: var(--surface-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* 배지 */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+}
+
+.badge-primary {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.badge-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.badge-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+.badge-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+/* 탭 */
+.tabs {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 24px;
+}
+
+.tab-list {
+    display: flex;
+    gap: 8px;
+}
+
+.tab-item {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.tab-item:hover {
+    color: var(--text-primary);
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 테이블 */
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table th {
+    background-color: var(--bg-color);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.table tbody tr:hover {
+    background-color: var(--bg-color);
+}
+
+/* 알림 */
+.alert {
+    padding: 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+}
+
+.alert-info {
+    background-color: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    color: var(--primary-color);
+}
+
+.alert-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    color: var(--warning-color);
+}
+
+.alert-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--danger-color);
+}
+
+.alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--success-color);
+}
+
+/* 유틸리티 */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+
+.flex {
+    display: flex;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gap-2 {
+    gap: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 검색/필터 섹션 */
+.search-filter-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-filter-section > div {
+    display: flex;
+    align-items: center;
+}
+
+/* 기간 선택 영역 */
+.date-range-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.date-range-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.date-input-wrapper {
+    min-width: 140px;
+    max-width: 160px;
+    flex-shrink: 0;
+}
+
+.date-input-wrapper input[type="date"] {
+    width: 100%;
+    min-width: 140px;
+}
+
+/* 필터 섹션 */
+.filter-section {
+    margin-bottom: 24px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1;
+}
+
+.filter-group .form-label {
+    margin-bottom: 8px;
+}
+
+.filter-group .flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group .flex input[type="date"] {
+    flex: 1;
+    min-width: 140px;
+}
+
+.filter-group .flex span {
+    flex-shrink: 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    .search-filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-filter-section > div {
+        width: 100%;
+    }
+    
+    .date-input-wrapper {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-group .flex {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group .flex input[type="date"] {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .date-range-separator {
+        display: none;
+    }
+}
+
+
+/* 레이아웃 스타일 */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 */
+.header {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.logo h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.logo a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.logo a:hover h1 {
+    opacity: 0.8;
+}
+
+.main-nav {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+    position: relative;
+}
+
+.nav-item {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-item:hover {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.nav-item.has-dropdown {
+    position: relative;
+}
+
+.nav-item.has-dropdown .nav-link::after {
+    content: '▼';
+    font-size: 10px;
+    margin-left: 4px;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.nav-item.has-dropdown.open .nav-link::after {
+    transform: rotate(180deg);
+}
+
+.nav-item.has-dropdown .nav-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+/* 드롭다운 메뉴 */
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.nav-item.open .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-dropdown-item {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.nav-dropdown-item:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.nav-dropdown-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.balance-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: var(--bg-color);
+    border-radius: var(--radius-md);
+}
+
+.balance-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.balance-amount {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 메인 컨텐츠 */
+.main-content {
+    flex: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.page-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* 대시보드 */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-icon {
+    font-size: 40px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-color);
+    border-radius: 50%;
+}
+
+.stat-content h3 {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.quick-actions {
+    margin-top: 32px;
+}
+
+.quick-actions h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.action-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.action-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.action-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.action-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.action-card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 2단 레이아웃 */
+.two-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 24px;
+}
+
+@media (max-width: 1024px) {
+    .two-column-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        height: auto;
+        padding: 16px;
+    }
+
+    .main-nav {
+        flex-wrap: wrap;
+        margin: 16px 0;
+        width: 100%;
+    }
+
+    .nav-dropdown {
+        position: static;
+        margin-top: 4px;
+        width: 100%;
+        box-shadow: none;
+        border: none;
+        border-top: 1px solid var(--border-color);
+        border-radius: 0;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        display: none;
+    }
+
+    .nav-item.open .nav-dropdown {
+        display: block;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .main-content {
+        padding: 16px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+    <style>
+        .send-form-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 24px;
+        }
+        .preview-section {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+        .preview-phone {
+            background: #f5f5f5;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .preview-phone-header {
+            background: #333;
+            color: white;
+            padding: 12px;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+            font-size: 12px;
+        }
+        .preview-phone-body {
+            background: white;
+            padding: 16px;
+            border-radius: 0 0 12px 12px;
+            min-height: 200px;
+        }
+        .byte-counter {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .byte-counter.warning {
+            color: var(--warning-color);
+        }
+        .byte-counter.danger {
+            color: var(--danger-color);
+        }
+        .recipient-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            margin-top: 8px;
+        }
+        .recipient-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .recipient-item:last-child {
+            border-bottom: none;
+        }
+        .cost-info {
+            background: #f5f5f5;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin-top: 20px;
+        }
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .cost-row:last-child {
+            margin-bottom: 0;
+        }
+        .cost-row span:first-child {
+            color: var(--text-secondary);
+        }
+        .cost-row span:last-child {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .cost-total {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 12px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+        .cost-total span:last-child {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .image-preview {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .image-preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-preview-item .remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .current-balance-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: var(--bg-color);
+            border-radius: var(--radius-md);
+        }
+        .current-balance-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .current-balance-amount {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+        @media (max-width: 1024px) {
+            .send-form-container {
+                grid-template-columns: 1fr;
+            }
+            .preview-section {
+                position: static;
+            }
+        }
+    </style>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader());
+        </script>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <div class="page-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h2>문자 발송</h2>
+                        <p class="page-description">SMS/LMS/MMS 메시지를 발송합니다</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 탭 메뉴 -->
+            <div class="tabs">
+                <div class="tab-list">
+                    <button class="tab-item active" onclick="window.location.href='message-send-general.html'">일반문자 발송</button>
+                    <button class="tab-item" onclick="window.location.href='message-send-ad.html'">광고문자 발송</button>
+                    <button class="tab-item" onclick="window.location.href='template-message.html'">일반문자 템플릿</button>
+                    <button class="tab-item" onclick="window.location.href='template-message-ad.html'">광고문자 템플릿</button>
+                </div>
+            </div>
+
+            <!-- 발신번호 등록 알림 -->
+            <div class="alert alert-warning" id="callerNumberAlert" style="display: none;">
+                <strong>발신번호를 먼저 등록해주세요.</strong> 발신번호 관리 페이지에서 등록할 수 있습니다.
+                <a href="mypage-caller-number.html" class="btn btn-sm btn-primary" style="margin-left: 12px;">발신번호 등록하기</a>
+            </div>
+
+            <div class="send-form-container">
+                <!-- 입력 영역 -->
+                <div class="card">
+                    <form id="sendForm">
+                        <!-- 발신번호 선택 -->
+                        <div class="form-group" id="callerNumberGroup">
+                            <label class="form-label required">발신번호</label>
+                            <select class="form-select" id="callerNumber" required>
+                                <option value="">발신번호를 선택하세요</option>
+                                <option value="010-1234-5678">010-1234-5678</option>
+                                <option value="02-1234-5678">02-1234-5678</option>
+                            </select>
+                        </div>
+                        <div style="margin-top: 16px; margin-bottom: 24px; display: flex; align-items: center; justify-content: flex-end;" id="newCallerNumberBtnWrap">
+                            <a href="mypage-caller-number.html" class="btn btn-primary btn-lg" id="newCallerNumberBtn">새 발신번호 등록하기</a>
+                        </div>
+
+                        <!-- 수신번호 입력 -->
+                        <div class="form-group">
+                            <label class="form-label required">수신번호</label>
+                            <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
+                                <!-- 상단 탭 및 주소록 버튼 영역 -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color);" id="recipientToolbar">
+                                    <div style="display: flex; gap: 8px;" id="excelBtnGroup">
+                                        <input type="file" id="recipientExcelFileInput" class="form-input" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleRecipientExcelFileSelect(event)">
+                                        <button type="button" class="btn btn-primary" id="excelUploadBtn" onclick="document.getElementById('recipientExcelFileInput').click()">엑셀업로드</button>
+                                        <button type="button" class="btn btn-outline" id="excelSampleBtn" onclick="downloadSampleFile()">엑셀샘플 다운로드</button>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;" id="addressBookBtnGroup">
+                                        <button type="button" class="btn btn-outline btn-sm" id="loadAddressBookBtn" onclick="loadRecipientAddressBook()">주소록 불러오기</button>
+                                        <select class="form-select" style="width: 120px;" id="recipientGroupSelect">
+                                            <option value="">그룹선택</option>
+                                            <option value="group1">VIP 고객</option>
+                                            <option value="group2">일반 고객</option>
+                                            <option value="group3">신규 고객</option>
+                                        </select>
+                                        <button type="button" class="btn btn-primary btn-sm" id="addToAddressBookBtn" onclick="addToAddressBook()">주소록에 추가</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- 데이터 테이블 영역 (편집 가능) -->
+                                <div id="recipientUploadContent" style="display: block;">
+                                    <div style="padding: 20px;">
+                                        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
+                                            <div style="overflow-x: auto; overflow-y: auto; max-height: 500px;">
+                                                <table class="data-table" id="recipientDataTable" style="width: 100%; border-collapse: collapse;">
+                                                    <thead style="background-color: var(--bg-color); position: sticky; top: 0; z-index: 10;">
+                                                        <tr>
+                                                            <th style="padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); min-width: 50px;">
+                                                                <input type="checkbox" id="selectAllRecipientCheckbox" onchange="toggleSelectAllRecipients(this.checked)">
+                                                            </th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 80px;">순번</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">이름</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 120px;">전화번호</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수1</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수2</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수3</th>
+                                                        </tr>
+                                                    </thead>
+                                                                    <tbody id="recipientDataTableBody">
+                                                        <!-- 기본 50,000개 행이 자동으로 생성됩니다 -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 하단 버튼 영역 -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-top: 1px solid var(--border-color);" id="recipientActionBar">
+                                        <div style="display: flex; gap: 8px;" id="rowManageBtnGroup">
+                                            <button type="button" class="btn btn-outline btn-sm" id="addRowBtn" onclick="addRecipientRow()">행 추가</button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="deleteSelectedBtn" onclick="deleteSelectedRecipientRows()">선택 행 삭제</button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="deleteAllBtn" onclick="deleteAllRecipientRows()">전체삭제</button>
+                                        </div>
+                                        <div style="display: flex; gap: 8px;" id="cleanupBtnGroup">
+                                            <button type="button" class="btn btn-outline btn-sm" id="removeDuplicateBtn" onclick="removeDuplicateRecipientNumbers()">중복번호 삭제</button>
+                                            <button type="button" class="btn btn-outline btn-sm" id="removeRejectBtn" onclick="removeRejectRecipientNumbers()">수신거부번호 삭제</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="form-help" style="margin-top: 8px;">
+                                총 <strong id="recipientCount">0</strong>명
+                            </div>
+                        </div>
+
+                        <!-- 메시지 타입 -->
+                        <div class="form-group" id="messageTypeGroup">
+                            <label class="form-label required">메시지 타입</label>
+                            <div class="flex gap-2">
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="radio" name="messageType" value="SMS" checked>
+                                    <span>SMS (90바이트 이하)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="radio" name="messageType" value="LMS">
+                                    <span>LMS (2,000바이트 이하)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="radio" name="messageType" value="MMS">
+                                    <span>MMS (이미지 포함)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 제목 (LMS/MMS만) -->
+                        <div class="form-group" id="titleGroup" style="display: none;">
+                            <label class="form-label">제목</label>
+                            <input type="text" class="form-input" id="messageTitle" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40">
+                        </div>
+
+                        <!-- 메시지 내용 -->
+                        <div class="form-group" id="messageContentGroup">
+                            <label class="form-label required">메시지 내용</label>
+                            <div class="flex gap-2 mb-1" id="variableBtnGroup">
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{이름}')">#{이름}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{전화번호}')">#{전화번호}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수1}')">#{변수1}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수2}')">#{변수2}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수3}')">#{변수3}</button>
+                                <button type="button" class="btn btn-sm btn-outline" id="templateSelectBtn" onclick="openModal('templateSelectModal')">템플릿 선택</button>
+                            </div>
+                            <textarea class="form-textarea" id="messageContent" rows="8" placeholder="메시지 내용을 입력하세요" required></textarea>
+                            <div class="byte-counter" id="byteCounter">0 / 90 바이트</div>
+                        </div>
+
+                        <!-- 이미지 첨부 (MMS만) -->
+                        <div class="form-group" id="imageGroup" style="display: none;">
+                            <label class="form-label">이미지 첨부</label>
+                            <input type="file" class="form-input" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                            <button type="button" class="btn btn-outline" id="addImageBtn" onclick="document.getElementById('imageInput').click()">이미지 추가</button>
+                            <div class="form-help">JPG, PNG, GIF (최대 300KB, 최대 3개)</div>
+                            <div class="image-preview" id="imagePreview"></div>
+                        </div>
+
+                        <!-- 발송 시간 -->
+                        <div class="form-group" id="sendTimeGroup">
+                            <label class="form-label required">발송 시간</label>
+                            <div class="flex gap-2">
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="radio" name="sendTime" value="immediate" checked>
+                                    <span>즉시 발송</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="radio" name="sendTime" value="reserved">
+                                    <span>예약 발송</span>
+                                </label>
+                            </div>
+                            <div id="reservedTimeGroup" style="display: none; margin-top: 12px;">
+                                <input type="datetime-local" class="form-input" id="reservedDateTime">
+                            </div>
+                        </div>
+
+                        <!-- 발송 비용 -->
+                        <div class="cost-info">
+                            <div class="cost-row">
+                                <span>수신번호 개수</span>
+                                <span id="costRecipientCount">0명</span>
+                            </div>
+                            <div class="cost-row">
+                                <span>메시지 타입</span>
+                                <span id="costMessageType">SMS</span>
+                            </div>
+                            <div class="cost-row">
+                                <span>단가</span>
+                                <span id="costUnitPrice">20원</span>
+                            </div>
+                            <div class="cost-row cost-total">
+                                <span>예상 발송 마일리지</span>
+                                <span id="costMileage">0</span>
+                            </div>
+                            <div class="cost-row cost-total">
+                                <span>예상 발송 포인트</span>
+                                <span id="costTotal">0</span>
+                            </div>
+                            <div class="cost-row">
+                                <span>발송 후 예상 잔여 포인트</span>
+                                <span id="expectedBalance">1,000,000</span>
+                            </div>
+                        </div>
+
+                        <!-- 액션 버튼 -->
+                        <div class="flex gap-2 mt-3" id="actionBtnGroup">
+                            <button type="button" class="btn btn-outline" id="testSendBtn" onclick="testSend()">테스트 발송</button>
+                            <button type="button" class="btn btn-outline" id="saveTemplateBtn" onclick="saveTemplate()">템플릿으로 저장</button>
+                            <button type="submit" class="btn btn-primary" id="submitSendBtn" style="margin-left: auto;">발송하기</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 미리보기 영역 -->
+                <div class="preview-section" id="previewSection">
+                    <div class="card">
+                        <h3 class="card-title">메시지 미리보기</h3>
+                        <div class="preview-phone" id="previewPhone">
+                            <div class="preview-phone-header">
+                                <div id="previewCallerNumber">010-1234-5678</div>
+                            </div>
+                            <div class="preview-phone-body">
+                                <div id="previewTitle" style="font-weight: 600; margin-bottom: 8px; display: none;"></div>
+                                <div id="previewContent" style="white-space: pre-wrap; line-height: 1.6;"></div>
+                                <div id="previewImages" style="margin-top: 12px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 템플릿 선택 모달 -->
+    <div class="modal-overlay" id="templateSelectModal">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">템플릿 선택</h3>
+                <button class="modal-close" onclick="closeModal('templateSelectModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="템플릿명 또는 내용으로 검색">
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>템플릿명</th>
+                                <th>타입</th>
+                                <th>내용</th>
+                                <th>등록일</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>주문 확인</td>
+                                <td><span class="badge badge-primary">SMS</span></td>
+                                <td>주문이 접수되었습니다...</td>
+                                <td>2024-01-15</td>
+                                <td><button class="btn btn-sm btn-primary" onclick="selectTemplate('주문 확인', '주문이 접수되었습니다. 주문번호: #{주문번호}')">선택</button></td>
+                            </tr>
+                            <tr>
+                                <td>배송 안내</td>
+                                <td><span class="badge badge-primary">LMS</span></td>
+                                <td>배송이 시작되었습니다...</td>
+                                <td>2024-01-14</td>
+                                <td><button class="btn btn-sm btn-primary" onclick="selectTemplate('배송 안내', '배송이 시작되었습니다. 운송장번호: #{운송장번호}')">선택</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('templateSelectModal')">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 템플릿 저장 모달 -->
+    <div class="modal-overlay" id="templateSaveModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">템플릿으로 저장</h3>
+                <button class="modal-close" onclick="closeModal('templateSaveModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label required">템플릿명</label>
+                    <input type="text" class="form-input" id="templateName" placeholder="템플릿명을 입력하세요" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('templateSaveModal')">취소</button>
+                <button class="btn btn-primary" onclick="saveTemplateConfirm()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 엑셀 업로드 모달 -->
+    <div class="modal-overlay" id="excelUploadModal">
+        <div class="modal" style="max-width: 1200px; width: 95%;">
+            <div class="modal-header">
+                <h3 class="modal-title">수신번호 관리</h3>
+                <button class="modal-close" onclick="closeModal('excelUploadModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <!-- 상단 탭 및 주소록 버튼 영역 -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" class="btn btn-primary" id="excelUploadTab" onclick="switchExcelTab('upload')">엑셀업로드</button>
+                        <button type="button" class="btn btn-outline" id="excelSampleTab" onclick="switchExcelTab('sample')">엑셀샘플 다운로드</button>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="loadAddressBook()">주소록 불러오기</button>
+                        <select class="form-select" style="width: 120px;" id="folderSelect">
+                            <option value="">폴더선택</option>
+                        </select>
+                        <select class="form-select" style="width: 120px;" id="groupSelect">
+                            <option value="">그룹선택</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 엑셀 업로드 탭 내용 -->
+                <div id="excelUploadContent" style="display: block;">
+                    <div style="padding: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">파일 선택</label>
+                            <div style="border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 40px; text-align: center;">
+                                <p>파일을 드래그하여 놓거나 클릭하여 선택하세요</p>
+                                <input type="file" id="excelFileInput" class="form-input" accept=".xlsx,.xls,.csv" style="margin-top: 16px;" onchange="handleExcelFileSelect(event)">
+                            </div>
+                            <div class="form-help">지원 형식: .xlsx, .xls, .csv (최대 10MB, 최대 10,000건)</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 데이터 테이블 영역 -->
+                    <div style="padding: 0 20px 20px 20px;">
+                        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
+                            <div style="overflow-x: auto; max-height: 400px;">
+                                <table class="data-table" id="excelDataTable" style="width: 100%; border-collapse: collapse;">
+                                    <thead style="background-color: var(--bg-color); position: sticky; top: 0; z-index: 10;">
+                                        <tr>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">이름</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 120px;">휴대폰</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수1</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수2</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수3</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수4</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수5</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수6</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수7</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수8</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="excelDataTableBody">
+                                        <!-- 빈 행 12개 표시 -->
+                                        <tr><td colspan="10" style="padding: 12px; text-align: center; color: var(--text-muted);">엑셀 파일을 업로드하세요</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 하단 버튼 영역 -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-top: 1px solid var(--border-color);">
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="selectAllRows()">전체선택</button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="copySelectedRows()">복사</button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="deleteAllRows()">전체삭제</button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="deleteSelectedRows()">삭제</button>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="removeDuplicateNumbers()">중복번호 삭제</button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="removeRejectNumbers()">수신거부번호 삭제</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 엑셀 샘플 다운로드 탭 내용 -->
+                <div id="excelSampleContent" style="display: none; padding: 20px;">
+                    <div class="form-group">
+                        <p style="margin-bottom: 16px;">샘플 파일을 다운로드하여 수신번호를 입력하세요.</p>
+                        <button type="button" class="btn btn-primary" onclick="downloadSampleFile()">샘플 파일 다운로드</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('excelUploadModal')">닫기</button>
+                <button class="btn btn-primary" onclick="addExcelRecipients()">추가</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 발송 확인 모달 -->
+    <div class="modal-overlay" id="sendConfirmModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">발송 확인</h3>
+                <button class="modal-close" onclick="closeModal('sendConfirmModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="cost-row">
+                        <span>발신번호</span>
+                        <span id="confirmCallerNumber">-</span>
+                    </div>
+                    <div class="cost-row">
+                        <span>수신번호 개수</span>
+                        <span id="confirmRecipientCount">0명</span>
+                    </div>
+                    <div class="cost-row">
+                        <span>메시지 타입</span>
+                        <span id="confirmMessageType">-</span>
+                    </div>
+                    <div class="cost-row">
+                        <span>발송 시간</span>
+                        <span id="confirmSendTime">즉시 발송</span>
+                    </div>
+                    <div class="cost-row cost-total">
+                        <span>예상 발송 포인트</span>
+                        <span id="confirmCost">0</span>
+                    </div>
+                </div>
+                <div class="alert alert-warning">
+                    발송 후에는 취소할 수 없습니다. 수신번호를 다시 한번 확인해주세요.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('sendConfirmModal')">취소</button>
+                <button class="btn btn-primary" onclick="confirmSend()">발송하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 테스트 발송 모달 -->
+    <div class="modal-overlay" id="addToAddressBookModal">
+        <div class="modal-content" style="max-width: 600px; width: 90%; background-color: var(--surface-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+            <div class="modal-header">
+                <h3>주소록에 추가</h3>
+                <button class="modal-close" onclick="closeModal('addToAddressBookModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label class="form-label">추가 방식 선택</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="addressBookAddType" value="existing" checked onchange="toggleAddressBookAddType()">
+                            <span>기존 그룹에 추가</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="addressBookAddType" value="new" onchange="toggleAddressBookAddType()">
+                            <span>새 그룹 생성</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="existingGroupSection" class="form-group">
+                    <label class="form-label required">그룹 선택</label>
+                    <select class="form-select" id="addressBookGroupSelect">
+                        <option value="">그룹을 선택하세요</option>
+                        <option value="group1">VIP 고객</option>
+                        <option value="group2">일반 고객</option>
+                        <option value="group3">신규 고객</option>
+                    </select>
+                </div>
+                
+                <div id="newGroupSection" class="form-group" style="display: none;">
+                    <label class="form-label required">새 그룹명</label>
+                    <input type="text" class="form-input" id="newGroupNameInput" placeholder="그룹명을 입력하세요">
+                </div>
+                
+                <div style="margin-top: 16px; padding: 12px; background-color: var(--bg-color); border-radius: var(--radius-md);">
+                    <div style="font-size: 13px; color: var(--text-secondary);">
+                        추가할 데이터: <strong id="addressBookDataCount">0</strong>개
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('addToAddressBookModal')">취소</button>
+                <button type="button" class="btn btn-primary" onclick="confirmAddToAddressBook()">추가</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="testSendModal">
+        <div class="modal" style="width: 500px; max-height: 80vh;">
+            <div class="modal-header">
+                <h3 class="modal-title">테스트 발송</h3>
+                <button class="modal-close" onclick="closeModal('testSendModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 테스트 번호 입력 -->
+                <div class="form-group">
+                    <label class="form-label required">테스트 수신번호</label>
+                    <div id="testPhoneNumbers">
+                        <div class="flex gap-2 mb-2">
+                            <input type="text" class="form-input test-phone-input" placeholder="010-1234-5678" value="010-1234-5678">
+                            <button type="button" class="btn btn-sm btn-outline" onclick="removeTestPhone(this)" style="display: none;">삭제</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline" onclick="addTestPhone()" id="addTestPhoneBtn">추가</button>
+                    <div class="form-help">최대 3개 번호까지 입력 가능합니다</div>
+                </div>
+
+                <!-- 테스트 내용 확인 -->
+                <div class="form-group">
+                    <label class="form-label">발송될 메시지 미리보기</label>
+                    <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; background-color: var(--bg-color);">
+                        <div style="margin-bottom: 8px;">
+                            <strong>발신번호:</strong> <span id="testPreviewCallerNumber">-</span>
+                        </div>
+                        <div id="testPreviewTitle" style="margin-bottom: 8px; display: none;">
+                            <strong>제목:</strong> <span id="testPreviewTitleText">-</span>
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>내용:</strong>
+                            <div id="testPreviewContent" style="margin-top: 4px; white-space: pre-wrap; word-break: break-word;">메시지 내용을 입력하세요</div>
+                        </div>
+                        <div id="testPreviewImage" style="margin-top: 8px; display: none;">
+                            <strong>이미지:</strong>
+                            <div id="testPreviewImageList" style="margin-top: 4px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 비용 안내 -->
+                <div class="form-group">
+                    <div class="alert alert-warning" style="margin-bottom: 8px;">
+                        테스트 발송도 포인트가 차감됩니다
+                    </div>
+                    <div class="cost-row">
+                        <span>예상 차감 포인트</span>
+                        <span id="testCost">0원</span>
+                    </div>
+                    <div class="cost-row">
+                        <span>현재 잔액</span>
+                        <span id="testBalance">1,000,000원</span>
+                    </div>
+                </div>
+
+                <!-- 발송 완료/실패 메시지 -->
+                <div id="testSendResult" style="display: none;">
+                    <div class="alert" id="testSendResultAlert" style="margin-top: 16px;"></div>
+                    <div id="testSendTime" style="text-align: center; margin-top: 8px; color: var(--text-secondary); font-size: 12px;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('testSendModal')" id="testSendCancelBtn">취소</button>
+                <button class="btn btn-primary" onclick="confirmTestSend()" id="testSendSubmitBtn">테스트 발송</button>
+            </div>
+        </div>
+    </div>
+
+    <script>// 공통 JavaScript 함수
+
+// 모달 열기/닫기
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex'; // 인라인 스타일 제거 후 다시 설정
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+// ESC 키로 모달 닫기
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+        const activeModal = document.querySelector('.modal-overlay.active');
+        if (activeModal) {
+            const modalId = activeModal.id;
+            if (modalId && typeof closeModal === 'function') {
+                closeModal(modalId);
+            } else {
+                activeModal.classList.remove('active');
+                activeModal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+    }
+});
+
+// 모달 외부 클릭 시 닫기
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
+
+// 탭 전환
+function switchTab(tabId, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // 모든 탭 비활성화
+    container.querySelectorAll('.tab-item').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    container.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // 선택한 탭 활성화
+    const tab = document.querySelector(`[data-tab="${tabId}"]`);
+    const content = document.getElementById(tabId);
+    if (tab) tab.classList.add('active');
+    if (content) content.classList.add('active');
+}
+
+// 전화번호 포맷팅
+function formatPhoneNumber(value) {
+    const numbers = value.replace(/[^\d]/g, '');
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 7) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+}
+
+// 바이트 계산 (한글 3바이트, 영문/숫자 1바이트)
+function calculateByteLength(str) {
+    let byteLength = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charAt(i);
+        if (escape(char).length > 4) {
+            byteLength += 3; // 한글
+        } else {
+            byteLength += 1; // 영문/숫자
+        }
+    }
+    return byteLength;
+}
+
+// 토스트 메시지
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-lg);
+        z-index: 2000;
+        animation: slideIn 0.3s ease;
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// 날짜 포맷팅
+function formatDate(date, format = 'YYYY-MM-DD HH:mm') {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+
+    return format
+        .replace('YYYY', year)
+        .replace('MM', month)
+        .replace('DD', day)
+        .replace('HH', hours)
+        .replace('mm', minutes);
+}
+
+// 숫자 포맷팅 (천단위 콤마)
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// 파일 업로드 미리보기
+function previewFile(input, previewId) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById(previewId);
+        if (preview) {
+            if (file.type.startsWith('image/')) {
+                preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px;">`;
+            } else {
+                preview.textContent = file.name;
+            }
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// 드래그 앤 드롭
+function setupDragAndDrop(dropZone, callback) {
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && callback) {
+            callback(files[0]);
+        }
+    });
+}
+
+// 페이지네이션
+function createPagination(currentPage, totalPages, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let html = '<div class="pagination">';
+    
+    // 이전 버튼
+    if (currentPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">이전</button>`;
+    }
+
+    // 페이지 번호
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    if (startPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) html += '<span class="page-ellipsis">...</span>';
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += '<span class="page-ellipsis">...</span>';
+        html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+    }
+
+    // 다음 버튼
+    if (currentPage < totalPages) {
+        html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">다음</button>`;
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// CSS 애니메이션 추가
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    .drag-over {
+        border-color: var(--primary-color) !important;
+        background-color: rgba(37, 99, 235, 0.05) !important;
+    }
+    .pagination {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 24px;
+    }
+    .page-btn {
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        background-color: var(--surface-color);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .page-btn:hover {
+        background-color: var(--bg-color);
+    }
+    .page-btn.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    .page-ellipsis {
+        padding: 8px 4px;
+    }
+`;
+document.head.appendChild(style);
+
+// 드롭다운 메뉴 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initDropdownMenus();
+});
+
+// initDropdownMenus 함수는 header.js에서 제공됩니다
+
+</script>
+    <script>
+        // 탭 전환
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                switchTab(tabId, 'sendForm');
+            });
+        });
+
+        // 메시지 타입 변경
+        document.querySelectorAll('input[name="messageType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                updateMessageType(this.value);
+            });
+        });
+
+        // 발송 시간 변경
+        document.querySelectorAll('input[name="sendTime"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('reservedTimeGroup').style.display = 
+                    this.value === 'reserved' ? 'block' : 'none';
+            });
+        });
+
+        // 메시지 내용 입력 시 바이트 계산 및 미리보기 업데이트
+        document.getElementById('messageContent').addEventListener('input', function() {
+            updateByteCounter();
+            updatePreview();
+        });
+
+        // 발신번호 변경 시 미리보기 업데이트
+        document.getElementById('callerNumber').addEventListener('change', function() {
+            document.getElementById('previewCallerNumber').textContent = this.value || '010-1234-5678';
+            updateCurrentBalance();
+        });
+
+        function updateCurrentBalance() {
+            const balanceDisplay = document.getElementById('currentBalanceDisplay');
+            const balanceAmount = document.getElementById('currentBalanceAmount');
+            
+            // 전체 잔여 포인트 조회 (예시: 실제로는 API 호출)
+            const balance = '1,000,000'; // 실제로는 API에서 가져와야 함
+            balanceAmount.textContent = balance;
+            balanceDisplay.style.display = 'flex';
+        }
+
+        // 수신번호 입력 처리 (테이블에서 직접 입력하므로 이벤트 리스너 불필요)
+        // recipientNumbers textarea는 더 이상 사용하지 않음
+
+        // 폼 제출
+        document.getElementById('sendForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showSendConfirm();
+        });
+
+        function updateMessageType(type) {
+            const titleGroup = document.getElementById('titleGroup');
+            const imageGroup = document.getElementById('imageGroup');
+            const reservedRadio = document.querySelector('input[name="sendTime"][value="reserved"]');
+            const immediateRadio = document.querySelector('input[name="sendTime"][value="immediate"]');
+            const reservedTimeGroup = document.getElementById('reservedTimeGroup');
+            
+            if (type === 'LMS' || type === 'MMS') {
+                titleGroup.style.display = 'block';
+            } else {
+                titleGroup.style.display = 'none';
+            }
+            
+            // MMS일 때만 예약발송 비활성화
+            if (type === 'MMS') {
+                imageGroup.style.display = 'block';
+                updateAddImageButton();
+                if (reservedRadio) {
+                    reservedRadio.disabled = true;
+                    // 예약발송이 선택되어 있으면 즉시발송으로 변경
+                    if (reservedRadio.checked) {
+                        immediateRadio.checked = true;
+                        reservedTimeGroup.style.display = 'none';
+                    }
+                }
+            } else {
+                imageGroup.style.display = 'none';
+                // SMS, LMS일 때 예약발송 활성화
+                if (reservedRadio) {
+                    reservedRadio.disabled = false;
+                }
+            }
+            
+            updateByteCounter();
+            updateCost();
+        }
+
+        function updateByteCounter() {
+            const content = document.getElementById('messageContent').value;
+            const title = document.getElementById('messageTitle').value;
+            const type = document.querySelector('input[name="messageType"]:checked').value;
+            
+            let totalBytes = calculateByteLength(content);
+            if (title) {
+                totalBytes += calculateByteLength(title);
+            }
+            
+            const maxBytes = type === 'SMS' ? 90 : 2000;
+            const counter = document.getElementById('byteCounter');
+            counter.textContent = `${totalBytes} / ${maxBytes} 바이트`;
+            
+            counter.className = 'byte-counter';
+            if (totalBytes > maxBytes * 0.9) {
+                counter.classList.add('warning');
+            }
+            if (totalBytes > maxBytes) {
+                counter.classList.add('danger');
+            }
+            
+            // SMS 초과 시 LMS로 자동 전환
+            if (type === 'SMS' && totalBytes > 90) {
+                document.querySelector('input[name="messageType"][value="LMS"]').checked = true;
+                updateMessageType('LMS');
+            }
+        }
+
+        function updatePreview() {
+            const title = document.getElementById('messageTitle').value;
+            const content = document.getElementById('messageContent').value;
+            const titleEl = document.getElementById('previewTitle');
+            const contentEl = document.getElementById('previewContent');
+            
+            if (title) {
+                titleEl.textContent = title;
+                titleEl.style.display = 'block';
+            } else {
+                titleEl.style.display = 'none';
+            }
+            
+            contentEl.textContent = content || '메시지 내용을 입력하세요';
+            
+            // 이미지 미리보기 업데이트
+            updatePreviewImages();
+        }
+        
+        function updatePreviewImages() {
+            const previewImages = document.getElementById('previewImages');
+            const imagePreview = document.getElementById('imagePreview');
+            const messageType = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
+            
+            if (!previewImages) return;
+            
+            // MMS가 아니거나 이미지가 없으면 숨김
+            if (messageType !== 'MMS') {
+                previewImages.innerHTML = '';
+                previewImages.style.display = 'none';
+                return;
+            }
+            
+            const images = imagePreview ? imagePreview.querySelectorAll('.image-preview-item img') : [];
+            
+            if (images.length === 0) {
+                previewImages.innerHTML = '';
+                previewImages.style.display = 'none';
+                return;
+            }
+            
+            // 이미지가 있으면 미리보기에 표시
+            previewImages.style.display = 'block';
+            previewImages.innerHTML = '';
+            
+            const imageContainer = document.createElement('div');
+            imageContainer.style.cssText = 'display: flex; gap: 8px; flex-wrap: wrap;';
+            
+            images.forEach((img, index) => {
+                const imgWrapper = document.createElement('div');
+                imgWrapper.style.cssText = 'width: 60px; height: 60px; border-radius: 8px; overflow: hidden;';
+                const imgClone = document.createElement('img');
+                imgClone.src = img.src;
+                imgClone.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+                imgWrapper.appendChild(imgClone);
+                imageContainer.appendChild(imgWrapper);
+            });
+            
+            previewImages.appendChild(imageContainer);
+        }
+
+        function processRecipients(value) {
+            // 테이블 기반으로 변경되었으므로 이 함수는 더 이상 사용하지 않음
+            // 대신 updateRecipientCount()를 사용
+            updateRecipientCount();
+            updateCost();
+        }
+
+        function clearRecipients() {
+            // 테이블 기반 수신번호 삭제
+            deleteAllRecipientRows();
+        }
+
+        function removeRecipient(number) {
+            // 테이블에서 특정 번호 제거
+            const rowIndex = recipientTableData.findIndex(row => row.phone === number);
+            if (rowIndex >= 0) {
+                recipientTableData.splice(rowIndex, 1);
+                updateRecipientTableFromData();
+                updateRecipientCount();
+            }
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const preview = document.getElementById('imagePreview');
+            const currentImages = preview.querySelectorAll('.image-preview-item').length;
+            
+            if (currentImages >= 3) {
+                showToast('최대 3개까지 첨부 가능합니다.', 'warning');
+                event.target.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'image-preview-item';
+                div.innerHTML = `
+                    <img src="${e.target.result}" alt="${file.name}">
+                    <button type="button" class="remove-btn" onclick="removeImage(this)">&times;</button>
+                `;
+                preview.appendChild(div);
+                
+                // 이미지가 3개가 되면 추가 버튼 숨기기
+                updateAddImageButton();
+                
+                // 우측 미리보기에 이미지 실시간 반영
+                updatePreviewImages();
+            };
+            reader.readAsDataURL(file);
+            
+            // 파일 input 초기화
+            event.target.value = '';
+        }
+
+        function removeImage(btn) {
+            btn.parentElement.remove();
+            updateAddImageButton();
+            // 우측 미리보기에서 이미지 실시간 제거
+            updatePreviewImages();
+        }
+
+        function updateAddImageButton() {
+            const preview = document.getElementById('imagePreview');
+            const addBtn = document.getElementById('addImageBtn');
+            const currentImages = preview.querySelectorAll('.image-preview-item').length;
+            
+            if (addBtn) {
+                if (currentImages >= 3) {
+                    addBtn.style.display = 'none';
+                } else {
+                    addBtn.style.display = 'inline-flex';
+                }
+            }
+        }
+
+        function selectTemplate(name, content) {
+            // 템플릿의 변수를 현재 페이지에서 사용하는 변수로 변환
+            let convertedContent = content;
+            
+            // 템플릿에 있는 모든 변수 패턴을 찾아서 변환
+            // 일반적인 변수 패턴들을 현재 페이지 변수로 매핑
+            const variableMap = {
+                '#{주문번호}': '#{변수1}',
+                '#{운송장번호}': '#{변수1}',
+                '#{고객명}': '#{이름}',
+                '#{고객이름}': '#{이름}',
+                '#{이름}': '#{이름}',
+                '#{전화번호}': '#{전화번호}',
+                '#{연락처}': '#{전화번호}',
+                '#{휴대폰}': '#{전화번호}',
+                '#{변수1}': '#{변수1}',
+                '#{변수2}': '#{변수2}',
+                '#{변수3}': '#{변수3}'
+            };
+            
+            // 매핑된 변수 변환
+            for (const [oldVar, newVar] of Object.entries(variableMap)) {
+                convertedContent = convertedContent.replace(new RegExp(oldVar.replace(/[{}]/g, '\\$&'), 'g'), newVar);
+            }
+            
+            // 매핑되지 않은 변수 패턴을 순서대로 변수1, 변수2, 변수3으로 변환
+            const variablePattern = /#\{[^}]+\}/g;
+            const foundVariables = [...new Set(convertedContent.match(variablePattern) || [])];
+            const unmappedVars = foundVariables.filter(v => !Object.values(variableMap).includes(v));
+            
+            unmappedVars.forEach((varName, index) => {
+                if (index < 3) {
+                    const replacement = `#{변수${index + 1}}`;
+                    convertedContent = convertedContent.replace(new RegExp(varName.replace(/[{}]/g, '\\$&'), 'g'), replacement);
+                }
+            });
+            
+            document.getElementById('messageContent').value = convertedContent;
+            updateByteCounter();
+            updatePreview();
+            closeModal('templateSelectModal');
+        }
+
+        function insertVariable(variable) {
+            const textarea = document.getElementById('messageContent');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            textarea.value = text.substring(0, start) + variable + text.substring(end);
+            textarea.focus();
+            textarea.setSelectionRange(start + variable.length, start + variable.length);
+            updateByteCounter();
+            updatePreview();
+        }
+
+        function updateCost() {
+            const count = parseInt(document.getElementById('recipientCount').textContent) || 0;
+            const type = document.querySelector('input[name="messageType"]:checked').value;
+            const unitPrice = type === 'SMS' ? 20 : type === 'LMS' ? 50 : 200;
+            const total = count * unitPrice;
+            const currentBalance = 1000000; // 실제로는 API에서 가져와야 함
+            const expectedBalance = currentBalance - total;
+            
+            document.getElementById('costRecipientCount').textContent = `${count}명`;
+            document.getElementById('costMessageType').textContent = type;
+            document.getElementById('costUnitPrice').textContent = `${unitPrice}원`;
+            document.getElementById('costTotal').textContent = formatNumber(total);
+            document.getElementById('expectedBalance').textContent = formatNumber(expectedBalance);
+        }
+
+        function showSendConfirm() {
+            document.getElementById('confirmCallerNumber').textContent = 
+                document.getElementById('callerNumber').value || '-';
+            document.getElementById('confirmRecipientCount').textContent = 
+                document.getElementById('recipientCount').textContent + '명';
+            document.getElementById('confirmMessageType').textContent = 
+                document.querySelector('input[name="messageType"]:checked').value;
+            const sendTime = document.querySelector('input[name="sendTime"]:checked').value;
+            if (sendTime === 'reserved') {
+                document.getElementById('confirmSendTime').textContent = 
+                    document.getElementById('reservedDateTime').value;
+            } else {
+                document.getElementById('confirmSendTime').textContent = '즉시 발송';
+            }
+            document.getElementById('confirmCost').textContent = 
+                document.getElementById('costTotal').textContent;
+            openModal('sendConfirmModal');
+        }
+
+        function confirmSend() {
+            // SMS 발송 시 변수값 길이 체크
+            const messageType = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
+            if (messageType === 'SMS') {
+                const messageContent = document.getElementById('messageContent').value;
+                const messageTitle = document.getElementById('messageTitle')?.value || '';
+                const recipientRows = document.querySelectorAll('#recipientDataTableBody tr');
+                
+                let hasOverLimit = false;
+                let overLimitCount = 0;
+                
+                recipientRows.forEach((row, index) => {
+                    const checkbox = row.querySelector('input[type="checkbox"]');
+                    if (!checkbox || !checkbox.checked) return; // 선택되지 않은 행은 제외
+                    
+                    // 변수값 가져오기
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length < 8) return; // 체크박스, 순번, 이름, 전화번호, 변수1, 변수2, 변수3 (총 7개) 필요
+                    
+                    const var1 = cells[4]?.querySelector('input')?.value || '';
+                    const var2 = cells[5]?.querySelector('input')?.value || '';
+                    const var3 = cells[6]?.querySelector('input')?.value || '';
+                    
+                    // 변수 치환
+                    let replacedContent = messageContent;
+                    replacedContent = replacedContent.replace(/#\{이름\}/g, cells[2]?.querySelector('input')?.value || '');
+                    replacedContent = replacedContent.replace(/#\{전화번호\}/g, cells[3]?.querySelector('input')?.value || '');
+                    replacedContent = replacedContent.replace(/#\{변수1\}/g, var1);
+                    replacedContent = replacedContent.replace(/#\{변수2\}/g, var2);
+                    replacedContent = replacedContent.replace(/#\{변수3\}/g, var3);
+                    
+                    // 바이트 계산
+                    let totalBytes = calculateByteLength(replacedContent);
+                    if (messageTitle) {
+                        totalBytes += calculateByteLength(messageTitle);
+                    }
+                    
+                    // 90바이트 초과 체크
+                    if (totalBytes > 90) {
+                        hasOverLimit = true;
+                        overLimitCount++;
+                    }
+                });
+                
+                if (hasOverLimit) {
+                    showToast('변수값 길이로 인해 글자수가 90바이트가 넘는 항목이 있어서 SMS 전송이 불가합니다.', 'warning');
+                    return;
+                }
+            }
+            
+            showToast('발송이 완료되었습니다.', 'success');
+            closeModal('sendConfirmModal');
+            // 실제로는 API 호출
+        }
+
+        function testSend() {
+            // 기본값: 로그인한 회원의 휴대폰번호 (예시: 010-1234-5678)
+            const defaultPhone = '010-1234-5678'; // 실제로는 API에서 가져와야 함
+            
+            // 테스트 번호 입력 필드 초기화
+            const testPhoneNumbers = document.getElementById('testPhoneNumbers');
+            testPhoneNumbers.innerHTML = `
+                <div class="flex gap-2 mb-2">
+                    <input type="text" class="form-input test-phone-input" placeholder="010-1234-5678" value="${defaultPhone}">
+                    <button type="button" class="btn btn-sm btn-outline" onclick="removeTestPhone(this)" style="display: none;">삭제</button>
+                </div>
+            `;
+            
+            // 미리보기 업데이트
+            updateTestPreview();
+            
+            // 비용 계산
+            updateTestCost();
+            
+            // 결과 메시지 숨기기
+            document.getElementById('testSendResult').style.display = 'none';
+            
+            // 버튼 상태 초기화
+            document.getElementById('testSendSubmitBtn').disabled = false;
+            document.getElementById('testSendSubmitBtn').textContent = '테스트 발송';
+            
+            openModal('testSendModal');
+        }
+
+        function addTestPhone() {
+            const testPhoneNumbers = document.getElementById('testPhoneNumbers');
+            const phoneCount = testPhoneNumbers.querySelectorAll('.test-phone-input').length;
+            
+            if (phoneCount >= 3) {
+                showToast('최대 3개 번호까지 입력 가능합니다.', 'warning');
+                return;
+            }
+            
+            const newPhoneDiv = document.createElement('div');
+            newPhoneDiv.className = 'flex gap-2 mb-2';
+            newPhoneDiv.innerHTML = `
+                <input type="text" class="form-input test-phone-input" placeholder="010-1234-5678" oninput="updateTestCost()">
+                <button type="button" class="btn btn-sm btn-outline" onclick="removeTestPhone(this)">삭제</button>
+            `;
+            testPhoneNumbers.appendChild(newPhoneDiv);
+            
+            // 첫 번째 번호에도 삭제 버튼 표시
+            if (phoneCount === 0) {
+                const firstDiv = testPhoneNumbers.querySelector('.flex');
+                if (firstDiv) {
+                    const deleteBtn = firstDiv.querySelector('button');
+                    if (deleteBtn) deleteBtn.style.display = 'inline-flex';
+                }
+            }
+            
+            // 추가 버튼 숨기기 (3개일 때)
+            if (phoneCount + 1 >= 3) {
+                document.getElementById('addTestPhoneBtn').style.display = 'none';
+            }
+        }
+
+        function removeTestPhone(btn) {
+            const testPhoneNumbers = document.getElementById('testPhoneNumbers');
+            const phoneCount = testPhoneNumbers.querySelectorAll('.test-phone-input').length;
+            
+            if (phoneCount <= 1) {
+                showToast('최소 1개 번호는 입력해야 합니다.', 'warning');
+                return;
+            }
+            
+            btn.parentElement.remove();
+            
+            // 추가 버튼 표시
+            if (phoneCount - 1 < 3) {
+                document.getElementById('addTestPhoneBtn').style.display = 'inline-flex';
+            }
+            
+            updateTestCost();
+        }
+
+        function updateTestPreview() {
+            // 발신번호
+            const callerNumber = document.getElementById('callerNumber').value || '-';
+            document.getElementById('testPreviewCallerNumber').textContent = callerNumber;
+            
+            // 제목 (LMS/MMS인 경우)
+            const messageType = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
+            const titleInput = document.getElementById('messageTitle');
+            if ((messageType === 'LMS' || messageType === 'MMS') && titleInput && titleInput.value) {
+                document.getElementById('testPreviewTitle').style.display = 'block';
+                document.getElementById('testPreviewTitleText').textContent = titleInput.value;
+            } else {
+                document.getElementById('testPreviewTitle').style.display = 'none';
+            }
+            
+            // 내용 (변수 치환 예시)
+            const content = document.getElementById('messageContent').value || '메시지 내용을 입력하세요';
+            let previewContent = content;
+            
+            // 변수 치환 예시
+            previewContent = previewContent.replace(/#{이름}/g, '홍길동');
+            previewContent = previewContent.replace(/#{전화번호}/g, '010-1234-5678');
+            
+            document.getElementById('testPreviewContent').textContent = previewContent;
+            
+            // 이미지 (MMS인 경우)
+            const imagePreview = document.getElementById('testPreviewImage');
+            const imageList = document.getElementById('testPreviewImageList');
+            const imageInputs = document.querySelectorAll('input[type="file"][accept*="image"]');
+            const hasImages = Array.from(imageInputs).some(input => input.files && input.files.length > 0);
+            
+            if (messageType === 'MMS' && hasImages) {
+                imagePreview.style.display = 'block';
+                imageList.innerHTML = '<span style="color: var(--text-secondary);">이미지 첨부됨</span>';
+            } else {
+                imagePreview.style.display = 'none';
+            }
+        }
+
+        function updateTestCost() {
+            const testPhoneInputs = document.querySelectorAll('.test-phone-input');
+            const validPhones = Array.from(testPhoneInputs).filter(input => {
+                const value = input.value.trim();
+                return value && /^010-\d{4}-\d{4}$/.test(value);
+            }).length;
+            
+            const messageType = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
+            const unitPrice = messageType === 'SMS' ? 20 : messageType === 'LMS' ? 50 : 200;
+            const totalCost = validPhones * unitPrice;
+            
+            document.getElementById('testCost').textContent = totalCost.toLocaleString() + '원';
+        }
+
+        function confirmTestSend() {
+            const testPhoneInputs = document.querySelectorAll('.test-phone-input');
+            const phoneNumbers = Array.from(testPhoneInputs)
+                .map(input => input.value.trim())
+                .filter(value => value);
+            
+            if (phoneNumbers.length === 0) {
+                showToast('테스트 수신번호를 입력해주세요.', 'warning');
+                return;
+            }
+            
+            // 전화번호 형식 검증
+            const phoneRegex = /^010-\d{4}-\d{4}$/;
+            const invalidPhones = phoneNumbers.filter(phone => !phoneRegex.test(phone));
+            if (invalidPhones.length > 0) {
+                showToast('올바른 전화번호 형식이 아닙니다. (010-XXXX-XXXX)', 'warning');
+                return;
+            }
+            
+            // 발송 버튼 비활성화 및 로딩 표시
+            const submitBtn = document.getElementById('testSendSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '발송 중...';
+            
+            // 결과 메시지 숨기기
+            document.getElementById('testSendResult').style.display = 'none';
+            
+            // 실제로는 API 호출
+            // 시뮬레이션: 2초 후 완료
+            setTimeout(() => {
+                // 성공 처리
+                const resultDiv = document.getElementById('testSendResult');
+                const resultAlert = document.getElementById('testSendResultAlert');
+                const sendTime = document.getElementById('testSendTime');
+                
+                resultAlert.className = 'alert alert-success';
+                resultAlert.textContent = '테스트 발송이 완료되었습니다';
+                sendTime.textContent = '발송 시간: ' + new Date().toLocaleString('ko-KR');
+                
+                resultDiv.style.display = 'block';
+                
+                // 버튼 상태 변경
+                submitBtn.textContent = '확인';
+                submitBtn.onclick = function() {
+                    closeModal('testSendModal');
+                };
+                
+                // 취소 버튼 숨기기
+                document.getElementById('testSendCancelBtn').style.display = 'none';
+                
+                showToast('테스트 발송이 완료되었습니다.', 'success');
+            }, 2000);
+        }
+
+
+        function saveTemplate() {
+            // 템플릿 저장 모달 열기
+            const templateNameEl = document.getElementById('templateName');
+            if (templateNameEl) templateNameEl.value = '';
+            openModal('templateSaveModal');
+        }
+
+        function saveTemplateConfirm() {
+            const name = document.getElementById('templateName').value;
+            
+            if (!name) {
+                showToast('템플릿명을 입력해주세요.', 'warning');
+                return;
+            }
+            
+            showToast('템플릿으로 저장되었습니다.', 'success');
+            closeModal('templateSaveModal');
+        }
+
+        // 샘플 파일 다운로드 (주소록 관리와 동일)
+        function downloadSampleFile() {
+            const sampleData = [
+                ['이름', '전화번호', '변수1', '변수2', '변수3'],
+                ['홍길동', '010-1234-5678', '홍길동', '서울시 강남구', 'VIP'],
+                ['김철수', '010-9876-5432', '김철수', '서울시 서초구', '일반']
+            ];
+            
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(sampleData);
+            
+            ws['!cols'] = [
+                { wch: 15 },
+                { wch: 20 },
+                { wch: 15 },
+                { wch: 20 },
+                { wch: 15 }
+            ];
+            
+            XLSX.utils.book_append_sheet(wb, ws, '주소록');
+            XLSX.writeFile(wb, '주소록_샘플파일.xlsx');
+            
+            showToast('샘플 파일 다운로드가 시작되었습니다.', 'success');
+        }
+
+        // 엑셀 업로드 관련 변수
+        let createdGroupName = null;
+        let excelFileData = null;
+
+        // 그룹 생성 영역 표시/숨김
+        function toggleGroupCreation() {
+            const checkbox = document.getElementById('addToAddressbook');
+            const groupArea = document.getElementById('groupCreationArea');
+            const groupNameInput = document.getElementById('newGroupName');
+            const statusDiv = document.getElementById('groupCreationStatus');
+            
+            if (checkbox.checked) {
+                groupArea.style.display = 'block';
+                groupNameInput.value = '';
+                createdGroupName = null;
+                statusDiv.textContent = '';
+            } else {
+                groupArea.style.display = 'none';
+                groupNameInput.value = '';
+                createdGroupName = null;
+                statusDiv.textContent = '';
+            }
+        }
+
+        // 그룹 생성
+        function createGroup() {
+            const groupNameInput = document.getElementById('newGroupName');
+            const groupName = groupNameInput.value.trim();
+            const statusDiv = document.getElementById('groupCreationStatus');
+            
+            if (!groupName) {
+                statusDiv.textContent = '그룹명을 입력해주세요.';
+                statusDiv.style.color = 'var(--danger-color)';
+                return;
+            }
+            
+            // 그룹명 유효성 검사
+            if (groupName.length > 50) {
+                statusDiv.textContent = '그룹명은 50자 이하로 입력해주세요.';
+                statusDiv.style.color = 'var(--danger-color)';
+                return;
+            }
+            
+            // 그룹 생성 (실제로는 API 호출)
+            createdGroupName = groupName;
+            statusDiv.textContent = `그룹 "${groupName}"이(가) 생성되었습니다. (업로드 시 주소록에 추가됩니다)`;
+            statusDiv.style.color = 'var(--success-color)';
+            
+            showToast(`그룹 "${groupName}"이(가) 생성되었습니다.`, 'success');
+        }
+
+        // 엑셀 모달 관련 변수
+        let excelTableData = [];
+        let selectedRowIndices = new Set();
+        
+        // 수신번호 테이블 관련 변수
+        let recipientTableData = [];
+
+        // 엑셀 탭 전환
+        function switchExcelTab(tab) {
+            const uploadTab = document.getElementById('excelUploadTab');
+            const sampleTab = document.getElementById('excelSampleTab');
+            const uploadContent = document.getElementById('excelUploadContent');
+            const sampleContent = document.getElementById('excelSampleContent');
+            
+            if (tab === 'upload') {
+                uploadTab.classList.remove('btn-outline');
+                uploadTab.classList.add('btn-primary');
+                sampleTab.classList.remove('btn-primary');
+                sampleTab.classList.add('btn-outline');
+                uploadContent.style.display = 'block';
+                sampleContent.style.display = 'none';
+            } else {
+                sampleTab.classList.remove('btn-outline');
+                sampleTab.classList.add('btn-primary');
+                uploadTab.classList.remove('btn-primary');
+                uploadTab.classList.add('btn-outline');
+                uploadContent.style.display = 'none';
+                sampleContent.style.display = 'block';
+            }
+        }
+
+        // 엑셀 파일 선택 처리
+        function handleExcelFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    
+                    if (jsonData.length < 2) {
+                        showToast('데이터가 없습니다. 헤더를 포함하여 최소 1개 이상의 데이터가 필요합니다.', 'warning');
+                        return;
+                    }
+                    
+                    // 헤더 찾기
+                    const headers = jsonData[0];
+                    const nameIndex = headers.findIndex(h => h === '이름' || h === 'Name' || h === 'name');
+                    const phoneIndex = headers.findIndex(h => h === '전화번호' || h === '휴대폰' || h === 'Phone' || h === 'phone');
+                    const varIndices = [];
+                    for (let i = 1; i <= 8; i++) {
+                        const varIndex = headers.findIndex(h => h === `변수${i}` || h === `Variable ${i}` || h === `변수 ${i}`);
+                        varIndices.push(varIndex);
+                    }
+                    
+                    // 데이터 파싱
+                    excelTableData = [];
+                    const rows = jsonData.slice(1);
+                    rows.forEach((row, index) => {
+                        const rowData = {
+                            index: index,
+                            name: nameIndex >= 0 ? (row[nameIndex] || '') : '',
+                            phone: phoneIndex >= 0 ? (row[phoneIndex] || '') : '',
+                            variables: varIndices.map(idx => idx >= 0 ? (row[idx] || '') : '')
+                        };
+                        excelTableData.push(rowData);
+                    });
+                    
+                    // 테이블에 표시
+                    renderExcelTable();
+                    showToast(`엑셀 파일이 로드되었습니다. (${excelTableData.length}건)`, 'success');
+                } catch (error) {
+                    console.error('엑셀 파일 읽기 오류:', error);
+                    showToast('엑셀 파일을 읽는 중 오류가 발생했습니다.', 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 엑셀 테이블 렌더링
+        function renderExcelTable() {
+            const tbody = document.getElementById('excelDataTableBody');
+            tbody.innerHTML = '';
+            
+            if (excelTableData.length === 0) {
+                // 최소 12개 행 표시 (빈 행)
+                for (let i = 0; i < 12; i++) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+                return;
+            }
+            
+            // 데이터 행 표시 (최소 12개 행 유지)
+            const maxRows = Math.max(excelTableData.length, 12);
+            for (let i = 0; i < maxRows; i++) {
+                const tr = document.createElement('tr');
+                if (i < excelTableData.length) {
+                    const row = excelTableData[i];
+                    tr.innerHTML = `
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);">${row.name || ''}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);">${row.phone || ''}</td>
+                        ${row.variables.map(v => `<td style="padding: 12px; border-bottom: 1px solid var(--border-color);">${v || ''}</td>`).join('')}
+                    `;
+                } else {
+                    // 빈 행
+                    tr.innerHTML = `
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                        <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"></td>
+                    `;
+                }
+                tbody.appendChild(tr);
+            }
+            
+            selectedRowIndices.clear();
+        }
+
+        // 전체 선택 (행 클릭으로 선택)
+        function selectAllRows() {
+            if (excelTableData.length === 0) {
+                showToast('선택할 데이터가 없습니다.', 'warning');
+                return;
+            }
+            selectedRowIndices.clear();
+            excelTableData.forEach((row, index) => {
+                selectedRowIndices.add(index);
+            });
+            showToast(`${excelTableData.length}개 행이 선택되었습니다.`, 'success');
+        }
+
+        // 선택된 행 복사
+        function copySelectedRows() {
+            if (selectedRowIndices.size === 0) {
+                showToast('복사할 행을 선택해주세요.', 'warning');
+                return;
+            }
+            // 복사 기능 구현 (클립보드 API 사용)
+            showToast(`${selectedRowIndices.size}개 행이 복사되었습니다.`, 'success');
+        }
+
+        // 전체 삭제
+        function deleteAllRows() {
+            if (excelTableData.length === 0) return;
+            if (confirm('모든 데이터를 삭제하시겠습니까?')) {
+                excelTableData = [];
+                selectedRowIndices.clear();
+                renderExcelTable();
+                showToast('모든 데이터가 삭제되었습니다.', 'success');
+            }
+        }
+
+        // 선택된 행 삭제 (전체 선택 후 삭제)
+        function deleteSelectedRows() {
+            if (selectedRowIndices.size === 0) {
+                // 선택된 행이 없으면 전체 삭제 확인
+                if (confirm('모든 데이터를 삭제하시겠습니까?')) {
+                    excelTableData = [];
+                    selectedRowIndices.clear();
+                    renderExcelTable();
+                    showToast('모든 데이터가 삭제되었습니다.', 'success');
+                }
+                return;
+            }
+            if (confirm(`${selectedRowIndices.size}개 행을 삭제하시겠습니까?`)) {
+                const sortedIndices = Array.from(selectedRowIndices).sort((a, b) => b - a);
+                sortedIndices.forEach(index => {
+                    excelTableData.splice(index, 1);
+                });
+                selectedRowIndices.clear();
+                renderExcelTable();
+                showToast(`${sortedIndices.length}개 행이 삭제되었습니다.`, 'success');
+            }
+        }
+
+        // 중복번호 삭제
+        function removeDuplicateNumbers() {
+            const phoneMap = new Map();
+            const duplicates = [];
+            
+            excelTableData.forEach((row, index) => {
+                const phone = row.phone.replace(/[^\d]/g, '');
+                if (phone) {
+                    if (phoneMap.has(phone)) {
+                        duplicates.push(index);
+                    } else {
+                        phoneMap.set(phone, index);
+                    }
+                }
+            });
+            
+            if (duplicates.length === 0) {
+                showToast('중복된 번호가 없습니다.', 'info');
+                return;
+            }
+            
+            if (confirm(`${duplicates.length}개의 중복 번호를 삭제하시겠습니까?`)) {
+                const sortedIndices = duplicates.sort((a, b) => b - a);
+                sortedIndices.forEach(index => {
+                    excelTableData.splice(index, 1);
+                });
+                selectedRowIndices.clear();
+                renderExcelTable();
+                showToast(`${duplicates.length}개의 중복 번호가 삭제되었습니다.`, 'success');
+            }
+        }
+
+        // 수신거부번호 삭제
+        function removeRejectNumbers() {
+            // 수신거부 목록 가져오기 (실제로는 API 호출)
+            const rejectNumbers = []; // 예시: ['010-1234-5678', '010-9876-5432']
+            
+            const toRemove = [];
+            excelTableData.forEach((row, index) => {
+                const phone = row.phone.replace(/[^\d]/g, '');
+                const rejectPhone = rejectNumbers.find(rn => rn.replace(/[^\d]/g, '') === phone);
+                if (rejectPhone) {
+                    toRemove.push(index);
+                }
+            });
+            
+            if (toRemove.length === 0) {
+                showToast('수신거부 번호가 없습니다.', 'info');
+                return;
+            }
+            
+            if (confirm(`${toRemove.length}개의 수신거부 번호를 삭제하시겠습니까?`)) {
+                const sortedIndices = toRemove.sort((a, b) => b - a);
+                sortedIndices.forEach(index => {
+                    excelTableData.splice(index, 1);
+                });
+                selectedRowIndices.clear();
+                renderExcelTable();
+                showToast(`${toRemove.length}개의 수신거부 번호가 삭제되었습니다.`, 'success');
+            }
+        }
+
+        // 엑셀 수신번호 추가
+        function addExcelRecipients() {
+            if (excelTableData.length === 0) {
+                showToast('추가할 데이터가 없습니다.', 'warning');
+                return;
+            }
+            
+            // 엑셀 데이터를 recipientTableData에 추가
+            excelTableData.forEach((row) => {
+                const phone = row.phone ? row.phone.toString().trim().replace(/[^\d]/g, '') : '';
+                if (phone.length >= 10 && phone.length <= 11) {
+                    const existingIndex = recipientTableData.findIndex(r => r.phone === phone);
+                    if (existingIndex < 0) {
+                        // 새 행 추가
+                        recipientTableData.push({
+                            index: recipientTableData.length,
+                            name: row.name || '',
+                            phone: phone,
+                            variables: [
+                                row.var1 || '',
+                                row.var2 || '',
+                                row.var3 || ''
+                            ]
+                        });
+                    } else {
+                        // 기존 데이터 업데이트
+                        recipientTableData[existingIndex].name = row.name || recipientTableData[existingIndex].name;
+                        recipientTableData[existingIndex].variables = [
+                            row.var1 || (recipientTableData[existingIndex].variables && recipientTableData[existingIndex].variables[0] || ''),
+                            row.var2 || (recipientTableData[existingIndex].variables && recipientTableData[existingIndex].variables[1] || ''),
+                            row.var3 || (recipientTableData[existingIndex].variables && recipientTableData[existingIndex].variables[2] || '')
+                        ];
+                    }
+                }
+            });
+            
+            // 테이블 다시 렌더링 (데이터 개수에 맞춰)
+            renderRecipientTable();
+            
+            // 수신번호 개수 업데이트
+            updateRecipientCount();
+            
+            showToast(`${excelTableData.length}개의 수신번호가 추가되었습니다.`, 'success');
+            closeModal('excelUploadModal');
+            
+            // 초기화
+            excelTableData = [];
+            selectedRowIndices.clear();
+            const excelFileInput = document.getElementById('excelFileInput');
+            if (excelFileInput) excelFileInput.value = '';
+        }
+
+        // 주소록 불러오기
+        function loadAddressBook() {
+            // 주소록 모달 열기 또는 API 호출
+            showToast('주소록 불러오기 기능은 준비 중입니다.', 'info');
+        }
+
+        // 주소록 불러오기
+        function loadRecipientAddressBook() {
+            const groupSelect = document.getElementById('recipientGroupSelect');
+            const selectedGroup = groupSelect.value;
+            
+            if (!selectedGroup) {
+                alert('그룹을 선택해주세요.');
+                return;
+            }
+            
+            // 그룹 선택에 따른 주소록 데이터 가져오기 (실제로는 API 호출)
+            // 예시 데이터
+            const addressBookData = {
+                'group1': [
+                    { name: '홍길동', phone: '010-1234-5678', variables: ['VIP', '서울', '2024', '1', 'A'] },
+                    { name: '김철수', phone: '010-2345-6789', variables: ['VIP', '부산', '2024', '2', 'B'] }
+                ],
+                'group2': [
+                    { name: '이영희', phone: '010-3456-7890', variables: ['일반', '대구', '2023', '3', 'C'] },
+                    { name: '박민수', phone: '010-4567-8901', variables: ['일반', '인천', '2023', '4', 'D'] }
+                ],
+                'group3': [
+                    { name: '최지영', phone: '010-5678-9012', variables: ['신규', '광주', '2024', '5', 'E'] }
+                ]
+            };
+            
+            const groupData = addressBookData[selectedGroup] || [];
+            
+            // 기존 데이터에 추가 (중복 제거)
+            groupData.forEach(item => {
+                const existingIndex = recipientTableData.findIndex(row => row.phone === item.phone);
+                if (existingIndex < 0) {
+                    recipientTableData.push({
+                        index: recipientTableData.length,
+                        name: item.name || '',
+                        phone: item.phone || '',
+                        variables: (item.variables || ['', '', '']).slice(0, 3)
+                    });
+                } else {
+                    // 기존 데이터 업데이트
+                    recipientTableData[existingIndex].name = item.name || recipientTableData[existingIndex].name;
+                    recipientTableData[existingIndex].variables = (item.variables || recipientTableData[existingIndex].variables || ['', '', '']).slice(0, 3);
+                }
+            });
+            
+            // 테이블 다시 렌더링 (데이터 개수에 맞춰)
+            renderRecipientTable();
+            updateRecipientCount();
+            showToast(`${groupData.length}개의 주소록이 추가되었습니다.`, 'success');
+        }
+
+        // 주소록에 추가 기능
+        function addToAddressBook() {
+            if (recipientTableData.length === 0) {
+                showToast('추가할 데이터가 없습니다.', 'warning');
+                return;
+            }
+            
+            // 선택된 행이 있으면 선택된 행만, 없으면 전체 추가
+            const dataToAdd = selectedRecipientIndices.size > 0 
+                ? Array.from(selectedRecipientIndices).map(idx => recipientTableData[idx]).filter(row => row && row.phone)
+                : recipientTableData.filter(row => row.phone);
+            
+            if (dataToAdd.length === 0) {
+                showToast('추가할 유효한 데이터가 없습니다.', 'warning');
+                return;
+            }
+            
+            // 데이터 개수 표시
+            const countElement = document.getElementById('addressBookDataCount');
+            if (countElement) {
+                countElement.textContent = dataToAdd.length;
+            }
+            
+            // 모달 초기화
+            const existingRadio = document.querySelector('input[name="addressBookAddType"][value="existing"]');
+            if (existingRadio) existingRadio.checked = true;
+            toggleAddressBookAddType();
+            
+            const groupSelect = document.getElementById('addressBookGroupSelect');
+            if (groupSelect) groupSelect.value = '';
+            
+            const newGroupInput = document.getElementById('newGroupNameInput');
+            if (newGroupInput) newGroupInput.value = '';
+            
+            // 모달 열기
+            openModal('addToAddressBookModal');
+        }
+
+        // 주소록 추가 타입 전환
+        function toggleAddressBookAddType() {
+            const addType = document.querySelector('input[name="addressBookAddType"]:checked')?.value;
+            const existingSection = document.getElementById('existingGroupSection');
+            const newSection = document.getElementById('newGroupSection');
+            
+            if (addType === 'existing') {
+                if (existingSection) existingSection.style.display = 'block';
+                if (newSection) newSection.style.display = 'none';
+            } else {
+                if (existingSection) existingSection.style.display = 'none';
+                if (newSection) newSection.style.display = 'block';
+            }
+        }
+
+        // 주소록 추가 확인
+        function confirmAddToAddressBook() {
+            const addType = document.querySelector('input[name="addressBookAddType"]:checked')?.value;
+            let groupName = '';
+            
+            if (addType === 'existing') {
+                const groupSelect = document.getElementById('addressBookGroupSelect');
+                const selectedGroup = groupSelect?.value;
+                
+                if (!selectedGroup) {
+                    showToast('그룹을 선택해주세요.', 'warning');
+                    return;
+                }
+                
+                // 그룹명 가져오기 (실제로는 API에서 가져와야 함)
+                const groupNames = {
+                    'group1': 'VIP 고객',
+                    'group2': '일반 고객',
+                    'group3': '신규 고객'
+                };
+                groupName = groupNames[selectedGroup] || selectedGroup;
+            } else {
+                const newGroupInput = document.getElementById('newGroupNameInput');
+                groupName = newGroupInput?.value?.trim();
+                
+                if (!groupName) {
+                    showToast('그룹명을 입력해주세요.', 'warning');
+                    return;
+                }
+            }
+            
+            // 선택된 행이 있으면 선택된 행만, 없으면 전체 추가
+            const dataToAdd = selectedRecipientIndices.size > 0 
+                ? Array.from(selectedRecipientIndices).map(idx => recipientTableData[idx]).filter(row => row && row.phone)
+                : recipientTableData.filter(row => row.phone);
+            
+            if (dataToAdd.length === 0) {
+                showToast('추가할 유효한 데이터가 없습니다.', 'warning');
+                return;
+            }
+            
+            // 실제로는 API 호출하여 주소록에 추가
+            // 여기서는 시뮬레이션
+            console.log('주소록 추가:', {
+                groupName: groupName,
+                addType: addType,
+                data: dataToAdd
+            });
+            
+            showToast(`"${groupName}" 그룹에 ${dataToAdd.length}개의 주소록이 추가되었습니다.`, 'success');
+            
+            // 모달 닫기
+            closeModal('addToAddressBookModal');
+            
+            // 선택 초기화
+            selectedRecipientIndices.clear();
+            const selectAllCheckbox = document.getElementById('selectAllRecipientCheckbox');
+            if (selectAllCheckbox) selectAllCheckbox.checked = false;
+        }
+
+        // 수신번호 엑셀 파일 선택 처리
+        function handleRecipientExcelFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    
+                    if (jsonData.length < 2) {
+                        showToast('데이터가 없습니다.', 'warning');
+                        return;
+                    }
+                    
+                    const headers = jsonData[0];
+                    const nameIndex = headers.findIndex(h => h === '이름' || h === 'Name' || h === 'name');
+                    const phoneIndex = headers.findIndex(h => h === '전화번호' || h === '휴대폰' || h === 'Phone' || h === 'phone');
+                    const varIndices = [];
+                    for (let i = 1; i <= 3; i++) {
+                        const varIndex = headers.findIndex(h => h === `변수${i}` || h === `Variable ${i}` || h === `변수 ${i}`);
+                        varIndices.push(varIndex);
+                    }
+                    
+                    recipientTableData = [];
+                    const rows = jsonData.slice(1);
+                    rows.forEach((row, index) => {
+                        const rowData = {
+                            index: index,
+                            name: nameIndex >= 0 ? (row[nameIndex] || '') : '',
+                            phone: phoneIndex >= 0 ? (row[phoneIndex] || '') : '',
+                            variables: varIndices.map(idx => idx >= 0 ? (row[idx] || '') : '').slice(0, 3)
+                        };
+                        recipientTableData.push(rowData);
+                    });
+                    
+                    renderRecipientTable();
+                    updateRecipientCount();
+                    showToast(`엑셀 파일이 로드되었습니다. (${recipientTableData.length}건)`, 'success');
+                } catch (error) {
+                    console.error('엑셀 파일 읽기 오류:', error);
+                    showToast('엑셀 파일을 읽는 중 오류가 발생했습니다.', 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 수신번호 테이블 렌더링
+        const DEFAULT_ROWS = 5;
+        let selectedRecipientIndices = new Set();
+
+        function renderRecipientTable() {
+            const tbody = document.getElementById('recipientDataTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            // 데이터가 있으면 데이터 개수만큼, 없으면 기본 5개 행 렌더링
+            const rowCount = Math.max(recipientTableData.length, DEFAULT_ROWS);
+            
+            for (let i = 0; i < rowCount; i++) {
+                const tr = document.createElement('tr');
+                const row = i < recipientTableData.length ? recipientTableData[i] : null;
+                
+                tr.innerHTML = `
+                    <td style="padding: 4px; border-bottom: 1px solid var(--border-color); text-align: center;">
+                        <input type="checkbox" class="recipient-row-checkbox" data-row="${i}" onchange="toggleRecipientRowSelection(${i}, this.checked)">
+                    </td>
+                    <td style="padding: 4px; border-bottom: 1px solid var(--border-color); text-align: center;">
+                        <span style="display: inline-block; padding: 6px; font-size: 13px; color: var(--text-secondary);">${i + 1}</span>
+                    </td>
+                    <td style="padding: 4px; border-bottom: 1px solid var(--border-color);">
+                        <input type="text" class="form-input recipient-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;" 
+                               data-row="${i}" data-field="name"
+                               value="${row ? (row.name || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;') : ''}" 
+                               onblur="updateRecipientTableData(${i}, 'name', this.value)"
+                               onkeypress="if(event.key==='Enter') { event.preventDefault(); moveToNextCell(this); }">
+                    </td>
+                    <td style="padding: 4px; border-bottom: 1px solid var(--border-color);">
+                        <input type="text" class="form-input recipient-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;" 
+                               data-row="${i}" data-field="phone"
+                               value="${row ? (row.phone || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;') : ''}" 
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                               onblur="updateRecipientTableData(${i}, 'phone', this.value); updateRecipientCount();"
+                               onkeypress="if(event.key==='Enter') { event.preventDefault(); moveToNextCell(this); }">
+                    </td>
+                    ${[1,2,3].map(v => `
+                        <td style="padding: 4px; border-bottom: 1px solid var(--border-color);">
+                            <input type="text" class="form-input recipient-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;" 
+                                   data-row="${i}" data-field="var${v}"
+                                   value="${row ? (row.variables && row.variables[v-1] ? (row.variables[v-1] || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;') : '') : ''}" 
+                                   onblur="updateRecipientTableData(${i}, 'var${v}', this.value)"
+                                   onkeypress="if(event.key==='Enter') { event.preventDefault(); moveToNextCell(this); }">
+                        </td>
+                    `).join('')}
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        // 체크박스 선택 기능
+        function toggleSelectAllRecipients(checked) {
+            const checkboxes = document.querySelectorAll('.recipient-row-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = checked;
+                const rowIndex = parseInt(cb.getAttribute('data-row'));
+                if (checked) {
+                    selectedRecipientIndices.add(rowIndex);
+                } else {
+                    selectedRecipientIndices.delete(rowIndex);
+                }
+            });
+        }
+
+        function toggleRecipientRowSelection(rowIndex, checked) {
+            if (checked) {
+                selectedRecipientIndices.add(rowIndex);
+            } else {
+                selectedRecipientIndices.delete(rowIndex);
+                // 전체 선택 체크박스도 해제
+                const selectAllCheckbox = document.getElementById('selectAllRecipientCheckbox');
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.checked = false;
+                }
+            }
+        }
+
+        // 행 추가 기능
+        function addRecipientRow() {
+            recipientTableData.push({
+                index: recipientTableData.length,
+                name: '',
+                phone: '',
+                variables: ['', '', '']
+            });
+            renderRecipientTable();
+            
+            // 새로 추가된 행으로 스크롤 이동
+            setTimeout(() => {
+                const tbody = document.getElementById('recipientDataTableBody');
+                if (tbody && tbody.lastElementChild) {
+                    tbody.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    // 새 행의 첫 번째 입력 필드에 포커스
+                    const firstInput = tbody.lastElementChild.querySelector('.recipient-input');
+                    if (firstInput) firstInput.focus();
+                }
+            }, 100);
+        }
+
+        // 다음 셀으로 이동
+        function moveToNextCell(currentInput) {
+            const inputs = Array.from(document.querySelectorAll('.recipient-input'));
+            const currentIndex = inputs.indexOf(currentInput);
+            if (currentIndex < inputs.length - 1) {
+                inputs[currentIndex + 1].focus();
+            }
+        }
+
+        // 엑셀 데이터로 테이블 업데이트
+        function updateRecipientTableFromData() {
+            const inputs = document.querySelectorAll('.recipient-input');
+            inputs.forEach(input => {
+                const rowIndex = parseInt(input.getAttribute('data-row'));
+                const field = input.getAttribute('data-field');
+                
+                if (rowIndex < recipientTableData.length) {
+                    const row = recipientTableData[rowIndex];
+                    let value = '';
+                    
+                    if (field === 'name') {
+                        value = row.name || '';
+                    } else if (field === 'phone') {
+                        value = row.phone || '';
+                    } else                     if (field.startsWith('var')) {
+                        const varIndex = parseInt(field.replace('var', '')) - 1;
+                        if (varIndex >= 0 && varIndex < 3) {
+                            value = row.variables && row.variables[varIndex] ? row.variables[varIndex] : '';
+                        }
+                    }
+                    
+                    input.value = value;
+                } else {
+                    input.value = '';
+                }
+            });
+        }
+
+        // 수신번호 테이블 데이터 업데이트
+        function updateRecipientTableData(index, field, value) {
+            // 인덱스가 배열 길이보다 크거나 같으면 배열 확장
+            while (index >= recipientTableData.length) {
+                recipientTableData.push({
+                    index: recipientTableData.length,
+                    name: '',
+                    phone: '',
+                    variables: ['', '', '']
+                });
+            }
+            
+            const row = recipientTableData[index];
+            if (!row) {
+                // 안전장치: row가 없으면 생성
+                recipientTableData[index] = {
+                    index: index,
+                    name: '',
+                    phone: '',
+                    variables: ['', '', '']
+                };
+            }
+            
+            const finalRow = recipientTableData[index];
+            if (field === 'name') {
+                finalRow.name = value;
+            } else if (field === 'phone') {
+                finalRow.phone = value;
+            } else if (field.startsWith('var')) {
+                const varIndex = parseInt(field.replace('var', '')) - 1;
+                if (varIndex >= 0 && varIndex < 3) {
+                    if (!finalRow.variables) finalRow.variables = ['', '', ''];
+                    finalRow.variables[varIndex] = value;
+                }
+            }
+        }
+
+        // 수신번호 개수 업데이트
+        function updateRecipientCount() {
+            const phoneCount = recipientTableData.filter(row => row.phone && row.phone.trim()).length;
+            const countElement = document.getElementById('recipientCount');
+            if (countElement) {
+                countElement.textContent = phoneCount;
+            }
+        }
+
+        function deleteAllRecipientRows() {
+            if (recipientTableData.length === 0) return;
+            if (confirm('모든 데이터를 삭제하시겠습니까?')) {
+                recipientTableData = [];
+                selectedRecipientIndices.clear();
+                const selectAllCheckbox = document.getElementById('selectAllRecipientCheckbox');
+                if (selectAllCheckbox) selectAllCheckbox.checked = false;
+                renderRecipientTable();
+                updateRecipientCount();
+                showToast('모든 데이터가 삭제되었습니다.', 'success');
+            }
+        }
+
+        function deleteSelectedRecipientRows() {
+            if (selectedRecipientIndices.size === 0) {
+                showToast('삭제할 행을 선택해주세요.', 'warning');
+                return;
+            }
+            if (confirm(`${selectedRecipientIndices.size}개 행을 삭제하시겠습니까?`)) {
+                const sortedIndices = Array.from(selectedRecipientIndices).sort((a, b) => b - a);
+                sortedIndices.forEach(index => {
+                    recipientTableData.splice(index, 1);
+                });
+                selectedRecipientIndices.clear();
+                const selectAllCheckbox = document.getElementById('selectAllRecipientCheckbox');
+                if (selectAllCheckbox) selectAllCheckbox.checked = false;
+                renderRecipientTable();
+                updateRecipientCount();
+                showToast(`${sortedIndices.length}개 행이 삭제되었습니다.`, 'success');
+            }
+        }
+
+        function removeDuplicateRecipientNumbers() {
+            const phoneMap = new Map();
+            const duplicates = [];
+            recipientTableData.forEach((row, index) => {
+                const phone = row.phone ? row.phone.replace(/[^\d]/g, '') : '';
+                if (phone) {
+                    if (phoneMap.has(phone)) {
+                        duplicates.push(index);
+                    } else {
+                        phoneMap.set(phone, index);
+                    }
+                }
+            });
+            if (duplicates.length === 0) {
+                showToast('중복된 번호가 없습니다.', 'info');
+                return;
+            }
+            if (confirm(`${duplicates.length}개의 중복 번호를 삭제하시겠습니까?`)) {
+                const sortedIndices = duplicates.sort((a, b) => b - a);
+                sortedIndices.forEach(index => {
+                    recipientTableData.splice(index, 1);
+                });
+                selectedRecipientIndices.clear();
+                const selectAllCheckbox = document.getElementById('selectAllRecipientCheckbox');
+                if (selectAllCheckbox) selectAllCheckbox.checked = false;
+                renderRecipientTable();
+                updateRecipientCount();
+                showToast(`${duplicates.length}개의 중복 번호가 삭제되었습니다.`, 'success');
+            }
+        }
+
+        function removeRejectRecipientNumbers() {
+            const rejectNumbers = [];
+            const toRemove = [];
+            recipientTableData.forEach((row, index) => {
+                const phone = row.phone ? row.phone.replace(/[^\d]/g, '') : '';
+                const rejectPhone = rejectNumbers.find(rn => rn.replace(/[^\d]/g, '') === phone);
+                if (rejectPhone) {
+                    toRemove.push(index);
+                }
+            });
+            if (toRemove.length === 0) {
+                showToast('수신거부 번호가 없습니다.', 'info');
+                return;
+            }
+            if (confirm(`${toRemove.length}개의 수신거부 번호를 삭제하시겠습니까?`)) {
+                const sortedIndices = toRemove.sort((a, b) => b - a);
+                sortedIndices.forEach(index => {
+                    recipientTableData.splice(index, 1);
+                });
+                selectedRecipientIndices.clear();
+                const selectAllCheckbox = document.getElementById('selectAllRecipientCheckbox');
+                if (selectAllCheckbox) selectAllCheckbox.checked = false;
+                renderRecipientTable();
+                updateRecipientCount();
+                showToast(`${toRemove.length}개의 수신거부 번호가 삭제되었습니다.`, 'success');
+            }
+        }
+
+
+        // 페이지 로드 시 빈 테이블 렌더링
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(renderRecipientTable, 100);
+            });
+        } else {
+            setTimeout(renderRecipientTable, 100);
+        }
+
+        // 초기화
+        updateCost();
+        setInterval(updateCost, 1000);
+    </script>
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+
+    <!-- 화면설계서 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        // 화면설계 데이터 정의 (모든 요소 포함)
+        const specData = [
+            // 1. 페이지 헤더
+            {
+                selector: '.page-header',
+                title: '페이지 헤더',
+                position: { top: '10px', right: '10px' },
+                description: '일반문자 발송 페이지의 타이틀 영역',
+                function: '현재 페이지 제목과 설명 표시'
+            },
+            // 2. 탭 메뉴
+            {
+                selector: '.tab-list',
+                title: '탭 메뉴',
+                position: { top: '5px', left: '10px' },
+                description: '문자 발송 관련 기능 탭',
+                behavior: [
+                    '일반문자 발송 (현재)',
+                    '광고문자 발송',
+                    '일반문자 템플릿',
+                    '광고문자 템플릿'
+                ]
+            },
+            // 3. 발신번호 선택
+            {
+                selector: '#callerNumberGroup',
+                title: '발신번호 선택',
+                position: { top: '5px', right: '10px' },
+                function: '등록된 발신번호 중 선택',
+                api: 'GET /api/caller-numbers',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 4. 새 발신번호 등록 버튼
+            {
+                selector: '#newCallerNumberBtn',
+                title: '새 발신번호 등록하기',
+                position: { top: '-5px', left: '-10px' },
+                function: '발신번호 관리 페이지로 이동',
+                behavior: ['클릭 시 mypage-caller-number.html로 이동']
+            },
+            // 5. 엑셀 업로드 버튼
+            {
+                selector: '#excelUploadBtn',
+                title: '엑셀 업로드',
+                position: { top: '-5px', left: '-10px' },
+                function: '엑셀 파일로 수신번호 대량 등록',
+                behavior: [
+                    '클릭 시 파일 선택 창 열림',
+                    'xlsx, xls, csv 형식 지원',
+                    '최대 50,000건 업로드 가능'
+                ]
+            },
+            // 6. 엑셀샘플 다운로드 버튼
+            {
+                selector: '#excelSampleBtn',
+                title: '엑셀샘플 다운로드',
+                position: { top: '-5px', left: '-10px' },
+                function: '업로드용 엑셀 양식 다운로드',
+                behavior: ['클릭 시 sample.xlsx 다운로드']
+            },
+            // 7. 주소록 불러오기 버튼
+            {
+                selector: '#loadAddressBookBtn',
+                title: '주소록 불러오기',
+                position: { top: '-5px', left: '-10px' },
+                function: '저장된 주소록에서 수신번호 불러오기',
+                behavior: ['클릭 시 주소록 선택 모달 열림']
+            },
+            // 8. 그룹 선택
+            {
+                selector: '#recipientGroupSelect',
+                title: '그룹 선택',
+                position: { top: '-5px', right: '-10px' },
+                function: '주소록 그룹 필터링',
+                behavior: ['선택한 그룹의 연락처만 표시']
+            },
+            // 9. 주소록에 추가 버튼
+            {
+                selector: '#addToAddressBookBtn',
+                title: '주소록에 추가',
+                position: { top: '-5px', right: '-10px' },
+                function: '현재 수신번호를 주소록에 저장',
+                api: 'POST /api/addressbook'
+            },
+            // 10. 수신번호 테이블
+            {
+                selector: '#recipientDataTable',
+                title: '수신번호 테이블',
+                position: { top: '5px', left: '5px' },
+                function: '수신자 정보 입력 및 편집',
+                behavior: [
+                    '직접 셀 클릭하여 편집',
+                    '체크박스로 다중 선택',
+                    '순번, 이름, 전화번호, 변수1~3 컬럼'
+                ]
+            },
+            // 11. 행 추가 버튼
+            {
+                selector: '#addRowBtn',
+                title: '행 추가',
+                position: { top: '-5px', left: '-10px' },
+                function: '수신번호 입력 행 추가'
+            },
+            // 12. 선택 행 삭제 버튼
+            {
+                selector: '#deleteSelectedBtn',
+                title: '선택 행 삭제',
+                position: { top: '-5px', left: '-10px' },
+                function: '체크된 행 삭제'
+            },
+            // 13. 전체삭제 버튼
+            {
+                selector: '#deleteAllBtn',
+                title: '전체삭제',
+                position: { top: '-5px', left: '-10px' },
+                function: '모든 수신번호 삭제',
+                behavior: ['확인 모달 후 삭제 진행']
+            },
+            // 14. 중복번호 삭제 버튼
+            {
+                selector: '#removeDuplicateBtn',
+                title: '중복번호 삭제',
+                position: { top: '-5px', left: '-10px' },
+                function: '중복된 전화번호 자동 제거'
+            },
+            // 15. 수신거부번호 삭제 버튼
+            {
+                selector: '#removeRejectBtn',
+                title: '수신거부번호 삭제',
+                position: { top: '-5px', right: '-10px' },
+                function: '수신거부 등록된 번호 자동 제거',
+                api: 'GET /api/reject-numbers'
+            },
+            // 16. 메시지 타입 선택
+            {
+                selector: '#messageTypeGroup',
+                title: '메시지 타입',
+                position: { top: '5px', right: '10px' },
+                function: 'SMS/LMS/MMS 선택',
+                behavior: [
+                    'SMS: 90바이트, 20원/건',
+                    'LMS: 2,000바이트, 50원/건',
+                    'MMS: 이미지 포함, 100원/건'
+                ]
+            },
+            // 17. 변수 버튼 그룹
+            {
+                selector: '#variableBtnGroup',
+                title: '변수 삽입 버튼',
+                position: { top: '-5px', left: '10px' },
+                function: '메시지에 개인화 변수 삽입',
+                behavior: [
+                    '#{이름}: 수신자 이름',
+                    '#{전화번호}: 수신자 번호',
+                    '#{변수1~3}: 커스텀 변수'
+                ]
+            },
+            // 18. 템플릿 선택 버튼
+            {
+                selector: '#templateSelectBtn',
+                title: '템플릿 선택',
+                position: { top: '-5px', right: '-10px' },
+                function: '저장된 템플릿 불러오기',
+                behavior: ['클릭 시 템플릿 선택 모달 열림']
+            },
+            // 19. 메시지 내용 입력
+            {
+                selector: '#messageContent',
+                title: '메시지 내용',
+                position: { top: '5px', right: '5px' },
+                function: '발송할 메시지 본문 작성',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 20. 바이트 카운터
+            {
+                selector: '#byteCounter',
+                title: '바이트 카운터',
+                position: { top: '-3px', left: '-10px' },
+                function: '입력된 메시지 바이트 수 표시',
+                behavior: [
+                    '한글 2바이트, 영문 1바이트',
+                    '초과 시 색상 변경 경고'
+                ]
+            },
+            // 21. 발송 시간 설정
+            {
+                selector: '#sendTimeGroup',
+                title: '발송 시간',
+                position: { top: '5px', right: '10px' },
+                function: '즉시/예약 발송 선택',
+                behavior: [
+                    '즉시 발송: 바로 전송',
+                    '예약 발송: 날짜/시간 지정'
+                ]
+            },
+            // 22. 발송 비용 정보
+            {
+                selector: '.cost-info',
+                title: '발송 비용 정보',
+                position: { top: '5px', right: '5px' },
+                function: '예상 비용 실시간 계산',
+                behavior: [
+                    '수신번호 × 단가 = 총 비용',
+                    '잔액 부족 시 경고 표시'
+                ]
+            },
+            // 23. 테스트 발송 버튼
+            {
+                selector: '#testSendBtn',
+                title: '테스트 발송',
+                position: { top: '-5px', left: '-10px' },
+                function: '테스트 번호로 1건 발송',
+                behavior: ['테스트 번호 입력 모달 열림']
+            },
+            // 24. 템플릿으로 저장 버튼
+            {
+                selector: '#saveTemplateBtn',
+                title: '템플릿으로 저장',
+                position: { top: '-5px', left: '-10px' },
+                function: '현재 메시지를 템플릿으로 저장',
+                api: 'POST /api/templates'
+            },
+            // 25. 발송하기 버튼
+            {
+                selector: '#submitSendBtn',
+                title: '발송하기',
+                position: { top: '-5px', right: '-10px' },
+                function: '메시지 발송 실행',
+                behavior: [
+                    '유효성 검증',
+                    '발송 확인 모달',
+                    'API 호출 후 결과 페이지 이동'
+                ],
+                api: 'POST /api/messages/send',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 26. 미리보기 영역
+            {
+                selector: '#previewPhone',
+                title: '메시지 미리보기',
+                position: { top: '5px', left: '5px' },
+                function: '실제 수신 화면 미리보기',
+                behavior: [
+                    '메시지 내용 실시간 반영',
+                    '변수는 예시 값으로 표시'
+                ]
+            }
+        ];
+
+        // 페이지 로드 완료 후 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initSpecOverlay(specData);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
+

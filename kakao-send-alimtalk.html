@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>알림톡 발송 - 메시징 서비스</title>
+    <script src="js/header.js"></script>
+    <style>/* 공통 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --purple-color: #7c5cdb;
+    --purple-light: #a78bfa;
+    --purple-bg: linear-gradient(135deg, #e8e4f8 0%, #dcd6f0 50%, #d0c8eb 100%);
+    --bg-color: #f8fafc;
+    --surface-color: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 20px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-color);
+}
+
+/* 버튼 스타일 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    gap: 8px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background-color: var(--bg-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn-lg {
+    padding: 14px 28px;
+    font-size: 16px;
+}
+
+/* 입력 필드 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: var(--danger-color);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-error {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--danger-color);
+}
+
+.form-help {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 카드 */
+.card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2xl);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+}
+
+.card-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+
+/* 모달 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background-color: var(--surface-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* 배지 */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+}
+
+.badge-primary {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.badge-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.badge-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+.badge-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+/* 탭 */
+.tabs {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 24px;
+}
+
+.tab-list {
+    display: flex;
+    gap: 8px;
+}
+
+.tab-item {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.tab-item:hover {
+    color: var(--text-primary);
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 테이블 */
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table th {
+    background-color: var(--bg-color);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.table tbody tr:hover {
+    background-color: var(--bg-color);
+}
+
+/* 알림 */
+.alert {
+    padding: 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+}
+
+.alert-info {
+    background-color: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    color: var(--primary-color);
+}
+
+.alert-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    color: var(--warning-color);
+}
+
+.alert-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--danger-color);
+}
+
+.alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--success-color);
+}
+
+/* 유틸리티 */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+
+.flex {
+    display: flex;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gap-2 {
+    gap: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 검색/필터 섹션 */
+.search-filter-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-filter-section > div {
+    display: flex;
+    align-items: center;
+}
+
+/* 기간 선택 영역 */
+.date-range-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.date-range-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.date-input-wrapper {
+    min-width: 140px;
+    max-width: 160px;
+    flex-shrink: 0;
+}
+
+.date-input-wrapper input[type="date"] {
+    width: 100%;
+    min-width: 140px;
+}
+
+/* 필터 섹션 */
+.filter-section {
+    margin-bottom: 24px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1;
+}
+
+.filter-group .form-label {
+    margin-bottom: 8px;
+}
+
+.filter-group .flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group .flex input[type="date"] {
+    flex: 1;
+    min-width: 140px;
+}
+
+.filter-group .flex span {
+    flex-shrink: 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    .search-filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-filter-section > div {
+        width: 100%;
+    }
+    
+    .date-input-wrapper {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-group .flex {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group .flex input[type="date"] {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .date-range-separator {
+        display: none;
+    }
+}
+
+
+/* 레이아웃 스타일 */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 */
+.header {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.logo h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.logo a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.logo a:hover h1 {
+    opacity: 0.8;
+}
+
+.main-nav {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+    position: relative;
+}
+
+.nav-item {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-item:hover {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.nav-item.has-dropdown {
+    position: relative;
+}
+
+.nav-item.has-dropdown .nav-link::after {
+    content: '▼';
+    font-size: 10px;
+    margin-left: 4px;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.nav-item.has-dropdown.open .nav-link::after {
+    transform: rotate(180deg);
+}
+
+.nav-item.has-dropdown .nav-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+/* 드롭다운 메뉴 */
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.nav-item.open .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-dropdown-item {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.nav-dropdown-item:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.nav-dropdown-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.balance-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: var(--bg-color);
+    border-radius: var(--radius-md);
+}
+
+.balance-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.balance-amount {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 메인 컨텐츠 */
+.main-content {
+    flex: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.page-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* 대시보드 */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-icon {
+    font-size: 40px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-color);
+    border-radius: 50%;
+}
+
+.stat-content h3 {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.quick-actions {
+    margin-top: 32px;
+}
+
+.quick-actions h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.action-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.action-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.action-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.action-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.action-card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 2단 레이아웃 */
+.two-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 24px;
+}
+
+@media (max-width: 1024px) {
+    .two-column-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        height: auto;
+        padding: 16px;
+    }
+
+    .main-nav {
+        flex-wrap: wrap;
+        margin: 16px 0;
+        width: 100%;
+    }
+
+    .nav-dropdown {
+        position: static;
+        margin-top: 4px;
+        width: 100%;
+        box-shadow: none;
+        border: none;
+        border-top: 1px solid var(--border-color);
+        border-radius: 0;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        display: none;
+    }
+
+    .nav-item.open .nav-dropdown {
+        display: block;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .main-content {
+        padding: 16px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+        .current-balance-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: var(--bg-color);
+            border-radius: var(--radius-md);
+        }
+        .current-balance-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .current-balance-amount {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+        .cost-info {
+            background: #f5f5f5;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin-top: 20px;
+        }
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .cost-row:last-child {
+            margin-bottom: 0;
+        }
+        .cost-row span:first-child {
+            color: var(--text-secondary);
+        }
+        .cost-row span:last-child {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .cost-total {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 12px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+        .cost-total span:last-child {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+</style>
+    <style>
+        .template-check-alert {
+            text-align: center;
+            padding: 60px 40px;
+            background: var(--surface-color);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+        }
+        .template-check-alert-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .template-check-alert h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        .template-check-alert p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+        .send-form-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 24px;
+        }
+        .preview-section {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+        .preview-kakao {
+            background: #e5e5ea;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .preview-kakao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .preview-kakao-channel-name {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+        .preview-kakao-badge {
+            background: #000;
+            color: #fff;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .preview-kakao-body {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 100px;
+        }
+        .preview-kakao-alimtalk-bar {
+            background: #FEE500;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .preview-kakao-alimtalk-bar span {
+            font-size: 13px;
+            font-weight: 600;
+            color: #000;
+        }
+        .preview-kakao-alimtalk-bar .kakao-icon {
+            width: 20px;
+            height: 20px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 8px;
+            font-weight: 700;
+        }
+        .preview-kakao-content {
+            padding: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .variable-input-group {
+            margin-bottom: 16px;
+        }
+        .variable-input-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .variable-input-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+        }
+        @media (max-width: 1024px) {
+            .send-form-container {
+                grid-template-columns: 1fr;
+            }
+            .preview-section {
+                position: static;
+            }
+        }
+        /* 토글 스위치 스타일 */
+        #fallbackToggle {
+            width: 44px;
+            height: 24px;
+            cursor: pointer;
+            appearance: none;
+            background: #10b981;
+            border-radius: 12px;
+            position: relative;
+            transition: background 0.2s;
+        }
+        #fallbackToggle::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+        }
+        #fallbackToggle:checked::before {
+            transform: translateX(20px);
+        }
+        #fallbackToggle:not(:checked) {
+            background: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader());
+        </script>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2>카카오톡 발송</h2>
+                <p class="page-description">카카오톡 알림톡 메시지를 발송합니다</p>
+            </div>
+
+            <!-- 탭 메뉴 -->
+            <div class="tabs">
+                <div class="tab-list">
+                    <button class="tab-item active" onclick="window.location.href='kakao-send-alimtalk.html'">알림톡 발송</button>
+                    <button class="tab-item" onclick="window.location.href='kakao-send-brandtalk.html'">브랜드 메시지 발송</button>
+                    <button class="tab-item" onclick="window.location.href='kakao-profile-manage.html'">카카오톡 발신 프로필</button>
+                    <button class="tab-item" onclick="window.location.href='template-alimtalk.html'">알림톡 템플릿</button>
+                    <button class="tab-item" onclick="window.location.href='template-brandtalk.html'">브랜드 메시지 템플릿</button>
+                </div>
+            </div>
+
+            <!-- 템플릿 확인 영역 -->
+            <div id="templateCheckArea">
+                <!-- 템플릿이 없는 경우 -->
+                <div class="template-check-alert" id="noTemplateAlert">
+                    <div class="template-check-alert-icon">📋</div>
+                    <h3>등록된 알림톡 템플릿이 없습니다</h3>
+                    <p>알림톡 발송을 위해서는 카카오톡 채널에서</p>
+                    <p>템플릿을 등록하고 승인받아야 합니다.</p>
+                    <p style="margin-top: 16px; font-weight: 500;">템플릿 등록 후 1~2 영업일 내 승인됩니다.</p>
+                    <div style="margin-top: 32px;">
+                        <a href="template-alimtalk.html" class="btn btn-primary btn-lg">템플릿 등록하러 가기</a>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <a href="https://kakaobusiness.gitbook.io/main/ad/infotalk/content-guide" target="_blank" class="form-help">템플릿 등록 가이드 보기</a>
+                    </div>
+                </div>
+
+                <!-- 템플릿이 있는 경우 발송 폼 -->
+                <div id="sendFormArea" style="display: none;">
+                    <div class="send-form-container">
+                        <!-- 입력 영역 -->
+                        <div class="card">
+                            <form id="sendForm">
+
+                                <!-- 카카오톡 발신 프로필 선택 영역 -->
+                                <div class="form-group" style="margin-bottom: 24px;">
+                                    <div class="flex-between" style="align-items: flex-end;">
+                                        <div style="flex: 1; margin-right: 16px;">
+                                            <label class="form-label required">카카오톡 발신 프로필</label>
+                                            <select class="form-select" id="senderProfile" required>
+                                                <option value="">카카오톡 발신 프로필을 선택하세요</option>
+                                                <option value="profile1">마케팅팀</option>
+                                                <option value="profile2">고객센터</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <a href="kakao-profile-manage.html" class="btn btn-outline">카카오톡 발신 프로필 등록</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 템플릿 선택 -->
+                                <div class="form-group">
+                                    <label class="form-label required">템플릿</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" class="form-input" id="selectedTemplate" placeholder="템플릿을 선택하세요" readonly>
+                                        <button type="button" class="btn btn-outline" onclick="openModal('templateSelectModal')" style="min-width: 140px;">템플릿 선택</button>
+                                    </div>
+                                </div>
+
+                                <!-- 변수 입력 -->
+                                <div class="form-group" id="variableInputArea">
+                                    <label class="form-label">변수 입력</label>
+                                    <div id="variableInputs"></div>
+                                </div>
+
+                                <!-- 수신번호 입력 -->
+                                <div class="form-group">
+                                    <label class="form-label required">수신번호</label>
+                                    <div class="tabs">
+                                        <div class="tab-list">
+                                            <button type="button" class="tab-item active" data-tab="direct">직접입력</button>
+                                            <button type="button" class="tab-item" data-tab="addressbook">주소록</button>
+                                            <button type="button" class="tab-item" data-tab="excel">엑셀 업로드</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="direct" class="tab-content active">
+                                        <textarea class="form-textarea" id="recipientNumbers" placeholder="전화번호를 입력하세요 (콤마 또는 엔터로 구분)"></textarea>
+                                        <div class="flex-between mt-1">
+                                            <span class="form-help">총 <strong id="recipientCount">0</strong>명</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="addressbook" class="tab-content">
+                                        <select class="form-select" id="addressbookGroup" multiple style="height: 150px;">
+                                            <option value="group1">전체 (1,234명)</option>
+                                            <option value="group2">VIP 고객 (234명)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div id="excel" class="tab-content">
+                                        <button type="button" class="btn btn-outline" onclick="openModal('excelUploadModal')">엑셀 파일 업로드</button>
+                                    </div>
+                                </div>
+
+                                <!-- 대체문자 작성 -->
+                                <div class="form-group" style="margin-top: 32px;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                                        <label class="form-label required" style="margin-bottom: 0;">대체문자 작성</label>
+                                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                            <input type="checkbox" id="fallbackToggle">
+                                        </label>
+                                    </div>
+
+                                    <div id="fallbackContent" style="background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; display: none;">
+                                        <!-- 문자 유형 선택 -->
+                                        <div style="margin-bottom: 24px;">
+                                            <h4 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">문자 유형 선택</h4>
+                                            <ul style="margin: 0 0 16px 0; padding-left: 20px; color: var(--text-secondary); font-size: 14px; line-height: 1.8;">
+                                                <li>SMS 단문 선택시 앞 45글자만 대체문자로 발송됩니다</li>
+                                                <li>잔액 부족시, 모든 대체 문자 발송이 실패 처리됩니다</li>
+                                                <li>LMS 장문 선택시 이미지는 발송되지 않아요</li>
+                                            </ul>
+                                            <div style="display: flex; gap: 16px;">
+                                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                                    <input type="radio" name="fallbackMessageType" value="SMS" checked style="width: 18px; height: 18px; cursor: pointer;">
+                                                    <span style="font-size: 14px; font-weight: 500;">SMS</span>
+                                                </label>
+                                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                                    <input type="radio" name="fallbackMessageType" value="LMS" style="width: 18px; height: 18px; cursor: pointer;">
+                                                    <span style="font-size: 14px; font-weight: 500;">LMS</span>
+                                                </label>
+                                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                                    <input type="radio" name="fallbackMessageType" value="MMS" style="width: 18px; height: 18px; cursor: pointer;">
+                                                    <span style="font-size: 14px; font-weight: 500;">MMS</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- 발신번호 -->
+                                        <div class="form-group" style="margin-bottom: 16px;">
+                                            <label class="form-label">발신번호</label>
+                                            <div style="position: relative;">
+                                                <input type="text" class="form-input" id="fallbackSenderNumber" value="010-9872-5784 (기본) (아이뱅크)" readonly style="padding-right: 40px;">
+                                                <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer;">▼</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- 회신번호 (고정) -->
+                                        <div class="form-group" style="margin-bottom: 16px;">
+                                            <label class="form-label">회신번호</label>
+                                            <div style="padding: 10px 12px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); color: var(--text-primary);">
+                                                080-123-4567
+                                            </div>
+                                        </div>
+
+                                        <!-- 상호명 -->
+                                        <div class="form-group" style="margin-bottom: 16px;">
+                                            <div style="display: grid; grid-template-columns: 100px 1fr; gap: 12px; align-items: end;">
+                                                <label class="form-label" style="margin-bottom: 0;">상호명</label>
+                                                <div style="position: relative;">
+                                                    <input type="text" class="form-input" id="fallbackCompanyName" value="아이뱅크" style="padding-right: 32px;">
+                                                    <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; font-size: 16px;">×</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- LMS 제목 입력란 (LMS 선택 시에만 표시) -->
+                                        <div class="form-group" id="fallbackLmsTitleGroup" style="margin-bottom: 16px; display: none;">
+                                            <label class="form-label">제목</label>
+                                            <input type="text" class="form-input" id="fallbackLmsTitle" placeholder="제목을 입력하세요" maxlength="30">
+                                            <div class="form-help">최대 30자</div>
+                                        </div>
+
+                                        <!-- MMS 이미지 첨부 영역 (MMS 선택 시에만 표시) -->
+                                        <div class="form-group" id="fallbackMmsImageGroup" style="margin-bottom: 16px; display: none;">
+                                            <label class="form-label">이미지 첨부 (최대 3개)</label>
+                                            <div id="fallbackMmsImageList" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px;"></div>
+                                            <input type="file" class="form-input" id="fallbackMmsImageInput" accept="image/*" multiple style="display: none;" onchange="handleFallbackMmsImageUpload(event)">
+                                            <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('fallbackMmsImageInput').click()" id="fallbackMmsImageAddBtn">
+                                                이미지 추가
+                                            </button>
+                                            <div class="form-help">JPG, PNG (각 최대 500KB)</div>
+                                        </div>
+
+                                        <!-- 메시지 내용 -->
+                                        <div class="form-group" style="margin-bottom: 16px;">
+                                            <label class="form-label">메시지 내용</label>
+                                            <div style="position: relative;">
+                                                <textarea class="form-textarea" id="fallbackMessage" rows="6" placeholder="메시지 내용을 입력하세요" style="padding-bottom: 40px; resize: none;"></textarea>
+                                                <div style="position: absolute; bottom: 12px; right: 12px; font-size: 12px; color: var(--text-secondary);">
+                                                    <span id="fallbackCharCount">0</span> / <span id="fallbackByteCount">90</span>byte
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 미리보기 버튼 -->
+                                        <div style="text-align: right;">
+                                            <button type="button" class="btn btn-outline" onclick="previewFallbackMessage()" style="background: #f8fafc; border-color: #e2e8f0; color: var(--text-primary);">미리보기</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 발송 시간 -->
+                                <div class="form-group">
+                                    <label class="form-label required">발송 시간</label>
+                                    <div class="flex gap-2">
+                                        <label style="display: flex; align-items: center; gap: 8px;">
+                                            <input type="radio" name="sendTime" value="immediate" checked>
+                                            <span>즉시 발송</span>
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 8px;">
+                                            <input type="radio" name="sendTime" value="reserved">
+                                            <span>예약 발송</span>
+                                        </label>
+                                    </div>
+                                    <div id="reservedTimeGroup" style="display: none; margin-top: 12px;">
+                                        <input type="datetime-local" class="form-input" id="reservedDateTime">
+                                    </div>
+                                </div>
+
+                                <!-- 발송 비용 -->
+                                <div class="cost-info">
+                                    <div class="cost-row">
+                                        <span>수신번호 개수</span>
+                                        <span id="costRecipientCount">0명</span>
+                                    </div>
+                                    <div class="cost-row">
+                                        <span>메시지 타입</span>
+                                        <span id="costMessageType">알림톡</span>
+                                    </div>
+                                    <div class="cost-row">
+                                        <span>단가</span>
+                                        <span id="costUnitPrice">30원</span>
+                                    </div>
+                                    <div class="cost-row cost-total">
+                                        <span>예상 발송 마일리지</span>
+                                        <span id="costMileage">0</span>
+                                    </div>
+                                    <div class="cost-row cost-total">
+                                        <span>예상 발송 포인트</span>
+                                        <span id="costTotal">0</span>
+                                    </div>
+                                    <div class="cost-row">
+                                        <span>발송 후 예상 잔여 포인트</span>
+                                        <span id="expectedBalance">1,000,000</span>
+                                    </div>
+                                </div>
+
+                                <!-- 액션 버튼 -->
+                                <div class="flex gap-2 mt-3">
+                                    <button type="button" class="btn btn-outline" onclick="testSend()">테스트 발송</button>
+                                    <button type="submit" class="btn btn-primary" style="margin-left: auto;">발송하기</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- 미리보기 영역 -->
+                        <div class="preview-section">
+                            <div class="card">
+                                <h3 class="card-title">메시지 미리보기</h3>
+                                <div class="preview-kakao">
+                                    <div class="preview-kakao-header">
+                                        <span class="preview-kakao-channel-name" id="previewProfileName">카카오톡 채널명</span>
+                                        <span class="preview-kakao-badge">kakao</span>
+                                    </div>
+                                    <div class="preview-kakao-body">
+                                        <div class="preview-kakao-alimtalk-bar">
+                                            <span>알림톡 도착</span>
+                                            <div class="kakao-icon">kakao</div>
+                                        </div>
+                                        <div class="preview-kakao-content">
+                                            <div id="previewContent" style="white-space: pre-wrap; line-height: 1.6;">발신프로필 및 템플릿을 선택해주세요.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 템플릿 선택 모달 -->
+    <div class="modal-overlay" id="templateSelectModal">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">템플릿 선택</h3>
+                <button class="modal-close" onclick="closeModal('templateSelectModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="템플릿명 또는 템플릿 코드로 검색">
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>템플릿 코드</th>
+                                <th>템플릿명</th>
+                                <th>카테고리</th>
+                                <th>변수</th>
+                                <th>상태</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>AT001</td>
+                                <td>주문 확인</td>
+                                <td>주문/배송</td>
+                                <td>#{주문번호}, #{상품명}</td>
+                                <td><span class="badge badge-success">승인완료</span></td>
+                                <td><button class="btn btn-sm btn-primary" onclick="selectTemplate('AT001', '주문 확인', ['주문번호', '상품명'], '주문이 접수되었습니다.\n주문번호: #{주문번호}\n상품명: #{상품명}')">선택</button></td>
+                            </tr>
+                            <tr>
+                                <td>AT002</td>
+                                <td>배송 안내</td>
+                                <td>주문/배송</td>
+                                <td>#{운송장번호}</td>
+                                <td><span class="badge badge-success">승인완료</span></td>
+                                <td><button class="btn btn-sm btn-primary" onclick="selectTemplate('AT002', '배송 안내', ['운송장번호'], '배송이 시작되었습니다.\n운송장번호: #{운송장번호}')">선택</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('templateSelectModal')">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 엑셀 업로드 모달 -->
+    <div class="modal-overlay" id="excelUploadModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">엑셀 업로드</h3>
+                <button class="modal-close" onclick="closeModal('excelUploadModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">파일 선택</label>
+                    <div style="border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 40px; text-align: center;">
+                        <p>파일을 드래그하여 놓거나 클릭하여 선택하세요</p>
+                        <input type="file" class="form-input" accept=".xlsx,.xls,.csv" style="margin-top: 16px;">
+                    </div>
+                    <div class="form-help">지원 형식: .xlsx, .xls, .csv (최대 10MB)</div>
+                    <a href="#" class="form-help">샘플 파일 다운로드</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('excelUploadModal')">취소</button>
+                <button class="btn btn-primary">업로드</button>
+            </div>
+        </div>
+    </div>
+
+    <script>// 공통 JavaScript 함수
+
+// 모달 열기/닫기
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex'; // 인라인 스타일 제거 후 다시 설정
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+// ESC 키로 모달 닫기
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+        const activeModal = document.querySelector('.modal-overlay.active');
+        if (activeModal) {
+            const modalId = activeModal.id;
+            if (modalId && typeof closeModal === 'function') {
+                closeModal(modalId);
+            } else {
+                activeModal.classList.remove('active');
+                activeModal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+    }
+});
+
+// 모달 외부 클릭 시 닫기
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
+
+// 탭 전환
+function switchTab(tabId, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // 모든 탭 비활성화
+    container.querySelectorAll('.tab-item').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    container.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // 선택한 탭 활성화
+    const tab = document.querySelector(`[data-tab="${tabId}"]`);
+    const content = document.getElementById(tabId);
+    if (tab) tab.classList.add('active');
+    if (content) content.classList.add('active');
+}
+
+// 전화번호 포맷팅
+function formatPhoneNumber(value) {
+    const numbers = value.replace(/[^\d]/g, '');
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 7) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+}
+
+// 바이트 계산 (한글 3바이트, 영문/숫자 1바이트)
+function calculateByteLength(str) {
+    let byteLength = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charAt(i);
+        if (escape(char).length > 4) {
+            byteLength += 3; // 한글
+        } else {
+            byteLength += 1; // 영문/숫자
+        }
+    }
+    return byteLength;
+}
+
+// 토스트 메시지
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-lg);
+        z-index: 2000;
+        animation: slideIn 0.3s ease;
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// 날짜 포맷팅
+function formatDate(date, format = 'YYYY-MM-DD HH:mm') {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+
+    return format
+        .replace('YYYY', year)
+        .replace('MM', month)
+        .replace('DD', day)
+        .replace('HH', hours)
+        .replace('mm', minutes);
+}
+
+// 숫자 포맷팅 (천단위 콤마)
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// 파일 업로드 미리보기
+function previewFile(input, previewId) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById(previewId);
+        if (preview) {
+            if (file.type.startsWith('image/')) {
+                preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px;">`;
+            } else {
+                preview.textContent = file.name;
+            }
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// 드래그 앤 드롭
+function setupDragAndDrop(dropZone, callback) {
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && callback) {
+            callback(files[0]);
+        }
+    });
+}
+
+// 페이지네이션
+function createPagination(currentPage, totalPages, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let html = '<div class="pagination">';
+    
+    // 이전 버튼
+    if (currentPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">이전</button>`;
+    }
+
+    // 페이지 번호
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    if (startPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) html += '<span class="page-ellipsis">...</span>';
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += '<span class="page-ellipsis">...</span>';
+        html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+    }
+
+    // 다음 버튼
+    if (currentPage < totalPages) {
+        html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">다음</button>`;
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// CSS 애니메이션 추가
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    .drag-over {
+        border-color: var(--primary-color) !important;
+        background-color: rgba(37, 99, 235, 0.05) !important;
+    }
+    .pagination {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 24px;
+    }
+    .page-btn {
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        background-color: var(--surface-color);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .page-btn:hover {
+        background-color: var(--bg-color);
+    }
+    .page-btn.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    .page-ellipsis {
+        padding: 8px 4px;
+    }
+`;
+document.head.appendChild(style);
+
+// 드롭다운 메뉴 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initDropdownMenus();
+});
+
+</script>
+    <script>
+        // 템플릿 존재 여부 확인 (실제로는 API 호출)
+        const hasTemplate = true; // 템플릿이 등록 완료된 상태
+
+        if (hasTemplate) {
+            document.getElementById('noTemplateAlert').style.display = 'none';
+            document.getElementById('sendFormArea').style.display = 'block';
+        } else {
+            document.getElementById('noTemplateAlert').style.display = 'block';
+            document.getElementById('sendFormArea').style.display = 'none';
+        }
+
+        // 탭 전환
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                switchTab(tabId, 'sendForm');
+            });
+        });
+
+        // 발신 프로필 선택 시 미리보기 채널명 업데이트
+        document.getElementById('senderProfile').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const channelName = selectedOption.text || '카카오톡 채널명';
+            document.getElementById('previewProfileName').textContent = channelName;
+        });
+
+        // 발송 시간 변경
+        document.querySelectorAll('input[name="sendTime"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('reservedTimeGroup').style.display = 
+                    this.value === 'reserved' ? 'block' : 'none';
+            });
+        });
+
+        // 수신번호 입력 처리
+        document.getElementById('recipientNumbers').addEventListener('input', function() {
+            const numbers = this.value.split(/[,\n]/).map(n => n.trim()).filter(n => n);
+            const uniqueNumbers = [...new Set(numbers)];
+            document.getElementById('recipientCount').textContent = uniqueNumbers.length;
+            updateCost();
+        });
+
+        // 템플릿 선택
+        function selectTemplate(code, name, variables, content) {
+            document.getElementById('selectedTemplate').value = `${name} (${code})`;
+            
+            // 변수 입력 필드 생성
+            const variableArea = document.getElementById('variableInputs');
+            variableArea.innerHTML = '';
+            
+            variables.forEach(variable => {
+                const div = document.createElement('div');
+                div.className = 'variable-input-group';
+                div.innerHTML = `
+                    <label>${variable}</label>
+                    <input type="text" class="form-input" data-variable="${variable}" placeholder="${variable} 값을 입력하세요" oninput="updatePreview()">
+                `;
+                variableArea.appendChild(div);
+            });
+            
+            // 미리보기 업데이트
+            updatePreviewContent(content);
+            closeModal('templateSelectModal');
+        }
+
+        function updatePreviewContent(templateContent) {
+            const content = document.getElementById('previewContent');
+            let previewText = templateContent;
+            
+            // 변수 치환
+            document.querySelectorAll('[data-variable]').forEach(input => {
+                const variable = input.getAttribute('data-variable');
+                const value = input.value || `#{${variable}}`;
+                previewText = previewText.replace(new RegExp(`#\\{${variable}\\}`, 'g'), value);
+            });
+            
+            content.textContent = previewText;
+        }
+
+        function updatePreview() {
+            const templateContent = document.getElementById('previewContent').textContent;
+            updatePreviewContent(templateContent);
+        }
+
+        function updateCost() {
+            const count = parseInt(document.getElementById('recipientCount').textContent) || 0;
+            const total = count * 30;
+            document.getElementById('costRecipientCount').textContent = `${count}명`;
+            document.getElementById('costTotal').textContent = `${formatNumber(total)}원`;
+        }
+
+
+        // 폼 제출
+        function testSend() {
+            // 기본값: 로그인한 회원의 휴대폰번호 (예시: 010-1234-5678)
+            const defaultPhone = '010-1234-5678'; // 실제로는 API에서 가져와야 함
+            
+            // 테스트 번호 입력 필드 초기화
+            const testPhoneNumbers = document.getElementById('testPhoneNumbers');
+            if (testPhoneNumbers) {
+                testPhoneNumbers.innerHTML = `
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" class="form-input test-phone-input" placeholder="010-1234-5678" value="${defaultPhone}">
+                        <button type="button" class="btn btn-sm btn-outline" onclick="removeTestPhone(this)" style="display: none;">삭제</button>
+                    </div>
+                `;
+            }
+            
+            // 미리보기 업데이트
+            updateTestPreview();
+            
+            // 비용 계산
+            updateTestCost();
+            
+            // 결과 메시지 숨기기
+            const resultDiv = document.getElementById('testSendResult');
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+            }
+            
+            // 버튼 상태 초기화
+            const submitBtn = document.getElementById('testSendSubmitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '테스트 발송';
+            }
+            
+            openModal('testSendModal');
+        }
+
+        function addTestPhone() {
+            const testPhoneNumbers = document.getElementById('testPhoneNumbers');
+            if (!testPhoneNumbers) return;
+            
+            const phoneCount = testPhoneNumbers.querySelectorAll('.test-phone-input').length;
+            
+            if (phoneCount >= 3) {
+                showToast('최대 3개 번호까지 입력 가능합니다.', 'warning');
+                return;
+            }
+            
+            const newPhoneDiv = document.createElement('div');
+            newPhoneDiv.className = 'flex gap-2 mb-2';
+            newPhoneDiv.innerHTML = `
+                <input type="text" class="form-input test-phone-input" placeholder="010-1234-5678" oninput="updateTestCost()">
+                <button type="button" class="btn btn-sm btn-outline" onclick="removeTestPhone(this)">삭제</button>
+            `;
+            testPhoneNumbers.appendChild(newPhoneDiv);
+            
+            // 첫 번째 번호에도 삭제 버튼 표시
+            if (phoneCount === 0) {
+                const firstDiv = testPhoneNumbers.querySelector('.flex');
+                if (firstDiv) {
+                    const deleteBtn = firstDiv.querySelector('button');
+                    if (deleteBtn) deleteBtn.style.display = 'inline-flex';
+                }
+            }
+            
+            // 추가 버튼 숨기기 (3개일 때)
+            if (phoneCount + 1 >= 3) {
+                const addBtn = document.getElementById('addTestPhoneBtn');
+                if (addBtn) addBtn.style.display = 'none';
+            }
+        }
+
+        function removeTestPhone(btn) {
+            const testPhoneNumbers = document.getElementById('testPhoneNumbers');
+            if (!testPhoneNumbers) return;
+            
+            const phoneCount = testPhoneNumbers.querySelectorAll('.test-phone-input').length;
+            
+            if (phoneCount <= 1) {
+                showToast('최소 1개 번호는 입력해야 합니다.', 'warning');
+                return;
+            }
+            
+            btn.parentElement.remove();
+            
+            // 추가 버튼 표시
+            if (phoneCount - 1 < 3) {
+                const addBtn = document.getElementById('addTestPhoneBtn');
+                if (addBtn) addBtn.style.display = 'inline-flex';
+            }
+            
+            updateTestCost();
+        }
+
+        function updateTestPreview() {
+            // 발신 프로필
+            const senderProfile = document.getElementById('senderProfile')?.value || '-';
+            const previewProfile = document.getElementById('testPreviewProfile');
+            if (previewProfile) previewProfile.textContent = senderProfile;
+            
+            // 내용
+            const content = document.getElementById('messageContent')?.value || '메시지 내용을 입력하세요';
+            let previewContent = content;
+            
+            // 변수 치환 예시
+            previewContent = previewContent.replace(/#{이름}/g, '홍길동');
+            previewContent = previewContent.replace(/#{전화번호}/g, '010-1234-5678');
+            
+            const previewContentEl = document.getElementById('testPreviewContent');
+            if (previewContentEl) previewContentEl.textContent = previewContent;
+        }
+
+        function updateTestCost() {
+            const testPhoneInputs = document.querySelectorAll('.test-phone-input');
+            const validPhones = Array.from(testPhoneInputs).filter(input => {
+                const value = input.value.trim();
+                return value && /^010-\d{4}-\d{4}$/.test(value);
+            }).length;
+            
+            const unitPrice = 30; // 알림톡 단가
+            const totalCost = validPhones * unitPrice;
+            
+            const testCostEl = document.getElementById('testCost');
+            if (testCostEl) testCostEl.textContent = totalCost.toLocaleString() + '원';
+        }
+
+        function confirmTestSend() {
+            const testPhoneInputs = document.querySelectorAll('.test-phone-input');
+            const phoneNumbers = Array.from(testPhoneInputs)
+                .map(input => input.value.trim())
+                .filter(value => value);
+            
+            if (phoneNumbers.length === 0) {
+                showToast('테스트 수신번호를 입력해주세요.', 'warning');
+                return;
+            }
+            
+            // 전화번호 형식 검증
+            const phoneRegex = /^010-\d{4}-\d{4}$/;
+            const invalidPhones = phoneNumbers.filter(phone => !phoneRegex.test(phone));
+            if (invalidPhones.length > 0) {
+                showToast('올바른 전화번호 형식이 아닙니다. (010-XXXX-XXXX)', 'warning');
+                return;
+            }
+            
+            // 발송 버튼 비활성화 및 로딩 표시
+            const submitBtn = document.getElementById('testSendSubmitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '발송 중...';
+            }
+            
+            // 결과 메시지 숨기기
+            const resultDiv = document.getElementById('testSendResult');
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+            }
+            
+            // 실제로는 API 호출
+            // 시뮬레이션: 2초 후 완료
+            setTimeout(() => {
+                // 성공 처리
+                if (resultDiv) {
+                    const resultAlert = document.getElementById('testSendResultAlert');
+                    const sendTime = document.getElementById('testSendTime');
+                    
+                    if (resultAlert) {
+                        resultAlert.className = 'alert alert-success';
+                        resultAlert.textContent = '테스트 발송이 완료되었습니다';
+                    }
+                    if (sendTime) {
+                        sendTime.textContent = '발송 시간: ' + new Date().toLocaleString('ko-KR');
+                    }
+                    
+                    resultDiv.style.display = 'block';
+                }
+                
+                // 버튼 상태 변경
+                if (submitBtn) {
+                    submitBtn.textContent = '확인';
+                    submitBtn.onclick = function() {
+                        closeModal('testSendModal');
+                    };
+                }
+                
+                // 취소 버튼 숨기기
+                const cancelBtn = document.getElementById('testSendCancelBtn');
+                if (cancelBtn) cancelBtn.style.display = 'none';
+                
+                showToast('테스트 발송이 완료되었습니다.', 'success');
+            }, 2000);
+        }
+
+        function saveTemplate() {
+            // 템플릿 저장 모달 열기
+            const templateNameEl = document.getElementById('templateName');
+            if (templateNameEl) templateNameEl.value = '';
+            openModal('templateSaveModal');
+        }
+
+        function saveTemplateConfirm() {
+            const templateNameEl = document.getElementById('templateName');
+            const name = templateNameEl ? templateNameEl.value : '';
+            
+            if (!name) {
+                showToast('템플릿명을 입력해주세요.', 'warning');
+                return;
+            }
+            
+            showToast('템플릿으로 저장되었습니다.', 'success');
+            closeModal('templateSaveModal');
+        }
+
+        // 대체문자 토글 기능
+        const fallbackToggle = document.getElementById('fallbackToggle');
+        const fallbackContent = document.getElementById('fallbackContent');
+        if (fallbackToggle && fallbackContent) {
+            fallbackToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    fallbackContent.style.display = 'block';
+                } else {
+                    fallbackContent.style.display = 'none';
+                }
+            });
+        }
+
+        // 대체문자 글자수 카운터
+        const fallbackMessage = document.getElementById('fallbackMessage');
+        const fallbackCharCount = document.getElementById('fallbackCharCount');
+        const fallbackByteCount = document.getElementById('fallbackByteCount');
+        if (fallbackMessage && fallbackCharCount && fallbackByteCount) {
+            function updateFallbackCount() {
+                const text = fallbackMessage.value;
+                const charCount = text.length;
+                const byteCount = calculateByteLength(text);
+                fallbackCharCount.textContent = charCount;
+                fallbackByteCount.textContent = 90; // 최대 바이트 수
+            }
+            fallbackMessage.addEventListener('input', updateFallbackCount);
+            updateFallbackCount();
+        }
+
+        // 문자 유형 선택에 따른 UI 업데이트
+        document.querySelectorAll('input[name="fallbackMessageType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const messageType = this.value;
+                const lmsTitleGroup = document.getElementById('fallbackLmsTitleGroup');
+                const mmsImageGroup = document.getElementById('fallbackMmsImageGroup');
+                const mmsImageAddBtn = document.getElementById('fallbackMmsImageAddBtn');
+                
+                if (messageType === 'LMS') {
+                    if (lmsTitleGroup) lmsTitleGroup.style.display = 'block';
+                    if (mmsImageGroup) mmsImageGroup.style.display = 'none';
+                } else if (messageType === 'MMS') {
+                    if (lmsTitleGroup) lmsTitleGroup.style.display = 'none';
+                    if (mmsImageGroup) mmsImageGroup.style.display = 'block';
+                    if (mmsImageAddBtn && fallbackMmsImageCount < 3) {
+                        mmsImageAddBtn.style.display = 'inline-flex';
+                    }
+                } else {
+                    if (lmsTitleGroup) lmsTitleGroup.style.display = 'none';
+                    if (mmsImageGroup) mmsImageGroup.style.display = 'none';
+                }
+            });
+        });
+
+        // 초기 상태 설정
+        const initialMessageType = document.querySelector('input[name="fallbackMessageType"]:checked');
+        if (initialMessageType) {
+            initialMessageType.dispatchEvent(new Event('change'));
+        }
+
+        // MMS 이미지 첨부 처리
+        let fallbackMmsImageCount = 0;
+        function handleFallbackMmsImageUpload(event) {
+            const files = Array.from(event.target.files);
+            const maxImages = 3;
+            
+            if (fallbackMmsImageCount + files.length > maxImages) {
+                showToast(`최대 ${maxImages}개까지 첨부할 수 있습니다.`, 'warning');
+                return;
+            }
+            
+            const imageList = document.getElementById('fallbackMmsImageList');
+            if (!imageList) return;
+            
+            files.forEach(file => {
+                if (fallbackMmsImageCount >= maxImages) return;
+                
+                if (!file.type.startsWith('image/')) {
+                    showToast('이미지 파일만 업로드 가능합니다.', 'warning');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageItem = document.createElement('div');
+                    imageItem.style.position = 'relative';
+                    imageItem.style.border = '1px solid var(--border-color)';
+                    imageItem.style.borderRadius = '8px';
+                    imageItem.style.overflow = 'hidden';
+                    imageItem.innerHTML = `
+                        <img src="${e.target.result}" style="width: 100%; height: 150px; object-fit: cover; display: block;">
+                        <button type="button" onclick="removeFallbackMmsImage(this)" style="position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1;">×</button>
+                    `;
+                    imageList.appendChild(imageItem);
+                    fallbackMmsImageCount++;
+                    
+                    // 이미지 개수에 따라 추가 버튼 표시/숨김
+                    const addBtn = document.getElementById('fallbackMmsImageAddBtn');
+                    if (addBtn) {
+                        addBtn.style.display = fallbackMmsImageCount < maxImages ? 'inline-flex' : 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // 파일 입력 초기화
+            event.target.value = '';
+        }
+
+        function removeFallbackMmsImage(btn) {
+            btn.parentElement.remove();
+            fallbackMmsImageCount--;
+            
+            // 이미지 개수에 따라 추가 버튼 표시/숨김
+            const addBtn = document.getElementById('fallbackMmsImageAddBtn');
+            if (addBtn) {
+                addBtn.style.display = fallbackMmsImageCount < 3 ? 'inline-flex' : 'none';
+            }
+        }
+
+        // 미리보기 함수
+        function previewFallbackMessage() {
+            const message = document.getElementById('fallbackMessage').value;
+            const messageType = document.querySelector('input[name="fallbackMessageType"]:checked').value;
+            const senderNumber = document.getElementById('fallbackSenderNumber').value;
+            const companyName = document.getElementById('fallbackCompanyName').value || '아이뱅크';
+            
+            // 발신번호 추출 (010-9872-5784 형식)
+            const phoneMatch = senderNumber.match(/(\d{3}-\d{4}-\d{4})/);
+            const displayPhone = phoneMatch ? phoneMatch[1] : '010-9872-5784';
+            
+            // 바이트 계산
+            const byteCount = calculateByteLength(message);
+            const maxByte = messageType === 'SMS' ? 90 : (messageType === 'LMS' ? 2000 : 2000);
+            
+            // 메시지 타입 한글명
+            const messageTypeName = messageType === 'SMS' ? '단문 SMS' : (messageType === 'LMS' ? '장문 LMS' : '멀티 MMS');
+            
+            // 미리보기 내용 업데이트
+            const previewPhone = document.getElementById('previewFallbackPhone');
+            const previewMessageType = document.getElementById('previewFallbackMessageType');
+            const previewContent = document.getElementById('previewFallbackContent');
+            
+            if (previewPhone) previewPhone.textContent = displayPhone;
+            if (previewMessageType) previewMessageType.textContent = `${messageTypeName} (${byteCount}/${maxByte}byte)`;
+            if (previewContent) {
+                let content = '[Web발신]\n';
+                content += `(광고)${companyName}\n`;
+                content += message || '테스트 메시지입니다.';
+                content += '\n무료수신거부 080-123-4567';
+                previewContent.textContent = content;
+            }
+            
+            // 모달 열기
+            openModal('fallbackPreviewModal');
+        }
+
+        document.getElementById('sendForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('발송이 완료되었습니다.', 'success');
+        });
+    </script>
+
+    <!-- 테스트 발송 모달 -->
+    <div class="modal-overlay" id="testSendModal">
+        <div class="modal" style="width: 500px; max-height: 80vh;">
+            <div class="modal-header">
+                <h3 class="modal-title">테스트 발송</h3>
+                <button class="modal-close" onclick="closeModal('testSendModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 테스트 번호 입력 -->
+                <div class="form-group">
+                    <label class="form-label required">테스트 수신번호</label>
+                    <div id="testPhoneNumbers">
+                        <div class="flex gap-2 mb-2">
+                            <input type="text" class="form-input test-phone-input" placeholder="010-1234-5678" value="010-1234-5678">
+                            <button type="button" class="btn btn-sm btn-outline" onclick="removeTestPhone(this)" style="display: none;">삭제</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline" onclick="addTestPhone()" id="addTestPhoneBtn">추가</button>
+                    <div class="form-help">최대 3개 번호까지 입력 가능합니다</div>
+                </div>
+
+                <!-- 테스트 내용 확인 -->
+                <div class="form-group">
+                    <label class="form-label">발송될 메시지 미리보기</label>
+                    <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; background-color: var(--bg-color);">
+                        <div style="margin-bottom: 8px;">
+                            <strong>발신 프로필:</strong> <span id="testPreviewProfile">-</span>
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>내용:</strong>
+                            <div id="testPreviewContent" style="margin-top: 4px; white-space: pre-wrap; word-break: break-word;">메시지 내용을 입력하세요</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 비용 안내 -->
+                <div class="form-group">
+                    <div class="alert alert-warning" style="margin-bottom: 8px;">
+                        테스트 발송도 포인트가 차감됩니다
+                    </div>
+                    <div class="cost-row">
+                        <span>예상 차감 포인트</span>
+                        <span id="testCost">0원</span>
+                    </div>
+                    <div class="cost-row">
+                        <span>현재 잔액</span>
+                        <span id="testBalance">1,000,000원</span>
+                    </div>
+                </div>
+
+                <!-- 발송 완료/실패 메시지 -->
+                <div id="testSendResult" style="display: none;">
+                    <div class="alert" id="testSendResultAlert" style="margin-top: 16px;"></div>
+                    <div id="testSendTime" style="text-align: center; margin-top: 8px; color: var(--text-secondary); font-size: 12px;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('testSendModal')" id="testSendCancelBtn">취소</button>
+                <button class="btn btn-primary" onclick="confirmTestSend()" id="testSendSubmitBtn">테스트 발송</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 템플릿 저장 모달 -->
+    <div class="modal-overlay" id="templateSaveModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">템플릿으로 저장</h3>
+                <button class="modal-close" onclick="closeModal('templateSaveModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label required">템플릿명</label>
+                    <input type="text" class="form-input" id="templateName" placeholder="템플릿명을 입력하세요" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('templateSaveModal')">취소</button>
+                <button class="btn btn-primary" onclick="saveTemplateConfirm()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 대체문자 미리보기 모달 -->
+    <div class="modal-overlay" id="fallbackPreviewModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">발송결과 미리보기</h3>
+                <button class="modal-close" onclick="closeModal('fallbackPreviewModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 13px; color: var(--text-secondary);">
+                    • 이용하시는 통신사 및 수신자의 단말기별로 실제 결과에 차이가 있을 수 있습니다.
+                </div>
+                <div style="background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; display: flex; justify-content: center;">
+                    <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; width: 280px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="font-size: 14px; color: var(--text-primary); margin-bottom: 8px; font-weight: 500;" id="previewFallbackPhone">010-9872-5784</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;" id="previewFallbackMessageType">단문 SMS (0/90byte)</div>
+                        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; font-size: 14px; color: var(--text-primary); line-height: 1.6; white-space: pre-wrap;" id="previewFallbackContent">
+[Web발신]
+(광고)아이뱅크
+테스트 메시지입니다.
+무료수신거부 080-123-4567
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal('fallbackPreviewModal')" style="width: 100%;">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>알림톡 템플릿 관리 - 메시징 서비스</title>
+    <script src="js/header.js"></script>
+    <style>/* 공통 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --purple-color: #7c5cdb;
+    --purple-light: #a78bfa;
+    --purple-bg: linear-gradient(135deg, #e8e4f8 0%, #dcd6f0 50%, #d0c8eb 100%);
+    --bg-color: #f8fafc;
+    --surface-color: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 20px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-color);
+}
+
+/* 버튼 스타일 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    gap: 8px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background-color: var(--bg-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn-lg {
+    padding: 14px 28px;
+    font-size: 16px;
+}
+
+/* 입력 필드 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: var(--danger-color);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-error {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--danger-color);
+}
+
+.form-help {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 카드 */
+.card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2xl);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+}
+
+.card-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* 모달 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background-color: var(--surface-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* 배지 */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+}
+
+.badge-primary {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.badge-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.badge-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+.badge-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+/* 탭 */
+.tabs {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 24px;
+}
+
+.tab-list {
+    display: flex;
+    gap: 8px;
+}
+
+.tab-item {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.tab-item:hover {
+    color: var(--text-primary);
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 테이블 */
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table th {
+    background-color: var(--bg-color);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.table tbody tr:hover {
+    background-color: var(--bg-color);
+}
+
+/* 알림 */
+.alert {
+    padding: 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+}
+
+.alert-info {
+    background-color: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    color: var(--primary-color);
+}
+
+.alert-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    color: var(--warning-color);
+}
+
+.alert-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--danger-color);
+}
+
+.alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--success-color);
+}
+
+/* 유틸리티 */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+
+.flex {
+    display: flex;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gap-2 {
+    gap: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 검색/필터 섹션 */
+.search-filter-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-filter-section > div {
+    display: flex;
+    align-items: center;
+}
+
+/* 기간 선택 영역 */
+.date-range-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.date-range-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.date-input-wrapper {
+    min-width: 140px;
+    max-width: 160px;
+    flex-shrink: 0;
+}
+
+.date-input-wrapper input[type="date"] {
+    width: 100%;
+    min-width: 140px;
+}
+
+/* 필터 섹션 */
+.filter-section {
+    margin-bottom: 24px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1;
+}
+
+.filter-group .form-label {
+    margin-bottom: 8px;
+}
+
+.filter-group .flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group .flex input[type="date"] {
+    flex: 1;
+    min-width: 140px;
+}
+
+.filter-group .flex span {
+    flex-shrink: 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    .search-filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-filter-section > div {
+        width: 100%;
+    }
+    
+    .date-input-wrapper {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-group .flex {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group .flex input[type="date"] {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .date-range-separator {
+        display: none;
+    }
+}
+
+
+/* 레이아웃 스타일 */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 */
+.header {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.logo h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.logo a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.logo a:hover h1 {
+    opacity: 0.8;
+}
+
+.main-nav {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+    position: relative;
+}
+
+.nav-item {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-item:hover {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.nav-item.has-dropdown {
+    position: relative;
+}
+
+.nav-item.has-dropdown .nav-link::after {
+    content: '▼';
+    font-size: 10px;
+    margin-left: 4px;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.nav-item.has-dropdown.open .nav-link::after {
+    transform: rotate(180deg);
+}
+
+.nav-item.has-dropdown .nav-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+/* 드롭다운 메뉴 */
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.nav-item.open .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-dropdown-item {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.nav-dropdown-item:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.nav-dropdown-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.balance-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: var(--bg-color);
+    border-radius: var(--radius-md);
+}
+
+.balance-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.balance-amount {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 메인 컨텐츠 */
+.main-content {
+    flex: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.page-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* 대시보드 */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-icon {
+    font-size: 40px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-color);
+    border-radius: 50%;
+}
+
+.stat-content h3 {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.quick-actions {
+    margin-top: 32px;
+}
+
+.quick-actions h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.action-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.action-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.action-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.action-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.action-card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 2단 레이아웃 */
+.two-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 24px;
+}
+
+@media (max-width: 1024px) {
+    .two-column-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        height: auto;
+        padding: 16px;
+    }
+
+    .main-nav {
+        flex-wrap: wrap;
+        margin: 16px 0;
+        width: 100%;
+    }
+
+    .nav-dropdown {
+        position: static;
+        margin-top: 4px;
+        width: 100%;
+        box-shadow: none;
+        border: none;
+        border-top: 1px solid var(--border-color);
+        border-radius: 0;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        display: none;
+    }
+
+    .nav-item.open .nav-dropdown {
+        display: block;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .main-content {
+        padding: 16px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+    <style>
+        .channel-info {
+            background: var(--bg-color);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning-color); }
+        .status-approved { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+        .status-rejected { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+        .status-review-needed { background: rgba(100, 116, 139, 0.1); color: var(--secondary-color); }
+        .status-review-requested { background: rgba(37, 99, 235, 0.1); color: var(--primary-color); }
+        .status-dormant { background: rgba(148, 163, 184, 0.1); color: var(--text-muted); }
+        .status-blocked { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+        .status-stopped { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+        .template-table {
+            width: 100%;
+        }
+        .template-table th {
+            background: var(--bg-color);
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .template-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .template-table tbody tr:hover {
+            background: var(--bg-color);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader());
+        </script>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2>카카오톡 발송</h2>
+                <p class="page-description">카카오 알림톡 발송을 위한 템플릿을 관리합니다</p>
+            </div>
+
+            <!-- 탭 메뉴 -->
+            <div class="tabs">
+                <div class="tab-list">
+                    <button class="tab-item" onclick="window.location.href='kakao-send-alimtalk.html'">알림톡 발송</button>
+                    <button class="tab-item" onclick="window.location.href='kakao-send-brandtalk.html'">브랜드 메시지 발송</button>
+                    <button class="tab-item" onclick="window.location.href='kakao-profile-manage.html'">카카오톡 발신 프로필</button>
+                    <button class="tab-item active" onclick="window.location.href='template-alimtalk.html'">알림톡 템플릿</button>
+                    <button class="tab-item" onclick="window.location.href='template-brandtalk.html'">브랜드 메시지 템플릿</button>
+                </div>
+            </div>
+
+            <!-- 발신프로필 선택 영역 (페이지 상단) -->
+            <div class="card" style="margin-bottom: 24px;">
+                <div class="flex-between" style="align-items: flex-end;">
+                    <div style="flex: 1; margin-right: 16px;">
+                        <label class="form-label required">발신프로필</label>
+                        <select class="form-select" id="profileSelect">
+                            <option value="">발신프로필을 선택하세요</option>
+                            <option value="profile1">마케팅팀</option>
+                            <option value="profile2">고객센터</option>
+                        </select>
+                    </div>
+                    <div>
+                        <a href="kakao-profile-manage.html" class="btn btn-outline">발신프로필 등록</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 검색 및 필터 -->
+            <div class="card" id="searchFilterSection" style="padding: 16px 24px; margin-bottom: 32px; display: none;">
+                <div class="search-filter-section">
+                    <div style="flex: 1; min-width: 200px;">
+                        <input type="text" class="form-input" placeholder="템플릿명으로 검색">
+                    </div>
+                    <div style="width: 150px;">
+                        <select class="form-select">
+                            <option>전체 상태</option>
+                            <option>심사필요</option>
+                            <option>심사요청</option>
+                            <option>승인</option>
+                            <option>휴면</option>
+                            <option>차단</option>
+                            <option>중지</option>
+                            <option>반려</option>
+                        </select>
+                    </div>
+                    <div style="width: 150px;">
+                        <select class="form-select">
+                            <option>전체 카테고리</option>
+                            <option>쇼핑/배송</option>
+                            <option>예약/티켓</option>
+                            <option>금융/보험</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary">검색</button>
+                    <button class="btn btn-outline">초기화</button>
+                </div>
+            </div>
+
+            <!-- 템플릿 목록 -->
+            <div class="card" id="templateListSection" style="display: none;">
+                <div class="template-actions" style="margin-bottom: 24px;">
+                    <div>
+                        <a href="template-alimtalk-register.html" class="btn btn-primary">템플릿 등록</a>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="template-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;"><input type="checkbox" id="selectAll"></th>
+                                <th>템플릿명</th>
+                                <th>템플릿 코드</th>
+                                <th>카테고리</th>
+                                <th>메시지 유형</th>
+                                <th>템플릿 상태</th>
+                                <th>등록일</th>
+                                <th>수정일</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="row-checkbox" data-id="1"></td>
+                                <td>주문 확인</td>
+                                <td>TMP001</td>
+                                <td>쇼핑/배송 > 주문/결제</td>
+                                <td>기본형</td>
+                                <td>
+                                    <div class="flex gap-2" style="align-items: center;">
+                                        <span class="status-badge status-approved">승인</span>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReviewResult(1)">심사결과</button>
+                                    </div>
+                                </td>
+                                <td>2024-01-15</td>
+                                <td>2024-01-15</td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn btn-sm btn-outline" onclick="previewTemplate(1)">미리보기</button>
+                                        <button class="btn btn-sm btn-outline" onclick="copyTemplate(1)">복사</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="row-checkbox" data-id="2"></td>
+                                <td>배송 안내</td>
+                                <td>TMP002</td>
+                                <td>쇼핑/배송 > 배송</td>
+                                <td>기본형</td>
+                                <td>
+                                    <div class="flex gap-2" style="align-items: center;">
+                                        <span class="status-badge status-approved">승인</span>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReviewResult(2)">심사결과</button>
+                                    </div>
+                                </td>
+                                <td>2024-01-14</td>
+                                <td>2024-01-14</td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn btn-sm btn-outline" onclick="previewTemplate(2)">미리보기</button>
+                                        <button class="btn btn-sm btn-outline" onclick="copyTemplate(2)">복사</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="row-checkbox" data-id="3"></td>
+                                <td>회원가입 환영</td>
+                                <td>TMP003</td>
+                                <td>기타</td>
+                                <td>강조형</td>
+                                <td>
+                                    <div class="flex gap-2" style="align-items: center;">
+                                        <span class="status-badge status-pending">심사요청</span>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReviewResult(3)">심사결과</button>
+                                    </div>
+                                </td>
+                                <td>2024-01-16</td>
+                                <td>2024-01-16</td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn btn-sm btn-outline" onclick="previewTemplate(3)">미리보기</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="row-checkbox" data-id="4"></td>
+                                <td>이벤트 안내</td>
+                                <td>TMP004</td>
+                                <td>기타</td>
+                                <td>이미지형</td>
+                                <td>
+                                    <div class="flex gap-2" style="align-items: center;">
+                                        <span class="status-badge status-rejected">반려</span>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReviewResult(4)">심사결과</button>
+                                    </div>
+                                </td>
+                                <td>2024-01-13</td>
+                                <td>2024-01-13</td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn btn-sm btn-outline" onclick="previewTemplate(4)">미리보기</button>
+                                        <button class="btn btn-sm btn-outline" onclick="editTemplate(4)">수정</button>
+                                        <button class="btn btn-sm btn-primary" onclick="requestReview(4)">심사요청</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="row-checkbox" data-id="5"></td>
+                                <td>신규 템플릿</td>
+                                <td>TMP005</td>
+                                <td>기타</td>
+                                <td>기본형</td>
+                                <td>
+                                    <div class="flex gap-2" style="align-items: center;">
+                                        <span class="status-badge status-pending">심사필요</span>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReviewResult(5)">심사결과</button>
+                                    </div>
+                                </td>
+                                <td>2024-01-17</td>
+                                <td>2024-01-17</td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn btn-sm btn-outline" onclick="previewTemplate(5)">미리보기</button>
+                                        <button class="btn btn-sm btn-outline" onclick="editTemplate(5)">수정</button>
+                                        <button class="btn btn-sm btn-primary" onclick="requestReview(5)">심사요청</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 선택 삭제 버튼 (표 하단) -->
+                <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+                    <button class="btn btn-outline btn-sm" id="batchDeleteBtn" onclick="batchDelete()" disabled>선택 삭제</button>
+                </div>
+
+                <!-- 페이지네이션 -->
+                <div id="pagination" style="margin-top: 24px;"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 반려 사유 확인 모달 -->
+    <div class="modal-overlay" id="rejectionModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">반려 사유</h3>
+                <button class="modal-close" onclick="closeModal('rejectionModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">템플릿 정보</label>
+                    <div style="background: var(--bg-color); padding: 12px; border-radius: var(--radius-md);">
+                        <div style="margin-top: 4px;"><strong>템플릿명:</strong> 이벤트 안내</div>
+                        <div style="margin-top: 4px;"><strong>반려 일시:</strong> 2024-01-13 15:30</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">반려 사유</label>
+                    <div class="alert alert-danger">
+                        광고성 내용이 포함되어 있습니다. 알림톡은 정보성 메시지만 발송 가능합니다.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">수정 가이드</label>
+                    <ul style="padding-left: 20px; color: var(--text-secondary);">
+                        <li>광고성 문구를 제거해주세요</li>
+                        <li>정보성 내용으로 수정해주세요</li>
+                        <li>수정 후 재검수를 신청해주세요</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('rejectionModal')">닫기</button>
+                <a href="template-alimtalk-edit.html" class="btn btn-primary">수정하기</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 템플릿 미리보기 모달 -->
+    <div class="modal-overlay" id="previewModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">템플릿 미리보기</h3>
+                <button class="modal-close" onclick="closeModal('previewModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="preview-kakao">
+                    <div class="preview-kakao-header">
+                        <span class="preview-kakao-channel-name" id="previewChannelName">마케팅팀</span>
+                        <span class="preview-kakao-badge">kakao</span>
+                    </div>
+                    <div class="preview-kakao-body">
+                        <div class="preview-kakao-alimtalk-bar">
+                            <span style="font-size: 13px; font-weight: 600; color: #3c1e1e;">알림톡 도착</span>
+                            <span style="font-size: 11px; color: #666;">오후 2:30</span>
+                        </div>
+                        <div style="padding: 14px;">
+                            <div id="previewTemplateContent" style="white-space: pre-wrap; line-height: 1.6; text-align: left; font-size: 14px;">주문이 접수되었습니다.
+주문번호: #{주문번호}
+배송 예정일: #{배송일}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('previewModal')">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 삭제 확인 모달 -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">템플릿 삭제</h3>
+                <button class="modal-close" onclick="closeModal('deleteModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>선택한 템플릿을 삭제하시겠습니까?</p>
+                <div class="alert alert-warning" style="margin-top: 16px;">
+                    삭제된 템플릿은 복구할 수 없습니다.<br>
+                    승인 완료 템플릿 삭제 시 해당 템플릿으로 발송이 불가능합니다.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('deleteModal')">취소</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">삭제</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 템플릿 심사결과 모달 -->
+    <div class="modal-overlay" id="reviewResultModal">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3 class="modal-title">템플릿 심사결과</h3>
+                <button class="modal-close" onclick="closeModal('reviewResultModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>작성자</th>
+                                <th>등록시간</th>
+                                <th>상태</th>
+                                <th>결과 및 요청사항</th>
+                                <th>첨부파일</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="reviewResultAuthor">jhcho5784</td>
+                                <td id="reviewResultTime">2025-12-29 10:43:47</td>
+                                <td><span class="status-badge status-review-needed" id="reviewResultStatus">심사필요</span></td>
+                                <td id="reviewResultContent">최초 등록</td>
+                                <td id="reviewResultFile">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('reviewResultModal')">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 템플릿 심사요청 모달 -->
+    <div class="modal-overlay" id="reviewRequestModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">템플릿 심사요청</h3>
+                <button class="modal-close" onclick="closeModal('reviewRequestModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 20px;">
+                    <ul style="padding-left: 20px; color: var(--text-secondary); font-size: 13px; line-height: 1.8;">
+                        <li>템플릿 심사 요청 시, 해당 템플릿 관련 문의사항 작성 및 파일 첨부가 가능합니다.</li>
+                        <li>템플릿 심사 요청 시, 변수 형식 확인 부탁드립니다.</li>
+                        <li>카카오 담당자의 심사 기준에 따라 반려될 수 있으며, 반려 사유 확인 후 재신청 부탁드립니다.</li>
+                    </ul>
+                </div>
+                <div style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">템플릿명</label>
+                        <input type="text" class="form-input" id="reviewRequestTemplateName" value="2" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">문의사항</label>
+                        <textarea class="form-textarea" id="reviewRequestInquiry" rows="5" placeholder="문의사항 있다면 입력해주세요. (최대 500자까지 입력 가능)" maxlength="500"></textarea>
+                        <div style="text-align: right; margin-top: 4px; font-size: 12px; color: var(--text-secondary);">
+                            <span id="reviewRequestCharCount">0</span>/500자
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">파일 첨부</label>
+                        <div>
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('reviewRequestFileInput').click()" style="display: flex; align-items: center; gap: 8px;">
+                                <span>↑</span>
+                                <span>파일첨부</span>
+                            </button>
+                            <input type="file" id="reviewRequestFileInput" multiple accept=".png,.jpg,.jpeg,.gif,.pdf" style="display: none;" onchange="handleReviewRequestFileUpload(event)">
+                            <div id="reviewRequestFileList" style="margin-top: 12px;"></div>
+                            <div style="margin-top: 8px; font-size: 12px; color: var(--text-secondary);">
+                                <ul style="padding-left: 20px; margin: 0;">
+                                    <li>png, jpg, jpeg, gif, pdf만 첨부 가능 (최대 50MB)</li>
+                                    <li>10개까지 첨부 가능</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('reviewRequestModal')">닫기</button>
+                <button class="btn btn-primary" onclick="submitReviewRequest()">심사요청</button>
+            </div>
+        </div>
+    </div>
+
+    <script>// 공통 JavaScript 함수
+
+// 모달 열기/닫기
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex'; // 인라인 스타일 제거 후 다시 설정
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+// ESC 키로 모달 닫기
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+        const activeModal = document.querySelector('.modal-overlay.active');
+        if (activeModal) {
+            const modalId = activeModal.id;
+            if (modalId && typeof closeModal === 'function') {
+                closeModal(modalId);
+            } else {
+                activeModal.classList.remove('active');
+                activeModal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+    }
+});
+
+// 모달 외부 클릭 시 닫기
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
+
+// 탭 전환
+function switchTab(tabId, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // 모든 탭 비활성화
+    container.querySelectorAll('.tab-item').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    container.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // 선택한 탭 활성화
+    const tab = document.querySelector(`[data-tab="${tabId}"]`);
+    const content = document.getElementById(tabId);
+    if (tab) tab.classList.add('active');
+    if (content) content.classList.add('active');
+}
+
+// 전화번호 포맷팅
+function formatPhoneNumber(value) {
+    const numbers = value.replace(/[^\d]/g, '');
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 7) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+}
+
+// 바이트 계산 (한글 3바이트, 영문/숫자 1바이트)
+function calculateByteLength(str) {
+    let byteLength = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charAt(i);
+        if (escape(char).length > 4) {
+            byteLength += 3; // 한글
+        } else {
+            byteLength += 1; // 영문/숫자
+        }
+    }
+    return byteLength;
+}
+
+// 토스트 메시지
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-lg);
+        z-index: 2000;
+        animation: slideIn 0.3s ease;
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// 날짜 포맷팅
+function formatDate(date, format = 'YYYY-MM-DD HH:mm') {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+
+    return format
+        .replace('YYYY', year)
+        .replace('MM', month)
+        .replace('DD', day)
+        .replace('HH', hours)
+        .replace('mm', minutes);
+}
+
+// 숫자 포맷팅 (천단위 콤마)
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// 파일 업로드 미리보기
+function previewFile(input, previewId) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById(previewId);
+        if (preview) {
+            if (file.type.startsWith('image/')) {
+                preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px;">`;
+            } else {
+                preview.textContent = file.name;
+            }
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// 드래그 앤 드롭
+function setupDragAndDrop(dropZone, callback) {
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && callback) {
+            callback(files[0]);
+        }
+    });
+}
+
+// 페이지네이션
+function createPagination(currentPage, totalPages, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let html = '<div class="pagination">';
+    
+    // 이전 버튼
+    if (currentPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">이전</button>`;
+    }
+
+    // 페이지 번호
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    if (startPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) html += '<span class="page-ellipsis">...</span>';
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += '<span class="page-ellipsis">...</span>';
+        html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+    }
+
+    // 다음 버튼
+    if (currentPage < totalPages) {
+        html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">다음</button>`;
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// CSS 애니메이션 추가
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    .drag-over {
+        border-color: var(--primary-color) !important;
+        background-color: rgba(37, 99, 235, 0.05) !important;
+    }
+    .pagination {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 24px;
+    }
+    .page-btn {
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        background-color: var(--surface-color);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .page-btn:hover {
+        background-color: var(--bg-color);
+    }
+    .page-btn.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    .page-ellipsis {
+        padding: 8px 4px;
+    }
+`;
+document.head.appendChild(style);
+
+// 드롭다운 메뉴 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initDropdownMenus();
+});
+
+</script>
+    <script>
+        function previewTemplate(id) {
+            openModal('previewModal');
+        }
+
+        function viewRejection(id) {
+            openModal('rejectionModal');
+        }
+
+        function copyTemplate(id) {
+            showToast('템플릿이 복사되었습니다.', 'success');
+            window.location.href = 'template-alimtalk-register.html';
+        }
+
+        function deleteTemplate(id) {
+            openModal('deleteModal');
+        }
+
+        function confirmDelete() {
+            showToast('템플릿이 삭제되었습니다.', 'success');
+            closeModal('deleteModal');
+        }
+
+        // 전체 선택/해제 기능
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+            const batchDeleteBtn = document.getElementById('batchDeleteBtn');
+
+            // 전체 선택 체크박스 이벤트
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    rowCheckboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                    updateBatchDeleteButton();
+                });
+            }
+
+            // 개별 체크박스 이벤트
+            rowCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateSelectAllCheckbox();
+                    updateBatchDeleteButton();
+                });
+            });
+
+            // 전체 선택 체크박스 상태 업데이트
+            function updateSelectAllCheckbox() {
+                if (selectAllCheckbox) {
+                    const allChecked = rowCheckboxes.length > 0 && Array.from(rowCheckboxes).every(cb => cb.checked);
+                    const someChecked = Array.from(rowCheckboxes).some(cb => cb.checked);
+                    selectAllCheckbox.checked = allChecked;
+                    selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                }
+            }
+
+            // 선택 삭제 버튼 활성화/비활성화
+            function updateBatchDeleteButton() {
+                if (batchDeleteBtn) {
+                    const hasChecked = Array.from(rowCheckboxes).some(cb => cb.checked);
+                    batchDeleteBtn.disabled = !hasChecked;
+                }
+            }
+        });
+
+        // 선택 삭제 함수
+        function batchDelete() {
+            const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+            if (checkedBoxes.length === 0) {
+                showToast('삭제할 템플릿을 선택해주세요.', 'warning');
+                return;
+            }
+
+            const selectedIds = Array.from(checkedBoxes).map(cb => cb.getAttribute('data-id'));
+            const count = selectedIds.length;
+
+            if (confirm(`선택한 ${count}개의 템플릿을 삭제하시겠습니까?`)) {
+                // 실제로는 API 호출로 삭제 처리
+                showToast(`${count}개의 템플릿이 삭제되었습니다.`, 'success');
+                
+                // 체크박스 해제
+                checkedBoxes.forEach(cb => {
+                    cb.checked = false;
+                });
+                document.getElementById('selectAll').checked = false;
+                document.getElementById('batchDeleteBtn').disabled = true;
+            }
+        }
+
+        // 페이지네이션 생성
+        createPagination(1, 5, 'pagination');
+
+        // 발신프로필 선택 시 템플릿 리스트 표시
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileSelect = document.getElementById('profileSelect');
+            const searchFilterSection = document.getElementById('searchFilterSection');
+            const templateListSection = document.getElementById('templateListSection');
+
+            if (profileSelect) {
+                profileSelect.addEventListener('change', function() {
+                    if (this.value) {
+                        searchFilterSection.style.display = 'block';
+                        templateListSection.style.display = 'block';
+                    } else {
+                        searchFilterSection.style.display = 'none';
+                        templateListSection.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        // 심사결과 보기
+        function viewReviewResult(templateId) {
+            // 실제로는 API에서 데이터를 가져와야 함
+            // 예시 데이터
+            const reviewData = {
+                1: { author: 'jhcho5784', time: '2025-12-29 10:43:47', status: '승인', content: '승인 완료', file: '-' },
+                2: { author: 'jhcho5784', time: '2025-12-29 10:43:47', status: '승인', content: '승인 완료', file: '-' },
+                3: { author: 'jhcho5784', time: '2025-12-29 10:43:47', status: '심사요청', content: '심사 진행 중', file: '-' },
+                4: { author: 'jhcho5784', time: '2025-12-29 10:43:47', status: '반려', content: '광고성 내용 포함', file: '-' },
+                5: { author: 'jhcho5784', time: '2025-12-29 10:43:47', status: '심사필요', content: '최초 등록', file: '-' }
+            };
+
+            const data = reviewData[templateId] || reviewData[5];
+            document.getElementById('reviewResultAuthor').textContent = data.author;
+            document.getElementById('reviewResultTime').textContent = data.time;
+            document.getElementById('reviewResultStatus').textContent = data.status;
+            document.getElementById('reviewResultContent').textContent = data.content;
+            document.getElementById('reviewResultFile').textContent = data.file;
+
+            // 상태에 따른 배지 스타일 적용
+            const statusBadge = document.getElementById('reviewResultStatus');
+            statusBadge.className = 'status-badge';
+            if (data.status === '승인') {
+                statusBadge.classList.add('status-approved');
+            } else if (data.status === '반려') {
+                statusBadge.classList.add('status-rejected');
+            } else if (data.status === '심사필요') {
+                statusBadge.classList.add('status-review-needed');
+            } else if (data.status === '심사요청') {
+                statusBadge.classList.add('status-review-requested');
+            }
+
+            openModal('reviewResultModal');
+        }
+
+        // 심사요청 모달 열기
+        function requestReview(templateId) {
+            // 실제로는 API에서 템플릿명을 가져와야 함
+            const templateNames = {
+                4: '이벤트 안내',
+                5: '신규 템플릿'
+            };
+            document.getElementById('reviewRequestTemplateName').value = templateNames[templateId] || '템플릿명';
+            document.getElementById('reviewRequestInquiry').value = '';
+            document.getElementById('reviewRequestFileList').innerHTML = '';
+            document.getElementById('reviewRequestCharCount').textContent = '0';
+            openModal('reviewRequestModal');
+        }
+
+        // 심사요청 파일 업로드 처리
+        let reviewRequestFiles = [];
+        function handleReviewRequestFileUpload(event) {
+            const files = Array.from(event.target.files);
+            const maxFiles = 10;
+            const maxSize = 50 * 1024 * 1024; // 50MB
+
+            if (reviewRequestFiles.length + files.length > maxFiles) {
+                showToast('파일은 최대 10개까지 첨부 가능합니다.', 'warning');
+                return;
+            }
+
+            files.forEach(file => {
+                if (file.size > maxSize) {
+                    showToast(`${file.name} 파일 크기가 50MB를 초과합니다.`, 'warning');
+                    return;
+                }
+
+                const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'application/pdf'];
+                if (!allowedTypes.includes(file.type)) {
+                    showToast(`${file.name} 파일 형식이 지원되지 않습니다.`, 'warning');
+                    return;
+                }
+
+                reviewRequestFiles.push(file);
+            });
+
+            updateReviewRequestFileList();
+        }
+
+        function updateReviewRequestFileList() {
+            const fileList = document.getElementById('reviewRequestFileList');
+            if (reviewRequestFiles.length === 0) {
+                fileList.innerHTML = '';
+                return;
+            }
+
+            fileList.innerHTML = reviewRequestFiles.map((file, index) => {
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: var(--bg-color); border-radius: var(--radius-md); margin-bottom: 8px;">
+                        <span style="font-size: 13px;">${file.name} (${fileSize}MB)</span>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="removeReviewRequestFile(${index})">삭제</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function removeReviewRequestFile(index) {
+            reviewRequestFiles.splice(index, 1);
+            updateReviewRequestFileList();
+        }
+
+        // 심사요청 제출
+        function submitReviewRequest() {
+            const inquiry = document.getElementById('reviewRequestInquiry').value;
+            const templateName = document.getElementById('reviewRequestTemplateName').value;
+
+            if (!templateName) {
+                showToast('템플릿명을 확인해주세요.', 'warning');
+                return;
+            }
+
+            // 실제로는 API 호출
+            showToast('심사요청이 완료되었습니다.', 'success');
+            closeModal('reviewRequestModal');
+            
+            // 페이지 새로고침 또는 리스트 업데이트
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        }
+
+        // 템플릿 수정
+        function editTemplate(templateId) {
+            window.location.href = `template-alimtalk-register.html?edit=${templateId}`;
+        }
+
+        // 문의사항 글자 수 카운터
+        document.addEventListener('DOMContentLoaded', function() {
+            const inquiryTextarea = document.getElementById('reviewRequestInquiry');
+            if (inquiryTextarea) {
+                inquiryTextarea.addEventListener('input', function() {
+                    const count = this.value.length;
+                    document.getElementById('reviewRequestCharCount').textContent = count;
+                });
+            }
+        });
+    </script>
+    <style>
+        .preview-kakao {
+            background: #e5e5ea;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .preview-kakao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .preview-kakao-channel-name {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+        .preview-kakao-badge {
+            background: #000;
+            color: #fff;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .preview-kakao-body {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 100px;
+        }
+        .preview-kakao-alimtalk-bar {
+            background: #FEE500;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #previewTemplateContent {
+            text-align: left !important;
+            direction: ltr !important;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+</body>
+</html>
+

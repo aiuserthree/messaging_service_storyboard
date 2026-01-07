@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>알림톡 발송 - 톡벨 화면설계서</title>
+    <link rel="stylesheet" href="../assets/common.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="../index.html" class="back-btn">← 목록으로</a>
+                <div class="page-info">
+                    <span class="page-id-badge">FE-P004-02</span>
+                    <span class="page-title-header">알림톡 발송</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-secondary" onclick="window.open('../../kakao-send-alimtalk.html', '_blank')">🔗 실제 페이지</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="mockup-panel">
+            <div class="mockup-canvas">
+                <div class="mockup-frame wide">
+                    <div class="browser-chrome">
+                        <div class="browser-dots">
+                            <div class="browser-dot red"></div>
+                            <div class="browser-dot yellow"></div>
+                            <div class="browser-dot green"></div>
+                        </div>
+                        <div class="browser-url">https://tokbell.co.kr/kakao-send-alimtalk</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="screen-mock">
+                            <!-- Header -->
+                            <div class="screen-header">
+                                <div class="screen-logo">Tokbell</div>
+                                <div class="screen-nav">
+                                    <span class="screen-nav-item">대시보드</span>
+                                    <span class="screen-nav-item">문자 발송</span>
+                                    <span class="screen-nav-item active">카카오톡 발송 ▼</span>
+                                    <span class="screen-nav-item">템플릿 관리</span>
+                                </div>
+                                <div class="screen-user">
+                                    <span style="background: #e8f4fd; padding: 6px 12px; border-radius: 6px; font-size: 12px;">
+                                        잔액: <strong style="color: #4361ee;">125,000P</strong>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Body -->
+                            <div class="screen-body" style="display: flex; padding: 24px; gap: 24px;">
+                                <!-- Left: Form Section -->
+                                <div style="flex: 1;">
+                                    <!-- 마커 1: 프로필 선택 -->
+                                    <div class="marker" data-id="1" style="top: 100px; left: 480px;">1</div>
+                                    <div class="form-section">
+                                        <div class="form-section-title">발신 프로필</div>
+                                        <select class="form-select">
+                                            <option>톡벨 공식채널 (@tokbell_official)</option>
+                                            <option>고객센터 (@tokbell_cs)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- 마커 2: 템플릿 선택 -->
+                                    <div class="marker" data-id="2" style="top: 200px; left: 480px;">2</div>
+                                    <div class="form-section">
+                                        <div class="form-section-title">알림톡 템플릿 <span style="color: #ef4444;">*</span></div>
+                                        <select class="form-select" style="margin-bottom: 12px;">
+                                            <option>주문 접수 안내</option>
+                                            <option>배송 시작 안내</option>
+                                            <option>배송 완료 안내</option>
+                                        </select>
+                                        <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; font-size: 13px; color: #666; line-height: 1.6;">
+                                            <strong>[톡벨] 주문 접수 안내</strong><br><br>
+                                            안녕하세요, #{고객명}님.<br>
+                                            주문이 정상적으로 접수되었습니다.<br><br>
+                                            ■ 주문번호: #{주문번호}<br>
+                                            ■ 상품명: #{상품명}<br>
+                                            ■ 결제금액: #{결제금액}원<br><br>
+                                            감사합니다.
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 마커 3: 수신번호 -->
+                                    <div class="marker" data-id="3" style="top: 480px; left: 480px;">3</div>
+                                    <div class="form-section">
+                                        <div class="form-section-title">수신번호</div>
+                                        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                                            <button class="mock-btn mock-btn-outline mock-btn-sm">📁 주소록</button>
+                                            <button class="mock-btn mock-btn-outline mock-btn-sm">📄 엑셀 업로드</button>
+                                        </div>
+                                        <textarea class="form-textarea" placeholder="수신번호 입력" style="height: 60px;">01012345678</textarea>
+                                        <div class="form-helper">입력된 번호: 1건</div>
+                                    </div>
+                                    
+                                    <!-- 마커 4: 변수 입력 -->
+                                    <div class="marker" data-id="4" style="top: 620px; left: 480px;">4</div>
+                                    <div class="form-section">
+                                        <div class="form-section-title">변수 값 입력</div>
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                            <div class="form-row">
+                                                <label class="form-label">#{고객명}</label>
+                                                <input type="text" class="form-input" value="홍길동">
+                                            </div>
+                                            <div class="form-row">
+                                                <label class="form-label">#{주문번호}</label>
+                                                <input type="text" class="form-input" value="ORD-20240115-001">
+                                            </div>
+                                            <div class="form-row">
+                                                <label class="form-label">#{상품명}</label>
+                                                <input type="text" class="form-input" value="프리미엄 회원권">
+                                            </div>
+                                            <div class="form-row">
+                                                <label class="form-label">#{결제금액}</label>
+                                                <input type="text" class="form-input" value="50,000">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right: Preview & Actions -->
+                                <div style="width: 280px;">
+                                    <!-- 마커 5: 미리보기 -->
+                                    <div class="marker" data-id="5" style="top: 100px; right: 20px;">5</div>
+                                    <div class="form-section">
+                                        <div class="form-section-title">📱 미리보기</div>
+                                        <div class="phone-mockup" style="background: #fee500;">
+                                            <div class="phone-screen" style="height: 420px;">
+                                                <div class="phone-header" style="background: #fee500; color: #3c1e1e;">
+                                                    톡벨 공식채널
+                                                </div>
+                                                <div class="phone-content" style="background: #b2c7d9; padding: 12px;">
+                                                    <div style="background: white; border-radius: 12px; padding: 16px; font-size: 12px; line-height: 1.6;">
+                                                        <strong>[톡벨] 주문 접수 안내</strong><br><br>
+                                                        안녕하세요, 홍길동님.<br>
+                                                        주문이 정상적으로 접수되었습니다.<br><br>
+                                                        ■ 주문번호: ORD-20240115-001<br>
+                                                        ■ 상품명: 프리미엄 회원권<br>
+                                                        ■ 결제금액: 50,000원<br><br>
+                                                        감사합니다.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 마커 6: 발송 옵션 -->
+                                    <div class="marker" data-id="6" style="top: 560px; right: 20px;">6</div>
+                                    <div class="form-section">
+                                        <div class="form-section-title">발송 옵션</div>
+                                        <div class="radio-group" style="flex-direction: column; gap: 8px;">
+                                            <div class="radio-item">
+                                                <div class="radio-circle active"></div>
+                                                <span>즉시 발송</span>
+                                            </div>
+                                            <div class="radio-item">
+                                                <div class="radio-circle"></div>
+                                                <span>예약 발송</span>
+                                            </div>
+                                        </div>
+                                        <div class="checkbox-item" style="margin-top: 12px;">
+                                            <div class="checkbox-box checked">✓</div>
+                                            <span style="font-size: 12px;">실패 시 SMS 대체 발송</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 마커 7: 발송 버튼 -->
+                                    <div class="marker" data-id="7" style="top: 700px; right: 20px;">7</div>
+                                    <div class="form-section">
+                                        <div style="text-align: center; margin-bottom: 16px;">
+                                            <div style="font-size: 12px; color: #666;">예상 비용</div>
+                                            <div style="font-size: 24px; font-weight: 700; color: #4361ee;">7.5원</div>
+                                        </div>
+                                        <button class="mock-btn mock-btn-primary" style="width: 100%; background: #fee500; color: #3c1e1e;">발송하기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description Panel -->
+        <div class="description-panel">
+            <div class="desc-header">
+                <div class="desc-title">화면 설명서</div>
+                <div class="desc-subtitle">kakao-send-alimtalk.html · 알림톡 발송</div>
+            </div>
+            <div class="desc-content">
+                <div class="desc-item expanded" data-id="1">
+                    <div class="desc-item-header">
+                        <div class="desc-number">1</div>
+                        <div class="desc-item-title">발신 프로필</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">승인된 카카오 프로필 중 발신에 사용할 프로필을 선택합니다.</div>
+                        <div class="desc-note">
+                            <div class="desc-note-title">💡 참고</div>
+                            <div class="desc-note-text">승인 완료된 프로필만 목록에 표시됩니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="2">
+                    <div class="desc-item-header">
+                        <div class="desc-number">2</div>
+                        <div class="desc-item-title">알림톡 템플릿</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">카카오 승인된 알림톡 템플릿을 선택합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>동작</th><th>설명</th></tr>
+                            <tr><td>선택</td><td>템플릿 내용 미리보기 표시</td></tr>
+                        </table>
+                        <div class="desc-note warning">
+                            <div class="desc-note-title">⚠️ 중요</div>
+                            <div class="desc-note-text">알림톡은 승인된 템플릿만 발송 가능합니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="3">
+                    <div class="desc-item-header">
+                        <div class="desc-number">3</div>
+                        <div class="desc-item-title">수신번호</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">알림톡을 발송할 수신번호를 입력합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>방법</th><th>설명</th></tr>
+                            <tr><td>주소록</td><td>저장된 주소록에서 선택</td></tr>
+                            <tr><td>엑셀 업로드</td><td>변수 값 포함 업로드</td></tr>
+                            <tr><td>직접 입력</td><td>수동 입력</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="4">
+                    <div class="desc-item-header">
+                        <div class="desc-number">4</div>
+                        <div class="desc-item-title">변수 값 입력</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">템플릿에 정의된 변수 값을 입력합니다.</div>
+                        <div class="desc-note">
+                            <div class="desc-note-title">💡 참고</div>
+                            <div class="desc-note-text">엑셀 업로드 시 변수 값을 일괄 설정할 수 있습니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="5">
+                    <div class="desc-item-header">
+                        <div class="desc-number">5</div>
+                        <div class="desc-item-title">미리보기</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">변수가 치환된 실제 발송 메시지를 미리봅니다.</div>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="6">
+                    <div class="desc-item-header">
+                        <div class="desc-number">6</div>
+                        <div class="desc-item-title">발송 옵션</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">발송 시간과 대체 발송 옵션을 설정합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>옵션</th><th>설명</th></tr>
+                            <tr><td>즉시/예약</td><td>발송 시점 선택</td></tr>
+                            <tr><td>SMS 대체</td><td>알림톡 실패 시 SMS 발송</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="7">
+                    <div class="desc-item-header">
+                        <div class="desc-number">7</div>
+                        <div class="desc-item-title">발송 버튼</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">예상 비용을 확인하고 알림톡을 발송합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>단가</th><th>비용</th></tr>
+                            <tr><td>알림톡</td><td>7.5원/건</td></tr>
+                            <tr><td>SMS 대체</td><td>추가 9.9원/건</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/common.js"></script>
+</body>
+</html>

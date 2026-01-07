@@ -1,0 +1,2453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>발신번호 관리 - 메시징 서비스</title>
+    <script src="js/header.js"></script>
+    <style>/* 공통 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --purple-color: #7c5cdb;
+    --purple-light: #a78bfa;
+    --purple-bg: linear-gradient(135deg, #e8e4f8 0%, #dcd6f0 50%, #d0c8eb 100%);
+    --bg-color: #f8fafc;
+    --surface-color: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 20px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-color);
+}
+
+/* 버튼 스타일 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    gap: 8px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background-color: var(--bg-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn-lg {
+    padding: 14px 28px;
+    font-size: 16px;
+}
+
+/* 입력 필드 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: var(--danger-color);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-error {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--danger-color);
+}
+
+.form-help {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 카드 */
+.card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-2xl);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+}
+
+.card-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* 모달 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background-color: var(--surface-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* 배지 */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+}
+
+.badge-primary {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.badge-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.badge-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+.badge-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+/* 탭 */
+.tabs {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 24px;
+}
+
+.tab-list {
+    display: flex;
+    gap: 8px;
+}
+
+.tab-item {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.tab-item:hover {
+    color: var(--text-primary);
+}
+
+.tab-item.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 테이블 */
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table th {
+    background-color: var(--bg-color);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.table tbody tr:hover {
+    background-color: var(--bg-color);
+}
+
+/* 알림 */
+.alert {
+    padding: 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+}
+
+.alert-info {
+    background-color: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    color: var(--primary-color);
+}
+
+.alert-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    color: var(--warning-color);
+}
+
+.alert-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--danger-color);
+}
+
+.alert-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--success-color);
+}
+
+/* 유틸리티 */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+
+.flex {
+    display: flex;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gap-2 {
+    gap: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 검색/필터 섹션 */
+.search-filter-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-filter-section > div {
+    display: flex;
+    align-items: center;
+}
+
+/* 기간 선택 영역 */
+.date-range-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.date-range-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.date-input-wrapper {
+    min-width: 140px;
+    max-width: 160px;
+    flex-shrink: 0;
+}
+
+.date-input-wrapper input[type="date"] {
+    width: 100%;
+    min-width: 140px;
+}
+
+/* 필터 섹션 */
+.filter-section {
+    margin-bottom: 24px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1;
+}
+
+.filter-group .form-label {
+    margin-bottom: 8px;
+}
+
+.filter-group .flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group .flex input[type="date"] {
+    flex: 1;
+    min-width: 140px;
+}
+
+.filter-group .flex span {
+    flex-shrink: 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* 반응형 처리 */
+@media (max-width: 768px) {
+    .search-filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-filter-section > div {
+        width: 100%;
+    }
+    
+    .date-input-wrapper {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .filter-group .flex {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group .flex input[type="date"] {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .date-range-separator {
+        display: none;
+    }
+}
+
+
+/* 레이아웃 스타일 */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 */
+.header {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.logo h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.logo a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.logo a:hover h1 {
+    opacity: 0.8;
+}
+
+.main-nav {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+    position: relative;
+}
+
+.nav-item {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-item:hover {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.nav-item.has-dropdown {
+    position: relative;
+}
+
+.nav-item.has-dropdown .nav-link::after {
+    content: '▼';
+    font-size: 10px;
+    margin-left: 4px;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.nav-item.has-dropdown.open .nav-link::after {
+    transform: rotate(180deg);
+}
+
+.nav-item.has-dropdown .nav-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+/* 드롭다운 메뉴 */
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.nav-item.open .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-dropdown-item {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.nav-dropdown-item:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.nav-dropdown-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.balance-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: var(--bg-color);
+    border-radius: var(--radius-md);
+}
+
+.balance-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.balance-amount {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 메인 컨텐츠 */
+.main-content {
+    flex: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.page-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* 대시보드 */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-icon {
+    font-size: 40px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-color);
+    border-radius: 50%;
+}
+
+.stat-content h3 {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.quick-actions {
+    margin-top: 32px;
+}
+
+.quick-actions h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.action-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.action-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.action-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.action-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.action-card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* 2단 레이아웃 */
+.two-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 24px;
+}
+
+@media (max-width: 1024px) {
+    .two-column-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        height: auto;
+        padding: 16px;
+    }
+
+    .main-nav {
+        flex-wrap: wrap;
+        margin: 16px 0;
+        width: 100%;
+    }
+
+    .nav-dropdown {
+        position: static;
+        margin-top: 4px;
+        width: 100%;
+        box-shadow: none;
+        border: none;
+        border-top: 1px solid var(--border-color);
+        border-radius: 0;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        display: none;
+    }
+
+    .nav-item.open .nav-dropdown {
+        display: block;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .main-content {
+        padding: 16px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+    <style>
+        .status-filter {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .status-filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background: var(--surface-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .status-filter-btn:hover {
+            border-color: var(--primary-color);
+        }
+        .status-filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+        .step-item {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-weight: 600;
+        }
+        .step-item.active .step-circle {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .step-item.completed .step-circle {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        .step-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .step-item.active .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .file-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+        .file-upload-area.drag-over {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
+        }
+        .uploaded-file {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-color);
+            border-radius: var(--radius-md);
+            margin-top: 12px;
+        }
+        .number-type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .number-type-mobile {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .number-type-landline {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        .auth-completed {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+        }
+        .auth-completed::before {
+            content: '✓';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: #2e7d32;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader());
+        </script>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2>마이페이지</h2>
+                <p class="page-description">문자 발송을 위한 발신번호를 등록하고 관리합니다</p>
+            </div>
+
+            <!-- 탭 메뉴 -->
+            <div class="tabs">
+                <div class="tab-list">
+                    <button class="tab-item" onclick="window.location.href='mypage-profile.html'">내 정보 수정</button>
+                    <button class="tab-item" onclick="window.location.href='mypage-password.html'">비밀번호 변경</button>
+                    <button class="tab-item active" onclick="window.location.href='mypage-caller-number.html'">발신번호 관리</button>
+                </div>
+            </div>
+
+            <!-- 안내 -->
+            <div class="alert alert-info">
+                <strong>발신번호 사전등록제 안내</strong>
+                <p style="margin-top: 8px; font-size: 12px;">
+                    정보통신망법에 따라 발신번호 사전 등록이 의무화되었습니다. 
+                    발신번호 등록 후 영업일 기준 1~3일 이내 승인 처리됩니다.
+                </p>
+            </div>
+
+            <!-- 발신번호 목록 -->
+            <div class="card">
+                <div class="flex-between mb-2">
+                    <h3 class="card-title">발신번호 목록</h3>
+                    <button class="btn btn-primary" onclick="openRegisterModal()">발신번호 등록</button>
+                </div>
+
+                <!-- 상태 필터 -->
+                <div class="status-filter">
+                    <button class="status-filter-btn active" onclick="filterStatus('all')">전체</button>
+                    <button class="status-filter-btn" onclick="filterStatus('pending')">승인대기</button>
+                    <button class="status-filter-btn" onclick="filterStatus('approved')">승인완료</button>
+                    <button class="status-filter-btn" onclick="filterStatus('rejected')">반려</button>
+                </div>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>발신번호</th>
+                                <th>통신사</th>
+                                <th>용도</th>
+                                <th>상태</th>
+                                <th>등록일</th>
+                                <th>승인일</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="callerNumberTableBody">
+                            <tr data-status="approved">
+                                <td>010-1234-5678</td>
+                                <td>SKT</td>
+                                <td>마케팅팀</td>
+                                <td><span class="badge badge-success">승인완료</span></td>
+                                <td>2024-01-10</td>
+                                <td>2024-01-12</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline" onclick="deleteCallerNumber(1)">삭제</button>
+                                </td>
+                            </tr>
+                            <tr data-status="pending">
+                                <td>02-1234-5678</td>
+                                <td>KT</td>
+                                <td>고객센터</td>
+                                <td><span class="badge badge-warning">승인대기</span></td>
+                                <td>2024-01-15</td>
+                                <td>-</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline" onclick="viewDetail(2)">상세보기</button>
+                                </td>
+                            </tr>
+                            <tr data-status="rejected">
+                                <td>010-9876-5432</td>
+                                <td>LG U+</td>
+                                <td>본인 휴대폰</td>
+                                <td><span class="badge badge-danger">반려</span></td>
+                                <td>2024-01-08</td>
+                                <td>-</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline" onclick="viewRejectionReason(3)">반려사유</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 발신번호 등록 모달 -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 class="modal-title">발신번호 신규등록</h3>
+                <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 24px; padding: 12px; background: var(--bg-color); border-radius: var(--radius-md);">
+                    <strong>발신번호 등록 문의: 1588-5412</strong><br>
+                    <small>기존 번호 관리는 발신번호관리 메뉴에서 가능합니다</small>
+                </div>
+
+                <!-- STEP 표시 -->
+                <div class="step-indicator">
+                    <div class="step-item active" id="step1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">회원 유형</div>
+                    </div>
+                    <div class="step-item" id="step2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">기본 정보</div>
+                    </div>
+                    <div class="step-item" id="step3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">인증 및 서류</div>
+                    </div>
+                    <div class="step-item" id="step4">
+                        <div class="step-circle">4</div>
+                        <div class="step-label">연락처</div>
+                    </div>
+                    <div class="step-item" id="step5">
+                        <div class="step-circle">5</div>
+                        <div class="step-label">제출</div>
+                    </div>
+                </div>
+
+                <form id="registerForm">
+                    <!-- STEP 1: 회원 유형 -->
+                    <div id="step1Content" class="step-content">
+                        <h3 style="margin-bottom: 20px;">회원 유형 선택</h3>
+                        <div class="form-group">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div class="card" style="cursor: pointer; border: 2px solid var(--border-color);" onclick="selectMemberType('personal')">
+                                    <h4 style="margin-bottom: 8px;">개인</h4>
+                                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">
+                                        개인 명의 발신번호를 등록합니다
+                                    </p>
+                                    <div style="font-size: 12px; color: var(--text-secondary);">
+                                        <strong>필수 서류:</strong><br>
+                                        • 본인인증<br>
+                                        • 통신서비스 이용증명원 또는 통신사 가입증명서
+                                    </div>
+                                </div>
+                                <div class="card" style="cursor: pointer; border: 2px solid var(--border-color);" onclick="selectMemberType('business')">
+                                    <h4 style="margin-bottom: 8px;">기업</h4>
+                                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">
+                                        기업/사업자 명의 발신번호를 등록합니다
+                                    </p>
+                                    <div style="font-size: 12px; color: var(--text-secondary);">
+                                        <strong>필수 서류:</strong><br>
+                                        • 본인인증<br>
+                                        • 사업자등록증<br>
+                                        • 재직증명서<br>
+                                        • 통신서비스 이용증명원
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: 기본 정보 -->
+                    <div id="step2Content" class="step-content" style="display: none;">
+                        <h3 style="margin-bottom: 20px;">기본 정보 입력</h3>
+                        <div class="form-group">
+                            <label class="form-label required">발신번호 등록</label>
+                            <div class="flex gap-2">
+                                <input type="tel" id="callerNumberInput" class="form-input" placeholder="010-1234-5678 또는 02-1234-5678" required oninput="detectNumberType()">
+                                <button type="button" class="btn btn-outline" onclick="checkDuplicateNumber()">확인</button>
+                            </div>
+                            <div id="numberTypeBadge" style="margin-top: 8px; display: none;">
+                                <span class="badge" id="numberTypeText"></span>
+                                <span id="authRequirementText" style="margin-left: 8px; font-size: 12px; color: var(--text-secondary);"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">발신번호 용도</label>
+                            <input type="text" id="purposeInput" class="form-input" placeholder="예: 마케팅팀, 고객센터, 본인 휴대폰">
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: 명의 구분 및 서류 -->
+                    <div id="step3Content" class="step-content" style="display: none;">
+                        <h3 style="margin-bottom: 20px;">명의 구분 및 서류 제출</h3>
+                        
+                        <!-- 명의 구분 선택 -->
+                        <div class="form-group">
+                            <label class="form-label required">명의 구분</label>
+                            <div id="ownershipTypeSection">
+                                <!-- 개인/기업에 따라 동적으로 생성 -->
+                            </div>
+                        </div>
+
+                        <!-- 본인인증 (휴대폰 번호인 경우만) -->
+                        <div class="form-group" id="authSection" style="display: none;">
+                            <label class="form-label required">본인인증</label>
+                            <div id="authStatus" style="margin-bottom: 8px;">
+                                <button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>
+                            </div>
+                            <div class="form-help" id="authHelpText">발신번호 명의자 본인인증이 필요합니다</div>
+                        </div>
+
+                        <!-- 서류 제출 섹션 -->
+                        <div class="form-group" id="documentSection">
+                            <!-- 명의 구분에 따라 동적으로 생성 -->
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: 연락처 -->
+                    <div id="step4Content" class="step-content" style="display: none;">
+                        <h3 style="margin-bottom: 20px;">연락처 정보</h3>
+                        <div class="form-group">
+                            <label class="form-label required">휴대폰번호</label>
+                            <input type="tel" id="contactPhoneInput" class="form-input" placeholder="010-1234-5678" required>
+                            <div class="form-help">승인/반려 결과 알림을 받을 연락처입니다</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">결과 수신 이메일</label>
+                            <input type="email" id="contactEmailInput" class="form-input" placeholder="example@email.com">
+                            <div class="form-help">발신번호 등록 결과를 이메일로도 받으시려면 입력해 주세요</div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5: 제출 -->
+                    <div id="step5Content" class="step-content" style="display: none;">
+                        <h3 style="margin-bottom: 20px;">최종 확인</h3>
+                        <div class="alert alert-info">
+                            모든 정보를 확인하신 후 제출해주세요. 제출 후 수정이 불가능합니다.
+                        </div>
+                        <div class="card">
+                            <div class="table-container">
+                                <table class="table">
+                                    <tr>
+                                        <th style="width: 150px;">회원 유형</th>
+                                        <td id="reviewMemberType">-</td>
+                                    </tr>
+                                    <tr>
+                                        <th>발신번호</th>
+                                        <td id="reviewCallerNumber">-</td>
+                                    </tr>
+                                    <tr>
+                                        <th>번호 유형</th>
+                                        <td id="reviewNumberType">-</td>
+                                    </tr>
+                                    <tr>
+                                        <th>명의 구분</th>
+                                        <td id="reviewOwnershipType">-</td>
+                                    </tr>
+                                    <tr>
+                                        <th>용도</th>
+                                        <td id="reviewPurpose">-</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('registerModal')">취소</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextStep()" style="display: none;">다음</button>
+                <button class="btn btn-primary" id="submitBtn" onclick="submitRegister()" style="display: none;">승인요청</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 발신번호 상세보기 모달 -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 class="modal-title">발신번호 상세 정보</h3>
+                <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="card" style="margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">기본 정보</h4>
+                    <div class="table-container">
+                        <table class="table">
+                            <tr>
+                                <th style="width: 150px;">발신번호</th>
+                                <td id="detailCallerNumber">-</td>
+                            </tr>
+                            <tr>
+                                <th>통신사</th>
+                                <td id="detailCarrier">-</td>
+                            </tr>
+                            <tr>
+                                <th>용도</th>
+                                <td id="detailPurpose">-</td>
+                            </tr>
+                            <tr>
+                                <th>상태</th>
+                                <td id="detailStatus">-</td>
+                            </tr>
+                            <tr>
+                                <th>등록일</th>
+                                <td id="detailRegisterDate">-</td>
+                            </tr>
+                            <tr>
+                                <th>승인일</th>
+                                <td id="detailApproveDate">-</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">신청 정보</h4>
+                    <div class="table-container">
+                        <table class="table">
+                            <tr>
+                                <th style="width: 150px;">회원 유형</th>
+                                <td id="detailMemberType">-</td>
+                            </tr>
+                            <tr>
+                                <th>명의 구분</th>
+                                <td id="detailOwnershipType">-</td>
+                            </tr>
+                            <tr>
+                                <th>번호 유형</th>
+                                <td id="detailNumberType">-</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">연락처 정보</h4>
+                    <div class="table-container">
+                        <table class="table">
+                            <tr>
+                                <th style="width: 150px;">결과 수신 휴대폰</th>
+                                <td id="detailContactPhone">-</td>
+                            </tr>
+                            <tr>
+                                <th>결과 수신 이메일</th>
+                                <td id="detailContactEmail">-</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card" id="documentSection" style="display: none;">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">제출 서류</h4>
+                    <div id="documentList">
+                        <!-- 동적으로 생성됨 -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('detailModal')">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>// 공통 JavaScript 함수
+
+// 모달 열기/닫기
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex'; // 인라인 스타일 제거 후 다시 설정
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+// ESC 키로 모달 닫기
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+        const activeModal = document.querySelector('.modal-overlay.active');
+        if (activeModal) {
+            const modalId = activeModal.id;
+            if (modalId && typeof closeModal === 'function') {
+                closeModal(modalId);
+            } else {
+                activeModal.classList.remove('active');
+                activeModal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+    }
+});
+
+// 모달 외부 클릭 시 닫기
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
+
+// 탭 전환
+function switchTab(tabId, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // 모든 탭 비활성화
+    container.querySelectorAll('.tab-item').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    container.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // 선택한 탭 활성화
+    const tab = document.querySelector(`[data-tab="${tabId}"]`);
+    const content = document.getElementById(tabId);
+    if (tab) tab.classList.add('active');
+    if (content) content.classList.add('active');
+}
+
+// 전화번호 포맷팅
+function formatPhoneNumber(value) {
+    const numbers = value.replace(/[^\d]/g, '');
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 7) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+}
+
+// 바이트 계산 (한글 3바이트, 영문/숫자 1바이트)
+function calculateByteLength(str) {
+    let byteLength = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charAt(i);
+        if (escape(char).length > 4) {
+            byteLength += 3; // 한글
+        } else {
+            byteLength += 1; // 영문/숫자
+        }
+    }
+    return byteLength;
+}
+
+// 토스트 메시지
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-lg);
+        z-index: 2000;
+        animation: slideIn 0.3s ease;
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// 날짜 포맷팅
+function formatDate(date, format = 'YYYY-MM-DD HH:mm') {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+
+    return format
+        .replace('YYYY', year)
+        .replace('MM', month)
+        .replace('DD', day)
+        .replace('HH', hours)
+        .replace('mm', minutes);
+}
+
+// 숫자 포맷팅 (천단위 콤마)
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// 파일 업로드 미리보기
+function previewFile(input, previewId) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById(previewId);
+        if (preview) {
+            if (file.type.startsWith('image/')) {
+                preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px;">`;
+            } else {
+                preview.textContent = file.name;
+            }
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// 드래그 앤 드롭
+function setupDragAndDrop(dropZone, callback) {
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && callback) {
+            callback(files[0]);
+        }
+    });
+}
+
+// 페이지네이션
+function createPagination(currentPage, totalPages, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let html = '<div class="pagination">';
+    
+    // 이전 버튼
+    if (currentPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">이전</button>`;
+    }
+
+    // 페이지 번호
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    if (startPage > 1) {
+        html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) html += '<span class="page-ellipsis">...</span>';
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += '<span class="page-ellipsis">...</span>';
+        html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+    }
+
+    // 다음 버튼
+    if (currentPage < totalPages) {
+        html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">다음</button>`;
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// CSS 애니메이션 추가
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    .drag-over {
+        border-color: var(--primary-color) !important;
+        background-color: rgba(37, 99, 235, 0.05) !important;
+    }
+    .pagination {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 24px;
+    }
+    .page-btn {
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        background-color: var(--surface-color);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .page-btn:hover {
+        background-color: var(--bg-color);
+    }
+    .page-btn.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    .page-ellipsis {
+        padding: 8px 4px;
+    }
+`;
+document.head.appendChild(style);
+
+// 드롭다운 메뉴 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initDropdownMenus();
+});
+
+// initDropdownMenus 함수는 header.js에서 제공됩니다
+
+</script>
+    <script>
+        let currentStep = 1;
+        let selectedMemberType = '';
+        let selectedOwnershipType = '';
+        let numberType = null; // 'MOBILE' or 'LANDLINE'
+        let requiresAuth = false;
+        let authCompleted = false;
+        let authInfo = null;
+
+        function filterStatus(status) {
+            // 모든 필터 버튼에서 active 클래스 제거
+            document.querySelectorAll('.status-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 클릭한 버튼에 active 클래스 추가
+            event.currentTarget.classList.add('active');
+            
+            // 테이블 행 필터링
+            const tbody = document.getElementById('callerNumberTableBody');
+            if (!tbody) return;
+            
+            const rows = tbody.querySelectorAll('tr[data-status]');
+            
+            rows.forEach(row => {
+                const rowStatus = row.getAttribute('data-status');
+                
+                if (status === 'all') {
+                    // 전체: 모든 행 표시
+                    row.style.display = '';
+                } else {
+                    // 선택한 상태와 일치하는 행만 표시
+                    if (rowStatus === status) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function selectMemberType(type) {
+            selectedMemberType = type;
+            document.querySelectorAll('#step1Content .card').forEach(card => {
+                card.style.borderColor = 'var(--border-color)';
+            });
+            event.currentTarget.style.borderColor = 'var(--primary-color)';
+            
+            // STEP 2로 이동
+            nextStep();
+        }
+
+        // 발신번호 유형 자동 인식
+        function detectNumberType() {
+            const input = document.getElementById('callerNumberInput');
+            const number = input.value.replace(/[^0-9]/g, '');
+            const badgeDiv = document.getElementById('numberTypeBadge');
+            const badgeText = document.getElementById('numberTypeText');
+            const authText = document.getElementById('authRequirementText');
+            
+            if (number.startsWith('010')) {
+                numberType = 'MOBILE';
+                requiresAuth = true;
+                badgeDiv.style.display = 'block';
+                badgeText.className = 'number-type-badge number-type-mobile';
+                badgeText.textContent = '휴대폰 번호';
+                authText.textContent = '본인인증이 필요합니다';
+            } else if (/^(02|0[3-6][1-5])/.test(number)) {
+                numberType = 'LANDLINE';
+                requiresAuth = false;
+                badgeDiv.style.display = 'block';
+                badgeText.className = 'number-type-badge number-type-landline';
+                badgeText.textContent = '유선번호';
+                authText.textContent = '본인인증이 필요하지 않습니다';
+            } else if (number.length > 0) {
+                numberType = null;
+                badgeDiv.style.display = 'none';
+            } else {
+                numberType = null;
+                badgeDiv.style.display = 'none';
+            }
+            
+            // 개인 회원 - 본인 명의 또는 기업 회원 - 본인(자사) 명의인 경우 서류 섹션 업데이트
+            if (selectedOwnershipType === 'self') {
+                updateDocumentSection();
+            }
+            
+            // 본인인증 섹션 업데이트
+            const authSection = document.getElementById('authSection');
+            if (authSection) {
+                // 본인(자사) 명의이고 휴대폰 번호일 때만 본인인증 필요
+                if (requiresAuth && numberType === 'MOBILE' && selectedOwnershipType === 'self') {
+                    authSection.style.display = 'block';
+                    const authHelpText = document.getElementById('authHelpText');
+                    if (authHelpText) {
+                        authHelpText.textContent = selectedMemberType === 'personal' 
+                            ? '발신번호 명의자 본인인증이 필요합니다' 
+                            : '서류 제출자 본인인증이 필요합니다';
+                    }
+                    
+                    // 본인인증 버튼 표시 및 상태 초기화
+                    if (!authCompleted) {
+                        authCompleted = false;
+                        const authStatus = document.getElementById('authStatus');
+                        if (authStatus) {
+                            authStatus.innerHTML = '<button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>';
+                        }
+                    }
+                } else {
+                    authSection.style.display = 'none';
+                    authCompleted = false;
+                }
+            }
+        }
+
+        function checkDuplicateNumber() {
+            const number = document.getElementById('callerNumberInput').value;
+            if (!number) {
+                showToast('발신번호를 입력해주세요.', 'warning');
+                return;
+            }
+            // 중복 확인 로직
+            showToast('사용 가능한 발신번호입니다.', 'success');
+        }
+
+        // STEP 3에서 명의 구분 선택 및 서류 섹션 업데이트
+        function updateOwnershipSection() {
+            const ownershipSection = document.getElementById('ownershipTypeSection');
+            const authSection = document.getElementById('authSection');
+            const docSection = document.getElementById('documentSection');
+            
+            if (selectedMemberType === 'personal') {
+                // 개인 회원 명의 구분
+                ownershipSection.innerHTML = `
+                    <div class="flex gap-2" style="flex-direction: column;">
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer;">
+                            <input type="radio" name="ownershipType" value="self" onchange="selectOwnershipType('self')">
+                            <div>
+                                <strong>본인 명의</strong>
+                                <p style="font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0;">본인 명의 발신번호를 등록합니다</p>
+                            </div>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer;">
+                            <input type="radio" name="ownershipType" value="others" onchange="selectOwnershipType('others')">
+                            <div>
+                                <strong>타인 명의</strong>
+                                <p style="font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0;">타인 명의 발신번호를 등록합니다. 위임장 및 추가 서류가 필요합니다</p>
+                            </div>
+                        </label>
+                    </div>
+                `;
+            } else {
+                // 기업 회원 명의 구분
+                ownershipSection.innerHTML = `
+                    <div class="flex gap-2" style="flex-direction: column;">
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer;">
+                            <input type="radio" name="ownershipType" value="self" onchange="selectOwnershipType('self')">
+                            <div>
+                                <strong>본인(자사) 명의</strong>
+                                <p style="font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0;">본인(자사) 명의 발신번호를 등록합니다</p>
+                            </div>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer;">
+                            <input type="radio" name="ownershipType" value="others" onchange="selectOwnershipType('others')">
+                            <div>
+                                <strong>타인 명의</strong>
+                                <p style="font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0;">타인 명의 발신번호를 등록합니다. 위임장 및 추가 서류가 필요합니다</p>
+                            </div>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer;">
+                            <input type="radio" name="ownershipType" value="other_company" onchange="selectOwnershipType('other_company')">
+                            <div>
+                                <strong>타사 명의</strong>
+                                <p style="font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0;">타사(다른 기업) 명의 발신번호를 등록합니다. 위임장, 위임하는 업체의 사업자등록증 및 수임하는 업체의 사업자등록증이 필요합니다</p>
+                            </div>
+                        </label>
+                    </div>
+                `;
+            }
+            
+            // 본인인증 섹션 표시/숨김
+            // 본인(자사) 명의이고 휴대폰 번호일 때만 본인인증 필요
+            if (requiresAuth && numberType === 'MOBILE' && selectedOwnershipType === 'self') {
+                authSection.style.display = 'block';
+                document.getElementById('authHelpText').textContent = selectedMemberType === 'personal' 
+                    ? '발신번호 명의자 본인인증이 필요합니다' 
+                    : '서류 제출자 본인인증이 필요합니다';
+                
+                // 본인인증 버튼 표시 및 상태 초기화
+                authCompleted = false;
+                const authStatus = document.getElementById('authStatus');
+                if (authStatus) {
+                    authStatus.innerHTML = '<button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>';
+                }
+            } else {
+                authSection.style.display = 'none';
+                // 본인인증 상태 초기화
+                authCompleted = false;
+            }
+        }
+
+        function selectOwnershipType(type) {
+            selectedOwnershipType = type;
+            updateDocumentSection();
+            
+            // 본인인증 섹션 업데이트
+            const authSection = document.getElementById('authSection');
+            if (authSection) {
+                // 본인(자사) 명의이고 휴대폰 번호일 때만 본인인증 필요
+                if (requiresAuth && numberType === 'MOBILE' && selectedOwnershipType === 'self') {
+                    authSection.style.display = 'block';
+                    document.getElementById('authHelpText').textContent = selectedMemberType === 'personal' 
+                        ? '발신번호 명의자 본인인증이 필요합니다' 
+                        : '서류 제출자 본인인증이 필요합니다';
+                    
+                    // 본인인증 버튼 표시 및 상태 초기화
+                    authCompleted = false;
+                    const authStatus = document.getElementById('authStatus');
+                    if (authStatus) {
+                        authStatus.innerHTML = '<button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>';
+                    }
+                } else {
+                    authSection.style.display = 'none';
+                    // 본인인증 상태 초기화
+                    authCompleted = false;
+                    const authStatus = document.getElementById('authStatus');
+                    if (authStatus) {
+                        authStatus.innerHTML = '<span style="color: var(--text-secondary);">본인인증이 필요하지 않습니다</span>';
+                    }
+                    const authButton = document.getElementById('authButton');
+                    if (authButton) {
+                        authButton.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        // 명의 구분별 서류 섹션 업데이트
+        function updateDocumentSection() {
+            const docSection = document.getElementById('documentSection');
+            const fileAccept = '.jpg,.jpeg,.gif,.png,.pdf,.tif,.tiff,.zip';
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            
+            if (!selectedOwnershipType) {
+                docSection.innerHTML = '<p style="color: var(--text-secondary);">명의 구분을 선택해주세요.</p>';
+                return;
+            }
+
+            let html = '';
+            
+            if (selectedMemberType === 'personal') {
+                if (selectedOwnershipType === 'self') {
+                    // 개인 - 본인 명의
+                    // 휴대폰 번호인 경우 본인인증만 필요 (통신서비스이용증명원 불필요)
+                    // 유선번호인 경우 통신서비스이용증명원 필요
+                    if (numberType === 'MOBILE') {
+                        // 휴대폰 번호: 서류 불필요
+                        html = `
+                            <div style="margin-top: 20px;">
+                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">휴대폰 번호는 본인인증만으로 등록 가능합니다.</p>
+                            </div>
+                        `;
+                    } else if (numberType === 'LANDLINE') {
+                        // 유선번호: 통신서비스이용증명원 필요
+                        html = `
+                            <div style="margin-top: 20px;">
+                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">발신번호 소유 확인을 위한 서류 제출이 필요합니다</p>
+                                <label class="form-label required">통신서비스 이용증명원 또는 통신사 가입증명서</label>
+                                <div class="file-upload-area" onclick="document.getElementById('certFile').click()">
+                                    <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                    <input type="file" id="certFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'certFile', ${maxSize})">
+                                </div>
+                                <div class="form-help">
+                                    통신사(SKT, KT, LG U+ 등)에서 발급한 최근 3개월 이내 서류를 제출해 주세요<br>
+                                    통신사 홈페이지, 고객센터, 대리점에서 발급 가능합니다<br>
+                                    발신번호와 명의자 정보가 명확히 표시된 서류를 제출해 주세요<br>
+                                    * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB<br>
+                                    * 서류가 여러 장일 경우 zip 파일로 압축하여 첨부하세요
+                                </div>
+                                <div id="certFileDisplay"></div>
+                            </div>
+                        `;
+                    } else {
+                        // 번호 타입 미선택
+                        html = `
+                            <div style="margin-top: 20px;">
+                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">발신번호를 입력해주세요.</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    // 개인 - 타인 명의
+                    html = `
+                        <div style="margin-top: 20px;">
+                            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">타인 명의 발신번호 등록을 위한 서류 제출이 필요합니다</p>
+                            <label class="form-label required">통신서비스 이용증명원 또는 통신사 가입증명서</label>
+                            <div class="file-upload-area" onclick="document.getElementById('certFile').click()">
+                                <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                <input type="file" id="certFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'certFile', ${maxSize})">
+                            </div>
+                            <div class="form-help">
+                                통신사(SKT, KT, LG U+ 등)에서 발급한 최근 3개월 이내 서류를 제출해 주세요<br>
+                                통신사 홈페이지, 고객센터, 대리점에서 발급 가능합니다<br>
+                                발신번호와 명의자 정보가 명확히 표시된 서류를 제출해 주세요<br>
+                                * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                            </div>
+                            <div id="certFileDisplay"></div>
+                            
+                            <label class="form-label required" style="margin-top: 20px;">위임장</label>
+                            <div class="file-upload-area" onclick="document.getElementById('powerOfAttorneyFile').click()">
+                                <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                <input type="file" id="powerOfAttorneyFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'powerOfAttorneyFile', ${maxSize})">
+                            </div>
+                            <div class="form-help">
+                                발신번호 명의자의 위임장이 필요합니다<br>
+                                위임자와 수임자 정보가 명확히 기재되어야 합니다<br>
+                                위임자의 서명 또는 날인이 필요합니다<br>
+                                * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                            </div>
+                            <div id="powerOfAttorneyFileDisplay"></div>
+                            
+                            <label class="form-label required" style="margin-top: 20px;">재직증명서 또는 신분증</label>
+                            <div class="file-upload-area" onclick="document.getElementById('employeeCertOrIdFile').click()">
+                                <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                <input type="file" id="employeeCertOrIdFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'employeeCertOrIdFile', ${maxSize})">
+                            </div>
+                            <div class="form-help">
+                                재직증명서: 최근 3개월 이내 발급된 서류<br>
+                                신분증: 주민등록증, 운전면허증, 여권 등<br>
+                                수임자(제출자)의 신원 확인을 위한 서류입니다<br>
+                                * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                            </div>
+                            <div id="employeeCertOrIdFileDisplay"></div>
+                        </div>
+                    `;
+                }
+            } else {
+                // 기업 회원
+                if (selectedOwnershipType === 'self') {
+                    // 기업 - 본인(자사) 명의
+                    // 휴대폰 번호인 경우 본인인증 완료 여부와 관계없이 통신서비스이용증명원 불필요
+                    // 유선번호인 경우 통신서비스이용증명원 필요
+                    if (numberType === 'MOBILE') {
+                        // 휴대폰 번호: 서류 불필요
+                        html = `
+                            <div style="margin-top: 20px;">
+                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">휴대폰 번호는 추가 서류 제출이 필요하지 않습니다.</p>
+                            </div>
+                        `;
+                    } else if (numberType === 'LANDLINE') {
+                        // 유선번호: 통신서비스이용증명원 필요
+                        html = `
+                            <div style="margin-top: 20px;">
+                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">발신번호와 발신번호 소유자(기업)간의 관계를 입증할 수 있는 서류 제출이 필요합니다</p>
+                                <label class="form-label required">통신서비스 이용증명원 또는 통신사 가입증명서</label>
+                                <div class="file-upload-area" onclick="document.getElementById('certFile2').click()">
+                                    <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                    <input type="file" id="certFile2" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'certFile2', ${maxSize})">
+                                </div>
+                                <div class="form-help">
+                                    통신사(SKT, KT, LG U+ 등)에서 발급한 최근 3개월 이내 서류를 제출해 주세요<br>
+                                    법인 명의 발신번호의 경우 법인 가입증명서를 제출해 주세요<br>
+                                    * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                                </div>
+                                <div id="certFile2Display"></div>
+                            </div>
+                        `;
+                    } else {
+                        // 번호 타입 미선택
+                        html = `
+                            <div style="margin-top: 20px;">
+                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">발신번호를 입력해주세요.</p>
+                            </div>
+                        `;
+                    }
+                } else if (selectedOwnershipType === 'others') {
+                    // 기업 - 타인 명의
+                    html = `
+                        <div style="margin-top: 20px;">
+                            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">타인 명의 발신번호 등록을 위한 서류 제출이 필요합니다</p>
+                            <label class="form-label required">통신서비스 이용증명원 또는 통신사 가입증명서</label>
+                            <div class="file-upload-area" onclick="document.getElementById('certFile').click()">
+                                <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                <input type="file" id="certFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'certFile', ${maxSize})">
+                            </div>
+                            <div class="form-help">
+                                통신사(SKT, KT, LG U+ 등)에서 발급한 최근 3개월 이내 서류를 제출해 주세요<br>
+                                * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                            </div>
+                            <div id="certFileDisplay"></div>
+                            
+                            <label class="form-label required" style="margin-top: 20px;">위임장</label>
+                            <div class="file-upload-area" onclick="document.getElementById('powerOfAttorneyFile').click()">
+                                <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                <input type="file" id="powerOfAttorneyFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'powerOfAttorneyFile', ${maxSize})">
+                            </div>
+                            <div class="form-help">
+                                발신번호 명의자의 위임장이 필요합니다<br>
+                                위임자와 수임자(제출자) 정보가 명확히 기재되어야 합니다<br>
+                                위임자의 서명 또는 날인이 필요합니다<br>
+                                * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                            </div>
+                            <div id="powerOfAttorneyFileDisplay"></div>
+                            
+                            <label class="form-label required" style="margin-top: 20px;">재직증명서 또는 신분증</label>
+                            <div class="file-upload-area" onclick="document.getElementById('employeeCertOrIdFile').click()">
+                                <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                <input type="file" id="employeeCertOrIdFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'employeeCertOrIdFile', ${maxSize})">
+                            </div>
+                            <div class="form-help">
+                                재직증명서: 최근 3개월 이내 발급된 서류<br>
+                                신분증: 주민등록증, 운전면허증, 여권 등<br>
+                                수임자(제출자)의 신원 확인을 위한 서류입니다<br>
+                                * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                            </div>
+                            <div id="employeeCertOrIdFileDisplay"></div>
+                        </div>
+                    `;
+                } else {
+                    // 기업 - 타사 명의
+                    html = `
+                        <div style="margin-top: 20px;">
+                            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">타사 명의 발신번호 등록을 위한 서류 제출이 필요합니다</p>
+                            <label class="form-label required">통신서비스 이용증명원 또는 통신사 가입증명서</label>
+                            <div class="file-upload-area" onclick="document.getElementById('certFile').click()">
+                                <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                <input type="file" id="certFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'certFile', ${maxSize})">
+                            </div>
+                            <div class="form-help">
+                                통신사(SKT, KT, LG U+ 등)에서 발급한 최근 3개월 이내 서류를 제출해 주세요<br>
+                                * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                            </div>
+                            <div id="certFileDisplay"></div>
+                            
+                            <label class="form-label required" style="margin-top: 20px;">위임장</label>
+                            <div class="file-upload-area" onclick="document.getElementById('powerOfAttorneyFile').click()">
+                                <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                <input type="file" id="powerOfAttorneyFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'powerOfAttorneyFile', ${maxSize})">
+                            </div>
+                            <div class="form-help">
+                                발신번호를 위임하는 기업(타사)의 위임장이 필요합니다<br>
+                                위임 기업과 수임 기업 정보가 명확히 기재되어야 합니다<br>
+                                위임 기업의 법인 직인이 날인되어야 합니다<br>
+                                * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                            </div>
+                            <div id="powerOfAttorneyFileDisplay"></div>
+                            
+                            <label class="form-label required" style="margin-top: 20px;">위임하는 업체의 사업자등록증</label>
+                            <div class="file-upload-area" onclick="document.getElementById('delegatorBusinessFile').click()">
+                                <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                <input type="file" id="delegatorBusinessFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'delegatorBusinessFile', ${maxSize})">
+                            </div>
+                            <div class="form-help">
+                                발신번호를 위임하는 기업(타사)의 사업자등록증을 제출해 주세요<br>
+                                국세청 홈택스에서 발급 가능합니다<br>
+                                법인명과 사업자등록번호가 명확히 표시되어야 합니다<br>
+                                * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                            </div>
+                            <div id="delegatorBusinessFileDisplay"></div>
+                            
+                            <label class="form-label required" style="margin-top: 20px;">수임하는 업체의 사업자등록증</label>
+                            <div class="file-upload-area" onclick="document.getElementById('delegateeBusinessFile').click()">
+                                <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                <input type="file" id="delegateeBusinessFile" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'delegateeBusinessFile', ${maxSize})">
+                            </div>
+                            <div class="form-help">
+                                발신번호를 수임하는 기업(자사)의 사업자등록증을 제출해 주세요<br>
+                                국세청 홈택스에서 발급 가능합니다<br>
+                                법인명과 사업자등록번호가 명확히 표시되어야 합니다<br>
+                                * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                            </div>
+                            <div id="delegateeBusinessFileDisplay"></div>
+                        </div>
+                    `;
+                }
+            }
+            
+            docSection.innerHTML = html;
+        }
+
+        function nextStep() {
+            // 현재 단계 검증
+            if (currentStep === 1 && !selectedMemberType) {
+                showToast('회원 유형을 선택해주세요.', 'warning');
+                return;
+            }
+            if (currentStep === 2) {
+                const callerNumber = document.getElementById('callerNumberInput').value;
+                if (!callerNumber) {
+                    showToast('발신번호를 입력해주세요.', 'warning');
+                    return;
+                }
+                if (!numberType) {
+                    showToast('유효한 발신번호를 입력해주세요.', 'warning');
+                    return;
+                }
+            }
+            if (currentStep === 3) {
+                if (!selectedOwnershipType) {
+                    showToast('명의 구분을 선택해주세요.', 'warning');
+                    return;
+                }
+                if (requiresAuth && !authCompleted) {
+                    showToast('본인인증을 완료해주세요.', 'warning');
+                    return;
+                }
+            }
+            if (currentStep === 4) {
+                const contactPhone = document.getElementById('contactPhoneInput').value;
+                if (!contactPhone) {
+                    showToast('연락처를 입력해주세요.', 'warning');
+                    return;
+                }
+            }
+            
+            if (currentStep < 5) {
+                document.getElementById(`step${currentStep}Content`).style.display = 'none';
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                document.getElementById(`step${currentStep}`).classList.add('completed');
+                
+                currentStep++;
+                document.getElementById(`step${currentStep}Content`).style.display = 'block';
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                
+                // STEP 3 진입 시 명의 구분 섹션 업데이트
+                if (currentStep === 3) {
+                    updateOwnershipSection();
+                }
+                
+                if (currentStep === 5) {
+                    document.getElementById('nextBtn').style.display = 'none';
+                    document.getElementById('submitBtn').style.display = 'block';
+                    // 최종 확인 정보 업데이트
+                    updateReviewInfo();
+                } else {
+                    document.getElementById('nextBtn').style.display = 'block';
+                    document.getElementById('submitBtn').style.display = 'none';
+                }
+            }
+        }
+
+        function updateReviewInfo() {
+            document.getElementById('reviewMemberType').textContent = selectedMemberType === 'personal' ? '개인' : '기업';
+            document.getElementById('reviewCallerNumber').textContent = document.getElementById('callerNumberInput').value || '-';
+            document.getElementById('reviewNumberType').textContent = numberType === 'MOBILE' ? '휴대폰 번호' : '유선번호';
+            
+            let ownershipText = '';
+            if (selectedMemberType === 'personal') {
+                ownershipText = selectedOwnershipType === 'self' ? '본인 명의' : '타인 명의';
+            } else {
+                if (selectedOwnershipType === 'self') ownershipText = '본인(자사) 명의';
+                else if (selectedOwnershipType === 'others') ownershipText = '타인 명의';
+                else ownershipText = '타사 명의';
+            }
+            document.getElementById('reviewOwnershipType').textContent = ownershipText;
+            document.getElementById('reviewPurpose').textContent = document.getElementById('purposeInput').value || '-';
+        }
+
+        function handleFileUpload(input, id, maxSize) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            // 파일 크기 검증
+            if (file.size > maxSize) {
+                showToast(`파일 크기는 최대 ${maxSize / 1024 / 1024}MB까지 가능합니다.`, 'error');
+                input.value = '';
+                return;
+            }
+            
+            // 파일 형식 검증
+            const allowedExtensions = ['.jpg', '.jpeg', '.gif', '.png', '.pdf', '.tif', '.tiff', '.zip'];
+            const fileName = file.name.toLowerCase();
+            const isValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+            
+            if (!isValidExtension) {
+                showToast('허용되지 않은 파일 형식입니다. (jpg, jpeg, gif, png, pdf, tif, tiff, zip만 가능)', 'error');
+                input.value = '';
+                return;
+            }
+            
+            const display = document.getElementById(id + 'Display');
+            const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
+            display.innerHTML = `
+                <div class="uploaded-file">
+                    <span>${file.name} (${fileSizeMB}MB)</span>
+                    <button type="button" class="btn btn-sm" onclick="removeFile('${id}')">삭제</button>
+                </div>
+            `;
+        }
+
+        function removeFile(id) {
+            document.getElementById(id).value = '';
+            const display = document.getElementById(id + 'Display');
+            if (display) {
+                display.innerHTML = '';
+            }
+        }
+
+        function openPhoneAuth() {
+            // 본인인증 팝업 호출 (실제로는 본인인증 서비스 연동)
+            showToast('본인인증 팝업이 열립니다.', 'info');
+            
+            // 시뮬레이션: 인증 완료 처리
+            setTimeout(() => {
+                authCompleted = true;
+                authInfo = {
+                    name: '홍길동',
+                    birthDate: '1990-01-01',
+                    carrier: 'SKT'
+                };
+                
+                const authStatus = document.getElementById('authStatus');
+                authStatus.innerHTML = `
+                    <div class="auth-completed">
+                        <span>인증 완료</span>
+                        <span style="font-size: 12px; color: var(--text-secondary);">(${authInfo.name})</span>
+                    </div>
+                `;
+                document.getElementById('authButton').style.display = 'none';
+                showToast('본인인증이 완료되었습니다.', 'success');
+                
+                // 본인인증 완료 후 서류 섹션 업데이트 (본인(자사) 명의인 경우)
+                if (selectedOwnershipType === 'self') {
+                    updateDocumentSection();
+                }
+            }, 1000);
+        }
+
+        function submitRegister() {
+            // 최종 검증
+            if (!selectedMemberType || !selectedOwnershipType || !numberType) {
+                showToast('필수 정보를 모두 입력해주세요.', 'warning');
+                return;
+            }
+            
+            // 본인(자사) 명의이고 휴대폰 번호일 때만 본인인증 필수
+            if (selectedOwnershipType === 'self' && requiresAuth && !authCompleted) {
+                showToast('본인인증을 완료해주세요.', 'warning');
+                return;
+            }
+            
+            showToast('발신번호 등록 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다.', 'success');
+            closeModal('registerModal');
+            
+            // 폼 초기화
+            resetForm();
+        }
+
+        function resetForm() {
+            currentStep = 1;
+            selectedMemberType = '';
+            selectedOwnershipType = '';
+            numberType = null;
+            requiresAuth = false;
+            authCompleted = false;
+            authInfo = null;
+            
+            // STEP 표시 초기화
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`step${i}`).classList.remove('active', 'completed');
+                document.getElementById(`step${i}Content`).style.display = 'none';
+            }
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('step1Content').style.display = 'block';
+            
+            // 버튼 초기화
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'none';
+            
+            // 입력값 초기화
+            document.getElementById('registerForm').reset();
+            document.getElementById('numberTypeBadge').style.display = 'none';
+        }
+
+        // 발신번호 등록 모달 열기
+        function openRegisterModal() {
+            resetForm();
+            openModal('registerModal');
+        }
+
+        function deleteCallerNumber(id) {
+            if (confirm('정말 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다.')) {
+                showToast('삭제되었습니다.', 'success');
+            }
+        }
+
+        function viewDetail(id) {
+            // 실제로는 API 호출하여 데이터를 가져옴
+            // 예시 데이터
+            const detailData = {
+                2: {
+                    callerNumber: '02-1234-5678',
+                    carrier: 'KT',
+                    purpose: '고객센터',
+                    status: '승인대기',
+                    registerDate: '2024-01-15',
+                    approveDate: '-',
+                    memberType: '기업',
+                    ownershipType: '본인(자사) 명의',
+                    numberType: '유선번호',
+                    contactPhone: '010-1111-2222',
+                    contactEmail: 'contact@example.com',
+                    documents: [
+                        { name: '사업자 등록증', fileName: 'business_registration.pdf', uploadDate: '2024-01-15' },
+                        { name: '재직증명서', fileName: 'employment_certificate.pdf', uploadDate: '2024-01-15' },
+                        { name: '통신서비스 이용증명원', fileName: 'telecom_certificate.pdf', uploadDate: '2024-01-15' }
+                    ]
+                }
+            };
+
+            const data = detailData[id];
+            if (!data) {
+                showToast('상세 정보를 불러올 수 없습니다.', 'error');
+                return;
+            }
+
+            // 모달에 데이터 채우기
+            document.getElementById('detailCallerNumber').textContent = data.callerNumber;
+            document.getElementById('detailCarrier').textContent = data.carrier;
+            document.getElementById('detailPurpose').textContent = data.purpose;
+            
+            // 상태 배지 생성
+            let statusBadge = '';
+            if (data.status === '승인완료') {
+                statusBadge = '<span class="badge badge-success">승인완료</span>';
+            } else if (data.status === '승인대기') {
+                statusBadge = '<span class="badge badge-warning">승인대기</span>';
+            } else if (data.status === '반려') {
+                statusBadge = '<span class="badge badge-danger">반려</span>';
+            }
+            document.getElementById('detailStatus').innerHTML = statusBadge;
+            
+            document.getElementById('detailRegisterDate').textContent = data.registerDate;
+            document.getElementById('detailApproveDate').textContent = data.approveDate;
+            document.getElementById('detailMemberType').textContent = data.memberType;
+            document.getElementById('detailOwnershipType').textContent = data.ownershipType;
+            document.getElementById('detailNumberType').textContent = data.numberType;
+            document.getElementById('detailContactPhone').textContent = data.contactPhone;
+            document.getElementById('detailContactEmail').textContent = data.contactEmail || '-';
+
+            // 서류 목록 표시
+            if (data.documents && data.documents.length > 0) {
+                const documentList = document.getElementById('documentList');
+                documentList.innerHTML = data.documents.map(doc => `
+                    <div style="padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>${doc.name}</strong>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                                    ${doc.fileName} · 업로드일: ${doc.uploadDate}
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline" onclick="downloadDocument('${doc.fileName}')">다운로드</button>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('documentSection').style.display = 'block';
+            } else {
+                document.getElementById('documentSection').style.display = 'none';
+            }
+
+            // 모달 열기
+            openModal('detailModal');
+        }
+
+        function downloadDocument(fileName) {
+            // 실제로는 파일 다운로드 API 호출
+            showToast(`${fileName} 다운로드를 시작합니다.`, 'info');
+        }
+
+        function viewRejectionReason(id) {
+            alert('반려 사유: 서류가 불명확합니다. 명확한 서류를 다시 제출해주세요.');
+        }
+    </script>
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+</body>
+</html>
+

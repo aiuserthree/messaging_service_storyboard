@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>브랜드톡 발송 전 확인 - 톡벨 화면설계서</title>
+    <link rel="stylesheet" href="../assets/common.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="../index.html" class="back-btn">← 목록으로</a>
+                <div class="page-info">
+                    <span class="page-id-badge">FE-P004-03-01</span>
+                    <span class="page-title-header">브랜드톡 발송 전 확인</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-secondary" onclick="window.open('../../kakao-send-brandtalk-before.html', '_blank')">🔗 실제 페이지</button>
+                <button class="btn btn-secondary" onclick="reloadIframe()">🔄 새로고침</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="mockup-panel">
+            <div class="mockup-canvas">
+                <div class="mockup-frame wide">
+                    <div class="browser-chrome">
+                        <div class="browser-dots">
+                            <div class="browser-dot red"></div>
+                            <div class="browser-dot yellow"></div>
+                            <div class="browser-dot green"></div>
+                        </div>
+                        <div class="browser-url">https://tokbell.co.kr/kakao-send-brandtalk-before.html</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="iframe-container" style="height: 700px;">
+                            <iframe id="pageIframe" class="page-iframe" src="../../kakao-send-brandtalk-before.html" style="height: 700px;" onload="hideLoading()"></iframe>
+                            <div class="iframe-loading" id="iframeLoading">
+                                <div class="iframe-loading-spinner"></div>
+                                <div>로딩 중...</div>
+                            </div>
+                            <div class="marker-overlay" id="markerOverlay">
+                                <div class="marker" data-id="1" style="top: 200px; right: 20px;">1</div>
+                                <div class="marker" data-id="2" style="top: 450px; right: 20px;">2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="description-panel">
+            <div class="desc-header">
+                <div class="desc-title">화면 설명서</div>
+                <div class="desc-subtitle">kakao-send-brandtalk-before.html · 브랜드톡 발송 전 확인 페이지</div>
+            </div>
+            <div class="desc-content">
+                <div class="desc-item expanded" data-id="1">
+                    <div class="desc-item-header">
+                        <div class="desc-number">1</div>
+                        <div class="desc-item-title">발송 정보 확인</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">발송 전 정보를 최종 확인합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>항목</th><th>설명</th></tr>
+                            <tr><td>발신프로필</td><td>선택된 카카오 채널</td></tr>
+                            <tr><td>템플릿</td><td>선택된 템플릿명</td></tr>
+                            <tr><td>수신자</td><td>발송 대상 수</td></tr>
+                            <tr><td>예상 비용</td><td>발송 예상 금액</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="2">
+                    <div class="desc-item-header">
+                        <div class="desc-number">2</div>
+                        <div class="desc-item-title">발송 버튼</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">최종 발송을 실행합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>동작</th><th>설명</th></tr>
+                            <tr><td>이전</td><td>발송 화면으로 돌아감</td></tr>
+                            <tr><td>발송</td><td>브랜드톡 발송 실행</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/common.js"></script>
+    <script>
+        function hideLoading() {
+            document.getElementById('iframeLoading').style.display = 'none';
+        }
+        
+        function reloadIframe() {
+            const iframe = document.getElementById('pageIframe');
+            document.getElementById('iframeLoading').style.display = 'block';
+            iframe.src = iframe.src;
+        }
+    </script>
+</body>
+</html>

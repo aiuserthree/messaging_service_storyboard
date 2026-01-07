@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - 톡벨 화면설계서</title>
+    <link rel="stylesheet" href="../assets/common.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="../index.html" class="back-btn">← 목록으로</a>
+                <div class="page-info">
+                    <span class="page-id-badge">FE-P002-01</span>
+                    <span class="page-title-header">로그인</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-secondary" onclick="window.open('../../login.html', '_blank')">🔗 실제 페이지</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="mockup-panel">
+            <div class="mockup-canvas">
+                <div class="mockup-frame narrow">
+                    <div class="browser-chrome">
+                        <div class="browser-dots">
+                            <div class="browser-dot red"></div>
+                            <div class="browser-dot yellow"></div>
+                            <div class="browser-dot green"></div>
+                        </div>
+                        <div class="browser-url">https://tokbell.co.kr/login</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="screen-mock">
+                            <!-- Header -->
+                            <div class="screen-header">
+                                <div class="screen-logo">Tokbell</div>
+                                <div class="screen-nav">
+                                    <span class="screen-nav-item">문자 발송</span>
+                                    <span class="screen-nav-item">카카오톡 발송</span>
+                                    <span class="screen-nav-item">템플릿 관리</span>
+                                </div>
+                                <div class="screen-user">
+                                    <span>로그인</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Login Form -->
+                            <div class="screen-body" style="display: flex; justify-content: center; align-items: center; min-height: 500px; background: #f8fafc;">
+                                <div style="background: white; padding: 48px 40px; border-radius: 16px; width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+                                    <div style="text-align: center; margin-bottom: 32px;">
+                                        <div style="font-size: 32px; font-weight: 700; color: #4361ee;">Tokbell</div>
+                                    </div>
+                                    
+                                    <!-- 마커 1: 로그인 폼 -->
+                                    <div class="marker" data-id="1" style="top: 150px; right: 30px;">1</div>
+                                    
+                                    <div class="form-row" style="margin-bottom: 16px;">
+                                        <label class="form-label">아이디</label>
+                                        <input type="text" class="form-input" placeholder="아이디를 입력하세요">
+                                    </div>
+                                    
+                                    <div class="form-row" style="margin-bottom: 16px;">
+                                        <label class="form-label">비밀번호</label>
+                                        <input type="password" class="form-input" placeholder="비밀번호를 입력하세요">
+                                    </div>
+                                    
+                                    <!-- 마커 2: 아이디 저장 -->
+                                    <div class="marker" data-id="2" style="top: 330px; right: 30px;">2</div>
+                                    <div class="checkbox-item" style="margin-bottom: 20px;">
+                                        <div class="checkbox-box checked">✓</div>
+                                        <span>아이디 저장</span>
+                                    </div>
+                                    
+                                    <!-- 마커 3: 로그인 버튼 -->
+                                    <div class="marker" data-id="3" style="top: 380px; right: 30px;">3</div>
+                                    <button class="mock-btn mock-btn-primary" style="width: 100%; padding: 14px;">로그인</button>
+                                    
+                                    <!-- 마커 4: 회원가입 버튼 -->
+                                    <div class="marker" data-id="4" style="top: 440px; right: 30px;">4</div>
+                                    <button class="mock-btn mock-btn-outline" style="width: 100%; padding: 14px; margin-top: 12px;">회원가입</button>
+                                    
+                                    <!-- 마커 5: 아이디/비밀번호 찾기 -->
+                                    <div class="marker" data-id="5" style="top: 510px; right: 30px;">5</div>
+                                    <div style="text-align: center; margin-top: 24px; font-size: 13px; color: #666;">
+                                        <a href="#" style="color: #4361ee; text-decoration: none;">아이디 찾기</a>
+                                        <span style="margin: 0 8px; color: #ddd;">|</span>
+                                        <a href="#" style="color: #4361ee; text-decoration: none;">비밀번호 찾기</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description Panel -->
+        <div class="description-panel">
+            <div class="desc-header">
+                <div class="desc-title">화면 설명서</div>
+                <div class="desc-subtitle">login.html · 사용자 로그인 페이지</div>
+            </div>
+            <div class="desc-content">
+                <div class="desc-item expanded" data-id="1">
+                    <div class="desc-item-header">
+                        <div class="desc-number">1</div>
+                        <div class="desc-item-title">로그인 폼 영역</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">아이디와 비밀번호 입력 필드입니다.</div>
+                        <table class="desc-table">
+                            <tr><th>필드</th><th>타입</th><th>검증</th></tr>
+                            <tr><td>아이디</td><td>text</td><td>필수 입력</td></tr>
+                            <tr><td>비밀번호</td><td>password</td><td>필수 입력</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="2">
+                    <div class="desc-item-header">
+                        <div class="desc-number">2</div>
+                        <div class="desc-item-title">아이디 저장</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">체크 시 localStorage에 아이디를 저장합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>기능</th><th>설명</th></tr>
+                            <tr><td>저장</td><td>savedUserId 키로 localStorage 저장</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="3">
+                    <div class="desc-item-header">
+                        <div class="desc-number">3</div>
+                        <div class="desc-item-title">로그인 버튼</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">로그인을 수행합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>동작</th><th>설명</th></tr>
+                            <tr><td>성공</td><td>main.html로 이동</td></tr>
+                            <tr><td>실패</td><td>에러 메시지 표시</td></tr>
+                        </table>
+                        <div class="desc-note">
+                            <div class="desc-note-title">💡 참고</div>
+                            <div class="desc-note-text">로그인 성공 시 isLoggedIn을 localStorage에 저장합니다.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="4">
+                    <div class="desc-item-header">
+                        <div class="desc-number">4</div>
+                        <div class="desc-item-title">회원가입 버튼</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">회원가입 페이지로 이동합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>동작</th><th>설명</th></tr>
+                            <tr><td>클릭</td><td>signup.html로 이동</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="desc-item" data-id="5">
+                    <div class="desc-item-header">
+                        <div class="desc-number">5</div>
+                        <div class="desc-item-title">아이디/비밀번호 찾기</div>
+                        <span class="desc-toggle">▼</span>
+                    </div>
+                    <div class="desc-item-body">
+                        <div class="desc-text">아이디 또는 비밀번호 찾기 기능을 제공합니다.</div>
+                        <table class="desc-table">
+                            <tr><th>기능</th><th>현재 상태</th></tr>
+                            <tr><td>아이디 찾기</td><td>준비 중 (alert)</td></tr>
+                            <tr><td>비밀번호 찾기</td><td>준비 중 (alert)</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/common.js"></script>
+</body>
+</html>
