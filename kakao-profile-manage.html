@@ -1604,40 +1604,75 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // ===== 페이지 기본 요소 =====
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '발신프로필 관리 페이지 제목' },
-            // 2. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '카카오톡 탭 전환' },
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '발신프로필 관리 페이지 제목', function: '페이지 타이틀 및 설명 표시' },
+            
+            // ===== 탭 메뉴 =====
+            // 2. 탭 메뉴 영역
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '카카오톡 관련 기능 탭', function: '서브 페이지 네비게이션' },
             // 3. 알림톡 발송 탭
-            { selector: '#tabMenu .tab-item:nth-child(1)', title: '알림톡 발송 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 발송 페이지' },
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '알림톡 발송 탭', position: { top: '-5px', left: '-10px' }, description: '알림톡 발송 페이지', function: '알림톡 메시지 발송' },
             // 4. 브랜드 메시지 탭
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '브랜드 메시지 탭', position: { top: '-5px', left: '-10px' }, function: '브랜드 메시지 페이지' },
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '브랜드 메시지 탭', position: { top: '-5px', left: '-10px' }, description: '브랜드 메시지 발송', function: '광고성 메시지 발송' },
             // 5. 발신프로필 탭
-            { selector: '#tabMenu .tab-item:nth-child(3)', title: '발신프로필 탭', position: { top: '-5px', left: '-10px' }, function: '발신프로필 관리 (현재)' },
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '발신프로필 탭', position: { top: '-5px', left: '-10px' }, description: '발신프로필 관리 (현재)', function: '카카오 채널 프로필 관리', behavior: ['현재 활성 탭'] },
             // 6. 알림톡 템플릿 탭
-            { selector: '#tabMenu .tab-item:nth-child(4)', title: '알림톡 템플릿 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 템플릿' },
+            { selector: '#tabMenu .tab-item:nth-child(4)', title: '알림톡 템플릿 탭', position: { top: '-5px', left: '-10px' }, description: '알림톡 템플릿 관리', function: '알림톡 템플릿 등록/조회' },
             // 7. 브랜드 템플릿 탭
-            { selector: '#tabMenu .tab-item:nth-child(5)', title: '브랜드 템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '브랜드 템플릿' },
-            // 8. 안내 영역
-            { selector: '#infoAlert', title: '안내 메시지', position: { top: '10px', left: '-15px' }, function: '채널 등록 안내' },
+            { selector: '#tabMenu .tab-item:nth-child(5)', title: '브랜드 템플릿 탭', position: { top: '-5px', right: '-10px' }, description: '브랜드 템플릿 관리', function: '브랜드 메시지 템플릿' },
+            
+            // ===== 안내 영역 =====
+            // 8. 안내 메시지
+            { selector: '.alert-info', title: '안내 메시지', position: { top: '10px', left: '-15px' }, description: '발신프로필 등록 안내', function: '카카오 채널 등록 절차 안내', behavior: ['채널 인증 절차 설명', '필요 서류 안내'] },
+            
+            // ===== 프로필 등록 =====
             // 9. 프로필 등록 버튼
-            { selector: '#addProfileBtn', title: '프로필 등록', position: { top: '-5px', left: '-10px' }, function: '새 발신프로필 등록', api: 'POST /api/kakao/profiles' },
-            // 10. 검색 섹션
-            { selector: '#searchSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, function: '프로필 검색/필터' },
+            { selector: '.btn-primary.btn-lg', title: '발신프로필 등록', position: { top: '-5px', left: '-10px' }, description: '새 발신프로필 등록', function: '프로필 등록 모달 열기', behavior: ['카카오 채널 ID 입력', '인증 절차 진행'], api: 'POST /api/kakao/profiles' },
+            
+            // ===== 검색 및 필터 =====
+            // 10. 검색 영역
+            { selector: '.card', title: '검색 영역', position: { top: '10px', left: '-15px' }, description: '프로필 검색 및 필터', function: '등록된 프로필 검색' },
             // 11. 검색 입력
-            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '프로필ID/채널명 검색' },
+            { selector: '.form-input[placeholder*="프로필"]', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '프로필ID 또는 채널명 검색', function: '키워드 검색', behavior: ['프로필ID, 채널명으로 검색'] },
             // 12. 상태 필터
-            { selector: '#statusFilter', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '상태별 필터링' },
+            { selector: '.form-select', title: '상태 필터', position: { top: '-5px', left: '-10px' }, description: '상태별 필터링', function: '프로필 상태 필터', behavior: ['전체/대기중/승인완료/거부 선택'] },
             // 13. 검색 버튼
-            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 실행', api: 'GET /api/kakao/profiles' },
+            { selector: '.btn-primary:not(.btn-lg)', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, description: '검색 실행', function: '필터 조건으로 검색', api: 'GET /api/kakao/profiles' },
+            
+            // ===== 프로필 목록 =====
             // 14. 프로필 목록 테이블
-            { selector: '#profileListSection .table', title: '프로필 목록', position: { top: '10px', left: '10px' }, function: '등록된 프로필 목록' },
-            // 15. 상세보기 버튼
-            { selector: '.btn-view', title: '상세보기', position: { top: '-5px', left: '-10px' }, function: '프로필 상세 정보' },
-            // 16. 삭제 버튼
-            { selector: '.btn-delete', title: '삭제', position: { top: '-5px', right: '-10px' }, function: '프로필 삭제', api: 'DELETE /api/kakao/profiles/:id' },
-            // 17. 페이지네이션
-            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+            { selector: '.table', title: '프로필 목록', position: { top: '10px', left: '10px' }, description: '등록된 발신프로필 목록', function: '프로필 정보 표시', behavior: ['프로필ID, 채널명, 카테고리, 상태, 등록일 표시'] },
+            // 15. 테이블 헤더 - 프로필ID
+            { selector: '.table th:nth-child(1)', title: '프로필ID 컬럼', position: { top: '-5px', left: '-10px' }, description: '카카오 프로필 ID', function: '고유 식별자' },
+            // 16. 테이블 헤더 - 채널명
+            { selector: '.table th:nth-child(2)', title: '채널명 컬럼', position: { top: '-5px', left: '-10px' }, description: '카카오 채널 이름', function: '발신자명으로 표시' },
+            // 17. 테이블 헤더 - 카테고리
+            { selector: '.table th:nth-child(3)', title: '카테고리 컬럼', position: { top: '-5px', left: '-10px' }, description: '채널 카테고리', function: '비즈니스 분류' },
+            // 18. 테이블 헤더 - 상태
+            { selector: '.table th:nth-child(4)', title: '상태 컬럼', position: { top: '-5px', left: '-10px' }, description: '프로필 승인 상태', function: '대기중/승인완료/거부 표시' },
+            // 19. 테이블 헤더 - 등록일
+            { selector: '.table th:nth-child(5)', title: '등록일 컬럼', position: { top: '-5px', left: '-10px' }, description: '프로필 등록일', function: '등록 날짜 표시' },
+            // 20. 테이블 헤더 - 관리
+            { selector: '.table th:nth-child(6)', title: '관리 컬럼', position: { top: '-5px', right: '-10px' }, description: '프로필 관리 액션', function: '상세보기/삭제 버튼' },
+            
+            // ===== 프로필 상세 액션 =====
+            // 21. 상세보기 버튼
+            { selector: '.btn-outline.btn-sm', title: '상세보기', position: { top: '-5px', left: '-10px' }, description: '프로필 상세 정보 조회', function: '프로필 상세 모달 열기', behavior: ['채널 정보, 인증 상태 확인'], api: 'GET /api/kakao/profiles/:id' },
+            // 22. 삭제 버튼
+            { selector: '.btn-danger.btn-sm', title: '삭제', position: { top: '-5px', right: '-10px' }, description: '프로필 삭제', function: '발신프로필 삭제', behavior: ['삭제 확인 팝업 표시', '삭제 시 복구 불가'], api: 'DELETE /api/kakao/profiles/:id' },
+            
+            // ===== 페이지네이션 =====
+            // 23. 페이지네이션
+            { selector: '.pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, description: '페이지 이동', function: '목록 페이지 전환', behavior: ['이전/다음 페이지', '페이지 번호 직접 선택'] },
+            
+            // ===== 모달 =====
+            // 24. 프로필 등록 모달
+            { selector: '#profileAddModal', title: '프로필 등록 모달', position: { top: '20px', left: '20px' }, description: '새 발신프로필 등록 팝업', function: '채널 정보 입력 및 인증', api: 'POST /api/kakao/profiles' },
+            // 25. 프로필 상세 모달
+            { selector: '#profileDetailModal', title: '프로필 상세 모달', position: { top: '20px', left: '20px' }, description: '프로필 상세 정보 팝업', function: '채널 상세 정보 조회', api: 'GET /api/kakao/profiles/:id' },
+            // 26. 삭제 확인 모달
+            { selector: '#deleteConfirmModal', title: '삭제 확인 모달', position: { top: '20px', left: '20px' }, description: '프로필 삭제 확인 팝업', function: '삭제 전 확인', behavior: ['확인/취소 버튼'] }
         ];
         initSpecOverlay(specData);
     </script>
