@@ -1954,7 +1954,80 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <script src="js/footer.js"></script>
     <script>
+        document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '.page-header', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '알림톡 템플릿 등록 페이지 제목' },
+            // 2. 작성 가이드 섹션
+            { selector: '.guide-section', title: '작성 가이드', position: { top: '10px', left: '10px' }, function: '템플릿 작성 규정 안내', behavior: ['정보성 메시지만 가능', '변수 형식 #{변수명}', '검수 소요 2~3시간'] },
+            // 3. 템플릿 폼
+            { selector: '#templateForm', title: '템플릿 폼', position: { top: '10px', right: '10px' }, function: '알림톡 템플릿 등록 폼', api: 'POST /api/templates/alimtalk' },
+            // 4. 카카오 채널 선택
+            { selector: '#channelSelect', title: '카카오 채널', position: { top: '-5px', left: '-10px' }, function: '발송할 카카오톡 채널 선택', tags: [{ text: '필수', type: 'required' }] },
+            // 5. 템플릿명 입력
+            { selector: '#templateForm .form-group:nth-child(2) input', title: '템플릿명', position: { top: '-5px', right: '-10px' }, function: '템플릿 관리용 이름', behavior: ['최대 200자'], tags: [{ text: '필수', type: 'required' }] },
+            // 6. 카테고리 선택 영역
+            { selector: '#templateForm .form-group:nth-child(3)', title: '카테고리', position: { top: '-5px', left: '-10px' }, function: '템플릿 카테고리 선택', behavior: ['대분류: 쇼핑/배송, 예약/티켓 등', '소분류: 주문/결제, 배송 등'], tags: [{ text: '필수', type: 'required' }] },
+            // 7. 템플릿 유형 선택
+            { selector: '#templateForm .form-group:nth-child(4)', title: '템플릿 유형', position: { top: '-5px', left: '-10px' }, function: '메시지 형태 선택', behavior: ['기본형: 텍스트만', '이미지형: 이미지 + 텍스트', '강조표기형: 강조 문구 + 텍스트'], tags: [{ text: '필수', type: 'required' }] },
+            // 8. 강조표기 보조문구
+            { selector: '#emphasisSubText', title: '강조표기 보조문구', position: { top: '-5px', left: '-10px' }, function: '강조 영역 보조 텍스트', behavior: ['최대 18자', '변수 불가'] },
+            // 9. 강조표기 문구
+            { selector: '#emphasisText', title: '강조표기 문구', position: { top: '-5px', right: '-10px' }, function: '강조 영역 메인 텍스트', behavior: ['최대 23자', '변수 사용 가능'] },
+            // 10. 변수 삽입 버튼 영역
+            { selector: '#templateForm .form-group:nth-child(6) .flex', title: '변수 삽입 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 내용에 변수 삽입', behavior: ['#{이름}', '#{전화번호}', '#{변수1~3}'] },
+            // 11. 템플릿 내용 입력
+            { selector: '#messageContent', title: '템플릿 내용', position: { top: '5px', right: '5px' }, function: '알림톡 메시지 본문 입력', behavior: ['최대 1,000자', '변수 사용 가능'], tags: [{ text: '필수', type: 'required' }] },
+            // 12. 글자수 카운터
+            { selector: '#charCounter', title: '글자수 카운터', position: { top: '-5px', right: '-10px' }, function: '입력된 글자 수 표시' },
+            // 13. 이미지 첨부 영역
+            { selector: '#imageGroup', title: '이미지 첨부', position: { top: '10px', left: '10px' }, function: '이미지형 템플릿 이미지 업로드', behavior: ['JPG, PNG 지원', '최대 500KB', '권장: 800x600px'] },
+            // 14. 보조문구 입력
+            { selector: '#templateForm .form-group:nth-child(8) textarea', title: '보조문구', position: { top: '5px', right: '5px' }, function: '부가 안내 정보 입력', behavior: ['선택 입력', '최대 500자'] },
+            // 15. 채널추가 버튼 체크박스
+            { selector: '#useChannelButton', title: '채널추가 버튼', position: { top: '-5px', left: '-10px' }, function: '카카오 채널 추가 버튼 표시 여부' },
+            // 16. 버튼 추가 영역
+            { selector: '#buttonList', title: '버튼 목록', position: { top: '10px', left: '10px' }, function: '템플릿 하단 버튼 설정', behavior: ['최대 5개 (채널버튼 사용 시 4개)', '웹링크/앱링크 타입'] },
+            // 17. 버튼 추가 버튼
+            { selector: '#addButtonBtn', title: '버튼 추가', position: { top: '-5px', left: '-10px' }, function: '새 버튼 추가' },
+            // 18. 미리보기 영역
+            { selector: '.preview-section', title: '미리보기', position: { top: '10px', left: '10px' }, function: '템플릿 실시간 미리보기', behavior: ['입력 내용 즉시 반영', '변수값 예시 치환'] },
+            // 19. 미리보기 채널명
+            { selector: '#previewChannelName', title: '채널명 미리보기', position: { top: '-5px', left: '-10px' }, function: '선택된 카카오 채널명 표시' },
+            // 20. 미리보기 내용
+            { selector: '#previewContent', title: '내용 미리보기', position: { top: '5px', right: '5px' }, function: '템플릿 본문 미리보기' },
+            // 21. 미리보기 버튼
+            { selector: '#previewButtons', title: '버튼 미리보기', position: { top: '5px', left: '5px' }, function: '추가된 버튼 미리보기' },
+            // 22. 임시 저장 버튼
+            { selector: '.card:last-of-type .btn-outline:first-child', title: '임시 저장', position: { top: '-5px', left: '-10px' }, function: '작성 중 임시 저장' },
+            // 23. 취소 버튼
+            { selector: '.card:last-of-type .btn-outline:nth-child(2)', title: '취소', position: { top: '-5px', left: '-10px' }, function: '작성 취소 및 목록 이동' },
+            // 24. 등록하기 버튼
+            { selector: '.card:last-of-type .btn-primary', title: '등록하기', position: { top: '-5px', right: '-10px' }, function: '템플릿 등록 확인 모달 열기', tags: [{ text: '필수', type: 'required' }] },
+            // === 등록 확인 모달 ===
+            // 25. 등록 확인 모달
+            { selector: '#registerConfirmModal', title: '등록 확인 모달', position: { top: '60px', left: '20px' }, function: '템플릿 등록 전 최종 확인', api: 'POST /api/templates/alimtalk' },
+            // 26. 모달 닫기 버튼
+            { selector: '#registerConfirmModal .modal-close', title: '모달 닫기', position: { top: '5px', right: '5px' }, function: '확인 모달 닫기' },
+            // 27. 등록 안내 메시지
+            { selector: '#registerConfirmModal .alert-info', title: '등록 안내', position: { top: '5px', left: '10px' }, function: '템플릿 등록 후 심사요청 안내' },
+            // 28. 확인 채널명
+            { selector: '#confirmChannel', title: '채널명 확인', position: { top: '-5px', right: '-10px' }, function: '선택된 채널명 표시' },
+            // 29. 확인 템플릿명
+            { selector: '#confirmName', title: '템플릿명 확인', position: { top: '-5px', right: '-10px' }, function: '입력된 템플릿명 표시' },
+            // 30. 확인 카테고리
+            { selector: '#confirmCategory', title: '카테고리 확인', position: { top: '-5px', right: '-10px' }, function: '선택된 카테고리 표시' },
+            // 31. 취소 버튼 (모달)
+            { selector: '#registerConfirmModal .modal-footer .btn-outline', title: '취소', position: { top: '-5px', left: '-10px' }, function: '등록 취소' },
+            // 32. 등록 확인 버튼
+            { selector: '#registerConfirmModal .modal-footer .btn-primary', title: '등록하기', position: { top: '-5px', right: '-10px' }, function: '템플릿 최종 등록', api: 'POST /api/templates/alimtalk', tags: [{ text: 'API', type: 'api' }] }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

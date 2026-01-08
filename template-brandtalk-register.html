@@ -2460,7 +2460,96 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <script src="js/footer.js"></script>
     <script>
+        document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 페이지 헤더
+            { selector: '.page-header', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '브랜드 메시지 템플릿 등록 페이지', behavior: ['승인 절차 없이 즉시 사용'] },
+            // 2. 템플릿 폼
+            { selector: '#templateForm', title: '템플릿 폼', position: { top: '10px', right: '10px' }, function: '브랜드 메시지 템플릿 등록 폼', api: 'POST /api/templates/brandtalk' },
+            // 3. 카카오 채널 선택
+            { selector: '#channelSelect', title: '카카오 채널', position: { top: '-5px', left: '-10px' }, function: '발송할 카카오톡 채널 선택', tags: [{ text: '필수', type: 'required' }] },
+            // 4. 템플릿명 입력
+            { selector: '#templateForm .form-group:nth-child(2) input', title: '템플릿명', position: { top: '-5px', right: '-10px' }, function: '템플릿 관리용 이름', behavior: ['최대 50자'], tags: [{ text: '필수', type: 'required' }] },
+            // 5. 메시지 유형 선택
+            { selector: '#templateForm .form-group:nth-child(3)', title: '메시지 유형', position: { top: '-5px', left: '-10px' }, function: '브랜드 메시지 형태 선택', behavior: ['텍스트: 텍스트만', '이미지: 이미지+텍스트', '리스트: 아이템 목록', '카드형: 슬라이드 카드'], tags: [{ text: '필수', type: 'required' }] },
+            // === 텍스트 유형 ===
+            // 6. 텍스트 유형 영역
+            { selector: '#textTypeGroup', title: '텍스트 유형 입력', position: { top: '10px', left: '10px' }, function: '텍스트형 메시지 입력 영역' },
+            // 7. 텍스트 변수 삽입 버튼
+            { selector: '#textTypeGroup .flex', title: '변수 삽입', position: { top: '-5px', left: '-10px' }, function: '메시지에 변수 삽입', behavior: ['#{이름}', '#{전화번호}', '#{변수1~3}'] },
+            // 8. 텍스트 메시지 내용
+            { selector: '#textMessageContent', title: '메시지 입력', position: { top: '5px', right: '5px' }, function: '텍스트 메시지 본문', behavior: ['최대 1,300자', '줄바꿈 최대 99개'], tags: [{ text: '필수', type: 'required' }] },
+            // 9. 텍스트 글자수 카운터
+            { selector: '#textCharCounter', title: '글자수', position: { top: '-5px', right: '-10px' }, function: '입력 글자수 표시' },
+            // === 이미지 유형 ===
+            // 10. 이미지 유형 영역
+            { selector: '#imageTypeGroup', title: '이미지 유형 입력', position: { top: '10px', left: '10px' }, function: '이미지형 메시지 입력 영역' },
+            // 11. 이미지 파일 첨부 버튼
+            { selector: '#imageFileInput', title: '이미지 첨부', position: { top: '-5px', left: '-10px' }, function: '이미지 파일 업로드', behavior: ['800x400px 권장', 'JPG/PNG, 최대 5MB'] },
+            // 12. 이미지 메시지 내용
+            { selector: '#imageMessageContent', title: '메시지 입력', position: { top: '5px', right: '5px' }, function: '이미지 메시지 본문', behavior: ['최대 400자', '줄바꿈 최대 29개'], tags: [{ text: '필수', type: 'required' }] },
+            // === 리스트 유형 ===
+            // 13. 리스트 유형 영역
+            { selector: '#listTypeGroup', title: '리스트 유형 입력', position: { top: '10px', left: '10px' }, function: '리스트형 메시지 입력 영역' },
+            // 14. 리스트 제목 입력
+            { selector: '#listTitle', title: '제목 입력', position: { top: '-5px', left: '-10px' }, function: '리스트 제목', behavior: ['최대 20자'], tags: [{ text: '필수', type: 'required' }] },
+            // 15. 메인 아이템 영역
+            { selector: '#listTypeGroup .form-group:nth-child(2)', title: '메인 아이템', position: { top: '10px', left: '10px' }, function: '리스트 메인 아이템 설정', behavior: ['이미지 800x400px', '가로세로 비율 2:1'] },
+            // 16. 메인 아이템 타이틀
+            { selector: '#mainItemTitle', title: '메인 타이틀', position: { top: '-5px', left: '-10px' }, function: '메인 아이템 제목', behavior: ['최대 25자', '선택 입력'] },
+            // 17. 메인 아이템 링크
+            { selector: '#mainItemLink', title: '메인 링크', position: { top: '-5px', right: '-10px' }, function: '메인 아이템 클릭 시 이동 URL', tags: [{ text: '필수', type: 'required' }] },
+            // 18. 서브 아이템 컨테이너
+            { selector: '#subItemsContainer', title: '서브 아이템', position: { top: '10px', left: '10px' }, function: '서브 아이템 목록', behavior: ['최소 2개, 최대 4개', '이미지 500x500px'] },
+            // === 카드형 유형 ===
+            // 19. 카드형 영역
+            { selector: '#cardTypeGroup', title: '카드형 입력', position: { top: '10px', left: '10px' }, function: '카드형 메시지 입력 영역' },
+            // 20. 카드 컨테이너
+            { selector: '#cardsContainer', title: '카드 목록', position: { top: '10px', left: '10px' }, function: '슬라이드 카드 목록', behavior: ['최대 6개 카드', '각 카드별 이미지/내용/버튼 설정'] },
+            // === 공통 버튼 설정 ===
+            // 21. 버튼 설정 영역
+            { selector: '#commonButtonGroup', title: '버튼 설정', position: { top: '10px', left: '10px' }, function: '메시지 하단 버튼 설정', behavior: ['카드형 제외', '최대 5개 버튼'] },
+            // 22. 채널추가 버튼 체크박스
+            { selector: '#useChannelButton', title: '채널추가 버튼', position: { top: '-5px', left: '-10px' }, function: '카카오 채널 추가 버튼 사용' },
+            // 23. 버튼 목록
+            { selector: '#buttonList', title: '버튼 목록', position: { top: '10px', left: '10px' }, function: '추가된 버튼 목록' },
+            // 24. 버튼 추가 버튼
+            { selector: '#addButtonBtn', title: '버튼 추가', position: { top: '-5px', left: '-10px' }, function: '새 버튼 추가' },
+            // 25. 상태 설정
+            { selector: '#templateForm .form-group:last-child', title: '상태 설정', position: { top: '-5px', left: '-10px' }, function: '템플릿 사용 상태', behavior: ['사용중: 발송 가능', '미사용: 발송 불가'], tags: [{ text: '필수', type: 'required' }] },
+            // === 미리보기 영역 ===
+            // 26. 미리보기 섹션
+            { selector: '.preview-section', title: '미리보기', position: { top: '10px', left: '10px' }, function: '템플릿 실시간 미리보기', behavior: ['입력 내용 즉시 반영', '변수값 예시 치환'] },
+            // 27. 미리보기 채널명
+            { selector: '#previewChannelName', title: '채널명 미리보기', position: { top: '-5px', left: '-10px' }, function: '선택된 카카오 채널명 표시' },
+            // 28. 미리보기 광고 채널명
+            { selector: '#previewAdChannelName', title: '광고 채널명', position: { top: '-5px', right: '-10px' }, function: '(광고) 표시 채널명' },
+            // 29. 미리보기 이미지
+            { selector: '#previewImage', title: '이미지 미리보기', position: { top: '5px', left: '5px' }, function: '업로드된 이미지 미리보기' },
+            // 30. 미리보기 내용
+            { selector: '#previewContent', title: '내용 미리보기', position: { top: '5px', right: '5px' }, function: '메시지 본문 미리보기' },
+            // 31. 미리보기 리스트
+            { selector: '#previewList', title: '리스트 미리보기', position: { top: '10px', left: '10px' }, function: '리스트형 미리보기' },
+            // 32. 미리보기 카드
+            { selector: '#previewCard', title: '카드 미리보기', position: { top: '10px', left: '10px' }, function: '카드형 슬라이드 미리보기' },
+            // 33. 미리보기 버튼
+            { selector: '#previewButtons', title: '버튼 미리보기', position: { top: '5px', left: '5px' }, function: '추가된 버튼 미리보기' },
+            // 34. 수신거부 안내
+            { selector: '#previewFooter', title: '수신거부 안내', position: { top: '-5px', right: '-10px' }, function: '수신거부 방법 안내 문구' },
+            // === 하단 액션 버튼 ===
+            // 35. 임시저장 버튼
+            { selector: '.card:last-of-type .btn-outline:first-child', title: '임시저장', position: { top: '-5px', left: '-10px' }, function: '작성 중 임시 저장' },
+            // 36. 취소 버튼
+            { selector: '.card:last-of-type .btn-outline:nth-child(2)', title: '취소', position: { top: '-5px', left: '-10px' }, function: '작성 취소 및 목록 이동' },
+            // 37. 저장 버튼
+            { selector: '.card:last-of-type .btn-primary', title: '저장', position: { top: '-5px', right: '-10px' }, function: '템플릿 저장', api: 'POST /api/templates/brandtalk', tags: [{ text: 'API', type: 'api' }] }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>
