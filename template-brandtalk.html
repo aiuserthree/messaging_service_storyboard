@@ -1614,50 +1614,57 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         const specData = [
             // === 메인 페이지 ===
-            // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '브랜드 메시지 템플릿 페이지 제목 및 설명', behavior: ['승인 절차 없이 즉시 사용 가능 안내'] },
-            // 2-7. 탭 메뉴
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '브랜드 메시지 템플릿 페이지 제목' },
+            // 탭 메뉴
             { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '카카오톡 발송 관련 탭 전환 메뉴' },
             { selector: '#tabMenu .tab-item:nth-child(1)', title: '알림톡 발송 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 발송 페이지로 이동' },
             { selector: '#tabMenu .tab-item:nth-child(2)', title: '브랜드 메시지 탭', position: { top: '-5px', left: '-10px' }, function: '브랜드 메시지 발송 페이지로 이동' },
             { selector: '#tabMenu .tab-item:nth-child(3)', title: '발신프로필 탭', position: { top: '-5px', left: '-10px' }, function: '카카오톡 발신 프로필 관리' },
             { selector: '#tabMenu .tab-item:nth-child(4)', title: '알림톡 템플릿 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 템플릿 관리 페이지' },
-            { selector: '#tabMenu .tab-item:nth-child(5)', title: '브랜드 템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '브랜드 메시지 템플릿 관리 (현재 페이지)' },
-            // 8-9. 발신프로필 선택
-            { selector: '#profileSelect', title: '발신프로필 선택', position: { top: '-10px', left: '-15px' }, function: '브랜드 메시지 발송 시 사용할 프로필 선택', behavior: ['프로필 선택 시 템플릿 목록 표시'], tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#tabMenu .tab-item:nth-child(5)', title: '브랜드 템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '브랜드 메시지 템플릿 관리 (현재)' },
+            // 발신프로필 선택
+            { selector: '#profileSelect', title: '발신프로필 선택', position: { top: '-10px', left: '-15px' }, function: '프로필 선택 시 템플릿 목록 표시', tags: [{ text: '필수', type: 'required' }] },
             { selector: '.btn-outline[href="kakao-profile-manage.html"]', title: '발신프로필 등록 버튼', position: { top: '-10px', right: '-15px' }, function: '새 발신프로필 등록 페이지로 이동' },
-            // 10. 브랜드 메시지 안내
-            { selector: '#brandtalkInfoSection', title: '브랜드 메시지 안내', position: { top: '-5px', left: '-10px' }, function: '브랜드 메시지 특징 안내', behavior: ['승인 절차 없음', '친구/수신동의 유저에게 발송', '다양한 템플릿 타입'] },
-            // 11-16. 검색 섹션
+            // 브랜드 메시지 안내
+            { selector: '#brandtalkInfoSection', title: '브랜드 메시지 안내', position: { top: '5px', left: '-10px' }, function: '브랜드 메시지 특징 안내' },
+            // 검색 섹션
             { selector: '#searchFilterSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, function: '템플릿 검색 및 필터링 영역' },
             { selector: '#searchFilterSection input[type="text"]', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '템플릿명으로 검색' },
-            { selector: '#searchFilterSection .form-select:nth-of-type(1)', title: '타입 필터', position: { top: '-5px', left: '-10px' }, function: '메시지 타입별 필터링', behavior: ['텍스트/이미지/리스트/카드형'] },
-            { selector: '#searchFilterSection .form-select:nth-of-type(2)', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '사용 상태별 필터링', behavior: ['사용중/미사용'] },
+            { selector: '#searchFilterSection .form-select:nth-of-type(1)', title: '타입 필터', position: { top: '-5px', left: '-10px' }, function: '메시지 타입별 필터링' },
+            { selector: '#searchFilterSection .form-select:nth-of-type(2)', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '사용 상태별 필터링' },
             { selector: '#searchFilterSection .btn-primary', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, function: '검색 실행', api: 'GET /api/kakao/templates/brand' },
             { selector: '#searchFilterSection .btn-outline', title: '초기화 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 조건 초기화' },
-            // 17-23. 템플릿 목록 섹션
+            // 템플릿 목록 섹션
             { selector: '#templateListSection', title: '템플릿 목록 섹션', position: { top: '10px', left: '10px' }, function: '브랜드 메시지 템플릿 테이블 표시' },
             { selector: '#templateListSection .btn-primary:first-of-type', title: '브랜드 메시지 등록 버튼', position: { top: '-10px', left: '-15px' }, function: '새 브랜드 메시지 템플릿 등록 페이지로 이동' },
             { selector: '#selectAll', title: '전체 선택 체크박스', position: { top: '-5px', left: '-10px' }, function: '모든 템플릿 일괄 선택/해제' },
-            { selector: '.template-table', title: '템플릿 테이블', position: { top: '5px', left: '5px' }, function: '템플릿 정보 표시', behavior: ['템플릿명, 채널, 메시지 타입, 상태, 등록일, 관리'] },
-            { selector: '.template-table tbody tr:first-child', title: '템플릿 행', position: { top: '-5px', left: '-10px' }, function: '개별 템플릿 정보', behavior: ['미리보기, 수정, 복사, 삭제'] },
+            { selector: '.template-table', title: '템플릿 테이블', position: { top: '5px', left: '5px' }, function: '템플릿 정보 표시' },
+            // 테이블 내 버튼들
+            { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="openPreviewModal"]', title: '미리보기 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 미리보기 모달 열기' },
+            { selector: '.template-table tbody a.btn-sm.btn-outline', title: '수정 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 수정 페이지로 이동' },
+            { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="copyTemplate"]', title: '복사 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 복사하여 새로 생성' },
+            { selector: '.template-table tbody .btn-sm.btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 삭제 확인 모달 열기' },
             { selector: '#batchDeleteBtn', title: '선택 삭제 버튼', position: { top: '-10px', right: '-15px' }, function: '선택된 템플릿 일괄 삭제', api: 'DELETE /api/kakao/templates/batch' },
             { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, function: '템플릿 목록 페이지 이동' },
             
             // === 템플릿 미리보기 모달 ===
-            { selector: '#previewModal', title: '템플릿 미리보기 모달', position: { top: '10px', left: '10px' }, function: '브랜드 메시지 템플릿 미리보기' },
+            { selector: '#previewModal', title: '미리보기 모달', position: { top: '60px', left: '20px' }, function: '브랜드 메시지 템플릿 미리보기' },
+            { selector: '#previewModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
             { selector: '#previewModal .preview-kakao', title: '카카오톡 미리보기', position: { top: '5px', left: '5px' }, function: '카카오톡 브랜드 메시지 형태로 미리보기' },
             { selector: '#previewChannelName', title: '채널명', position: { top: '-5px', left: '-10px' }, function: '발신 채널명 표시' },
             { selector: '.preview-kakao-ad-label', title: '광고 라벨', position: { top: '-5px', left: '-10px' }, function: '(광고) 표시 및 채널명' },
             { selector: '#previewTemplateContent', title: '메시지 내용', position: { top: '5px', left: '5px' }, function: '템플릿 메시지 내용 표시' },
             { selector: '#previewButtons', title: '버튼 미리보기', position: { top: '-5px', left: '-10px' }, function: '템플릿에 설정된 버튼 미리보기' },
-            { selector: '#previewModal .btn-primary', title: '발송하기 버튼', position: { top: '-5px', right: '-10px' }, function: '이 템플릿으로 발송 페이지 이동' },
-            { selector: '#previewModal .btn-outline[href]', title: '수정하기 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 수정 페이지로 이동' },
+            { selector: '#previewModal .modal-footer .btn-outline:first-child', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, function: '모달 닫기' },
+            { selector: '#previewModal .modal-footer .btn-outline[href]', title: '수정하기 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 수정 페이지로 이동' },
+            { selector: '#previewModal .modal-footer .btn-primary', title: '발송하기 버튼', position: { top: '-5px', right: '-10px' }, function: '이 템플릿으로 발송 페이지 이동' },
             
             // === 삭제 확인 모달 ===
-            { selector: '#deleteModal', title: '삭제 확인 모달', position: { top: '10px', left: '10px' }, function: '템플릿 삭제 전 확인' },
-            { selector: '#deleteModal .alert-warning', title: '삭제 경고', position: { top: '-5px', left: '-10px' }, function: '삭제 시 복구 불가 경고 메시지' },
-            { selector: '#deleteModal .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 삭제 실행', api: 'DELETE /api/kakao/templates/{id}' }
+            { selector: '#deleteModal', title: '삭제 확인 모달', position: { top: '60px', left: '20px' }, function: '템플릿 삭제 전 확인' },
+            { selector: '#deleteModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
+            { selector: '#deleteModal .alert-warning', title: '삭제 경고', position: { top: '5px', left: '5px' }, function: '삭제 시 복구 불가 경고 메시지' },
+            { selector: '#deleteModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '삭제 취소' },
+            { selector: '#deleteModal .modal-footer .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 삭제 실행', api: 'DELETE /api/kakao/templates/{id}', tags: [{ text: 'API', type: 'api' }] }
         ];
         initSpecOverlay(specData);
     </script>

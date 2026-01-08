@@ -2954,115 +2954,104 @@ document.addEventListener('DOMContentLoaded', function() {
         const specData = [
             // ===== 페이지 기본 요소 =====
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '브랜드 메시지 발송 페이지 제목', function: '페이지 타이틀 표시' },
-            
-            // ===== 탭 메뉴 =====
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '브랜드 메시지 발송 페이지 제목' },
             // 2. 탭 메뉴 영역
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '카카오톡 관련 기능 탭', function: '서브 페이지 네비게이션' },
-            // 3. 알림톡 발송 탭
-            { selector: '#tabMenu .tab-item:nth-child(1)', title: '알림톡 발송 탭', position: { top: '-5px', left: '-10px' }, description: '알림톡 발송 페이지로 이동', function: '알림톡 메시지 발송 화면' },
-            // 4. 브랜드 메시지 탭
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '브랜드 메시지 탭', position: { top: '-5px', left: '-10px' }, description: '브랜드 메시지 발송 (현재)', function: '광고성 메시지 발송', behavior: ['현재 활성 탭'] },
-            // 5. 발신프로필 탭
-            { selector: '#tabMenu .tab-item:nth-child(3)', title: '발신프로필 탭', position: { top: '-5px', left: '-10px' }, description: '발신프로필 관리', function: '카카오 채널 프로필 관리' },
-            // 6. 알림톡 템플릿 탭
-            { selector: '#tabMenu .tab-item:nth-child(4)', title: '알림톡 템플릿 탭', position: { top: '-5px', left: '-10px' }, description: '알림톡 템플릿 관리', function: '알림톡 템플릿 등록/조회' },
-            // 7. 브랜드 템플릿 탭
-            { selector: '#tabMenu .tab-item:nth-child(5)', title: '브랜드 템플릿 탭', position: { top: '-5px', right: '-10px' }, description: '브랜드 템플릿 관리', function: '브랜드 메시지 템플릿 등록/조회' },
-            
-            // ===== 안내 영역 =====
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '서브 페이지 네비게이션' },
+            // 3~7. 탭 버튼들
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '알림톡 발송 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 발송 화면으로 이동' },
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '브랜드 메시지 탭', position: { top: '-5px', left: '-10px' }, function: '광고성 메시지 발송 (현재)' },
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '발신프로필 탭', position: { top: '-5px', left: '-10px' }, function: '카카오 채널 프로필 관리' },
+            { selector: '#tabMenu .tab-item:nth-child(4)', title: '알림톡 템플릿 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 템플릿 등록/조회' },
+            { selector: '#tabMenu .tab-item:nth-child(5)', title: '브랜드 템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '브랜드 템플릿 등록/조회' },
             // 8. 광고성 메시지 안내
-            { selector: '.alert-warning', title: '광고성 메시지 안내', position: { top: '10px', left: '-15px' }, description: '브랜드 메시지 발송 시 주의사항', function: '광고법 준수 안내', behavior: ['광고성 메시지 표기 필수', '수신자 동의 필요'] },
-            
+            { selector: '.alert-warning', title: '광고성 메시지 안내', position: { top: '10px', left: '-15px' }, function: '광고법 준수 안내', behavior: ['광고성 메시지 표기 필수'] },
             // ===== 발송 폼 영역 =====
             // 9. 발신 프로필 선택
-            { selector: '#brandChannel', title: '발신 프로필 선택', position: { top: '-10px', left: '-15px' }, description: '카카오 채널 선택', function: '발신자 프로필 지정', behavior: ['등록된 채널 목록 표시', '미리보기에 채널명 반영'], tags: [{ text: '필수', type: 'required' }], api: 'GET /api/kakao/profiles' },
+            { selector: '#brandChannel', title: '발신 프로필', position: { top: '-10px', left: '-15px' }, function: '발신자 프로필 지정', tags: [{ text: '필수', type: 'required' }], api: 'GET /api/kakao/profiles' },
+            // 10. 발송 대상 도움말
+            { selector: '.tooltip-wrapper', title: '발송 대상 도움말', position: { top: '-5px', right: '-10px' }, function: 'I/N/M 타입 설명' },
+            // 11~13. 발송 대상 옵션
+            { selector: 'input[name="targetType"][value="I"]', title: 'I 타입 (친구)', position: { top: '-5px', left: '-25px' }, function: '채널 친구에게 발송' },
+            { selector: 'input[name="targetType"][value="N"]', title: 'N 타입 (비친구)', position: { top: '-5px', left: '-25px' }, function: '비친구에게 발송' },
+            { selector: 'input[name="targetType"][value="M"]', title: 'M 타입 (전체)', position: { top: '-5px', left: '-25px' }, function: '친구 여부 상관없이 발송' },
+            // 14. 템플릿 선택
+            { selector: '#selectedTemplate', title: '템플릿 선택', position: { top: '-10px', left: '-15px' }, function: '템플릿 선택 및 적용', tags: [{ text: '필수', type: 'required' }] },
+            // 15~16. 메시지 내용
+            { selector: '.btn-sm.btn-outline', title: '변수 삽입 버튼', position: { top: '-5px', left: '-10px' }, function: '메시지에 변수 삽입' },
+            { selector: '#messageContent', title: '메시지 내용', position: { top: '5px', right: '5px' }, function: '발송할 메시지 작성', tags: [{ text: '필수', type: 'required' }] },
+            // 17~18. 버튼 설정
+            { selector: '#useChannelButton', title: '채널 추가 버튼', position: { top: '-5px', right: '-15px' }, function: '메시지에 친구 추가 버튼 포함' },
+            { selector: '#addButtonBtn', title: '버튼 추가', position: { top: '-5px', left: '-10px' }, function: '웹링크/앱링크 버튼 생성' },
+            // 19. 이미지 업로드
+            { selector: '#imageInput', title: '이미지 업로드', position: { top: '-5px', left: '-10px' }, function: '이미지 첨부', behavior: ['JPG, PNG, 최대 500KB'] },
+            // 20~30. 수신번호 입력
+            { selector: '#recipientExcelFileInput', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, function: '대량 수신번호 등록' },
+            { selector: 'button[onclick="downloadSampleFile()"]', title: '샘플 다운로드', position: { top: '-5px', left: '-10px' }, function: '업로드 양식 제공' },
+            { selector: 'button[onclick="loadRecipientAddressBook()"]', title: '주소록 불러오기', position: { top: '-5px', left: '-10px' }, function: '주소록 그룹 불러오기' },
+            { selector: '#recipientGroupSelect', title: '그룹 선택', position: { top: '-5px', left: '-10px' }, function: '수신자 그룹 지정' },
+            { selector: 'button[onclick="addToAddressBook()"]', title: '주소록에 추가', position: { top: '-5px', right: '-10px' }, function: '수신자 주소록 등록' },
+            { selector: '#recipientDataTable', title: '수신번호 테이블', position: { top: '10px', left: '10px' }, function: '수신번호 직접 입력/편집' },
+            { selector: '#selectAllRecipientCheckbox', title: '전체 선택', position: { top: '-5px', left: '-10px' }, function: '전체 행 선택/해제' },
+            { selector: 'button[onclick="addRecipientRow()"]', title: '행 추가', position: { top: '-5px', left: '-10px' }, function: '새 수신번호 입력 행 생성' },
+            { selector: 'button[onclick="deleteSelectedRecipientRows()"]', title: '선택 행 삭제', position: { top: '-5px', left: '-10px' }, function: '체크된 수신자 삭제' },
+            { selector: 'button[onclick="deleteAllRecipientRows()"]', title: '전체 삭제', position: { top: '-5px', left: '-10px' }, function: '수신자 목록 초기화' },
+            { selector: 'button[onclick="removeDuplicateRecipientNumbers()"]', title: '중복번호 삭제', position: { top: '-5px', left: '-10px' }, function: '중복 수신번호 자동 삭제' },
+            // 31~32. 대체문자 영역
+            { selector: '#fallbackToggle', title: '대체문자 토글', position: { top: '-5px', right: '-15px' }, function: '알림톡 실패 건 SMS/LMS 발송' },
+            { selector: '#fallbackContent', title: '대체문자 내용', position: { top: '10px', left: '10px' }, function: 'SMS/LMS/MMS 선택 및 내용 입력' },
+            // 33~36. 발송 시간, 비용, 액션 버튼
+            { selector: '#sendTimeGroup', title: '발송 시간', position: { top: '5px', left: '-15px' }, function: '즉시/예약 발송 설정', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '.cost-info', title: '발송 비용 정보', position: { top: '10px', left: '-15px' }, function: '수신번호 기준 비용 자동 계산' },
+            { selector: 'button[onclick="testSend()"]', title: '테스트 발송', position: { top: '-5px', left: '-10px' }, function: '소량 테스트 발송', api: 'POST /api/kakao/brand/test' },
+            { selector: '#sendForm button[type="submit"]', title: '발송하기', position: { top: '-5px', right: '-10px' }, function: '메시지 발송', api: 'POST /api/kakao/brand/send', tags: [{ text: 'API', type: 'api' }] },
+            // 37~38. 미리보기 영역
+            { selector: '.preview-section', title: '미리보기 영역', position: { top: '10px', left: '10px' }, function: '발송될 메시지 형태 확인' },
+            { selector: '.preview-brand', title: '브랜드 메시지 미리보기', position: { top: '10px', right: '10px' }, function: '실제 수신 화면 미리보기' },
             
-            // ===== 발송 대상 영역 =====
-            // 10. 발송 대상 안내 박스
-            { selector: '.tooltip-wrapper', title: '발송 대상 도움말', position: { top: '-5px', right: '-10px' }, description: 'I/N/M 타입 설명', function: '발송 대상 유형 안내', behavior: ['호버 시 상세 설명 표시'] },
-            // 11. I 타입 옵션
-            { selector: 'input[name="targetType"][value="I"]', title: 'I 타입 (친구)', position: { top: '-5px', left: '-25px' }, description: '마케팅 수신 동의한 채널 친구 대상', function: '채널 친구에게 발송', behavior: ['기존 친구톡과 동일', '비친구 광고 채널 승인 불필요'] },
-            // 12. N 타입 옵션
-            { selector: 'input[name="targetType"][value="N"]', title: 'N 타입 (비친구)', position: { top: '-5px', left: '-25px' }, description: '마케팅 수신 동의한 채널 비친구 대상', function: '비친구에게 발송', behavior: ['친구인 사용자는 발송 실패', '비친구 광고 채널 사전 승인 필요'] },
-            // 13. M 타입 옵션
-            { selector: 'input[name="targetType"][value="M"]', title: 'M 타입 (전체)', position: { top: '-5px', left: '-25px' }, description: '마케팅 수신 동의 회원 전체', function: '친구 여부 상관없이 발송', behavior: ['마케팅 동의 회원 대상', '비친구 광고 채널 사전 승인 필요'] },
+            // ===== 템플릿 선택 모달 =====
+            { selector: '#templateSelectModal', title: '템플릿 선택 모달', position: { top: '60px', left: '20px' }, function: '등록된 템플릿 목록 조회', api: 'GET /api/kakao/brand-templates' },
+            { selector: '#templateSelectModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
+            { selector: '#templateSelectModal .table', title: '템플릿 목록 테이블', position: { top: '10px', left: '10px' }, function: '선택 가능한 템플릿 표시' },
+            { selector: '#templateSelectModal .table .btn-primary', title: '선택 버튼', position: { top: '-5px', right: '-10px' }, function: '해당 템플릿 선택 및 적용' },
+            { selector: '#templateSelectModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 선택 취소' },
             
-            // ===== 템플릿 선택 =====
-            // 14. 템플릿 선택 필드
-            { selector: '#selectedTemplate', title: '템플릿 선택', position: { top: '-10px', left: '-15px' }, description: '선택된 템플릿 표시', function: '템플릿 선택 및 적용', tags: [{ text: '필수', type: 'required' }] },
+            // ===== 템플릿 저장 모달 (saveTemplateModal) =====
+            { selector: '#saveTemplateModal', title: '템플릿 저장 모달', position: { top: '60px', left: '20px' }, function: '현재 메시지를 템플릿으로 저장' },
+            { selector: '#saveTemplateModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
+            { selector: '#templateNameInput', title: '템플릿명 입력', position: { top: '-5px', left: '-10px' }, function: '저장할 템플릿명 입력', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#saveTemplateModal input[name="templateStatus"][value="active"]', title: '사용 상태', position: { top: '-5px', left: '-10px' }, function: '템플릿 사용 상태' },
+            { selector: '#saveTemplateModal input[name="templateStatus"][value="inactive"]', title: '미사용 상태', position: { top: '-5px', left: '-10px' }, function: '템플릿 미사용 상태' },
+            { selector: '#saveTemplateModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '저장 취소' },
+            { selector: '#saveTemplateModal .modal-footer .btn-primary', title: '저장 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 저장 실행', api: 'POST /api/kakao/brand-templates', tags: [{ text: 'API', type: 'api' }] },
             
-            // ===== 메시지 내용 =====
-            // 15. 변수 버튼 영역
-            { selector: '.btn-sm.btn-outline', title: '변수 삽입 버튼', position: { top: '-5px', left: '-10px' }, description: '메시지에 변수 삽입', function: '클릭 시 변수 태그 삽입', behavior: ['#{이름}, #{전화번호}, #{변수1~3} 삽입'] },
-            // 16. 메시지 내용 입력
-            { selector: '#messageContent', title: '메시지 내용', position: { top: '5px', right: '5px' }, description: '브랜드 메시지 본문', function: '발송할 메시지 작성', behavior: ['변수 치환 지원', '실시간 미리보기 연동'], tags: [{ text: '필수', type: 'required' }] },
+            // ===== 테스트 발송 모달 =====
+            { selector: '#testSendModal', title: '테스트 발송 모달', position: { top: '60px', left: '20px' }, function: '테스트 수신번호 입력 및 발송', api: 'POST /api/kakao/brand/test' },
+            { selector: '#testSendModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
+            { selector: '#testPhoneNumbers', title: '테스트 수신번호 영역', position: { top: '10px', left: '10px' }, function: '테스트 수신자 지정' },
+            { selector: '.test-phone-input', title: '번호 입력 필드', position: { top: '-5px', left: '-10px' }, function: '테스트 수신번호 입력' },
+            { selector: '#addTestPhoneBtn', title: '번호 추가 버튼', position: { top: '-5px', right: '-10px' }, function: '추가 테스트 번호 입력 필드 생성' },
+            { selector: '#testPreviewProfile', title: '발신 프로필 표시', position: { top: '-5px', right: '-10px' }, function: '선택된 발신 프로필명' },
+            { selector: '#testPreviewContent', title: '메시지 내용 표시', position: { top: '5px', right: '5px' }, function: '발송될 메시지 미리보기' },
+            { selector: '#testCost', title: '예상 차감 포인트', position: { top: '-5px', right: '-10px' }, function: '테스트 발송 비용 표시' },
+            { selector: '#testBalance', title: '현재 잔액', position: { top: '-5px', right: '-10px' }, function: '사용 가능 포인트 표시' },
+            { selector: '#testSendResult', title: '발송 결과 영역', position: { top: '10px', left: '10px' }, function: '테스트 발송 성공/실패 표시' },
+            { selector: '#testSendCancelBtn', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '테스트 발송 취소' },
+            { selector: '#testSendSubmitBtn', title: '테스트 발송 버튼', position: { top: '-5px', right: '-10px' }, function: '테스트 메시지 발송', api: 'POST /api/kakao/brand/test', tags: [{ text: 'API', type: 'api' }] },
             
-            // ===== 버튼 설정 =====
-            // 17. 채널 추가 버튼 체크박스
-            { selector: '#useChannelButton', title: '채널 추가 버튼', position: { top: '-5px', right: '-15px' }, description: '채널 친구 추가 버튼 사용', function: '메시지에 친구 추가 버튼 포함', behavior: ['체크 시 채널 추가 버튼 표시'] },
-            // 18. 버튼 추가 버튼
-            { selector: '#addButtonBtn', title: '버튼 추가', position: { top: '-5px', left: '-10px' }, description: 'CTA 버튼 추가', function: '웹링크/앱링크 버튼 생성', behavior: ['최대 5개 버튼 추가 가능'] },
+            // ===== 템플릿으로 저장 모달 (templateSaveModal) =====
+            { selector: '#templateSaveModal', title: '템플릿으로 저장 모달', position: { top: '60px', left: '20px' }, function: '현재 메시지 템플릿 저장' },
+            { selector: '#templateSaveModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
+            { selector: '#templateName', title: '템플릿명 입력', position: { top: '-5px', left: '-10px' }, function: '저장할 템플릿명 입력', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#templateSaveModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '저장 취소' },
+            { selector: '#templateSaveModal .modal-footer .btn-primary', title: '저장 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 저장 실행', api: 'POST /api/kakao/brand-templates' },
             
-            // ===== 이미지 업로드 =====
-            // 19. 이미지 업로드 입력
-            { selector: '#imageInput', title: '이미지 업로드', position: { top: '-5px', left: '-10px' }, description: '브랜드 메시지 이미지', function: '이미지 첨부', behavior: ['JPG, PNG 지원', '최대 500KB'] },
-            
-            // ===== 수신번호 입력 =====
-            // 20. 엑셀 업로드 버튼
-            { selector: '#recipientExcelFileInput', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, description: '수신번호 엑셀 업로드', function: '대량 수신번호 등록', behavior: ['.xlsx, .xls, .csv 지원'] },
-            // 21. 샘플 다운로드 버튼
-            { selector: 'button[onclick="downloadSampleFile()"]', title: '샘플 다운로드', position: { top: '-5px', left: '-10px' }, description: '엑셀 샘플 파일 다운로드', function: '업로드 양식 제공' },
-            // 22. 주소록 불러오기 버튼
-            { selector: 'button[onclick="loadRecipientAddressBook()"]', title: '주소록 불러오기', position: { top: '-5px', left: '-10px' }, description: '등록된 주소록에서 선택', function: '주소록 그룹 불러오기', api: 'GET /api/addressbook/groups' },
-            // 23. 그룹 선택
-            { selector: '#recipientGroupSelect', title: '그룹 선택', position: { top: '-5px', left: '-10px' }, description: '저장할 그룹 선택', function: '수신자 그룹 지정' },
-            // 24. 주소록에 추가 버튼
-            { selector: 'button[onclick="addToAddressBook()"]', title: '주소록에 추가', position: { top: '-5px', right: '-10px' }, description: '현재 목록을 주소록에 저장', function: '수신자 주소록 등록', api: 'POST /api/addressbook' },
-            // 25. 수신번호 테이블
-            { selector: '#recipientDataTable', title: '수신번호 테이블', position: { top: '10px', left: '10px' }, description: '수신자 목록 편집', function: '수신번호 직접 입력/편집', behavior: ['행 추가/삭제', '변수값 입력 가능'] },
-            // 26. 전체 선택 체크박스
-            { selector: '#selectAllRecipientCheckbox', title: '전체 선택', position: { top: '-5px', left: '-10px' }, description: '모든 수신자 선택', function: '전체 행 선택/해제' },
-            // 27. 행 추가 버튼
-            { selector: 'button[onclick="addRecipientRow()"]', title: '행 추가', position: { top: '-5px', left: '-10px' }, description: '수신자 행 추가', function: '새 수신번호 입력 행 생성' },
-            // 28. 선택 행 삭제 버튼
-            { selector: 'button[onclick="deleteSelectedRecipientRows()"]', title: '선택 행 삭제', position: { top: '-5px', left: '-10px' }, description: '선택된 행 삭제', function: '체크된 수신자 삭제' },
-            // 29. 전체 삭제 버튼
-            { selector: 'button[onclick="deleteAllRecipientRows()"]', title: '전체 삭제', position: { top: '-5px', left: '-10px' }, description: '모든 수신자 삭제', function: '수신자 목록 초기화' },
-            // 30. 중복번호 삭제 버튼
-            { selector: 'button[onclick="removeDuplicateRecipientNumbers()"]', title: '중복번호 삭제', position: { top: '-5px', left: '-10px' }, description: '중복된 전화번호 제거', function: '중복 수신번호 자동 삭제' },
-            
-            // ===== 대체문자 영역 =====
-            // 31. 대체문자 토글
-            { selector: '#fallbackToggle', title: '대체문자 설정', position: { top: '-5px', right: '-15px' }, description: '발송 실패 시 문자 발송', function: '알림톡 실패 건 SMS/LMS 발송', behavior: ['토글 ON 시 설정 영역 표시'] },
-            // 32. 대체문자 내용 영역
-            { selector: '#fallbackContent', title: '대체문자 내용', position: { top: '10px', left: '10px' }, description: '대체문자 상세 설정', function: 'SMS/LMS/MMS 선택 및 내용 입력' },
-            
-            // ===== 발송 시간 =====
-            // 33. 발송 시간 영역
-            { selector: '#sendTimeGroup', title: '발송 시간', position: { top: '5px', left: '-15px' }, description: '발송 시점 선택', function: '즉시/예약 발송 설정', tags: [{ text: '필수', type: 'required' }] },
-            
-            // ===== 발송 비용 =====
-            // 34. 발송 비용 정보
-            { selector: '.cost-info', title: '발송 비용 정보', position: { top: '10px', left: '-15px' }, description: '예상 발송 비용', function: '수신번호 기준 비용 자동 계산' },
-            
-            // ===== 액션 버튼 =====
-            // 35. 테스트 발송 버튼
-            { selector: 'button[onclick="testSend()"]', title: '테스트 발송', position: { top: '-5px', left: '-10px' }, description: '테스트 메시지 발송', function: '소량 테스트 발송', behavior: ['최대 3개 번호', '실제 포인트 차감'], api: 'POST /api/kakao/brand/test' },
-            // 36. 발송하기 버튼
-            { selector: '#sendForm button[type="submit"]', title: '발송하기', position: { top: '-5px', right: '-10px' }, description: '브랜드 메시지 발송 실행', function: '메시지 발송', api: 'POST /api/kakao/brand/send', tags: [{ text: 'API', type: 'api' }] },
-            
-            // ===== 미리보기 영역 =====
-            // 37. 미리보기 카드
-            { selector: '.preview-section', title: '미리보기 영역', position: { top: '10px', left: '10px' }, description: '메시지 미리보기', function: '발송될 메시지 형태 확인' },
-            // 38. 카카오톡 미리보기
-            { selector: '.preview-brand', title: '브랜드 메시지 미리보기', position: { top: '10px', right: '10px' }, description: '실제 수신 화면 미리보기', function: '채널명, 내용, 버튼 표시', behavior: ['실시간 업데이트'] },
-            
-            // ===== 모달 =====
-            // 39. 템플릿 선택 모달
-            { selector: '#templateSelectModal', title: '템플릿 선택 모달', position: { top: '20px', left: '20px' }, description: '템플릿 선택 팝업', function: '등록된 템플릿 목록 조회', api: 'GET /api/kakao/brand-templates' },
-            // 40. 테스트 발송 모달
-            { selector: '#testSendModal', title: '테스트 발송 모달', position: { top: '20px', left: '20px' }, description: '테스트 발송 팝업', function: '테스트 수신번호 입력 및 발송', api: 'POST /api/kakao/brand/test' }
+            // ===== 대체문자 미리보기 모달 =====
+            { selector: '#fallbackPreviewModal', title: '대체문자 미리보기 모달', position: { top: '60px', left: '20px' }, function: '대체문자 발송 형태 확인' },
+            { selector: '#fallbackPreviewModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
+            { selector: '#previewFallbackPhone', title: '발신번호 표시', position: { top: '-5px', left: '-10px' }, function: '대체문자 발신번호' },
+            { selector: '#previewFallbackMessageType', title: '메시지 유형 표시', position: { top: '-5px', right: '-10px' }, function: 'SMS/LMS 유형 및 글자수' },
+            { selector: '#previewFallbackContent', title: '대체문자 내용 표시', position: { top: '5px', right: '5px' }, function: '대체문자 본문 미리보기' },
+            { selector: '#fallbackPreviewModal .modal-footer .btn-primary', title: '확인 버튼', position: { top: '-5px', right: '-10px' }, function: '모달 닫기' }
         ];
         initSpecOverlay(specData);
     </script>

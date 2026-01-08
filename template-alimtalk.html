@@ -1920,69 +1920,85 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         const specData = [
             // === 메인 페이지 ===
-            // 1. 페이지 헤더
             { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '알림톡 템플릿 페이지 제목 및 설명' },
-            // 2-7. 탭 메뉴
+            // 탭 메뉴
             { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '카카오톡 발송 관련 탭 전환 메뉴' },
             { selector: '#tabMenu .tab-item:nth-child(1)', title: '알림톡 발송 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 발송 페이지로 이동' },
             { selector: '#tabMenu .tab-item:nth-child(2)', title: '브랜드 메시지 탭', position: { top: '-5px', left: '-10px' }, function: '브랜드 메시지 발송 페이지로 이동' },
             { selector: '#tabMenu .tab-item:nth-child(3)', title: '발신프로필 탭', position: { top: '-5px', left: '-10px' }, function: '카카오톡 발신 프로필 관리' },
-            { selector: '#tabMenu .tab-item:nth-child(4)', title: '알림톡 템플릿 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 템플릿 관리 (현재 페이지)' },
+            { selector: '#tabMenu .tab-item:nth-child(4)', title: '알림톡 템플릿 탭', position: { top: '-5px', left: '-10px' }, function: '알림톡 템플릿 관리 (현재)' },
             { selector: '#tabMenu .tab-item:nth-child(5)', title: '브랜드 템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '브랜드 메시지 템플릿 관리' },
-            // 8-9. 발신프로필 선택
-            { selector: '#profileSelect', title: '발신프로필 선택', position: { top: '-10px', left: '-15px' }, function: '알림톡 발송 시 사용할 프로필 선택', behavior: ['프로필 선택 시 템플릿 목록 표시', '프로필별 템플릿 관리'], tags: [{ text: '필수', type: 'required' }] },
+            // 발신프로필 선택
+            { selector: '#profileSelect', title: '발신프로필 선택', position: { top: '-10px', left: '-15px' }, function: '프로필 선택 시 템플릿 목록 표시', tags: [{ text: '필수', type: 'required' }] },
             { selector: '.btn-outline[href="kakao-profile-manage.html"]', title: '발신프로필 등록 버튼', position: { top: '-10px', right: '-15px' }, function: '새 발신프로필 등록 페이지로 이동' },
-            // 10-15. 검색 섹션
+            // 검색 섹션
             { selector: '#searchFilterSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, function: '템플릿 검색 및 필터링 영역' },
             { selector: '#searchFilterSection input[type="text"]', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '템플릿명으로 검색' },
-            { selector: '#searchFilterSection .form-select:nth-of-type(1)', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '심사상태별 필터링', behavior: ['심사필요/심사요청/승인/휴면/차단/중지/반려'] },
-            { selector: '#searchFilterSection .form-select:nth-of-type(2)', title: '카테고리 필터', position: { top: '-5px', left: '-10px' }, function: '카테고리별 필터링', behavior: ['쇼핑/배송, 예약/티켓, 금융/보험 등'] },
+            { selector: '#searchFilterSection .form-select:nth-of-type(1)', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '심사상태별 필터링' },
+            { selector: '#searchFilterSection .form-select:nth-of-type(2)', title: '카테고리 필터', position: { top: '-5px', left: '-10px' }, function: '카테고리별 필터링' },
             { selector: '#searchFilterSection .btn-primary', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, function: '검색 실행', api: 'GET /api/kakao/templates/alimtalk' },
             { selector: '#searchFilterSection .btn-outline', title: '초기화 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 조건 초기화' },
-            // 16-22. 템플릿 목록 섹션
+            // 템플릿 목록 섹션
             { selector: '#templateListSection', title: '템플릿 목록 섹션', position: { top: '10px', left: '10px' }, function: '알림톡 템플릿 테이블 표시' },
             { selector: '#templateListSection .btn-primary:first-of-type', title: '템플릿 등록 버튼', position: { top: '-10px', left: '-15px' }, function: '새 알림톡 템플릿 등록 페이지로 이동' },
             { selector: '#selectAll', title: '전체 선택 체크박스', position: { top: '-5px', left: '-10px' }, function: '모든 템플릿 일괄 선택/해제' },
-            { selector: '.template-table', title: '템플릿 테이블', position: { top: '5px', left: '5px' }, function: '템플릿 정보 표시', behavior: ['템플릿명, 코드, 카테고리, 상태, 등록일, 관리'] },
-            { selector: '.template-table tbody tr:first-child', title: '템플릿 행', position: { top: '-5px', left: '-10px' }, function: '개별 템플릿 정보', behavior: ['미리보기, 복사, 수정, 삭제, 심사요청'] },
+            { selector: '.template-table', title: '템플릿 테이블', position: { top: '5px', left: '5px' }, function: '템플릿 정보 표시' },
+            // 테이블 내 버튼들
+            { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="openPreviewModal"]', title: '미리보기 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 미리보기 모달 열기' },
+            { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="copyTemplate"]', title: '복사 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 복사하여 새로 생성' },
+            { selector: '.template-table tbody a.btn-sm.btn-outline', title: '수정 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 수정 페이지로 이동' },
+            { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="openReviewResultModal"]', title: '심사결과 버튼', position: { top: '-5px', left: '-10px' }, function: '심사 결과 이력 확인 모달' },
+            { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="openReviewRequestModal"]', title: '심사요청 버튼', position: { top: '-5px', left: '-10px' }, function: '카카오 심사 요청 모달' },
+            { selector: '.template-table tbody .btn-sm.btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 삭제 확인 모달' },
             { selector: '#batchDeleteBtn', title: '선택 삭제 버튼', position: { top: '-10px', right: '-15px' }, function: '선택된 템플릿 일괄 삭제', api: 'DELETE /api/kakao/templates/batch' },
             { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, function: '템플릿 목록 페이지 이동' },
             
             // === 반려 사유 확인 모달 ===
-            { selector: '#rejectionModal', title: '반려 사유 모달', position: { top: '10px', left: '10px' }, function: '템플릿 반려 사유 확인' },
-            { selector: '#rejectionModal .modal-header', title: '모달 헤더', position: { top: '-5px', left: '-10px' }, function: '반려 사유 제목' },
-            { selector: '#rejectionModal .alert-danger', title: '반려 사유 내용', position: { top: '-5px', left: '-10px' }, function: '카카오 심사 반려 사유 표시' },
-            { selector: '#rejectionModal ul', title: '수정 가이드', position: { top: '-5px', left: '-10px' }, function: '반려된 템플릿 수정 가이드라인' },
-            { selector: '#rejectionModal .btn-primary', title: '수정하기 버튼', position: { top: '-5px', right: '-10px' }, function: '반려된 템플릿 수정 페이지로 이동' },
+            { selector: '#rejectionModal', title: '반려 사유 모달', position: { top: '60px', left: '20px' }, function: '템플릿 반려 사유 확인' },
+            { selector: '#rejectionModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
+            { selector: '#rejectionModal .alert-danger', title: '반려 사유 내용', position: { top: '5px', left: '5px' }, function: '카카오 심사 반려 사유 표시' },
+            { selector: '#rejectionModal ul', title: '수정 가이드', position: { top: '5px', left: '5px' }, function: '반려된 템플릿 수정 가이드라인' },
+            { selector: '#rejectionModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, function: '모달 닫기' },
+            { selector: '#rejectionModal .modal-footer .btn-primary', title: '수정하기 버튼', position: { top: '-5px', right: '-10px' }, function: '반려된 템플릿 수정 페이지로 이동' },
             
             // === 템플릿 미리보기 모달 ===
-            { selector: '#previewModal', title: '템플릿 미리보기 모달', position: { top: '10px', left: '10px' }, function: '알림톡 템플릿 미리보기' },
+            { selector: '#previewModal', title: '템플릿 미리보기 모달', position: { top: '60px', left: '20px' }, function: '알림톡 템플릿 미리보기' },
+            { selector: '#previewModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
             { selector: '#previewModal .preview-kakao', title: '카카오톡 미리보기', position: { top: '5px', left: '5px' }, function: '카카오톡 알림톡 형태로 미리보기' },
             { selector: '#previewChannelName', title: '채널명', position: { top: '-5px', left: '-10px' }, function: '발신 채널명 표시' },
+            { selector: '#previewModal .preview-kakao-alimtalk-bar', title: '알림톡 바', position: { top: '5px', left: '5px' }, function: '알림톡 도착 시간 표시' },
             { selector: '#previewTemplateContent', title: '메시지 내용', position: { top: '5px', left: '5px' }, function: '템플릿 메시지 내용 표시' },
+            { selector: '#previewModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', right: '-10px' }, function: '모달 닫기' },
             
             // === 삭제 확인 모달 ===
-            { selector: '#deleteModal', title: '삭제 확인 모달', position: { top: '10px', left: '10px' }, function: '템플릿 삭제 전 확인' },
-            { selector: '#deleteModal .alert-warning', title: '삭제 경고', position: { top: '-5px', left: '-10px' }, function: '삭제 시 경고 메시지', behavior: ['삭제된 템플릿 복구 불가', '승인 완료 템플릿 삭제 시 발송 불가'] },
-            { selector: '#deleteModal .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 삭제 실행', api: 'DELETE /api/kakao/templates/{id}' },
+            { selector: '#deleteModal', title: '삭제 확인 모달', position: { top: '60px', left: '20px' }, function: '템플릿 삭제 전 확인' },
+            { selector: '#deleteModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
+            { selector: '#deleteModal .alert-warning', title: '삭제 경고', position: { top: '5px', left: '5px' }, function: '삭제 시 경고 메시지' },
+            { selector: '#deleteModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '삭제 취소' },
+            { selector: '#deleteModal .modal-footer .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 삭제 실행', api: 'DELETE /api/kakao/templates/{id}', tags: [{ text: 'API', type: 'api' }] },
             
             // === 심사결과 모달 ===
-            { selector: '#reviewResultModal', title: '심사결과 모달', position: { top: '10px', left: '10px' }, function: '템플릿 심사 결과 이력 확인' },
-            { selector: '#reviewResultModal .table', title: '심사결과 테이블', position: { top: '5px', left: '5px' }, function: '심사 이력 목록', behavior: ['작성자, 등록시간, 상태, 결과, 첨부파일'] },
+            { selector: '#reviewResultModal', title: '심사결과 모달', position: { top: '60px', left: '20px' }, function: '템플릿 심사 결과 이력 확인' },
+            { selector: '#reviewResultModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
+            { selector: '#reviewResultModal .table', title: '심사결과 테이블', position: { top: '5px', left: '5px' }, function: '심사 이력 목록' },
             { selector: '#reviewResultAuthor', title: '작성자', position: { top: '-5px', left: '-10px' }, function: '심사 요청자 ID' },
             { selector: '#reviewResultTime', title: '등록시간', position: { top: '-5px', left: '-10px' }, function: '심사 요청 시간' },
-            { selector: '#reviewResultStatus', title: '심사 상태', position: { top: '-5px', left: '-10px' }, function: '심사필요/심사요청/승인/반려 상태 배지' },
+            { selector: '#reviewResultStatus', title: '심사 상태', position: { top: '-5px', left: '-10px' }, function: '심사 상태 배지' },
             { selector: '#reviewResultContent', title: '결과 및 요청사항', position: { top: '-5px', right: '-10px' }, function: '심사 결과 또는 문의사항' },
+            { selector: '#reviewResultFile', title: '첨부파일', position: { top: '-5px', right: '-10px' }, function: '첨부파일 다운로드' },
+            { selector: '#reviewResultModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', right: '-10px' }, function: '모달 닫기' },
             
             // === 심사요청 모달 ===
-            { selector: '#reviewRequestModal', title: '심사요청 모달', position: { top: '10px', left: '10px' }, function: '템플릿 카카오 심사 요청' },
-            { selector: '#reviewRequestModal ul', title: '심사요청 안내', position: { top: '-5px', left: '-10px' }, function: '심사 요청 전 안내사항' },
-            { selector: '#reviewRequestTemplateName', title: '템플릿명', position: { top: '-5px', left: '-10px' }, function: '심사 요청할 템플릿명 (읽기전용)' },
-            { selector: '#reviewRequestInquiry', title: '문의사항 입력', position: { top: '5px', right: '5px' }, function: '심사 관련 문의사항 입력 (최대 500자)', tags: [{ text: '선택', type: 'optional' }] },
+            { selector: '#reviewRequestModal', title: '심사요청 모달', position: { top: '60px', left: '20px' }, function: '템플릿 카카오 심사 요청' },
+            { selector: '#reviewRequestModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
+            { selector: '#reviewRequestModal ul', title: '심사요청 안내', position: { top: '5px', left: '5px' }, function: '심사 요청 전 안내사항' },
+            { selector: '#reviewRequestTemplateName', title: '템플릿명 입력', position: { top: '-5px', left: '-10px' }, function: '심사 요청할 템플릿명 (읽기전용)' },
+            { selector: '#reviewRequestInquiry', title: '문의사항 입력', position: { top: '5px', right: '5px' }, function: '심사 관련 문의사항 입력', tags: [{ text: '선택', type: 'optional' }] },
             { selector: '#reviewRequestCharCount', title: '글자수 카운터', position: { top: '-5px', right: '-10px' }, function: '현재 입력된 글자수 / 500자' },
-            { selector: '#reviewRequestFileInput', title: '파일 첨부', position: { top: '-5px', left: '-10px' }, function: '심사 관련 파일 첨부', behavior: ['png/jpg/gif/pdf', '최대 50MB, 10개'] },
-            { selector: '#reviewRequestFileList', title: '첨부파일 목록', position: { top: '-5px', right: '-10px' }, function: '첨부된 파일 목록 표시 및 삭제' },
-            { selector: '#reviewRequestModal .btn-primary', title: '심사요청 버튼', position: { top: '-5px', right: '-10px' }, function: '카카오 심사 요청 제출', api: 'POST /api/kakao/templates/{id}/review' }
+            { selector: '#reviewRequestFileInput', title: '파일 첨부 버튼', position: { top: '-5px', left: '-10px' }, function: '심사 관련 파일 첨부' },
+            { selector: '#reviewRequestFileList', title: '첨부파일 목록', position: { top: '5px', right: '5px' }, function: '첨부된 파일 목록 및 삭제' },
+            { selector: '#reviewRequestModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, function: '모달 닫기' },
+            { selector: '#reviewRequestModal .modal-footer .btn-primary', title: '심사요청 버튼', position: { top: '-5px', right: '-10px' }, function: '카카오 심사 요청 제출', api: 'POST /api/kakao/templates/{id}/review', tags: [{ text: 'API', type: 'api' }] }
         ];
         initSpecOverlay(specData);
     </script>
