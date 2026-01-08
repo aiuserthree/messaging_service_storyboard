@@ -2598,6 +2598,7 @@ body {
                 api: 'GET /statistics/messages?days=30',
                 position: { top: '10px', left: '10px' }
             },
+            // === 상담 신청서 모달 ===
             {
                 selector: '#consultationModal',
                 title: '상담 신청서 모달',
@@ -2605,7 +2606,75 @@ body {
                 function: '고객 정보 입력 및 상담 요청',
                 behavior: ['회사명, 담당자명, 연락처, 이메일 필수 입력', '메시지 유형 복수 선택 가능', '예상 발송량 선택', 'ESC 키로 닫기 가능'],
                 api: 'POST /consultation/request',
-                position: { top: '20px', left: '20px' }
+                position: { top: '60px', left: '20px' }
+            },
+            {
+                selector: '#consultationModal .modal-close',
+                title: '모달 닫기',
+                function: '상담 신청 취소',
+                position: { top: '5px', right: '5px' }
+            },
+            {
+                selector: '#companyName',
+                title: '회사명 입력',
+                function: '기업/단체 이름 입력',
+                tags: [{ text: '필수', type: 'required' }],
+                position: { top: '-5px', left: '-10px' }
+            },
+            {
+                selector: '#contactName',
+                title: '담당자명 입력',
+                function: '문의 담당자 성함',
+                tags: [{ text: '필수', type: 'required' }],
+                position: { top: '-5px', left: '-10px' }
+            },
+            {
+                selector: '#contactPhone',
+                title: '연락처 입력',
+                function: '연락 가능한 전화번호',
+                tags: [{ text: '필수', type: 'required' }],
+                position: { top: '-5px', left: '-10px' }
+            },
+            {
+                selector: '#contactEmail',
+                title: '이메일 입력',
+                function: '견적서 및 답변 수신 이메일',
+                tags: [{ text: '필수', type: 'required' }],
+                position: { top: '-5px', left: '-10px' }
+            },
+            {
+                selector: '#consultationForm input[name="messageType"]',
+                title: '메시지 유형 선택',
+                function: '관심 있는 메시지 서비스 선택',
+                behavior: ['일반문자', '광고문자', '선거문자', '카카오 알림톡', '카카오 브랜드메시지'],
+                position: { top: '-5px', left: '-40px' }
+            },
+            {
+                selector: '#consultationForm select',
+                title: '예상 발송량 선택',
+                function: '월간 예상 발송 건수 선택',
+                behavior: ['5만건 이하', '5만~10만건', '10만~50만건', '50만~100만건', '100만건 이상'],
+                position: { top: '-5px', left: '-10px' }
+            },
+            {
+                selector: '#consultationForm textarea',
+                title: '추가 문의사항',
+                function: '상세 요청사항 및 질문 입력',
+                position: { top: '5px', right: '5px' }
+            },
+            {
+                selector: '#consultationModal .modal-footer .btn-outline',
+                title: '취소 버튼',
+                function: '상담 신청 취소 및 모달 닫기',
+                position: { top: '-5px', left: '-10px' }
+            },
+            {
+                selector: '#consultationModal .modal-footer .btn-primary',
+                title: '신청하기 버튼',
+                function: '상담 신청 제출',
+                api: 'POST /api/consultation',
+                tags: [{ text: 'API', type: 'api' }],
+                position: { top: '-5px', right: '-10px' }
             }
         ]);
     </script>

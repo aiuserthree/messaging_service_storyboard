@@ -1963,6 +1963,102 @@ document.addEventListener('DOMContentLoaded', function() {
                 position: { top: '10px', left: '10px' },
                 function: '예상 발송량 기반 필요 금액 계산',
                 behavior: ['메시지 타입별 건수 입력', '실시간 합계 표시']
+            },
+            // 19. 견적문의 버튼
+            {
+                selector: '.btn-outline[onclick*="estimateModal"]',
+                title: '견적문의 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '대량 발송 견적 문의 모달 오픈',
+                behavior: ['기업/단체용 대량 견적 요청', '맞춤 가격 상담']
+            },
+            // === 견적 문의 모달 ===
+            // 20. 견적 문의 모달
+            {
+                selector: '#estimateModal',
+                title: '견적 문의 모달',
+                position: { top: '60px', left: '20px' },
+                function: '대량 발송 견적 문의 폼',
+                behavior: ['기업 정보 입력', '발송량 기입', '문의 제출'],
+                api: 'POST /api/inquiries/estimate'
+            },
+            // 21. 모달 닫기 버튼
+            {
+                selector: '#estimateModal .modal-close',
+                title: '모달 닫기',
+                position: { top: '5px', right: '5px' },
+                function: '견적 문의 모달 닫기'
+            },
+            // 22. 회사명/단체명 입력
+            {
+                selector: '#estimateForm .form-group:nth-child(1) input',
+                title: '회사명/단체명',
+                position: { top: '-5px', left: '-10px' },
+                function: '회사 또는 단체명 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 23. 담당자명 입력
+            {
+                selector: '#estimateForm .form-group:nth-child(2) input',
+                title: '담당자명',
+                position: { top: '-5px', left: '-10px' },
+                function: '담당자 성함 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 24. 연락처 입력
+            {
+                selector: '#estimateForm .form-group:nth-child(3) input',
+                title: '연락처',
+                position: { top: '-5px', left: '-10px' },
+                function: '연락 가능한 전화번호 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 25. 이메일 입력
+            {
+                selector: '#estimateForm .form-group:nth-child(4) input',
+                title: '이메일',
+                position: { top: '-5px', left: '-10px' },
+                function: '견적서 수신 이메일',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 26. 월 예상 발송량 입력
+            {
+                selector: '#estimateForm .form-group:nth-child(5) input',
+                title: '월 예상 발송량',
+                position: { top: '-5px', left: '-10px' },
+                function: '월간 예상 발송 건수 입력'
+            },
+            // 27. 메시지 타입 선택 (체크박스 그룹)
+            {
+                selector: '#estimateForm .form-group:nth-child(6)',
+                title: '메시지 타입 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '주요 사용 메시지 타입 선택',
+                behavior: ['SMS, LMS, MMS, 알림톡, 브랜드메시지 중 복수 선택']
+            },
+            // 28. 문의내용 입력
+            {
+                selector: '#estimateForm .form-group:nth-child(7) textarea',
+                title: '문의내용',
+                position: { top: '5px', right: '5px' },
+                function: '추가 요청사항 및 상세 문의 내용 입력'
+            },
+            // 29. 모달 취소 버튼
+            {
+                selector: '#estimateModal .modal-footer .btn-outline',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '견적 문의 취소 및 모달 닫기'
+            },
+            // 30. 제출하기 버튼
+            {
+                selector: '#estimateModal .modal-footer .btn-primary',
+                title: '제출하기 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '견적 문의 제출',
+                behavior: ['필수 항목 검증', '견적 문의 등록'],
+                api: 'POST /api/inquiries/estimate',
+                tags: [{ text: 'API', type: 'api' }]
             }
         ];
         initSpecOverlay(specData);

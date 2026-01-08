@@ -1627,7 +1627,144 @@ document.addEventListener('DOMContentLoaded', function() {
             // 16. 엑셀 다운로드
             { selector: '#excelDownloadBtn', title: '엑셀 다운로드', position: { top: '-5px', left: '-10px' }, function: '충전 내역 엑셀 내보내기' },
             // 17. 페이지네이션
-            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' },
+            // === 영수증 모달 ===
+            // 18. 영수증 모달
+            {
+                selector: '#receiptModal',
+                title: '영수증 모달',
+                position: { top: '60px', left: '20px' },
+                function: '충전 영수증 상세 정보',
+                behavior: ['영수증 번호', '충전 일시', '금액', '결제 방법', '상태 표시']
+            },
+            // 19. 영수증 모달 닫기 버튼
+            {
+                selector: '#receiptModal .modal-close',
+                title: '모달 닫기',
+                position: { top: '5px', right: '5px' },
+                function: '영수증 모달 닫기'
+            },
+            // 20. 영수증 번호
+            {
+                selector: '#receiptNumber',
+                title: '영수증 번호',
+                position: { top: '-5px', right: '-10px' },
+                function: '영수증 고유 번호 표시'
+            },
+            // 21. 충전 일시
+            {
+                selector: '#receiptDate',
+                title: '충전 일시',
+                position: { top: '-5px', right: '-10px' },
+                function: '충전 날짜 및 시간 표시'
+            },
+            // 22. 충전 포인트
+            {
+                selector: '#receiptAmount',
+                title: '충전 포인트',
+                position: { top: '-5px', right: '-10px' },
+                function: '충전된 포인트 금액'
+            },
+            // 23. 충전 방법
+            {
+                selector: '#receiptMethod',
+                title: '충전 방법',
+                position: { top: '-5px', right: '-10px' },
+                function: '결제 수단 표시'
+            },
+            // 24. 충전 상태
+            {
+                selector: '#receiptStatus',
+                title: '충전 상태',
+                position: { top: '-5px', right: '-10px' },
+                function: '충전 완료/진행중/실패 상태'
+            },
+            // 25. 영수증 닫기 버튼
+            {
+                selector: '#receiptModal .modal-footer .btn-outline',
+                title: '닫기 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '영수증 모달 닫기'
+            },
+            // 26. 영수증 인쇄 버튼
+            {
+                selector: '#receiptModal .modal-footer .btn-primary:first-of-type',
+                title: '인쇄 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '영수증 인쇄'
+            },
+            // 27. 영수증 다운로드 버튼
+            {
+                selector: '#receiptModal .modal-footer .btn-primary:last-of-type',
+                title: '다운로드 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: 'PDF 영수증 다운로드'
+            },
+            // === 상세보기 모달 ===
+            // 28. 상세보기 모달
+            {
+                selector: '#detailModal',
+                title: '사용 내역 상세 모달',
+                position: { top: '60px', left: '20px' },
+                function: '포인트 사용 내역 상세 정보',
+                behavior: ['사용 일시', '서비스', '제목', '내용', '발신번호', '사용 포인트', '발송 건수', '성공/실패 건수']
+            },
+            // 29. 상세 모달 닫기 버튼
+            {
+                selector: '#detailModal .modal-close',
+                title: '모달 닫기',
+                position: { top: '5px', right: '5px' },
+                function: '상세보기 모달 닫기'
+            },
+            // 30. 사용 일시
+            {
+                selector: '#detailDate',
+                title: '사용 일시',
+                position: { top: '-5px', right: '-10px' },
+                function: '포인트 사용 날짜/시간'
+            },
+            // 31. 서비스 유형
+            {
+                selector: '#detailService',
+                title: '서비스',
+                position: { top: '-5px', right: '-10px' },
+                function: '사용 서비스 (SMS/LMS/MMS/알림톡)'
+            },
+            // 32. 제목
+            {
+                selector: '#detailTitle',
+                title: '제목',
+                position: { top: '-5px', right: '-10px' },
+                function: '발송 제목'
+            },
+            // 33. 내용
+            {
+                selector: '#detailContent',
+                title: '내용',
+                position: { top: '5px', right: '5px' },
+                function: '발송 메시지 내용'
+            },
+            // 34. 발신번호
+            {
+                selector: '#detailCallerNumber',
+                title: '발신번호',
+                position: { top: '-5px', right: '-10px' },
+                function: '발신 전화번호'
+            },
+            // 35. 사용 포인트
+            {
+                selector: '#detailAmount',
+                title: '사용 포인트',
+                position: { top: '-5px', right: '-10px' },
+                function: '차감된 포인트 금액'
+            },
+            // 36. 상세 모달 닫기 버튼
+            {
+                selector: '#detailModal .modal-footer .btn-outline',
+                title: '닫기 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '상세보기 모달 닫기'
+            }
         ];
         initSpecOverlay(specData);
     </script>

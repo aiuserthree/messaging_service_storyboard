@@ -1759,23 +1759,187 @@ document.addEventListener('DOMContentLoaded', function() {
                 position: { top: '-5px', right: '-10px' },
                 function: '수정 내용 초기화'
             },
+            // === 휴대폰 인증 모달 ===
             // 23. 휴대폰 인증 모달
             {
                 selector: '#phoneVerifyModal',
                 title: '휴대폰 인증 모달',
-                position: { top: '10px', left: '10px' },
+                position: { top: '60px', left: '20px' },
                 function: '휴대폰 본인 인증',
                 behavior: ['인증번호 6자리 입력', '3분 유효시간', '재전송 가능'],
                 api: 'POST /api/auth/verify-phone'
             },
-            // 24. 사업자 전환 모달
+            // 24. 휴대폰 인증 모달 닫기
+            {
+                selector: '#phoneVerifyModal .modal-close',
+                title: '모달 닫기',
+                position: { top: '5px', right: '5px' },
+                function: '휴대폰 인증 취소'
+            },
+            // 25. 휴대폰번호 표시
+            {
+                selector: '#phoneVerifyModal .form-group:first-child input',
+                title: '휴대폰번호',
+                position: { top: '-5px', right: '-10px' },
+                function: '인증 대상 휴대폰번호 (읽기 전용)'
+            },
+            // 26. 인증번호 입력
+            {
+                selector: '#phoneVerifyModal .form-group:last-child input',
+                title: '인증번호 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '6자리 인증번호 입력',
+                behavior: ['SMS로 발송된 번호 입력', '3분 유효시간'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 27. 인증번호 재전송 버튼
+            {
+                selector: '#phoneVerifyModal .btn-sm',
+                title: '재전송 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '인증번호 재발송',
+                api: 'POST /api/auth/send-verification'
+            },
+            // 28. 휴대폰 인증 취소 버튼
+            {
+                selector: '#phoneVerifyModal .modal-footer .btn-outline',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '인증 취소 및 모달 닫기'
+            },
+            // 29. 휴대폰 인증 확인 버튼
+            {
+                selector: '#phoneVerifyModal .modal-footer .btn-primary',
+                title: '확인 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '인증번호 확인',
+                api: 'POST /api/auth/verify-phone',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            // === 사업자 전환 모달 ===
+            // 30. 사업자 전환 모달
             {
                 selector: '#convertBusinessModal',
                 title: '사업자 전환 모달',
-                position: { top: '10px', left: '10px' },
+                position: { top: '60px', left: '20px' },
                 function: '사업자 회원 전환 정보 입력',
                 behavior: ['기업유형 선택', '사업자등록증 업로드', '재직증명서 업로드(직원)'],
                 api: 'POST /api/users/convert-business'
+            },
+            // 31. 사업자 전환 모달 닫기
+            {
+                selector: '#convertBusinessModal .modal-close',
+                title: '모달 닫기',
+                position: { top: '5px', right: '5px' },
+                function: '사업자 전환 취소'
+            },
+            // 32. 전환 안내 메시지
+            {
+                selector: '#convertBusinessModal .alert-warning',
+                title: '경고 안내',
+                position: { top: '5px', left: '10px' },
+                function: '전환 후 되돌릴 수 없음 안내'
+            },
+            // 33. 기업유형 선택
+            {
+                selector: '#convertForm .form-group:nth-child(1)',
+                title: '기업유형 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '개인사업자/법인사업자 선택',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 34. 담당자 유형
+            {
+                selector: '#convertForm .form-group:nth-child(2)',
+                title: '담당자 유형',
+                position: { top: '-5px', left: '-10px' },
+                function: '대표자/직원 선택',
+                behavior: ['직원 선택 시 재직증명서 필요'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 35. 업체명 입력
+            {
+                selector: '#convertForm .form-group:nth-child(3) input',
+                title: '업체명',
+                position: { top: '-5px', right: '-10px' },
+                function: '사업체명 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 36. 사업자등록번호 입력
+            {
+                selector: '#businessNumber',
+                title: '사업자등록번호',
+                position: { top: '-5px', left: '-10px' },
+                function: '사업자등록번호 입력',
+                behavior: ['123-45-67890 형식'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 37. 사업자확인 버튼
+            {
+                selector: '#convertForm button[onclick*="verifyBusinessNumber"]',
+                title: '사업자확인 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '국세청 API로 사업자 조회',
+                api: 'POST /api/business/verify'
+            },
+            // 38. 대표자명 입력
+            {
+                selector: '#convertForm .form-group:nth-child(5) input',
+                title: '대표자명',
+                position: { top: '-5px', right: '-10px' },
+                function: '대표자 성함 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 39. 사업장 주소
+            {
+                selector: '#convertForm .form-section:nth-child(2) .form-group:first-child',
+                title: '사업장 주소',
+                position: { top: '-5px', left: '-10px' },
+                function: '사업장 주소 입력',
+                behavior: ['주소 검색 버튼 클릭 → Daum 주소 API'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 40. 연락처 입력
+            {
+                selector: '#convertForm .form-section:nth-child(2) .form-group:last-child input',
+                title: '연락처',
+                position: { top: '-5px', right: '-10px' },
+                function: '사업장 연락처 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 41. 사업자등록증 업로드
+            {
+                selector: '#businessLicense',
+                title: '사업자등록증',
+                position: { top: '-5px', left: '-10px' },
+                function: '사업자등록증 파일 업로드',
+                behavior: ['PDF, JPG, PNG 지원', '국세청 홈택스에서 발급'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 42. 재직증명서 업로드
+            {
+                selector: '#employmentCert',
+                title: '재직증명서',
+                position: { top: '-5px', left: '-10px' },
+                function: '재직증명서 파일 업로드',
+                behavior: ['직원 선택 시에만 필요', '최근 3개월 이내 발급'],
+                tags: [{ text: '조건부 필수', type: 'required' }]
+            },
+            // 43. 사업자 전환 취소 버튼
+            {
+                selector: '#convertBusinessModal .modal-footer .btn-outline',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '사업자 전환 취소'
+            },
+            // 44. 사업자 전환 제출 버튼
+            {
+                selector: '#convertBusinessModal .modal-footer .btn-primary',
+                title: '제출하기 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '사업자 전환 신청 제출',
+                api: 'POST /api/users/convert-business',
+                tags: [{ text: 'API', type: 'api' }]
             }
         ];
         initSpecOverlay(specData);

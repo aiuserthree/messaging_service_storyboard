@@ -2376,142 +2376,47 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // === 메인 페이지 ===
             // 1. 페이지 헤더
-            {
-                selector: '#pageHeader',
-                title: '페이지 헤더',
-                position: { top: '10px', left: '-15px' },
-                function: '발송결과 조회 페이지 제목'
-            },
-            // 2. 탭 메뉴
-            {
-                selector: '#tabMenu',
-                title: '탭 메뉴',
-                position: { top: '-10px', left: '10px' },
-                function: '발송결과/예약내역 탭 전환',
-                behavior: ['발송결과 탭', '예약내역 탭']
-            },
-            // 3. 발송결과 탭
-            {
-                selector: '#tabMenu .tab-item:first-child',
-                title: '발송결과 탭',
-                position: { top: '-5px', left: '-10px' },
-                function: '완료된 발송 내역 조회'
-            },
-            // 4. 예약내역 탭
-            {
-                selector: '#tabMenu .tab-item:nth-child(2)',
-                title: '예약내역 탭',
-                position: { top: '-5px', right: '-10px' },
-                function: '예약된 발송 내역 조회'
-            },
-            // 5. 필터 섹션
-            {
-                selector: '#filterSection',
-                title: '필터 섹션',
-                position: { top: '10px', left: '-15px' },
-                function: '발송결과 검색 및 필터링'
-            },
-            // 6. 검색 입력
-            {
-                selector: '#searchInput',
-                title: '검색 입력',
-                position: { top: '-5px', left: '-10px' },
-                function: '수신번호/메시지 내용 검색'
-            },
-            // 7. 메시지 타입 필터
-            {
-                selector: '#messageTypeFilter',
-                title: '메시지 타입',
-                position: { top: '-5px', left: '-10px' },
-                function: 'SMS/LMS/MMS/알림톡 필터',
-                behavior: ['전체', 'SMS', 'LMS', 'MMS', '알림톡', '브랜드메시지']
-            },
-            // 8. 상태 필터
-            {
-                selector: '#statusFilter',
-                title: '상태 필터',
-                position: { top: '-5px', left: '-10px' },
-                function: '발송상태 필터링',
-                behavior: ['전체', '성공', '실패', '대기', '발송중']
-            },
-            // 9. 발신번호 필터
-            {
-                selector: '#callerNumberFilter',
-                title: '발신번호 필터',
-                position: { top: '-5px', left: '-10px' },
-                function: '발신번호별 필터링'
-            },
-            // 10. 시작일 선택
-            {
-                selector: '#startDate',
-                title: '시작일',
-                position: { top: '-5px', left: '-10px' },
-                function: '조회 시작일 선택'
-            },
-            // 11. 종료일 선택
-            {
-                selector: '#endDate',
-                title: '종료일',
-                position: { top: '-5px', left: '-10px' },
-                function: '조회 종료일 선택'
-            },
-            // 12. 검색 버튼
-            {
-                selector: '#filterSection .btn-primary',
-                title: '검색 버튼',
-                position: { top: '-5px', left: '-10px' },
-                function: '필터 조건으로 검색',
-                api: 'GET /api/messages/results'
-            },
-            // 13. 초기화 버튼
-            {
-                selector: '#filterSection .btn-outline',
-                title: '초기화 버튼',
-                position: { top: '-5px', right: '-10px' },
-                function: '필터 조건 초기화'
-            },
-            // 14. 통계 영역
-            {
-                selector: '.stats-grid',
-                title: '통계 영역',
-                position: { top: '10px', left: '10px' },
-                function: '발송 통계 요약',
-                behavior: ['전체발송', '성공', '실패', '성공률', '사용포인트']
-            },
-            // 15. 발송결과 테이블
-            {
-                selector: '.result-list-table',
-                title: '발송결과 테이블',
-                position: { top: '10px', left: '10px' },
-                function: '발송 결과 목록',
-                behavior: ['발송일시', '발신번호', '메시지타입', '건수', '상태'],
-                api: 'GET /api/messages/results'
-            },
-            // 16. 상세보기 버튼
-            {
-                selector: '.result-list-table .btn-sm',
-                title: '상세보기 버튼',
-                position: { top: '-5px', right: '-10px' },
-                function: '발송 상세 내역 확인',
-                behavior: ['아코디언 펼치기', '수신번호별 결과 표시']
-            },
-            // 17. 엑셀 다운로드 버튼
-            {
-                selector: '.action-buttons .btn-outline',
-                title: '엑셀 다운로드',
-                position: { top: '-5px', left: '-10px' },
-                function: '발송결과 엑셀 파일 다운로드',
-                api: 'GET /api/messages/results/export'
-            },
-            // 18. 페이지네이션
-            {
-                selector: '#pagination',
-                title: '페이지네이션',
-                position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' },
-                function: '결과 목록 페이지 이동',
-                behavior: ['이전', '페이지 번호', '다음']
-            }
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '발송결과 조회 페이지 제목 및 설명' },
+            // 2-4. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '발송결과/예약내역 탭 전환' },
+            { selector: '#tabMenu .tab-item:first-child', title: '발송결과 탭', position: { top: '-5px', left: '-10px' }, function: '완료된 발송 내역 조회 (현재)' },
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '예약내역 탭', position: { top: '-5px', right: '-10px' }, function: '예약된 발송 내역 조회' },
+            // 5-13. 필터 섹션
+            { selector: '#filterSection', title: '필터 섹션', position: { top: '10px', left: '-15px' }, function: '발송결과 검색 및 필터링 영역' },
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '수신번호 또는 메시지 내용으로 검색' },
+            { selector: '#messageTypeFilter', title: '메시지 타입', position: { top: '-5px', left: '-10px' }, function: '메시지 타입별 필터링', behavior: ['전체/SMS/LMS/MMS/알림톡/브랜드메시지'] },
+            { selector: '#statusFilter', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '발송 상태별 필터링', behavior: ['전체/성공/실패/대기/발송중'] },
+            { selector: '#callerNumberFilter', title: '발신번호 필터', position: { top: '-5px', left: '-10px' }, function: '등록된 발신번호별 필터링' },
+            { selector: '#startDate', title: '시작일', position: { top: '-5px', left: '-10px' }, function: '조회 기간 시작일 선택' },
+            { selector: '#endDate', title: '종료일', position: { top: '-5px', left: '-10px' }, function: '조회 기간 종료일 선택' },
+            { selector: '#filterSection .btn-primary', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, function: '필터 조건으로 발송결과 검색', api: 'GET /api/messages/results' },
+            { selector: '#filterSection .btn-outline', title: '초기화 버튼', position: { top: '-5px', right: '-10px' }, function: '모든 필터 조건 초기화' },
+            // 14-19. 발송결과 콘텐츠
+            { selector: '.stats-grid', title: '통계 영역', position: { top: '10px', left: '10px' }, function: '발송 통계 요약 카드', behavior: ['전체발송 건수', '성공 건수', '실패 건수', '성공률', '사용포인트'] },
+            { selector: '.result-list-table', title: '발송결과 테이블', position: { top: '10px', left: '10px' }, function: '발송 결과 목록 테이블', behavior: ['발송일시, 발신번호, 메시지타입, 건수, 상태 표시'] },
+            { selector: '.result-list-table tbody tr:first-child', title: '발송결과 행', position: { top: '-5px', left: '-10px' }, function: '개별 발송 결과 정보', behavior: ['클릭 시 상세 내역 확인', '재발송 버튼'] },
+            { selector: '.result-list-table .btn-sm:first-of-type', title: '상세보기 버튼', position: { top: '-5px', left: '-10px' }, function: '발송 상세 내역 모달 열기', behavior: ['수신번호별 결과 표시'] },
+            { selector: '.action-buttons .btn-outline', title: '엑셀 다운로드', position: { top: '-5px', left: '-10px' }, function: '발송결과 엑셀 파일 다운로드', api: 'GET /api/messages/results/export' },
+            { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, function: '결과 목록 페이지 이동' },
+            // 20-28. 예약내역 탭 콘텐츠
+            { selector: '#reservationFilterSection', title: '예약내역 필터', position: { top: '10px', left: '-15px' }, function: '예약 발송 검색 및 필터링' },
+            { selector: '#reservationStartDate', title: '예약 시작일', position: { top: '-5px', left: '-10px' }, function: '예약 조회 시작일 선택' },
+            { selector: '#reservationEndDate', title: '예약 종료일', position: { top: '-5px', left: '-10px' }, function: '예약 조회 종료일 선택' },
+            { selector: '#reservationStatusFilter', title: '예약 상태 필터', position: { top: '-5px', left: '-10px' }, function: '예약 상태별 필터링', behavior: ['전체/예약중/발송완료/취소'] },
+            { selector: '.reservation-table', title: '예약내역 테이블', position: { top: '10px', left: '10px' }, function: '예약 발송 목록 테이블' },
+            { selector: '.reservation-table tbody tr:first-child', title: '예약내역 행', position: { top: '-5px', left: '-10px' }, function: '개별 예약 발송 정보', behavior: ['상세보기, 수정, 취소 버튼'] },
+            { selector: '.reservation-table .btn-outline[onclick*="cancelReservation"]', title: '예약 취소 버튼', position: { top: '-5px', right: '-10px' }, function: '예약 발송 취소', api: 'DELETE /api/messages/reservation/{id}' },
+            { selector: '#pagination-reservation', title: '예약내역 페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, function: '예약내역 페이지 이동' },
+            
+            // === 상세보기 모달 ===
+            { selector: '#detailModal', title: '발송 상세 모달', position: { top: '10px', left: '10px' }, function: '발송 상세 정보 조회' },
+            { selector: '#detailModal .modal-header', title: '모달 헤더', position: { top: '-5px', left: '-10px' }, function: '발송 상세 정보 제목' },
+            { selector: '#detailModal .card', title: '발송 정보 카드', position: { top: '5px', left: '5px' }, function: '발송 상세 정보 표시', behavior: ['발송ID, 발송일시, 발신번호, 메시지타입, 수신번호 수, 성공/실패 건수, 메시지 내용'] },
+            { selector: '#detailModal .table', title: '상세 정보 테이블', position: { top: '5px', left: '5px' }, function: '발송 상세 항목별 정보 표시' },
+            { selector: '#detailModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, function: '모달 닫기' },
+            { selector: '#detailModal .modal-footer .btn-primary', title: '재발송 버튼', position: { top: '-5px', right: '-10px' }, function: '동일 내용으로 재발송', api: 'POST /api/messages/resend' }
         ];
         initSpecOverlay(specData);
     </script>
