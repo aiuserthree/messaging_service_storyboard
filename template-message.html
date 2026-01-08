@@ -1871,46 +1871,113 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // ===== 페이지 기본 요소 =====
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '일반문자 템플릿 페이지 제목' },
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '일반문자 템플릿 관리 페이지', function: '페이지 제목 및 설명 표시' },
             // 2. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '문자발송 탭 전환' },
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '문자발송 관련 탭 전환', function: '페이지 네비게이션' },
             // 3. 일반문자 탭
-            { selector: '#tabMenu .tab-item:nth-child(1)', title: '일반문자 탭', position: { top: '-5px', left: '-10px' }, function: '일반문자 발송 페이지' },
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '일반문자 탭', position: { top: '-5px', left: '-10px' }, description: '일반문자 발송 페이지로 이동', function: '일반문자 발송 화면' },
             // 4. 광고문자 탭
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '광고문자 탭', position: { top: '-5px', left: '-10px' }, function: '광고문자 발송 페이지' },
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '광고문자 탭', position: { top: '-5px', left: '-10px' }, description: '광고문자 발송 페이지로 이동', function: '광고문자 발송 화면' },
             // 5. 템플릿 탭
-            { selector: '#tabMenu .tab-item:nth-child(3)', title: '템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '템플릿 관리 (현재)' },
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '템플릿 탭', position: { top: '-5px', right: '-10px' }, description: '템플릿 관리 (현재)', function: '템플릿 목록 및 관리', behavior: ['현재 활성 탭'] },
+            
+            // ===== 통계 섹션 =====
             // 6. 통계 섹션
-            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, function: '템플릿 현황 통계' },
+            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, description: '템플릿 현황 통계', function: '유형별 템플릿 개수 표시' },
             // 7. 전체 통계
-            { selector: '#statsSection .stat-card:nth-child(1)', title: '전체 템플릿', position: { top: '-5px', left: '-10px' }, function: '전체 템플릿 수' },
+            { selector: '#statsSection .stat-card:nth-child(1)', title: '전체 템플릿', position: { top: '-5px', left: '-10px' }, description: '등록된 전체 템플릿 수', function: '총 템플릿 개수' },
             // 8. SMS 통계
-            { selector: '#statsSection .stat-card:nth-child(2)', title: 'SMS 템플릿', position: { top: '-5px', left: '-10px' }, function: 'SMS 템플릿 수' },
+            { selector: '#statsSection .stat-card:nth-child(2)', title: 'SMS 템플릿', position: { top: '-5px', left: '-10px' }, description: 'SMS 유형 템플릿 수', function: '단문 템플릿 개수' },
             // 9. LMS 통계
-            { selector: '#statsSection .stat-card:nth-child(3)', title: 'LMS 템플릿', position: { top: '-5px', left: '-10px' }, function: 'LMS 템플릿 수' },
+            { selector: '#statsSection .stat-card:nth-child(3)', title: 'LMS 템플릿', position: { top: '-5px', left: '-10px' }, description: 'LMS 유형 템플릿 수', function: '장문 템플릿 개수' },
             // 10. MMS 통계
-            { selector: '#statsSection .stat-card:nth-child(4)', title: 'MMS 템플릿', position: { top: '-5px', right: '-10px' }, function: 'MMS 템플릿 수' },
+            { selector: '#statsSection .stat-card:nth-child(4)', title: 'MMS 템플릿', position: { top: '-5px', right: '-10px' }, description: 'MMS 유형 템플릿 수', function: '멀티미디어 템플릿 개수' },
+            
+            // ===== 검색/필터 섹션 =====
             // 11. 검색 섹션
-            { selector: '#searchSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, function: '템플릿 검색/필터' },
+            { selector: '#searchSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, description: '템플릿 검색 영역', function: '조건별 템플릿 검색' },
             // 12. 검색 입력
-            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '템플릿명/내용 검색' },
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '키워드 검색 입력', function: '템플릿명/내용 검색', behavior: ['입력 후 검색 버튼 클릭'] },
             // 13. 타입 필터
-            { selector: '#typeFilter', title: '타입 필터', position: { top: '-5px', left: '-10px' }, function: 'SMS/LMS/MMS 필터' },
+            { selector: '#typeFilter', title: '타입 필터', position: { top: '-5px', left: '-10px' }, description: '메시지 타입 필터', function: 'SMS/LMS/MMS 필터', behavior: ['전체/SMS/LMS/MMS 선택'] },
             // 14. 검색 버튼
-            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 실행', api: 'GET /api/templates' },
+            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, description: '검색 실행', function: '필터 조건으로 목록 갱신', api: 'GET /api/templates' },
+            
+            // ===== 액션 버튼 =====
             // 15. 새 템플릿 등록
-            { selector: '#addTemplateBtn', title: '새 템플릿 등록', position: { top: '-10px', left: '-15px' }, function: '템플릿 등록 모달', api: 'POST /api/templates' },
+            { selector: '#addTemplateBtn', title: '새 템플릿 등록', position: { top: '-10px', left: '-15px' }, description: '템플릿 등록 모달 열기', function: '새 템플릿 작성', behavior: ['클릭 시 등록 모달 열림'], api: 'POST /api/templates' },
             // 16. 일괄 삭제
-            { selector: '#batchDeleteBtn', title: '일괄 삭제', position: { top: '-10px', left: '-15px' }, function: '선택 템플릿 삭제', api: 'DELETE /api/templates/batch' },
+            { selector: '#batchDeleteBtn', title: '일괄 삭제', position: { top: '-10px', left: '-15px' }, description: '선택된 템플릿 삭제', function: '복수 템플릿 삭제', behavior: ['체크된 템플릿 일괄 삭제'], api: 'DELETE /api/templates/batch' },
             // 17. 내보내기
-            { selector: '#exportBtn', title: '내보내기', position: { top: '-10px', right: '-15px' }, function: '템플릿 데이터 내보내기' },
+            { selector: '#exportBtn', title: '내보내기', position: { top: '-10px', right: '-15px' }, description: '템플릿 데이터 내보내기', function: 'CSV/Excel 다운로드' },
+            
+            // ===== 템플릿 목록 =====
             // 18. 템플릿 그리드
-            { selector: '#templateGrid', title: '템플릿 카드 목록', position: { top: '10px', left: '10px' }, function: '템플릿 카드 표시' },
+            { selector: '#templateGrid', title: '템플릿 카드 목록', position: { top: '10px', left: '10px' }, description: '등록된 템플릿 카드 표시', function: '템플릿 목록 그리드', behavior: ['카드 클릭 시 상세 보기'] },
             // 19. 템플릿 카드
-            { selector: '#templateGrid .template-card:first-child', title: '템플릿 카드', position: { top: '-5px', left: '-10px' }, function: '개별 템플릿 정보', behavior: ['미리보기', '수정', '복사', '삭제'] },
-            // 20. 페이지네이션
-            { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+            { selector: '.template-item', title: '템플릿 카드', position: { top: '-5px', left: '-10px' }, description: '개별 템플릿 정보', function: '템플릿명, 내용 미리보기, 메타정보', behavior: ['미리보기', '수정', '복사', '삭제 버튼'] },
+            // 20. 미리보기 버튼
+            { selector: '.template-actions-buttons .btn:nth-child(1)', title: '미리보기 버튼', position: { top: '-5px', left: '-10px' }, description: '템플릿 미리보기', function: '미리보기 모달 열기', behavior: ['클릭 시 미리보기 모달 표시'] },
+            // 21. 수정 버튼
+            { selector: '.template-actions-buttons .btn:nth-child(2)', title: '수정 버튼', position: { top: '-5px', left: '-10px' }, description: '템플릿 수정', function: '수정 모달 열기', api: 'PUT /api/templates/:id' },
+            // 22. 복사 버튼
+            { selector: '.template-actions-buttons .btn:nth-child(3)', title: '복사 버튼', position: { top: '-5px', left: '-10px' }, description: '템플릿 복사', function: '템플릿 복제 생성', api: 'POST /api/templates/:id/copy' },
+            // 23. 삭제 버튼
+            { selector: '.template-actions-buttons .btn:nth-child(4)', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, description: '템플릿 삭제', function: '삭제 확인 모달 열기', api: 'DELETE /api/templates/:id' },
+            // 24. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, description: '페이지 이동 컨트롤', function: '목록 페이지 전환' },
+            
+            // ===== 템플릿 등록/수정 모달 =====
+            // 25. 등록 모달
+            { selector: '#addTemplateModal', title: '템플릿 등록 모달', position: { top: '20px', left: '20px' }, description: '템플릿 등록/수정 팝업', function: '새 템플릿 작성 또는 기존 템플릿 수정' },
+            // 26. 모달 닫기 버튼
+            { selector: '#addTemplateModal .modal-close', title: '모달 닫기', position: { top: '-5px', right: '-10px' }, description: '모달 닫기 버튼', function: '모달 닫기' },
+            // 27. 템플릿명 입력
+            { selector: '#addTemplateModal .form-input[placeholder*="템플릿명"]', title: '템플릿명 입력', position: { top: '-5px', left: '-10px' }, description: '템플릿 이름 입력', function: '템플릿 식별명 지정', behavior: ['최대 50자'], tags: [{ text: '필수', type: 'required' }] },
+            // 28. 메시지 타입 선택
+            { selector: '#addTemplateModal input[name="messageType"]', title: '메시지 타입', position: { top: '-5px', left: '-25px' }, description: 'SMS/LMS/MMS 선택', function: '메시지 유형 지정', behavior: ['SMS: 90byte', 'LMS: 2000byte', 'MMS: 이미지 포함'], tags: [{ text: '필수', type: 'required' }] },
+            // 29. 제목 입력 (LMS/MMS)
+            { selector: '#titleGroup', title: '제목 입력', position: { top: '-5px', left: '-10px' }, description: 'LMS/MMS 제목', function: '장문 메시지 제목', behavior: ['LMS/MMS 선택 시 표시', '최대 40자'] },
+            // 30. 변수 삽입 버튼
+            { selector: '#addTemplateModal .btn-sm.btn-outline', title: '변수 삽입', position: { top: '-5px', left: '-10px' }, description: '개인화 변수 삽입', function: '#{이름}, #{전화번호} 등 삽입', behavior: ['클릭 시 커서 위치에 변수 삽입'] },
+            // 31. 메시지 내용 입력
+            { selector: '#templateContent', title: '메시지 내용', position: { top: '5px', right: '5px' }, description: '템플릿 본문 입력', function: '메시지 내용 작성', behavior: ['실시간 바이트 카운트', '미리보기 연동'], tags: [{ text: '필수', type: 'required' }] },
+            // 32. 바이트 카운터
+            { selector: '#byteCounter', title: '바이트 카운터', position: { top: '-5px', right: '-10px' }, description: '입력 바이트 수 표시', function: '현재/최대 바이트 표시' },
+            // 33. 이미지 첨부 영역
+            { selector: '#imageGroup', title: '이미지 첨부', position: { top: '5px', left: '-10px' }, description: 'MMS 이미지 첨부', function: '이미지 파일 업로드', behavior: ['MMS 선택 시 표시', 'JPG/PNG/GIF', '최대 300KB, 3개'] },
+            // 34. 이미지 추가 버튼
+            { selector: '#addImageBtn', title: '이미지 추가', position: { top: '-5px', left: '-10px' }, description: '이미지 파일 선택', function: '파일 선택 다이얼로그 열기' },
+            // 35. 메모 입력
+            { selector: '#addTemplateModal textarea[placeholder*="메모"]', title: '메모 입력', position: { top: '5px', left: '-10px' }, description: '템플릿 설명/용도 메모', function: '관리용 메모 작성', behavior: ['선택사항', '최대 200자'] },
+            // 36. 모달 미리보기 영역
+            { selector: '#addTemplateModal .preview-phone', title: '모달 미리보기', position: { top: '10px', right: '10px' }, description: '작성 중 메시지 미리보기', function: '실시간 미리보기 표시' },
+            // 37. 모달 취소 버튼
+            { selector: '#addTemplateModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '등록 취소', function: '모달 닫기, 입력 취소' },
+            // 38. 모달 저장 버튼
+            { selector: '#addTemplateModal .btn-primary', title: '저장 버튼', position: { top: '-5px', right: '-10px' }, description: '템플릿 저장', function: '입력 내용 저장', api: 'POST /api/templates', tags: [{ text: 'API', type: 'api' }] },
+            
+            // ===== 미리보기 모달 =====
+            // 39. 미리보기 모달
+            { selector: '#previewModal', title: '미리보기 모달', position: { top: '20px', left: '20px' }, description: '템플릿 미리보기 팝업', function: '저장된 템플릿 상세 미리보기' },
+            // 40. 미리보기 내용
+            { selector: '#previewTemplateContent', title: '미리보기 내용', position: { top: '10px', left: '10px' }, description: '템플릿 본문 표시', function: '메시지 내용 확인' },
+            // 41. 발송하기 버튼
+            { selector: '#previewModal .btn-primary', title: '발송하기 버튼', position: { top: '-5px', right: '-10px' }, description: '이 템플릿으로 발송', function: '문자 발송 페이지로 이동', behavior: ['템플릿 내용 자동 적용'] },
+            // 42. 닫기 버튼
+            { selector: '#previewModal .btn-outline', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, description: '모달 닫기', function: '미리보기 모달 닫기' },
+            
+            // ===== 삭제 확인 모달 =====
+            // 43. 삭제 모달
+            { selector: '#deleteModal', title: '삭제 확인 모달', position: { top: '20px', left: '20px' }, description: '템플릿 삭제 확인 팝업', function: '삭제 전 확인' },
+            // 44. 삭제 경고 메시지
+            { selector: '#deleteModal .alert-warning', title: '삭제 경고', position: { top: '10px', left: '10px' }, description: '삭제 불가 경고', function: '복구 불가 안내' },
+            // 45. 삭제 취소 버튼
+            { selector: '#deleteModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '삭제 취소', function: '모달 닫기' },
+            // 46. 삭제 확인 버튼
+            { selector: '#deleteModal .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, description: '삭제 실행', function: '템플릿 삭제', api: 'DELETE /api/templates/:id', tags: [{ text: 'API', type: 'api' }] }
         ];
         initSpecOverlay(specData);
     </script>

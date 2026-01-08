@@ -2782,42 +2782,93 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // ===== 페이지 기본 요소 =====
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '주소록 관리 페이지 제목' },
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '주소록 관리 페이지', function: '페이지 제목 표시' },
             // 2. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '주소록/수신거부 전환' },
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '주소록/수신거부 전환', function: '페이지 네비게이션' },
             // 3. 주소록 탭
-            { selector: '#tabMenu .tab-item:first-child', title: '주소록 탭', position: { top: '-5px', left: '-10px' }, function: '주소록 관리 페이지' },
+            { selector: '#tabMenu .tab-item:first-child', title: '주소록 탭', position: { top: '-5px', left: '-10px' }, description: '주소록 관리 (현재)', function: '연락처 관리', behavior: ['현재 활성 탭'] },
             // 4. 수신거부 탭
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '수신거부 탭', position: { top: '-5px', right: '-10px' }, function: '수신거부 관리 페이지' },
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '수신거부 탭', position: { top: '-5px', right: '-10px' }, description: '수신거부 관리', function: '수신거부 번호 관리' },
+            
+            // ===== 통계 섹션 =====
             // 5. 통계 섹션
-            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, function: '전체주소/그룹수/정상주소/수신거부 통계' },
+            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, description: '주소록 현황 통계', function: '전체/그룹/정상/수신거부 수 표시' },
+            
+            // ===== 그룹 사이드바 =====
             // 6. 그룹 사이드바
-            { selector: '#groupSidebar', title: '그룹 사이드바', position: { top: '10px', left: '-15px' }, function: '주소록 그룹 목록' },
+            { selector: '#groupSidebar', title: '그룹 사이드바', position: { top: '10px', left: '-15px' }, description: '주소록 그룹 목록', function: '그룹별 주소록 관리' },
             // 7. 그룹 추가 버튼
-            { selector: '#addGroupBtn', title: '그룹 추가', position: { top: '-5px', left: '-10px' }, function: '새 그룹 생성', api: 'POST /api/addressbook/groups' },
+            { selector: '#addGroupBtn', title: '그룹 추가', position: { top: '-5px', left: '-10px' }, description: '새 그룹 생성', function: '그룹 생성 모달 열기', api: 'POST /api/addressbook/groups' },
             // 8. 그룹 검색
-            { selector: '#groupSearch', title: '그룹 검색', position: { top: '-5px', left: '-10px' }, function: '그룹명으로 검색' },
+            { selector: '#groupSearch', title: '그룹 검색', position: { top: '-5px', left: '-10px' }, description: '그룹명 검색', function: '그룹 필터링' },
             // 9. 그룹 목록
-            { selector: '#groupList', title: '그룹 목록', position: { top: '5px', left: '5px' }, function: '등록된 그룹 표시', behavior: ['클릭 시 그룹 선택', '우클릭 컨텍스트 메뉴'] },
+            { selector: '#groupList', title: '그룹 목록', position: { top: '5px', left: '5px' }, description: '등록된 그룹 표시', function: '그룹 선택', behavior: ['클릭 시 그룹 선택', '우클릭 컨텍스트 메뉴'] },
+            
+            // ===== 주소록 콘텐츠 =====
             // 10. 주소록 콘텐츠
-            { selector: '.addressbook-content', title: '주소록 콘텐츠', position: { top: '10px', left: '10px' }, function: '선택 그룹의 주소 목록' },
+            { selector: '.addressbook-content', title: '주소록 콘텐츠', position: { top: '10px', left: '10px' }, description: '선택 그룹 주소 목록', function: '연락처 표시 및 편집' },
             // 11. 주소 검색
-            { selector: '#addressSearch', title: '주소 검색', position: { top: '-5px', left: '-10px' }, function: '이름/전화번호 검색' },
+            { selector: '#addressSearch', title: '주소 검색', position: { top: '-5px', left: '-10px' }, description: '이름/전화번호 검색', function: '연락처 검색' },
             // 12. 주소 추가 버튼
-            { selector: '#addAddressBtn', title: '주소 추가', position: { top: '-5px', left: '-10px' }, function: '새 주소 등록', api: 'POST /api/addressbook' },
+            { selector: '#addAddressBtn', title: '주소 추가', position: { top: '-5px', left: '-10px' }, description: '새 주소 등록', function: '연락처 추가 모달', api: 'POST /api/addressbook' },
             // 13. 엑셀 업로드 버튼
-            { selector: '#excelUploadBtn', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, function: '엑셀 파일로 대량 등록' },
+            { selector: '#excelUploadBtn', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, description: '엑셀 대량 등록', function: '파일 업로드 모달 열기' },
             // 14. 엑셀 다운로드 버튼
-            { selector: '#excelDownloadBtn', title: '엑셀 다운로드', position: { top: '-5px', right: '-10px' }, function: '주소록 엑셀 내보내기' },
+            { selector: '#excelDownloadBtn', title: '엑셀 다운로드', position: { top: '-5px', right: '-10px' }, description: '주소록 내보내기', function: 'Excel 파일 다운로드' },
+            
+            // ===== 주소 테이블 =====
             // 15. 주소 테이블
-            { selector: '#addressTable', title: '주소 테이블', position: { top: '10px', left: '10px' }, function: '주소 목록 표시', behavior: ['체크박스 다중 선택', '인라인 편집'] },
+            { selector: '#addressTable', title: '주소 테이블', position: { top: '10px', left: '10px' }, description: '주소 목록', function: '연락처 표시/편집', behavior: ['인라인 편집', '다중 선택'] },
             // 16. 전체 선택 체크박스
-            { selector: '#selectAllAddresses', title: '전체 선택', position: { top: '-5px', left: '-10px' }, function: '모든 주소 선택/해제' },
+            { selector: '#selectAllAddresses', title: '전체 선택', position: { top: '-5px', left: '-10px' }, description: '모든 주소 선택', function: '전체 선택/해제' },
             // 17. 선택 삭제 버튼
-            { selector: '#deleteSelectedBtn', title: '선택 삭제', position: { top: '-5px', left: '-10px' }, function: '선택한 주소 삭제', api: 'DELETE /api/addressbook' },
+            { selector: '#deleteSelectedBtn', title: '선택 삭제', position: { top: '-5px', left: '-10px' }, description: '선택 주소 삭제', function: '체크된 항목 삭제', api: 'DELETE /api/addressbook' },
             // 18. 페이지네이션
-            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' }
+            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, description: '페이지 이동', function: '목록 페이지 전환' },
+            
+            // ===== 그룹 생성 모달 =====
+            // 19. 그룹 생성 모달
+            { selector: '#addGroupModal', title: '그룹 생성 모달', position: { top: '20px', left: '20px' }, description: '새 그룹 생성 팝업', function: '그룹명 입력 및 생성' },
+            // 20. 그룹명 입력
+            { selector: '#addGroupModal input', title: '그룹명 입력', position: { top: '-5px', left: '-10px' }, description: '새 그룹 이름', function: '그룹 식별명 지정', tags: [{ text: '필수', type: 'required' }] },
+            // 21. 그룹 생성 취소
+            { selector: '#addGroupModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '그룹 생성 취소', function: '모달 닫기' },
+            // 22. 그룹 생성 확인
+            { selector: '#addGroupModal .btn-primary', title: '생성 버튼', position: { top: '-5px', right: '-10px' }, description: '그룹 생성 실행', function: '새 그룹 저장', api: 'POST /api/addressbook/groups' },
+            
+            // ===== 주소 추가 모달 =====
+            // 23. 주소 추가 모달
+            { selector: '#addAddressModal', title: '주소 추가 모달', position: { top: '20px', left: '20px' }, description: '새 연락처 추가 팝업', function: '연락처 정보 입력' },
+            // 24. 이름 입력
+            { selector: '#addAddressModal input[placeholder*="이름"]', title: '이름 입력', position: { top: '-5px', left: '-10px' }, description: '연락처 이름', function: '이름 입력' },
+            // 25. 전화번호 입력
+            { selector: '#addAddressModal input[placeholder*="전화번호"]', title: '전화번호 입력', position: { top: '-5px', left: '-10px' }, description: '연락처 전화번호', function: '전화번호 입력', tags: [{ text: '필수', type: 'required' }] },
+            // 26. 주소 추가 취소
+            { selector: '#addAddressModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '추가 취소', function: '모달 닫기' },
+            // 27. 주소 추가 확인
+            { selector: '#addAddressModal .btn-primary', title: '추가 버튼', position: { top: '-5px', right: '-10px' }, description: '주소 추가 실행', function: '연락처 저장', api: 'POST /api/addressbook' },
+            
+            // ===== 엑셀 업로드 모달 =====
+            // 28. 엑셀 업로드 모달
+            { selector: '#excelUploadModal', title: '엑셀 업로드 모달', position: { top: '20px', left: '20px' }, description: '대량 등록 팝업', function: '엑셀 파일 업로드' },
+            // 29. 파일 드롭존
+            { selector: '#excelUploadModal .drop-zone', title: '파일 드롭존', position: { top: '10px', left: '10px' }, description: '파일 선택 영역', function: '드래그앤드롭 또는 클릭' },
+            // 30. 샘플 다운로드
+            { selector: '#excelUploadModal a', title: '샘플 다운로드', position: { top: '-5px', right: '-10px' }, description: '샘플 파일 다운로드', function: '업로드 양식 제공' },
+            // 31. 업로드 취소
+            { selector: '#excelUploadModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '업로드 취소', function: '모달 닫기' },
+            // 32. 업로드 확인
+            { selector: '#excelUploadModal .btn-primary', title: '업로드 버튼', position: { top: '-5px', right: '-10px' }, description: '파일 업로드 실행', function: '엑셀 데이터 등록', api: 'POST /api/addressbook/upload' },
+            
+            // ===== 삭제 확인 모달 =====
+            // 33. 삭제 모달
+            { selector: '#deleteModal', title: '삭제 확인 모달', position: { top: '20px', left: '20px' }, description: '삭제 확인 팝업', function: '삭제 전 확인' },
+            // 34. 삭제 취소
+            { selector: '#deleteModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '삭제 취소', function: '모달 닫기' },
+            // 35. 삭제 확인
+            { selector: '#deleteModal .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, description: '삭제 실행', function: '선택 항목 삭제', api: 'DELETE /api/addressbook' }
         ];
         initSpecOverlay(specData);
     </script>
