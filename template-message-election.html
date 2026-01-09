@@ -1942,71 +1942,401 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
-            // === 메인 페이지 ===
+            // ===== 페이지 기본 구조 =====
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '선거문자 템플릿 페이지 제목 및 설명' },
-            // 2-6. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '선거문자 관련 탭 전환 메뉴' },
-            { selector: '#tabMenu .tab-item:nth-child(1)', title: '선거문자 발송 탭', position: { top: '-5px', left: '-10px' }, function: '선거문자 발송 페이지로 이동' },
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '주소록 탭', position: { top: '-5px', left: '-10px' }, function: '선거용 주소록 관리 페이지로 이동' },
-            { selector: '#tabMenu .tab-item:nth-child(3)', title: '수신거부 탭', position: { top: '-5px', left: '-10px' }, function: '선거문자 수신거부 관리 페이지로 이동' },
-            { selector: '#tabMenu .tab-item:nth-child(4)', title: '템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '선거문자 템플릿 관리 (현재 페이지)' },
-            // 7-11. 통계 섹션
-            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, function: '선거문자 템플릿 현황 통계 카드' },
-            { selector: '#statsSection .stat-card:nth-child(1)', title: '전체 템플릿', position: { top: '-5px', left: '-10px' }, function: '등록된 전체 템플릿 수 표시' },
-            { selector: '#statsSection .stat-card:nth-child(2)', title: 'SMS 템플릿', position: { top: '-5px', left: '-10px' }, function: 'SMS 타입 템플릿 수' },
-            { selector: '#statsSection .stat-card:nth-child(3)', title: 'LMS 템플릿', position: { top: '-5px', left: '-10px' }, function: 'LMS 타입 템플릿 수' },
-            { selector: '#statsSection .stat-card:nth-child(4)', title: 'MMS 템플릿', position: { top: '-5px', right: '-10px' }, function: 'MMS 타입 템플릿 수' },
-            // 12-16. 검색 섹션
-            { selector: '#searchSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, function: '템플릿 검색 및 필터링 영역' },
-            { selector: '#searchFilterSection input[type="text"]', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '템플릿명 또는 내용으로 검색' },
-            { selector: '#searchFilterSection .form-select', title: '타입 필터', position: { top: '-5px', left: '-10px' }, function: 'SMS/LMS/MMS 타입별 필터링' },
-            { selector: '#searchFilterSection .btn-primary', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, function: '검색 실행', api: 'GET /api/templates/election' },
-            { selector: '#searchFilterSection .btn-outline', title: '초기화 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 조건 초기화' },
-            // 17-20. 템플릿 목록 액션
-            { selector: '#templateListSection', title: '템플릿 목록 섹션', position: { top: '10px', left: '10px' }, function: '선거문자 템플릿 카드 그리드 표시' },
-            { selector: '#addTemplateBtn', title: '새 템플릿 등록', position: { top: '-10px', left: '-15px' }, function: '새 선거문자 템플릿 등록', behavior: ['[선거] 문구 자동 포함', '후보자/정당명 필수', '금지어 자동 검출'] },
-            { selector: '#batchDeleteBtn', title: '일괄 삭제', position: { top: '-10px', left: '-15px' }, function: '선택된 템플릿 일괄 삭제', api: 'DELETE /api/templates/batch' },
-            { selector: '#exportBtn', title: '내보내기', position: { top: '-10px', right: '-15px' }, function: '템플릿 데이터 Excel/CSV로 내보내기' },
-            // 21-22. 템플릿 그리드
-            { selector: '#templateGrid', title: '템플릿 카드 목록', position: { top: '10px', left: '10px' }, function: '선거문자 템플릿 카드 그리드 표시' },
-            { selector: '#templateGrid .template-item:first-child', title: '템플릿 카드', position: { top: '-5px', left: '-10px' }, function: '개별 템플릿 정보 카드', behavior: ['미리보기/수정/복사/삭제 버튼'] },
-            // 23. 페이지네이션
-            { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, function: '템플릿 목록 페이지 이동' },
-            
-            // === 템플릿 등록/수정 모달 ===
-            { selector: '#addTemplateModal', title: '템플릿 등록 모달', position: { top: '10px', left: '10px' }, function: '새 선거문자 템플릿 등록/수정 폼' },
-            { selector: '#addTemplateModal .modal-header', title: '모달 헤더', position: { top: '-5px', left: '-10px' }, function: '템플릿 등록 제목 및 닫기 버튼' },
-            { selector: '#templateForm', title: '템플릿 폼', position: { top: '5px', left: '5px' }, function: '템플릿 입력 폼 영역' },
-            { selector: '#templateForm input[type="text"]:first-of-type', title: '템플릿명 입력', position: { top: '-5px', left: '-10px' }, function: '템플릿 이름 입력', tags: [{ text: '필수', type: 'required' }] },
-            { selector: '#templateForm input[name="messageType"]', title: '메시지 타입 선택', position: { top: '-5px', left: '-10px' }, function: 'SMS/LMS/MMS 타입 선택', tags: [{ text: '필수', type: 'required' }] },
-            { selector: '#titleGroup', title: '제목 입력 그룹', position: { top: '-5px', left: '-10px' }, function: 'LMS/MMS용 제목 입력' },
-            { selector: '#candidateNameInput', title: '후보자/정당명', position: { top: '-5px', left: '-10px' }, function: '후보자명 또는 정당명 입력', behavior: ['[선거] 문구 옆에 표시됨'], tags: [{ text: '필수', type: 'required' }] },
-            { selector: '#templateForm .flex.gap-2.mb-1 button', title: '변수 삽입 버튼', position: { top: '-5px', left: '-10px' }, function: '메시지에 변수 삽입', behavior: ['커서 위치에 변수 삽입'] },
-            { selector: '#templateContent', title: '메시지 내용', position: { top: '5px', right: '5px' }, function: '선거문자 메시지 내용 입력', tags: [{ text: '필수', type: 'required' }] },
-            { selector: '#byteCounter', title: '바이트 카운터', position: { top: '-5px', right: '-10px' }, function: '현재 입력된 바이트 수 표시' },
-            { selector: '#forbiddenWordWarning', title: '금지어 경고', position: { top: '-5px', left: '-10px' }, function: '선거법 위반 금지어 검출 시 경고 표시', behavior: ['허위, 비방 등 금지어 자동 검출', '발송 전 수정 필요'] },
-            { selector: '#rejectNumberInput', title: '080 수신거부 번호', position: { top: '-5px', left: '-10px' }, function: '080 수신거부 번호 선택', tags: [{ text: '필수', type: 'required' }] },
-            { selector: '#imageGroup', title: '이미지 첨부 그룹', position: { top: '-5px', left: '-10px' }, function: 'MMS용 이미지 첨부' },
-            { selector: '#addImageBtn', title: '이미지 추가 버튼', position: { top: '-5px', left: '-10px' }, function: '이미지 파일 선택 창 열기' },
-            { selector: '#imagePreview', title: '이미지 미리보기', position: { top: '-5px', right: '-10px' }, function: '첨부된 이미지 미리보기 및 삭제' },
-            { selector: '#templateForm textarea:last-of-type', title: '메모 입력', position: { top: '-5px', left: '-10px' }, function: '템플릿 설명 또는 용도 메모', tags: [{ text: '선택', type: 'optional' }] },
-            { selector: '#addTemplateModal .preview-phone', title: '미리보기 영역', position: { top: '5px', right: '5px' }, function: '스마트폰 형태 메시지 미리보기' },
-            { selector: '#previewContent', title: '미리보기 내용', position: { top: '5px', left: '5px' }, function: '[선거], 후보자명, 내용, 수신거부 번호 실시간 반영' },
-            { selector: '#addTemplateModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '모달 닫기' },
-            { selector: '#addTemplateModal .modal-footer .btn-primary', title: '저장 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 저장', api: 'POST /api/templates/election' },
-            
-            // === 템플릿 미리보기 모달 ===
-            { selector: '#previewModal', title: '템플릿 미리보기 모달', position: { top: '10px', left: '10px' }, function: '저장된 템플릿 미리보기' },
-            { selector: '#previewTemplateContent', title: '미리보기 내용', position: { top: '5px', left: '5px' }, function: '템플릿 메시지 내용 표시' },
-            { selector: '#previewModal .btn-primary', title: '발송하기 버튼', position: { top: '-5px', right: '-10px' }, function: '이 템플릿으로 선거문자 발송 페이지 이동' },
-            
-            // === 삭제 확인 모달 ===
-            { selector: '#deleteModal', title: '삭제 확인 모달', position: { top: '10px', left: '10px' }, function: '템플릿 삭제 전 확인' },
-            { selector: '#deleteModal .alert-warning', title: '삭제 경고', position: { top: '-5px', left: '-10px' }, function: '삭제 시 복구 불가 경고 메시지' },
-            { selector: '#deleteModal .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 삭제 실행', api: 'DELETE /api/templates/{id}' }
+            {
+                selector: '#pageHeader',
+                title: '페이지 헤더',
+                position: { top: '10px', right: '10px' },
+                function: '선거문자 템플릿 관리 페이지의 타이틀 영역',
+                description: '선거문자 템플릿 관리 페이지 제목 및 설명'
+            },
+            // 2. 탭 메뉴
+            {
+                selector: '#tabMenu',
+                title: '탭 메뉴',
+                position: { top: '5px', left: '10px' },
+                function: '선거문자 관련 기능 탭',
+                behavior: [
+                    '선거문자 발송',
+                    '선거문자 템플릿 (현재)'
+                ]
+            },
+            // ===== 통계 영역 =====
+            // 3. 통계 요약 섹션
+            {
+                selector: '#statsSection',
+                title: '통계 요약',
+                position: { top: '10px', left: '10px' },
+                function: '선거문자 템플릿 현황 통계 카드',
+                api: 'GET /api/election/templates/stats'
+            },
+            // 4. 전체 템플릿 수
+            {
+                selector: '#statsSection .stat-card:nth-child(1)',
+                title: '전체 템플릿',
+                position: { top: '-5px', left: '-10px' },
+                function: '등록된 전체 템플릿 수 표시'
+            },
+            // 5. SMS 템플릿 수
+            {
+                selector: '#statsSection .stat-card:nth-child(2)',
+                title: 'SMS 템플릿',
+                position: { top: '-5px', left: '-10px' },
+                function: 'SMS 타입 템플릿 수',
+                behavior: ['90바이트 이하 문자 템플릿']
+            },
+            // 6. LMS 템플릿 수
+            {
+                selector: '#statsSection .stat-card:nth-child(3)',
+                title: 'LMS 템플릿',
+                position: { top: '-5px', left: '-10px' },
+                function: 'LMS 타입 템플릿 수',
+                behavior: ['2,000바이트 이하 장문 문자 템플릿']
+            },
+            // 7. MMS 템플릿 수
+            {
+                selector: '#statsSection .stat-card:nth-child(4)',
+                title: 'MMS 템플릿',
+                position: { top: '-5px', right: '-10px' },
+                function: 'MMS 타입 템플릿 수',
+                behavior: ['이미지 포함 멀티미디어 문자 템플릿']
+            },
+            // ===== 검색 영역 =====
+            // 8. 검색 및 필터 섹션
+            {
+                selector: '#searchFilterSection',
+                title: '검색 및 필터',
+                position: { top: '10px', left: '10px' },
+                function: '템플릿 검색 및 필터링 영역'
+            },
+            // 9. 검색어 입력
+            {
+                selector: '#searchFilterSection input[type="text"]',
+                title: '검색 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '템플릿명 또는 내용으로 검색',
+                behavior: ['입력 후 검색 버튼 클릭 또는 Enter']
+            },
+            // 10. 메시지 타입 필터
+            {
+                selector: '#searchFilterSection .form-select',
+                title: '타입 필터',
+                position: { top: '-5px', left: '-10px' },
+                function: 'SMS/LMS/MMS 타입별 필터링',
+                behavior: ['전체/SMS/LMS/MMS 선택']
+            },
+            // 11. 검색 버튼
+            {
+                selector: '#searchFilterSection .btn-primary',
+                title: '검색 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '검색 조건으로 템플릿 조회',
+                api: 'GET /api/election/templates?keyword={keyword}&type={type}'
+            },
+            // 12. 초기화 버튼
+            {
+                selector: '#searchFilterSection .btn-outline',
+                title: '초기화 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '검색 조건 초기화',
+                behavior: ['모든 필터 해제 후 전체 목록 표시']
+            },
+            // ===== 템플릿 목록 영역 =====
+            // 13. 템플릿 목록 섹션
+            {
+                selector: '#templateListSection',
+                title: '템플릿 목록 섹션',
+                position: { top: '10px', left: '10px' },
+                function: '선거문자 템플릿 카드 그리드 영역'
+            },
+            // 14. 새 템플릿 등록 버튼
+            {
+                selector: '#addTemplateBtn',
+                title: '새 템플릿 등록',
+                position: { top: '-5px', left: '-10px' },
+                function: '새 선거문자 템플릿 등록 모달 열기',
+                behavior: [
+                    '(선거운동정보) 필수 입력',
+                    '공직선거법 금지어 자동 검출',
+                    '후보자/정당명 필수 입력'
+                ]
+            },
+            // 15. 일괄 삭제 버튼
+            {
+                selector: '#batchDeleteBtn',
+                title: '일괄 삭제',
+                position: { top: '-5px', left: '-10px' },
+                function: '선택된 템플릿 일괄 삭제',
+                behavior: ['체크박스 선택된 템플릿만 삭제'],
+                api: 'DELETE /api/election/templates/batch'
+            },
+            // 16. 내보내기 버튼
+            {
+                selector: '#exportBtn',
+                title: '내보내기',
+                position: { top: '-5px', right: '-10px' },
+                function: '템플릿 데이터 Excel/CSV로 내보내기',
+                behavior: ['현재 필터 조건에 해당하는 템플릿 목록 다운로드']
+            },
+            // 17. 템플릿 카드 그리드
+            {
+                selector: '#templateGrid',
+                title: '템플릿 카드 목록',
+                position: { top: '10px', left: '10px' },
+                function: '선거문자 템플릿 카드 그리드 표시',
+                behavior: [
+                    '카드 형태로 템플릿 표시',
+                    '템플릿명, 타입, 내용 미리보기',
+                    '등록일 표시'
+                ]
+            },
+            // 18. 개별 템플릿 카드
+            {
+                selector: '#templateGrid .template-item:first-child',
+                title: '템플릿 카드',
+                position: { top: '-5px', left: '-10px' },
+                function: '개별 템플릿 정보 카드',
+                behavior: [
+                    '체크박스: 일괄 작업용 선택',
+                    '미리보기: 전체 내용 확인 모달',
+                    '수정: 템플릿 편집 모달',
+                    '복사: 템플릿 복제',
+                    '삭제: 템플릿 삭제'
+                ]
+            },
+            // 19. 페이지네이션
+            {
+                selector: '#pagination',
+                title: '페이지네이션',
+                position: { top: '5px', left: '50%' },
+                function: '템플릿 목록 페이지 이동',
+                behavior: [
+                    '이전/다음 페이지 버튼',
+                    '페이지 번호 직접 선택',
+                    '페이지당 12개 표시'
+                ]
+            },
+            // ===== 템플릿 등록/수정 모달 =====
+            // 20. 템플릿 등록 모달
+            {
+                selector: '#addTemplateModal',
+                title: '템플릿 등록 모달',
+                position: { top: '60px', left: '20px' },
+                function: '새 선거문자 템플릿 등록/수정 폼'
+            },
+            // 21. 템플릿명 입력
+            {
+                selector: '#templateForm input[type="text"]:first-of-type',
+                title: '템플릿명 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '템플릿 이름 입력 (목록에서 식별용)',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 22. 메시지 타입 선택
+            {
+                selector: '#templateForm input[name="messageType"]',
+                title: '메시지 타입 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: 'SMS/LMS/MMS 타입 선택',
+                behavior: [
+                    'SMS: 90바이트, 25원/건',
+                    'LMS: 2,000바이트, 55원/건',
+                    'MMS: 이미지 포함, 110원/건'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 23. 제목 입력 (LMS/MMS)
+            {
+                selector: '#titleGroup',
+                title: '제목 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: 'LMS/MMS용 제목 입력',
+                behavior: ['LMS/MMS 선택 시에만 표시', '최대 40자']
+            },
+            // 24. 선거운동정보 입력
+            {
+                selector: '#candidateNameInput',
+                title: '선거운동정보',
+                position: { top: '-5px', left: '-10px' },
+                function: '공직선거법 필수 문구 "(선거운동정보)" 입력',
+                behavior: [
+                    '최대 40바이트 (한글 20자)',
+                    '메시지 맨 앞에 자동 삽입',
+                    '예: (선거운동정보)홍길동,기호1번'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 25. 변수 삽입 버튼
+            {
+                selector: '#templateForm .flex.gap-2.mb-1 button',
+                title: '변수 삽입 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '메시지에 개인화 변수 삽입',
+                behavior: [
+                    '#{이름}: 수신자 이름',
+                    '#{전화번호}: 수신자 번호',
+                    '커서 위치에 변수 삽입'
+                ]
+            },
+            // 26. 메시지 내용
+            {
+                selector: '#templateContent',
+                title: '메시지 내용',
+                position: { top: '5px', right: '5px' },
+                function: '선거문자 메시지 본문 입력',
+                behavior: [
+                    '실시간 바이트 수 카운트',
+                    '공직선거법 금지어 실시간 검사',
+                    '90바이트 초과 시 LMS 권장'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 27. 바이트 카운터
+            {
+                selector: '#byteCounter',
+                title: '바이트 카운터',
+                position: { top: '-3px', left: '-10px' },
+                function: '입력된 메시지 바이트 수 표시',
+                behavior: [
+                    '한글 2바이트, 영문 1바이트',
+                    '초과 시 색상 변경 경고'
+                ]
+            },
+            // 28. 금지어 경고
+            {
+                selector: '#forbiddenWordWarning',
+                title: '금지어 경고',
+                position: { top: '5px', left: '5px' },
+                function: '공직선거법 금지어 감지 시 경고 표시',
+                behavior: [
+                    '허위사실, 비방 등 금지어 자동 검출',
+                    '발견 시 빨간색 경고 박스 표시',
+                    '저장 전 수정 필요'
+                ]
+            },
+            // 29. 이미지 첨부 그룹 (MMS)
+            {
+                selector: '#imageGroup',
+                title: '이미지 첨부',
+                position: { top: '5px', left: '5px' },
+                function: 'MMS용 이미지 첨부 영역',
+                behavior: [
+                    'MMS 선택 시에만 표시',
+                    'jpg, png, gif 지원',
+                    '최대 300KB'
+                ]
+            },
+            // 30. 이미지 추가 버튼
+            {
+                selector: '#addImageBtn',
+                title: '이미지 추가 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '이미지 파일 선택 창 열기'
+            },
+            // 31. 이미지 미리보기
+            {
+                selector: '#imagePreview',
+                title: '이미지 미리보기',
+                position: { top: '5px', right: '5px' },
+                function: '첨부된 이미지 미리보기 및 삭제',
+                behavior: ['X 버튼 클릭으로 이미지 제거']
+            },
+            // 32. 메모 입력
+            {
+                selector: '#templateForm textarea:last-of-type',
+                title: '메모 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '템플릿 설명 또는 용도 메모 (내부 관리용)',
+                tags: [{ text: '선택', type: 'optional' }]
+            },
+            // 33. 메시지 미리보기
+            {
+                selector: '#addTemplateModal .preview-phone',
+                title: '메시지 미리보기',
+                position: { top: '5px', left: '5px' },
+                function: '스마트폰 형태 메시지 미리보기',
+                behavior: [
+                    '(선거운동정보) + 본문 실시간 반영',
+                    '변수는 예시 값으로 표시'
+                ]
+            },
+            // 34. 취소 버튼
+            {
+                selector: '#addTemplateModal .modal-footer .btn-outline',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '모달 닫기 (입력 내용 폐기)'
+            },
+            // 35. 저장 버튼
+            {
+                selector: '#addTemplateModal .modal-footer .btn-primary',
+                title: '저장 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '템플릿 저장 실행',
+                behavior: [
+                    '필수값 검증',
+                    '금지어 최종 검사',
+                    '저장 후 목록 갱신'
+                ],
+                api: 'POST /api/election/templates',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            // ===== 템플릿 미리보기 모달 =====
+            // 36. 템플릿 미리보기 모달
+            {
+                selector: '#previewModal',
+                title: '템플릿 미리보기 모달',
+                position: { top: '60px', left: '20px' },
+                function: '저장된 템플릿 전체 내용 미리보기'
+            },
+            // 37. 미리보기 내용
+            {
+                selector: '#previewTemplateContent',
+                title: '미리보기 내용',
+                position: { top: '5px', left: '5px' },
+                function: '템플릿 메시지 전체 내용 표시'
+            },
+            // 38. 발송하기 버튼
+            {
+                selector: '#previewModal .btn-primary',
+                title: '발송하기 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '이 템플릿으로 선거문자 발송 페이지 이동',
+                behavior: ['템플릿 내용이 발송 폼에 자동 입력됨']
+            },
+            // ===== 삭제 확인 모달 =====
+            // 39. 삭제 확인 모달
+            {
+                selector: '#deleteModal',
+                title: '삭제 확인 모달',
+                position: { top: '60px', left: '20px' },
+                function: '템플릿 삭제 전 최종 확인'
+            },
+            // 40. 삭제 경고 메시지
+            {
+                selector: '#deleteModal .alert-warning',
+                title: '삭제 경고',
+                position: { top: '-5px', left: '-10px' },
+                function: '삭제 시 복구 불가 경고 메시지'
+            },
+            // 41. 삭제 실행 버튼
+            {
+                selector: '#deleteModal .btn-danger',
+                title: '삭제 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '템플릿 삭제 실행',
+                api: 'DELETE /api/election/templates/{id}',
+                tags: [{ text: 'API', type: 'api' }]
+            }
         ];
-        initSpecOverlay(specData);
+
+        // 페이지 로드 완료 후 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initSpecOverlay(specData);
+            }, 500);
+        });
     </script>
 </body>
 </html>
