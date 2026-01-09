@@ -461,6 +461,8 @@
         const btn = document.querySelector('.spec-toggle-btn');
         
         if (isOverlayActive) {
+            // 마커 지연 생성 (최초 활성화 시에만)
+            createAllMarkers();
             document.body.classList.add('spec-overlay-active');
             btn.classList.add('active');
             btn.innerHTML = '✓ 화면설계 ON';
@@ -497,65 +499,53 @@
         }
     }
 
-    // MutationObserver로 모달 상태 변화 감지
+    // MutationObserver로 모달 상태 변화 감지 (최적화)
+    let modalObserver = null;
     function observeModalChanges() {
-        const observer = new MutationObserver((mutations) => {
-            let shouldCheck = false;
-            
-            mutations.forEach(mutation => {
-                // attribute 변경 (style, class 등)
-                if (mutation.type === 'attributes') {
-                    if (mutation.target.classList.contains('modal-overlay')) {
-                        shouldCheck = true;
-                    }
-                }
-                // 자식 노드 추가/제거
-                if (mutation.type === 'childList') {
-                    mutation.addedNodes.forEach(node => {
-                        if (node.nodeType === 1 && (node.classList?.contains('modal-overlay') || node.querySelector?.('.modal-overlay'))) {
-                            shouldCheck = true;
-                        }
-                    });
-                    mutation.removedNodes.forEach(node => {
-                        if (node.nodeType === 1 && node.classList?.contains('modal-overlay')) {
-                            shouldCheck = true;
-                        }
-                    });
-                }
-            });
-
-            if (shouldCheck) {
-                checkModalState();
-            }
+        if (modalObserver) return; // 이미 실행 중이면 스킵
+        
+        // 모달 요소만 직접 감시 (전체 body 감시 제거)
+        const modals = document.querySelectorAll('.modal-overlay');
+        if (modals.length === 0) return;
+        
+        modalObserver = new MutationObserver(() => {
+            requestAnimationFrame(checkModalState);
         });
 
-        // body와 모든 모달 요소 관찰
-        observer.observe(document.body, {
-            attributes: true,
-            childList: true,
-            subtree: true,
-            attributeFilter: ['style', 'class']
+        modals.forEach(modal => {
+            modalObserver.observe(modal, {
+                attributes: true,
+                attributeFilter: ['style', 'class']
+            });
         });
 
         // 초기 상태 체크
         checkModalState();
-
-        // 주기적 체크 (안전장치)
-        setInterval(checkModalState, 500);
     }
 
-    // 초기화
-    window.initSpecOverlay = function(data) {
-        specData = data;
-
-        // UI 요소 생성
-        createToggleButton();
-        currentTooltip = createTooltip();
-
-        // 마커 생성
+    // 마커 생성 여부
+    let markersCreated = false;
+    
+    // 마커 지연 생성
+    function createAllMarkers() {
+        if (markersCreated) return;
+        markersCreated = true;
+        
         specData.forEach((item, index) => {
             createMarker(item, index);
         });
+        
+        // 모달 감시 시작
+        observeModalChanges();
+    }
+
+    // 초기화 (버튼과 툴팁만 생성, 마커는 지연)
+    window.initSpecOverlay = function(data) {
+        specData = data;
+
+        // UI 요소만 생성 (마커는 버튼 클릭 시 생성)
+        createToggleButton();
+        currentTooltip = createTooltip();
 
         // 문서 클릭 시 툴팁 닫기
         document.addEventListener('click', (e) => {
@@ -565,9 +555,6 @@
             }
         });
 
-        // 모달 상태 감지 시작
-        observeModalChanges();
-
-        console.log('✅ Spec Overlay 초기화 완료 - ' + specData.length + '개 컴포넌트');
+        console.log('✅ Spec Overlay 준비 완료 - ' + specData.length + '개 컴포넌트 (지연 로딩)');
     };
 })();
