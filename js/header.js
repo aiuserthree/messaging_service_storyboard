@@ -18,8 +18,6 @@ function createHeader(activeMenu = '') {
             hasDropdown: true,
             items: [
                 { label: '선거문자 발송', url: 'message-send-election.html' },
-                { label: '선거문자 주소록', url: 'election-addressbook.html' },
-                { label: '수신거부관리', url: 'election-reject.html' },
                 { label: '선거문자 템플릿', url: 'template-message-election.html' }
             ]
         },
@@ -93,8 +91,6 @@ function createHeader(activeMenu = '') {
         'template-message.html': 'message',
         'template-message-ad.html': 'message',
         'message-send-election.html': 'election',
-        'election-addressbook.html': 'election',
-        'election-reject.html': 'election',
         'template-message-election.html': 'election',
         'kakao-send-alimtalk.html': 'kakao',
         'kakao-send-brandtalk.html': 'kakao',
