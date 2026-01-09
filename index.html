@@ -1826,194 +1826,325 @@
     <!-- 화면설계 오버레이 -->
     <script src="js/spec-overlay.js"></script>
     <script>
-        window.initSpecOverlay([
+        const specData = [
+            // ===== 히어로 영역 =====
+            // 1. 히어로 섹션
             {
                 selector: '#heroSection',
                 title: '히어로 섹션',
-                description: '메인 페이지 상단 첫 화면 영역',
-                function: '서비스 핵심 가치 전달 및 사용자 행동 유도',
-                behavior: ['페이지 로드 시 첫 번째로 노출되는 영역', '스크롤 애니메이션 적용 가능'],
-                position: { top: '20px', left: '20px' }
+                position: { top: '20px', left: '20px' },
+                function: '서비스 핵심 가치 전달 및 첫 인상 형성',
+                behavior: [
+                    '페이지 최상단 첫 화면 영역',
+                    '서비스 슬로건 및 주요 혜택 표시',
+                    '스크롤 애니메이션 적용 가능'
+                ]
             },
+            // 2. 견적 문의 버튼
             {
                 selector: '#heroCta',
                 title: '견적 문의 버튼',
-                description: '견적 상담 페이지로 이동하는 CTA 버튼',
-                function: '잠재 고객의 견적 문의 유도',
-                behavior: ['클릭 시 support-inquiry.html 페이지로 이동', '호버 시 스타일 변경'],
-                api: 'GET /support/inquiry',
-                position: { top: '-10px', left: '-15px' }
+                position: { top: '-10px', left: '-15px' },
+                function: '잠재 고객의 견적 상담 유도 (Primary CTA)',
+                behavior: [
+                    '클릭 시 support-inquiry.html 페이지로 이동',
+                    '호버 시 배경색 변경 및 상승 효과'
+                ]
             },
+            // ===== 가격 정보 영역 =====
+            // 3. 가격 탭 메뉴
             {
                 selector: '#pricingTabs',
                 title: '가격 탭 메뉴',
-                description: '서비스 유형별 가격 정보 전환 탭',
-                function: '문자/카카오/선거문자 가격표 전환',
-                behavior: ['탭 클릭 시 해당 서비스 가격 카드로 전환', '활성 탭 스타일 변경'],
-                position: { top: '-10px', left: '-15px' }
+                position: { top: '-10px', left: '-15px' },
+                function: '서비스 유형별 가격표 전환 탭',
+                behavior: [
+                    '문자(SMS/LMS/MMS), 카카오톡, 선거문자 3개 탭',
+                    '탭 클릭 시 해당 서비스 가격 카드로 전환',
+                    '활성 탭 하이라이트 표시'
+                ]
             },
+            // 4. 가격 카드 영역
             {
                 selector: '#pricingCards',
                 title: '가격 카드 영역',
-                description: 'SMS, LMS, MMS 가격 정보 카드',
-                function: '서비스별 단가 및 할인율 정보 제공',
-                behavior: ['탭 선택에 따라 내용 변경', '카드 호버 시 강조 효과'],
-                position: { top: '-10px', left: '-15px' }
+                position: { top: '-10px', left: '-15px' },
+                function: 'SMS/LMS/MMS 또는 알림톡/브랜드메시지 단가 표시',
+                behavior: [
+                    '탭 선택에 따라 카드 내용 동적 변경',
+                    '건당 단가, 대량 할인율 정보 포함',
+                    '카드 호버 시 강조 효과'
+                ]
             },
+            // ===== 배너 및 공지 영역 =====
+            // 5. 롤링 배너
             {
                 selector: '#bannerCarousel',
                 title: '롤링 배너',
-                description: '이벤트 및 가이드 안내 배너',
-                function: '프로모션 및 가이드 안내 노출',
-                behavior: ['자동 롤링 (5초 간격)', '좌우 화살표로 수동 전환', '클릭 시 해당 페이지 이동'],
-                position: { top: '20px', left: '20px' }
+                position: { top: '20px', left: '20px' },
+                function: '이벤트, 프로모션, 가이드 안내 배너 노출',
+                behavior: [
+                    '5초 간격 자동 롤링',
+                    '좌우 화살표 버튼으로 수동 전환',
+                    '인디케이터 클릭으로 직접 이동',
+                    '배너 클릭 시 해당 이벤트/가이드 페이지로 이동'
+                ]
             },
+            // 6. 공지사항 카드
             {
                 selector: '#noticeCard',
                 title: '공지사항 카드',
-                description: '최근 공지사항 목록 표시',
-                function: '서비스 관련 공지사항 빠른 확인',
-                behavior: ['최신 3개 공지 표시', '클릭 시 상세 페이지 이동', '더보기 클릭 시 전체 목록 이동'],
-                api: 'GET /notices?limit=3',
-                position: { top: '-10px', left: '-15px' }
+                position: { top: '-10px', left: '-15px' },
+                function: '최신 서비스 공지사항 빠른 확인',
+                behavior: [
+                    '최신 3개 공지 목록 표시',
+                    '제목 클릭 시 상세 페이지(support-notice-detail.html) 이동',
+                    '더보기 클릭 시 전체 목록(support-notice.html) 이동'
+                ],
+                api: 'GET /api/notices?limit=3'
             },
+            // ===== 서비스 소개 영역 =====
+            // 7. 서비스 카탈로그 섹션
             {
                 selector: '#serviceCatalogSection',
                 title: '서비스 카탈로그',
-                description: '제공 서비스 목록 카드 영역',
-                function: '주요 서비스 소개 및 페이지 연결',
-                behavior: ['서비스 카드 클릭 시 해당 서비스 페이지 이동', '카드 호버 시 상승 애니메이션'],
-                position: { top: '20px', left: '20px' }
+                position: { top: '20px', left: '20px' },
+                function: '제공 서비스 목록 카드형 소개',
+                behavior: [
+                    '일반문자, 광고문자, 알림톡, 브랜드메시지 등 서비스 카드',
+                    '카드 클릭 시 해당 서비스 발송 페이지로 이동',
+                    '카드 호버 시 상승 애니메이션'
+                ]
             },
+            // 8. 브랜드 메시지 섹션
             {
                 selector: '#brandMessageSection',
                 title: '브랜드 메시지 섹션',
-                description: '카카오 브랜드 메시지 서비스 소개',
-                function: '신규 서비스인 브랜드 메시지 홍보',
-                behavior: ['서비스 특징 시각적 표현', '자세히 보기 링크 제공'],
-                position: { top: '20px', left: '20px' }
+                position: { top: '20px', left: '20px' },
+                function: '카카오 브랜드 메시지 신규 서비스 홍보',
+                behavior: [
+                    '브랜드 메시지 특징 시각적 표현',
+                    '이미지, 카드, 버튼 등 다양한 형식 소개',
+                    '자세히 보기 버튼으로 상세 안내 페이지 이동'
+                ]
             },
+            // ===== FAQ 영역 =====
+            // 9. FAQ 섹션
             {
                 selector: '#faqSection',
                 title: 'FAQ 섹션',
-                description: '자주 묻는 질문 영역',
-                function: '사용자 궁금증 해결 및 CS 부담 감소',
-                behavior: ['질문 클릭 시 답변 아코디언 펼침/접힘', '전체 FAQ 링크 제공'],
-                position: { top: '20px', left: '20px' }
+                position: { top: '20px', left: '20px' },
+                function: '자주 묻는 질문으로 사용자 궁금증 해결',
+                behavior: [
+                    '주요 FAQ 5~7개 노출',
+                    '질문 클릭 시 답변 아코디언 펼침/접힘',
+                    'CS 문의 감소 효과'
+                ]
             },
+            // 10. 전체 FAQ 보기 링크
             {
                 selector: '#faqAllLink',
                 title: '전체 FAQ 보기',
-                description: 'FAQ 전체 목록 페이지 링크',
-                function: '모든 FAQ 확인 페이지로 이동',
-                behavior: ['클릭 시 support-faq.html 페이지로 이동'],
-                position: { top: '-10px', left: '-15px' }
+                position: { top: '-10px', left: '-15px' },
+                function: 'FAQ 전체 목록 페이지로 이동',
+                behavior: [
+                    '클릭 시 support-faq.html 이동',
+                    '카테고리별 전체 FAQ 확인 가능'
+                ]
             },
+            // 11. 1:1 문의 안내 영역
             {
                 selector: '#faqHelpArea',
                 title: '1:1 문의 안내',
-                description: '고객센터 문의 안내 영역',
-                function: 'FAQ에서 해결되지 않은 문의 유도',
-                behavior: ['클릭 시 1:1 문의 페이지 이동'],
-                position: { top: '-10px', left: '-15px' }
+                position: { top: '-10px', left: '-15px' },
+                function: 'FAQ로 해결되지 않는 문의 유도',
+                behavior: [
+                    '클릭 시 support-inquiry.html 이동',
+                    '고객센터 운영시간 안내 포함'
+                ]
             },
+            // ===== CTA 영역 =====
+            // 12. CTA 섹션
             {
                 selector: '#ctaSection',
                 title: 'CTA 섹션',
-                description: '대량발송 견적 상담 유도 영역',
-                function: '대량발송 고객 전환 유도',
-                behavior: ['서비스 소개서 다운로드 가능', '상담 신청 모달 연동'],
-                position: { top: '20px', left: '20px' }
+                position: { top: '20px', left: '20px' },
+                function: '대량발송 기업고객 전환 유도 영역',
+                behavior: [
+                    '서비스 소개서 다운로드 버튼',
+                    '견적 상담 신청 버튼',
+                    '기업 맞춤 상담 안내'
+                ]
             },
+            // 13. 서비스 소개서 다운로드 버튼
             {
                 selector: '#downloadGuideBtn',
                 title: '서비스 소개서 받기',
-                description: '서비스 소개서 PDF 다운로드 버튼',
-                function: '서비스 소개자료 제공',
-                behavior: ['클릭 시 PDF 파일 다운로드', '토스트 알림 표시'],
-                api: 'GET /downloads/service-guide.pdf',
-                position: { top: '-10px', left: '-15px' }
+                position: { top: '-10px', left: '-15px' },
+                function: '서비스 소개서 PDF 다운로드',
+                behavior: [
+                    '클릭 시 PDF 파일 다운로드',
+                    '다운로드 완료 토스트 알림 표시'
+                ],
+                api: 'GET /downloads/service-guide.pdf'
             },
+            // 14. 상담 신청 버튼
             {
                 selector: '#consultationBtn',
                 title: '상담 신청서 작성',
-                description: '견적 상담 신청 모달 호출 버튼',
-                function: '대량발송 견적 상담 신청',
-                behavior: ['클릭 시 상담 신청 모달 표시', '폼 제출 시 상담 요청 접수'],
-                api: 'POST /consultation/request',
-                position: { top: '-10px', left: '-15px' }
+                position: { top: '-10px', left: '-15px' },
+                function: '대량발송 견적 상담 신청 모달 호출',
+                behavior: [
+                    '클릭 시 상담 신청 모달 오픈',
+                    '기업 정보 입력 후 상담 요청'
+                ]
             },
-            // === 상담 신청서 모달 ===
+            // ===== 상담 신청서 모달 =====
+            // 15. 상담 신청서 모달
             {
                 selector: '#consultationModal',
                 title: '상담 신청서 모달',
+                position: { top: '60px', left: '20px' },
                 function: '대량발송 견적 상담 신청 폼',
-                behavior: ['기업 정보 입력', '관심 서비스 선택', '문의 내용 작성'],
-                api: 'POST /api/consultation',
-                position: { top: '60px', left: '20px' }
+                behavior: [
+                    '기업 정보 입력 (회사명, 담당자, 연락처, 이메일)',
+                    '관심 서비스 유형 체크박스 선택',
+                    '예상 발송량 선택',
+                    '추가 문의사항 입력',
+                    'ESC 또는 배경 클릭으로 닫기 가능'
+                ],
+                api: 'POST /api/consultation'
             },
+            // 16. 모달 닫기 버튼
             {
                 selector: '#consultationModal .modal-close',
                 title: '모달 닫기',
-                function: '상담 신청 취소',
-                position: { top: '5px', right: '5px' }
+                position: { top: '5px', right: '5px' },
+                function: '상담 신청 취소 및 모달 닫기',
+                behavior: [
+                    '클릭 시 모달 닫힘',
+                    '입력 내용 초기화'
+                ]
             },
+            // 17. 회사명 입력
             {
                 selector: '#companyName',
                 title: '회사명 입력',
-                function: '기업/단체 이름 입력',
-                tags: [{ text: '필수', type: 'required' }],
-                position: { top: '-5px', left: '-10px' }
+                position: { top: '-5px', left: '-10px' },
+                function: '상담 요청 기업/단체명 입력',
+                behavior: [
+                    '필수 입력 항목',
+                    '미입력 시 제출 불가'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
             },
+            // 18. 담당자명 입력
             {
                 selector: '#contactName',
                 title: '담당자명 입력',
-                function: '문의 담당자 성함',
-                tags: [{ text: '필수', type: 'required' }],
-                position: { top: '-5px', left: '-10px' }
+                position: { top: '-5px', left: '-10px' },
+                function: '상담 담당자 성함 입력',
+                behavior: [
+                    '필수 입력 항목',
+                    '상담 회신 시 호칭으로 사용'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
             },
+            // 19. 연락처 입력
             {
                 selector: '#contactPhone',
                 title: '연락처 입력',
-                function: '연락 가능한 전화번호',
-                tags: [{ text: '필수', type: 'required' }],
-                position: { top: '-5px', left: '-10px' }
+                position: { top: '-5px', left: '-10px' },
+                function: '연락 가능한 전화번호 입력',
+                behavior: [
+                    '필수 입력 항목',
+                    '010-0000-0000 형식 자동 포맷팅',
+                    '유선/휴대폰 모두 가능'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
             },
+            // 20. 이메일 입력
             {
                 selector: '#contactEmail',
                 title: '이메일 입력',
-                function: '견적서 및 답변 수신 이메일',
-                tags: [{ text: '필수', type: 'required' }],
-                position: { top: '-5px', left: '-10px' }
+                position: { top: '-5px', left: '-10px' },
+                function: '견적서 및 상담 답변 수신 이메일',
+                behavior: [
+                    '필수 입력 항목',
+                    '이메일 형식 유효성 검사',
+                    '견적서 PDF 발송 주소로 활용'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
             },
+            // 21. 메시지 유형 선택 (체크박스)
             {
                 selector: '#consultationForm input[name="messageType"]',
                 title: '메시지 유형 선택',
-                function: '관심 있는 메시지 서비스 선택',
-                behavior: ['일반문자', '광고문자', '선거문자', '카카오 알림톡', '카카오 브랜드메시지'],
-                position: { top: '-5px', left: '-40px' }
+                position: { top: '-5px', left: '-40px' },
+                function: '관심 있는 메시지 서비스 선택 (복수 선택 가능)',
+                behavior: [
+                    '일반문자(SMS/LMS/MMS)',
+                    '광고문자',
+                    '선거문자',
+                    '카카오 알림톡',
+                    '카카오 브랜드메시지',
+                    '최소 1개 이상 선택 권장'
+                ]
             },
+            // 22. 예상 발송량 선택
+            {
+                selector: '#consultationForm select',
+                title: '예상 발송량 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '월간 예상 메시지 발송 건수 선택',
+                behavior: [
+                    '5만건 이하',
+                    '5만~10만건',
+                    '10만~50만건',
+                    '50만~100만건',
+                    '100만건 이상',
+                    '대량 할인 견적 산정 기준'
+                ]
+            },
+            // 23. 추가 문의사항
             {
                 selector: '#consultationForm textarea',
                 title: '추가 문의사항',
+                position: { top: '5px', right: '5px' },
                 function: '상세 요청사항 및 질문 입력',
-                position: { top: '5px', right: '5px' }
+                behavior: [
+                    '선택 입력 항목',
+                    '특별 요청사항, 궁금한 점 자유롭게 입력',
+                    '최대 500자'
+                ]
             },
+            // 24. 취소 버튼
             {
                 selector: '#consultationModal .modal-footer .btn-outline',
                 title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
                 function: '상담 신청 취소 및 모달 닫기',
-                position: { top: '-5px', left: '-10px' }
+                behavior: [
+                    '클릭 시 모달 닫힘',
+                    '입력 내용 초기화'
+                ]
             },
+            // 25. 신청하기 버튼
             {
                 selector: '#consultationModal .modal-footer .btn-primary',
                 title: '신청하기 버튼',
+                position: { top: '-5px', right: '-10px' },
                 function: '상담 신청 제출',
+                behavior: [
+                    '필수 입력값 검증',
+                    '검증 실패 시 에러 메시지 표시',
+                    '성공 시 완료 토스트 표시 후 모달 닫힘'
+                ],
                 api: 'POST /api/consultation',
-                tags: [{ text: 'API', type: 'api' }],
-                position: { top: '-5px', right: '-10px' }
+                tags: [{ text: 'API', type: 'api' }]
             }
-        ]);
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>

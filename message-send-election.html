@@ -4005,48 +4005,253 @@ if (document.readyState === 'loading') {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // ===== 페이지 기본 구조 =====
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '선거문자 발송 페이지 제목' },
+            {
+                selector: '#pageHeader',
+                title: '페이지 헤더',
+                position: { top: '10px', left: '-15px' },
+                function: '선거문자 발송 페이지 타이틀 및 설명',
+                behavior: [
+                    '공직선거법 준수 안내 포함',
+                    '선거회원 전용 메뉴'
+                ]
+            },
             // 2. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '선거문자 탭 전환' },
+            {
+                selector: '#tabMenu',
+                title: '탭 메뉴',
+                position: { top: '-10px', left: '10px' },
+                function: '선거문자 관련 하위 페이지 네비게이션',
+                behavior: [
+                    '선거문자 발송/주소록/수신거부/템플릿 4개 탭',
+                    '활성 탭 하이라이트 표시'
+                ]
+            },
             // 3. 선거문자 발송 탭
-            { selector: '#tabMenu .tab-item:nth-child(1)', title: '선거문자 발송 탭', position: { top: '-5px', left: '-10px' }, function: '선거문자 발송 (현재)' },
+            {
+                selector: '#tabMenu .tab-item:nth-child(1)',
+                title: '선거문자 발송 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '선거문자 발송 페이지 (현재)',
+                behavior: ['활성 상태 스타일 적용']
+            },
             // 4. 주소록 탭
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '주소록 탭', position: { top: '-5px', left: '-10px' }, function: '선거용 주소록 관리' },
+            {
+                selector: '#tabMenu .tab-item:nth-child(2)',
+                title: '주소록 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '선거용 주소록 관리 페이지로 이동',
+                behavior: ['클릭 시 election-addressbook.html 이동']
+            },
             // 5. 수신거부 탭
-            { selector: '#tabMenu .tab-item:nth-child(3)', title: '수신거부 탭', position: { top: '-5px', left: '-10px' }, function: '수신거부 관리' },
+            {
+                selector: '#tabMenu .tab-item:nth-child(3)',
+                title: '수신거부 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '수신거부 번호 관리 페이지로 이동',
+                behavior: ['클릭 시 election-reject.html 이동']
+            },
             // 6. 템플릿 탭
-            { selector: '#tabMenu .tab-item:nth-child(4)', title: '템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '선거문자 템플릿' },
+            {
+                selector: '#tabMenu .tab-item:nth-child(4)',
+                title: '템플릿 탭',
+                position: { top: '-5px', right: '-10px' },
+                function: '선거문자 템플릿 관리 페이지로 이동',
+                behavior: ['클릭 시 template-message-election.html 이동']
+            },
+            // ===== 법적 안내사항 =====
             // 7. 법적 안내사항
-            { selector: '#legalNotice', title: '법적 안내사항', position: { top: '10px', left: '-15px' }, function: '공직선거법 준수 안내', behavior: ['07:00~23:00', '투표일 발송 불가'] },
+            {
+                selector: '#legalNotice',
+                title: '법적 안내사항',
+                position: { top: '10px', left: '-15px' },
+                function: '공직선거법 준수 필수 안내 영역',
+                behavior: [
+                    '발송 가능 시간: 07:00~23:00',
+                    '선거일 및 선거일 전일 발송 불가',
+                    '(선거운동정보) 필수 포함 안내',
+                    '1인당 1일 최대 10만건 제한'
+                ]
+            },
+            // ===== 발신번호 영역 =====
             // 8. 발신번호 그룹
-            { selector: '#callerNumberGroup', title: '발신번호', position: { top: '-10px', right: '10px' }, function: '선관위 등록 발신번호', tags: [{ text: '필수', type: 'required' }] },
+            {
+                selector: '#callerNumberGroup',
+                title: '발신번호',
+                position: { top: '-10px', right: '10px' },
+                function: '선관위 사전등록 발신번호 선택',
+                behavior: [
+                    '선관위 등록 완료된 번호만 표시',
+                    '미등록 시 발신번호 등록 유도'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
             // 9. 발신번호 선택
-            { selector: '#callerNumber', title: '발신번호 선택', position: { top: '-5px', left: '-10px' }, function: '등록된 발신번호 선택' },
+            {
+                selector: '#callerNumber',
+                title: '발신번호 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '등록된 발신번호 드롭다운 선택',
+                behavior: [
+                    '승인 완료된 번호 목록 표시',
+                    '선택 시 해당 번호로 발송'
+                ],
+                api: 'GET /api/election/caller-numbers'
+            },
+            // ===== 수신번호 영역 =====
             // 10. 수신번호 영역
-            { selector: '#recipientGroup', title: '수신번호 영역', position: { top: '-10px', left: '-15px' }, function: '수신자 번호 관리' },
+            {
+                selector: '#recipientGroup',
+                title: '수신번호 영역',
+                position: { top: '-10px', left: '-15px' },
+                function: '수신자 번호 입력/관리 영역',
+                behavior: [
+                    '직접 입력, 엑셀 업로드, 주소록 불러오기 지원',
+                    '최대 10만건 입력 가능',
+                    '중복/수신거부 번호 자동 제거'
+                ]
+            },
             // 11. 엑셀 업로드
-            { selector: '#excelUploadBtn', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, function: '엑셀로 대량 등록' },
+            {
+                selector: '#excelUploadBtn',
+                title: '엑셀 업로드',
+                position: { top: '-5px', left: '-10px' },
+                function: '엑셀 파일로 수신번호 대량 등록',
+                behavior: [
+                    'xlsx, xls, csv 파일 지원',
+                    '최대 10만건 업로드 가능',
+                    '업로드 후 미리보기 제공'
+                ]
+            },
             // 12. 주소록 불러오기
-            { selector: '#loadAddressBtn', title: '주소록 불러오기', position: { top: '-5px', left: '-10px' }, function: '주소록에서 수신자 선택' },
+            {
+                selector: '#loadAddressBtn',
+                title: '주소록 불러오기',
+                position: { top: '-5px', left: '-10px' },
+                function: '저장된 선거용 주소록에서 수신자 선택',
+                behavior: [
+                    '클릭 시 주소록 선택 모달 오픈',
+                    '그룹 단위 또는 개별 선택 가능'
+                ]
+            },
+            // ===== 메시지 작성 영역 =====
             // 13. 메시지 타입 그룹
-            { selector: '#messageTypeGroup', title: '메시지 타입', position: { top: '-10px', left: '-15px' }, function: 'SMS/LMS/MMS 선택' },
+            {
+                selector: '#messageTypeGroup',
+                title: '메시지 타입',
+                position: { top: '-10px', left: '-15px' },
+                function: 'SMS/LMS/MMS 메시지 유형 선택',
+                behavior: [
+                    'SMS: 90바이트, 25원/건',
+                    'LMS: 2,000바이트, 55원/건',
+                    'MMS: 이미지 포함, 110원/건'
+                ]
+            },
             // 14. 선거운동정보 입력
-            { selector: '#electionInfoGroup', title: '선거운동정보', position: { top: '-10px', left: '-15px' }, function: '(선거운동정보) 입력', behavior: ['최대 40바이트'], tags: [{ text: '필수', type: 'required' }] },
+            {
+                selector: '#electionInfoGroup',
+                title: '선거운동정보',
+                position: { top: '-10px', left: '-15px' },
+                function: '공직선거법 필수 문구 "(선거운동정보)" 입력',
+                behavior: [
+                    '최대 40바이트 (한글 20자)',
+                    '메시지 맨 앞에 자동 삽입',
+                    '예: (선거운동정보)홍길동,기호1번'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
             // 15. 변수 삽입 버튼
-            { selector: '#variableButtons', title: '변수 삽입', position: { top: '-10px', left: '-15px' }, function: '개인화 변수 삽입' },
+            {
+                selector: '#variableButtons',
+                title: '변수 삽입',
+                position: { top: '-10px', left: '-15px' },
+                function: '개인화 변수 삽입 버튼 그룹',
+                behavior: [
+                    '#{이름}: 수신자 이름',
+                    '#{전화번호}: 수신자 번호',
+                    '#{변수1~3}: 커스텀 변수'
+                ]
+            },
             // 16. 메시지 내용
-            { selector: '#messageContent', title: '메시지 내용', position: { top: '-10px', right: '10px' }, function: '메시지 본문 작성', behavior: ['실시간 바이트 카운트', '금지어 검사'] },
+            {
+                selector: '#messageContent',
+                title: '메시지 내용',
+                position: { top: '-10px', right: '10px' },
+                function: '선거문자 본문 내용 작성',
+                behavior: [
+                    '실시간 바이트 수 카운트',
+                    '공직선거법 금지어 실시간 검사',
+                    '90바이트 초과 시 LMS 자동 전환'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
             // 17. 템플릿 선택 버튼
-            { selector: '#templateSelectBtn', title: '템플릿 선택', position: { top: '-5px', left: '-10px' }, function: '저장된 템플릿 불러오기' },
+            {
+                selector: '#templateSelectBtn',
+                title: '템플릿 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '저장된 선거문자 템플릿 불러오기',
+                behavior: [
+                    '클릭 시 템플릿 목록 모달 오픈',
+                    '선택 시 메시지 내용 자동 채움'
+                ]
+            },
+            // ===== 발송 설정 =====
             // 18. 발송 시간 설정
-            { selector: '#sendTimeGroup', title: '발송 시간', position: { top: '-10px', left: '-15px' }, function: '즉시/예약 발송', behavior: ['07:00~23:00 제한'] },
+            {
+                selector: '#sendTimeGroup',
+                title: '발송 시간',
+                position: { top: '-10px', left: '-15px' },
+                function: '즉시 발송 또는 예약 발송 선택',
+                behavior: [
+                    '즉시 발송: 확인 후 바로 전송',
+                    '예약 발송: 날짜/시간 지정',
+                    '발송 가능 시간: 07:00~23:00만 선택 가능',
+                    '선거일/선거일 전일 선택 불가'
+                ]
+            },
             // 19. 발송 비용 정보
-            { selector: '.cost-info', title: '발송 비용', position: { top: '10px', left: '-15px' }, function: '예상 비용 및 잔여 포인트' },
+            {
+                selector: '.cost-info',
+                title: '발송 비용',
+                position: { top: '10px', left: '-15px' },
+                function: '예상 발송 비용 및 잔여 포인트 표시',
+                behavior: [
+                    '수신번호 수 × 단가 = 예상 비용',
+                    '잔여 포인트 표시',
+                    '잔액 부족 시 경고 및 충전 유도'
+                ]
+            },
+            // ===== 미리보기 및 발송 =====
             // 20. 미리보기 영역
-            { selector: '.preview-section', title: '미리보기', position: { top: '10px', right: '10px' }, function: '메시지 미리보기' },
-            // 21. 발송 버튼
-            { selector: '#sendBtn', title: '발송하기 버튼', position: { top: '-5px', right: '-10px' }, function: '선거문자 발송 실행', api: 'POST /api/election/send' }
+            {
+                selector: '.preview-section',
+                title: '미리보기',
+                position: { top: '10px', right: '10px' },
+                function: '발송될 메시지 실시간 미리보기',
+                behavior: [
+                    '휴대폰 목업 형태로 표시',
+                    '(선거운동정보) + 메시지 내용 표시',
+                    '변수는 예시 값으로 치환하여 표시'
+                ]
+            },
+            // 21. 발송하기 버튼
+            {
+                selector: '#sendBtn',
+                title: '발송하기 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '선거문자 발송 실행 (Primary Action)',
+                behavior: [
+                    '필수값 검증 (발신번호, 수신번호, 메시지)',
+                    '발송 시간 적법성 검증',
+                    '금지어 최종 검사',
+                    '발송 확인 모달 표시',
+                    '확인 시 API 호출 후 결과 페이지 이동'
+                ],
+                api: 'POST /api/election/send',
+                tags: [{ text: 'API', type: 'api' }]
+            }
         ];
         initSpecOverlay(specData);
     </script>

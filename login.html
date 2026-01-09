@@ -602,28 +602,41 @@ body {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // ===== 로그인 영역 =====
             // 1. 로그인 컨테이너
             {
                 selector: '#loginContainer',
                 title: '로그인 컨테이너',
                 position: { top: '10px', left: '10px' },
-                function: '로그인 폼 전체 영역',
-                behavior: ['폼 유효성 검증', '로그인 성공 시 메인 페이지 이동']
+                function: '로그인 폼 전체 영역 (중앙 정렬 카드 형태)',
+                behavior: [
+                    '화면 중앙 배치',
+                    '반응형: 모바일에서 너비 100%',
+                    '로고, 폼, 부가 기능 포함'
+                ]
             },
             // 2. 로그인 폼
             {
                 selector: '#loginForm',
                 title: '로그인 폼',
                 position: { top: '10px', right: '10px' },
-                function: '로그인 정보 입력 폼',
-                behavior: ['Enter 키로 로그인 실행', 'Submit 이벤트 처리']
+                function: '로그인 정보 입력 및 제출 폼',
+                behavior: [
+                    'Enter 키 입력 시 로그인 실행',
+                    'Submit 이벤트 가로채기 (preventDefault)',
+                    '폼 유효성 검증 후 API 호출'
+                ]
             },
             // 3. 아이디 입력 그룹
             {
                 selector: '#userIdGroup',
                 title: '아이디 입력 그룹',
                 position: { top: '-5px', left: '-10px' },
-                function: '아이디 레이블 및 입력 필드',
+                function: '아이디(이메일) 레이블 및 입력 필드 그룹',
+                behavior: [
+                    '레이블에 필수 표시(*)',
+                    '포커스 시 테두리 색상 변경'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 4. 아이디 입력 필드
@@ -631,8 +644,13 @@ body {
                 selector: '#userId',
                 title: '아이디 입력 필드',
                 position: { top: '-5px', right: '-10px' },
-                function: '사용자 아이디 입력',
-                behavior: ['자동완성 지원 (autocomplete=username)', '빈 값 시 에러 표시'],
+                function: '사용자 아이디(이메일) 입력',
+                behavior: [
+                    '이메일 형식 입력',
+                    '자동완성 지원 (autocomplete=username)',
+                    '빈 값 시 "아이디를 입력해주세요" 에러',
+                    '아이디 저장 체크 시 자동 입력'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 5. 비밀번호 입력 그룹
@@ -640,7 +658,11 @@ body {
                 selector: '#passwordGroup',
                 title: '비밀번호 입력 그룹',
                 position: { top: '-5px', left: '-10px' },
-                function: '비밀번호 레이블 및 입력 필드',
+                function: '비밀번호 레이블 및 입력 필드 그룹',
+                behavior: [
+                    '레이블에 필수 표시(*)',
+                    '포커스 시 테두리 색상 변경'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 6. 비밀번호 입력 필드
@@ -649,33 +671,51 @@ body {
                 title: '비밀번호 입력 필드',
                 position: { top: '-5px', right: '-10px' },
                 function: '사용자 비밀번호 입력',
-                behavior: ['입력값 마스킹 (type=password)', '빈 값 시 에러 표시'],
+                behavior: [
+                    '입력값 마스킹 (type=password)',
+                    '빈 값 시 "비밀번호를 입력해주세요" 에러',
+                    '복사/붙여넣기 가능'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 7. 아이디 저장 체크박스
+            // 7. 아이디 저장 체크박스 그룹
             {
                 selector: '#rememberIdGroup',
                 title: '아이디 저장',
                 position: { top: '-5px', left: '-10px' },
-                function: '로그인 시 아이디 기억',
-                behavior: ['체크 시 localStorage에 아이디 저장', '다음 로그인 시 자동 입력'],
+                function: '다음 로그인 시 아이디 자동 입력 기능',
+                behavior: [
+                    '체크 시 localStorage에 아이디 저장',
+                    '다음 방문 시 자동 채워짐',
+                    '체크 해제 시 저장된 아이디 삭제'
+                ],
                 tags: [{ text: '선택', type: 'optional' }]
             },
-            // 8. 아이디 저장 체크박스 입력
+            // 8. 아이디 저장 체크박스
             {
                 selector: '#rememberId',
                 title: '체크박스 입력',
                 position: { top: '-5px', right: '-10px' },
-                function: '아이디 저장 여부 선택',
-                behavior: ['클릭 시 토글']
+                function: '아이디 저장 여부 토글',
+                behavior: [
+                    '클릭 시 체크 상태 토글',
+                    '로그인 성공 시 설정 저장'
+                ]
             },
             // 9. 로그인 버튼
             {
                 selector: '#loginBtn',
                 title: '로그인 버튼',
                 position: { top: '-5px', left: '-10px' },
-                function: '로그인 요청 실행',
-                behavior: ['폼 유효성 검증', '로그인 API 호출', '성공 시 main.html 이동', '실패 시 에러 메시지 표시'],
+                function: '로그인 요청 실행 (Primary Action)',
+                behavior: [
+                    '클릭 또는 Enter 키로 실행',
+                    '아이디/비밀번호 빈 값 검증',
+                    'API 호출 중 로딩 상태 표시',
+                    '성공 시 main.html로 리다이렉트',
+                    '실패 시 "아이디 또는 비밀번호가 일치하지 않습니다" 에러',
+                    '5회 실패 시 계정 잠금 안내'
+                ],
                 api: 'POST /api/auth/login',
                 tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
@@ -684,31 +724,48 @@ body {
                 selector: '#signupLink',
                 title: '회원가입 버튼',
                 position: { top: '-5px', left: '-10px' },
-                function: '회원가입 페이지 이동',
-                behavior: ['클릭 시 signup.html 이동']
+                function: '회원가입 페이지로 이동',
+                behavior: [
+                    '클릭 시 signup.html 이동',
+                    '신규 회원 유입 유도'
+                ]
             },
-            // 11. 로그인 푸터
+            // 11. 계정 찾기 영역
             {
                 selector: '#loginFooter',
                 title: '계정 찾기 영역',
                 position: { top: '-5px', left: '-10px' },
-                function: '아이디/비밀번호 찾기 링크'
+                function: '아이디/비밀번호 찾기 링크 그룹',
+                behavior: [
+                    '구분자(|)로 두 링크 구분',
+                    '링크 호버 시 밑줄 표시'
+                ]
             },
             // 12. 아이디 찾기 링크
             {
                 selector: '#findIdLink',
                 title: '아이디 찾기 링크',
                 position: { top: '-5px', left: '-10px' },
-                function: '아이디 찾기 페이지 이동',
-                behavior: ['클릭 시 아이디 찾기 모달/페이지 이동', '가입 시 등록한 정보로 아이디 조회']
+                function: '아이디 찾기 기능 호출',
+                behavior: [
+                    '클릭 시 아이디 찾기 모달 또는 페이지 이동',
+                    '가입 시 등록한 휴대폰/이메일로 인증',
+                    '인증 성공 시 아이디 일부 마스킹하여 안내'
+                ],
+                api: 'POST /api/auth/find-id'
             },
             // 13. 비밀번호 찾기 링크
             {
                 selector: '#findPasswordLink',
                 title: '비밀번호 찾기 링크',
                 position: { top: '-5px', right: '-10px' },
-                function: '비밀번호 찾기 페이지 이동',
-                behavior: ['클릭 시 비밀번호 찾기 모달/페이지 이동', '이메일 인증 후 비밀번호 재설정']
+                function: '비밀번호 찾기/재설정 기능 호출',
+                behavior: [
+                    '클릭 시 비밀번호 찾기 모달 또는 페이지 이동',
+                    '아이디 + 이메일 인증 절차',
+                    '임시 비밀번호 발급 또는 재설정 링크 발송'
+                ],
+                api: 'POST /api/auth/find-password'
             }
         ];
         initSpecOverlay(specData);
