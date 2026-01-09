@@ -547,7 +547,7 @@ body {
 /* 회원유형 선택 */
 .member-type-selector {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
     margin-bottom: 32px;
 }
@@ -600,6 +600,16 @@ body {
 
 .member-type-card.selected .member-type-icon.green {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.member-type-icon.red {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #dc2626;
+}
+
+.member-type-card.selected .member-type-icon.red {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     color: white;
 }
 
@@ -887,6 +897,10 @@ body {
         grid-template-columns: 1fr;
     }
 
+    .member-type-card {
+        padding: 32px 20px;
+    }
+
     .phone-input-group,
     .verification-code-group,
     .input-group {
@@ -1108,6 +1122,15 @@ body {
                             </div>
                             <div class="member-type-title">기업회원</div>
                             <div class="member-type-desc">기업/공공기관/단체 고객을 위한 서비스</div>
+                        </div>
+                        <div class="member-type-card" onclick="selectMemberType('election')">
+                            <div class="member-type-icon red">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M18 13h-.68l-2 2h1.91L19 17H5l1.78-2h2.05l-2-2H6l-3 3v4c0 1.1.89 2 1.99 2H19c1.1 0 2-.89 2-2v-4l-3-3zm-1-5.05l-4.95 4.95-3.54-3.54 4.95-4.95L17 7.95zm-4.24-5.66L6.39 8.66a.996.996 0 0 0 0 1.41l4.95 4.95c.39.39 1.02.39 1.41 0l6.36-6.36a.996.996 0 0 0 0-1.41L14.16 2.3a.975.975 0 0 0-1.4-.01z"/>
+                                </svg>
+                            </div>
+                            <div class="member-type-title">선거회원</div>
+                            <div class="member-type-desc">공직선거 후보자를 위한 서비스</div>
                         </div>
                     </div>
 
@@ -1360,6 +1383,222 @@ body {
                         <button type="button" class="btn btn-primary btn-full" onclick="submitSignup('business')">가입</button>
                     </div>
                 </div>
+
+                <!-- Step 4: 정보 입력 (선거) -->
+                <div class="step-content" id="step4-election">
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 24px;">* 표시는 필수 입력 항목입니다.</p>
+                    
+                    <div style="background: rgba(220, 38, 38, 0.05); border: 1px solid rgba(220, 38, 38, 0.2); border-radius: var(--radius-md); padding: 16px; margin-bottom: 24px;">
+                        <p style="color: var(--danger-color); font-size: 13px; line-height: 1.6;">
+                            <strong>📋 선거회원 안내</strong><br>
+                            선거회원 가입 후 담당자 승인 시 선거문자 최저 단가로 적용되며, 선거 전문 담당자가 별도 관리해 드립니다.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required" for="electionUserId">아이디</label>
+                        <div class="input-group">
+                            <input type="text" id="electionUserId" class="form-input" placeholder="8자~12자 영문, 숫자, 영문+숫자 조합만 사용">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="checkElectionUserId()">중복확인</button>
+                        </div>
+                        <div class="form-help">* 8자~12자 영문, 숫자, 영문+숫자 조합만 사용</div>
+                        <div class="form-error" id="electionUserIdError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required" for="electionPassword">비밀번호</label>
+                        <input type="password" id="electionPassword" class="form-input" placeholder="8자~16자 영문, 숫자, 특수문자 혼합 사용" oninput="validatePasswordConfirm('election')">
+                        <div class="form-help">
+                            * 8자~16자 영문, 숫자, 특수문자(~!@#$%^&*?) 혼합 사용<br>
+                            * 동일한 문자를 연속해서 반복 사용 불가<br>
+                            * 이전과 동일한 비밀번호 사용 불가
+                        </div>
+                        <div class="form-error" id="electionPasswordError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required" for="electionPasswordConfirm">비밀번호 확인</label>
+                        <input type="password" id="electionPasswordConfirm" class="form-input" placeholder="상단에 입력한 비밀번호와 동일하게 입력" oninput="validatePasswordConfirm('election')">
+                        <div class="form-error" id="electionPasswordConfirmError"></div>
+                    </div>
+
+                    <!-- 선거 기본 정보 -->
+                    <div style="background: var(--bg-color); border-radius: var(--radius-lg); padding: 20px; margin: 24px 0;">
+                        <h4 style="font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">📋 후보자 기본 정보</h4>
+                        
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label class="form-label required">후보자명</label>
+                            <input type="text" class="form-input" id="electionCandidateName" placeholder="ex) 홍길동">
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label class="form-label required">소속/기관</label>
+                            <input type="text" class="form-input" id="electionOrganization" placeholder="ex) 대한민국당">
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label required">지역</label>
+                            <input type="text" class="form-input" id="electionRegion" placeholder="ex) 서울 경성구 갑">
+                        </div>
+                    </div>
+
+                    <!-- 서류 업로드 -->
+                    <div style="background: var(--bg-color); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px;">
+                        <h4 style="font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">📎 서류 업로드</h4>
+                        
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label class="form-label required">후보자 신분증 사본</label>
+                            <div class="file-upload-area" onclick="document.getElementById('electionIdCardInput').click()" ondrop="handleElectionFileDrop(event, 'electionIdCard')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                                <div class="file-upload-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    </svg>
+                                </div>
+                                <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                                <div class="file-upload-hint">PDF, JPG, PNG 파일만 업로드 가능 (최대 10MB)</div>
+                            </div>
+                            <input type="file" id="electionIdCardInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" onchange="handleElectionFileSelect(event, 'electionIdCard')">
+                            <div class="file-preview" id="electionIdCardPreview"></div>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">* 주민등록증, 운전면허증 등 본인 확인 가능한 신분증</p>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label class="form-label required">(예비)후보자 등록 증명서 사본</label>
+                            <div class="file-upload-area" onclick="document.getElementById('electionCertificateInput').click()" ondrop="handleElectionFileDrop(event, 'electionCertificate')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                                <div class="file-upload-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    </svg>
+                                </div>
+                                <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                                <div class="file-upload-hint">PDF, JPG, PNG 파일만 업로드 가능 (최대 10MB)</div>
+                            </div>
+                            <input type="file" id="electionCertificateInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" onchange="handleElectionFileSelect(event, 'electionCertificate')">
+                            <div class="file-preview" id="electionCertificatePreview"></div>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">* 선거관리위원회가 발급한 후보자 등록 증명서</p>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label class="form-label required">발신번호 등록 증명 서류</label>
+                            <div class="file-upload-area" onclick="document.getElementById('electionCallerProofInput').click()" ondrop="handleElectionFileDrop(event, 'electionCallerProof')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                                <div class="file-upload-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    </svg>
+                                </div>
+                                <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                                <div class="file-upload-hint">PDF, JPG, PNG 파일만 업로드 가능 (최대 10MB)</div>
+                            </div>
+                            <input type="file" id="electionCallerProofInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" onchange="handleElectionFileSelect(event, 'electionCallerProof')">
+                            <div class="file-preview" id="electionCallerProofPreview"></div>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">* 후보자 본인 명의와 일치해야 함 (ex. 통신서비스이용증명원)</p>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">선관위 문자메시지 전송 신고서 사본 <span style="color: var(--text-muted); font-weight: 400;">(선택)</span></label>
+                            <div class="file-upload-area" onclick="document.getElementById('electionReportCopyInput').click()" ondrop="handleElectionFileDrop(event, 'electionReportCopy')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                                <div class="file-upload-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    </svg>
+                                </div>
+                                <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                                <div class="file-upload-hint">PDF, JPG, PNG 파일만 업로드 가능 (최대 10MB)</div>
+                            </div>
+                            <input type="file" id="electionReportCopyInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" onchange="handleElectionFileSelect(event, 'electionReportCopy')">
+                            <div class="file-preview" id="electionReportCopyPreview"></div>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">* 선거관리위원회에 제출한 문자메시지 전송 신고서</p>
+                        </div>
+                    </div>
+
+                    <!-- 발송할 문자 메시지 내용 -->
+                    <div style="background: var(--bg-color); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px;">
+                        <h4 style="font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">💬 발송할 문자 메시지 내용</h4>
+                        
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label required">메시지 내용 전문</label>
+                            <textarea class="form-textarea" id="electionMessageContent" rows="6" placeholder="선관위에 신고한 문자 메시지 내용을 정확히 입력해 주세요." style="resize: vertical;"></textarea>
+                            <p style="font-size: 12px; color: var(--danger-color); margin-top: 4px; font-weight: 500;">⚠️ 선관위에 신고한 내용과 완전히 동일해야 합니다.</p>
+                        </div>
+                    </div>
+
+                    <!-- 선거문자 이용약관 동의 -->
+                    <div style="margin-bottom: 24px;">
+                        <div class="checkbox-group" style="margin-bottom: 12px;">
+                            <input type="checkbox" id="electionAgreeTerms">
+                            <label for="electionAgreeTerms"><span style="color: var(--primary-color); font-weight: 500;">[필수]</span> 제 3자 정보제공 및 선거문자 이용약관 동의</label>
+                        </div>
+                        
+                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+                            본인은 선거관리위원회가 관리하는 선거(대통령 선거, 국회의원 선거, 지방의회 의원 및 지방자치단체의 장의 선거, 조합장 선거 등)에서 '톡벨' 선거문자 서비스를 이용하기 위하여 아래의 내용에 동의합니다.
+                        </p>
+                        
+                        <div class="terms-section" style="max-height: 200px;">
+                            <div class="terms-content">
+                                <p style="margin-bottom: 12px;"><strong style="color: var(--warning-color);">※ 선거문자 서비스 이용약관 ※</strong></p>
+                                
+                                <p style="margin-bottom: 12px;"><strong>1. 문자 발송 위임</strong></p>
+                                <p style="margin-bottom: 12px;">본인(후보자)은 '톡벨'(이하 '회사')에게 선거문자 발송 업무를 위임하며, 회사는 후보자의 요청에 따라 문자 메시지 발송을 대행합니다.</p>
+                                
+                                <p style="margin-bottom: 12px;"><strong>2. 발송 내용의 책임</strong></p>
+                                <p style="margin-bottom: 12px;">발송되는 문자 메시지 내용의 진실성 및 합법성에 대한 모든 책임은 후보자 본인에게 있습니다. 회사는 메시지 내용으로 인해 발생하는 법적 분쟁이나 손해에 대해 책임지지 않습니다.</p>
+                                
+                                <p style="margin-bottom: 12px;"><strong>3. 자동 동보통신 발송 횟수 제한</strong></p>
+                                <p style="margin-bottom: 12px;">공직선거법에 따라 자동 동보통신을 이용한 선거운동은 <strong style="color: var(--danger-color);">총 8회</strong>로 제한됩니다. 본인은 이 발송 횟수 제한을 초과하지 않도록 관리할 책임이 있음을 확인합니다.</p>
+                                
+                                <p style="margin-bottom: 12px;"><strong>4. 전화번호 수집 적법성</strong></p>
+                                <p style="margin-bottom: 12px;">본인은 발송에 사용되는 모든 전화번호가 합법적인 경로를 통해 수집되었으며, 자동 생성 프로그램을 일체 사용하지 않았음을 확인합니다. 이를 위반하여 발생하는 모든 법적 책임은 본인에게 있습니다.</p>
+                                
+                                <p style="margin-bottom: 12px;"><strong>5. 선관위 자료 제공 동의</strong></p>
+                                <p style="margin-bottom: 12px;">회사는 선거관리위원회의 요청이 있는 경우 정치자금법, 공직선거법 등 관련법령에 따라 관련 자료를 선거관리위원회에 제공할 수 있으며, 본인은 이에 대하여 민형사상의 일체의 이의를 제기하지 않겠습니다.</p>
+                                
+                                <p style="margin-bottom: 12px;"><strong>6. 제공 목적</strong></p>
+                                <p style="margin-bottom: 12px;">선거관리위원회가 공직선거법, 정치자금법 등 관련 법령에 따라 선거 관련 자료를 요청하는 경우, 해당 목적에 한하여 정보를 제공합니다.</p>
+                                
+                                <p style="margin-bottom: 12px;"><strong>7. 제공 항목</strong></p>
+                                <p style="margin-bottom: 8px;">- 후보자명, 소속/기관, 지역 등 선거회원 가입 시 입력한 정보</p>
+                                <p style="margin-bottom: 8px;">- 선거문자 발송 내역 (발송일시, 수신번호, 발송 내용 등)</p>
+                                <p style="margin-bottom: 8px;">- 발송 건수 및 비용 관련 정보</p>
+                                <p style="margin-bottom: 12px;">- 기타 선거관리위원회가 법령에 따라 요청하는 관련 자료</p>
+                                
+                                <p style="margin-bottom: 12px;"><strong>8. 법적 근거</strong></p>
+                                <p style="margin-bottom: 8px;">- 공직선거법 제82조의2 (선거운동을 위한 전화·문자메시지 전송의 제한)</p>
+                                <p style="margin-bottom: 8px;">- 정치자금법 제49조 (정치자금의 수수·기부 등에 관한 자료의 제출)</p>
+                                <p style="margin-bottom: 12px;">- 개인정보 보호법 제17조 (개인정보의 제공)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required" for="electionContact">연락처</label>
+                        <input type="tel" id="electionContact" class="form-input" placeholder="010-1234-5678" maxlength="13" oninput="formatPhoneNumber(this)">
+                        <div class="form-error" id="electionContactError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required" for="electionEmail">이메일</label>
+                        <input type="email" id="electionEmail" class="form-input" placeholder="example@email.com">
+                        <div class="form-help">* 본인 확인 및 승인 결과 안내 시 필요</div>
+                        <div class="form-error" id="electionEmailError"></div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-outline btn-full" onclick="prevStep(3)">이전단계</button>
+                        <button type="button" class="btn btn-primary btn-full" onclick="submitSignup('election')">가입 신청</button>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -1422,8 +1661,10 @@ body {
             
             if (type === 'individual') {
                 cards[0].classList.add('selected');
-            } else {
+            } else if (type === 'business') {
                 cards[1].classList.add('selected');
+            } else if (type === 'election') {
+                cards[2].classList.add('selected');
             }
             
             document.getElementById('step2-next').disabled = false;
@@ -1455,8 +1696,10 @@ body {
             if (step === 4) {
                 if (memberType === 'individual') {
                     document.getElementById('step4-individual').classList.add('active');
-                } else {
+                } else if (memberType === 'business') {
                     document.getElementById('step4-business').classList.add('active');
+                } else if (memberType === 'election') {
+                    document.getElementById('step4-election').classList.add('active');
                 }
             } else {
                 document.getElementById(`step${step}`).classList.add('active');
@@ -1633,9 +1876,20 @@ body {
 
         // 비밀번호 확인 검증
         function validatePasswordConfirm(type) {
-            const passwordId = type === 'individual' ? 'individualPassword' : 'businessPassword';
-            const confirmId = type === 'individual' ? 'individualPasswordConfirm' : 'businessPasswordConfirm';
-            const errorId = type === 'individual' ? 'individualPasswordConfirmError' : 'businessPasswordConfirmError';
+            let passwordId, confirmId, errorId;
+            if (type === 'individual') {
+                passwordId = 'individualPassword';
+                confirmId = 'individualPasswordConfirm';
+                errorId = 'individualPasswordConfirmError';
+            } else if (type === 'business') {
+                passwordId = 'businessPassword';
+                confirmId = 'businessPasswordConfirm';
+                errorId = 'businessPasswordConfirmError';
+            } else if (type === 'election') {
+                passwordId = 'electionPassword';
+                confirmId = 'electionPasswordConfirm';
+                errorId = 'electionPasswordConfirmError';
+            }
             
             const password = document.getElementById(passwordId).value;
             const passwordConfirm = document.getElementById(confirmId).value;
@@ -1654,6 +1908,66 @@ body {
                 errorDiv.textContent = '';
                 errorDiv.classList.remove('show');
             }
+        }
+
+        // 아이디 중복확인 (선거)
+        function checkElectionUserId() {
+            const userId = document.getElementById('electionUserId').value;
+            const errorDiv = document.getElementById('electionUserIdError');
+            
+            if (!userId) {
+                errorDiv.textContent = '아이디를 입력해주세요.';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            if (userId.length < 8 || userId.length > 12) {
+                errorDiv.textContent = '아이디는 8-12자로 입력해주세요.';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            // 실제로는 서버에 중복확인 요청
+            alert('사용 가능한 아이디입니다.');
+            errorDiv.classList.remove('show');
+        }
+
+        // 선거회원 파일 선택 처리
+        function handleElectionFileSelect(event, fieldId) {
+            const file = event.target.files[0];
+            if (file) {
+                displayElectionFilePreview(file, fieldId);
+            }
+        }
+
+        // 선거회원 파일 드래그 앤 드롭
+        function handleElectionFileDrop(event, fieldId) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+            const file = event.dataTransfer.files[0];
+            if (file) {
+                document.getElementById(fieldId + 'Input').files = event.dataTransfer.files;
+                displayElectionFilePreview(file, fieldId);
+            }
+        }
+
+        // 선거회원 파일 미리보기
+        function displayElectionFilePreview(file, fieldId) {
+            const previewDiv = document.getElementById(fieldId + 'Preview');
+            previewDiv.innerHTML = `
+                <div class="file-preview-item">
+                    <span class="file-preview-name">${file.name}</span>
+                    <span class="file-preview-remove" onclick="removeElectionFile('${fieldId}')">×</span>
+                </div>
+            `;
+            previewDiv.classList.add('show');
+        }
+
+        // 선거회원 파일 제거
+        function removeElectionFile(fieldId) {
+            document.getElementById(fieldId + 'Input').value = '';
+            document.getElementById(fieldId + 'Preview').classList.remove('show');
+            document.getElementById(fieldId + 'Preview').innerHTML = '';
         }
 
         // 기업유형 변경 처리
@@ -1836,6 +2150,58 @@ body {
                 
                 // 실제로는 서버에 회원가입 요청
                 alert('회원가입이 완료되었습니다.');
+                window.location.href = 'index.html';
+            } else if (type === 'election') {
+                // 선거 회원가입 검증
+                const userId = document.getElementById('electionUserId').value;
+                const password = document.getElementById('electionPassword').value;
+                const passwordConfirm = document.getElementById('electionPasswordConfirm').value;
+                const candidateName = document.getElementById('electionCandidateName').value;
+                const organization = document.getElementById('electionOrganization').value;
+                const region = document.getElementById('electionRegion').value;
+                const contact = document.getElementById('electionContact').value;
+                const email = document.getElementById('electionEmail').value;
+                const messageContent = document.getElementById('electionMessageContent').value;
+                const agreeTerms = document.getElementById('electionAgreeTerms').checked;
+                
+                if (!userId || !password || !passwordConfirm || !candidateName || !organization || 
+                    !region || !contact || !email || !messageContent) {
+                    alert('모든 필수 항목을 입력해주세요.');
+                    return;
+                }
+                
+                if (password !== passwordConfirm) {
+                    alert('비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+                
+                // 필수 서류 검증
+                const idCardInput = document.getElementById('electionIdCardInput');
+                const certificateInput = document.getElementById('electionCertificateInput');
+                const callerProofInput = document.getElementById('electionCallerProofInput');
+                
+                if (!idCardInput.files || idCardInput.files.length === 0) {
+                    alert('후보자 신분증 사본을 업로드해주세요.');
+                    return;
+                }
+                
+                if (!certificateInput.files || certificateInput.files.length === 0) {
+                    alert('(예비)후보자 등록 증명서 사본을 업로드해주세요.');
+                    return;
+                }
+                
+                if (!callerProofInput.files || callerProofInput.files.length === 0) {
+                    alert('발신번호 등록 증명 서류를 업로드해주세요.');
+                    return;
+                }
+                
+                if (!agreeTerms) {
+                    alert('선거문자 이용약관에 동의해주세요.');
+                    return;
+                }
+                
+                // 실제로는 서버에 회원가입 요청
+                alert('선거회원 가입 신청이 완료되었습니다.\n담당자 승인 후 서비스 이용이 가능합니다.');
                 window.location.href = 'index.html';
             }
         }
