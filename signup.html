@@ -958,7 +958,7 @@ body {
 
                     <div class="form-group">
                         <div class="checkbox-group">
-                            <input type="checkbox" id="agreeRequired1" class="required-agreement" onchange="checkRequiredAgreements()">
+                            <input type="checkbox" id="agreeRequired1" class="required-agreement" onchange="updateAllAgreement(); checkRequiredAgreements()">
                             <label for="agreeRequired1" class="required">이용약관 동의 <span style="color: var(--danger-color);">(필수)</span></label>
                         </div>
                         <div class="terms-section">
@@ -979,7 +979,7 @@ body {
 
                     <div class="form-group">
                         <div class="checkbox-group">
-                            <input type="checkbox" id="agreeRequired2" class="required-agreement" onchange="checkRequiredAgreements()">
+                            <input type="checkbox" id="agreeRequired2" class="required-agreement" onchange="updateAllAgreement(); checkRequiredAgreements()">
                             <label for="agreeRequired2" class="required">개인정보 수집 및 이용에 관한 동의 <span style="color: var(--danger-color);">(필수)</span></label>
                             <a href="#" style="margin-left: 8px; color: var(--primary-color); text-decoration: underline; font-size: 12px;">개인정보처리방침 바로가기</a>
                         </div>
@@ -1013,7 +1013,7 @@ body {
 
                     <div class="form-group">
                         <div class="checkbox-group">
-                            <input type="checkbox" id="agreeRequired3" class="required-agreement" onchange="checkRequiredAgreements()">
+                            <input type="checkbox" id="agreeRequired3" class="required-agreement" onchange="updateAllAgreement(); checkRequiredAgreements()">
                             <label for="agreeRequired3" class="required">개인정보 취급 위탁 동의 <span style="color: var(--danger-color);">(필수)</span></label>
                         </div>
                         <div class="terms-section">
@@ -1045,7 +1045,7 @@ body {
 
                     <div class="form-group">
                         <div class="checkbox-group">
-                            <input type="checkbox" id="agreeRequired4" class="required-agreement" onchange="checkRequiredAgreements()">
+                            <input type="checkbox" id="agreeRequired4" class="required-agreement" onchange="updateAllAgreement(); checkRequiredAgreements()">
                             <label for="agreeRequired4" class="required">불법스팸방지안내 <span style="color: var(--danger-color);">(필수)</span></label>
                         </div>
                         <div class="terms-section">
@@ -1178,12 +1178,12 @@ body {
                     <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 24px;">* 표시는 필수 입력 항목입니다.</p>
 
                     <div class="form-group">
-                        <label class="form-label required" for="individualUserId">아이디</label>
+                        <label class="form-label required" for="individualUserId">아이디 (이메일)</label>
                         <div class="input-group">
-                            <input type="text" id="individualUserId" class="form-input" placeholder="8자~12자 영문, 숫자, 영문+숫자 조합만 사용">
+                            <input type="email" id="individualUserId" class="form-input" placeholder="example@email.com">
                             <button type="button" class="btn btn-outline btn-sm" onclick="checkIndividualUserId()">중복확인</button>
                         </div>
-                        <div class="form-help">* 8자~12자 영문, 숫자, 영문+숫자 조합만 사용</div>
+                        <div class="form-help">* 이메일 주소를 아이디로 사용합니다</div>
                         <div class="form-error" id="individualUserIdError"></div>
                     </div>
 
@@ -1210,12 +1210,6 @@ body {
                         <div class="form-error" id="individualContactError"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label required" for="individualEmail">이메일</label>
-                        <input type="email" id="individualEmail" class="form-input" placeholder="example@email.com">
-                        <div class="form-help">* 본인 확인 및 임시 비밀번호 수신 시 필요</div>
-                        <div class="form-error" id="individualEmailError"></div>
-                    </div>
 
                     <div class="form-group">
                         <label class="form-label">마케팅 수신여부</label>
@@ -1243,12 +1237,12 @@ body {
                     <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 24px;">* 표시는 필수 입력 항목입니다.</p>
 
                     <div class="form-group">
-                        <label class="form-label required" for="businessUserId">아이디</label>
+                        <label class="form-label required" for="businessUserId">아이디 (이메일)</label>
                         <div class="input-group">
-                            <input type="text" id="businessUserId" class="form-input" placeholder="8자~12자 영문, 숫자, 영문+숫자 조합만 사용">
+                            <input type="email" id="businessUserId" class="form-input" placeholder="example@email.com">
                             <button type="button" class="btn btn-outline btn-sm" onclick="checkBusinessUserId()">중복확인</button>
                         </div>
-                        <div class="form-help">* 8자~12자 영문, 숫자, 영문+숫자 조합만 사용</div>
+                        <div class="form-help">* 이메일 주소를 아이디로 사용합니다</div>
                         <div class="form-error" id="businessUserIdError"></div>
                     </div>
 
@@ -1396,12 +1390,12 @@ body {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label required" for="electionUserId">아이디</label>
+                        <label class="form-label required" for="electionUserId">아이디 (이메일)</label>
                         <div class="input-group">
-                            <input type="text" id="electionUserId" class="form-input" placeholder="8자~12자 영문, 숫자, 영문+숫자 조합만 사용">
+                            <input type="email" id="electionUserId" class="form-input" placeholder="example@email.com">
                             <button type="button" class="btn btn-outline btn-sm" onclick="checkElectionUserId()">중복확인</button>
                         </div>
-                        <div class="form-help">* 8자~12자 영문, 숫자, 영문+숫자 조합만 사용</div>
+                        <div class="form-help">* 이메일 주소를 아이디로 사용합니다</div>
                         <div class="form-error" id="electionUserIdError"></div>
                     </div>
 
@@ -1587,12 +1581,6 @@ body {
                         <div class="form-error" id="electionContactError"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label required" for="electionEmail">이메일</label>
-                        <input type="email" id="electionEmail" class="form-input" placeholder="example@email.com">
-                        <div class="form-help">* 본인 확인 및 승인 결과 안내 시 필요</div>
-                        <div class="form-error" id="electionEmailError"></div>
-                    </div>
 
                     <div class="button-group">
                         <button type="button" class="btn btn-outline btn-full" onclick="prevStep(3)">이전단계</button>
@@ -1614,15 +1602,22 @@ body {
         // 전체 동의 토글
         function toggleAllAgreements() {
             const agreeAll = document.getElementById('agreeAll');
-            const requiredAgreements = document.querySelectorAll('.required-agreement');
-            const optionalAgreements = document.querySelectorAll('.optional-agreement');
+            if (!agreeAll) return;
             
-            requiredAgreements.forEach(checkbox => {
-                checkbox.checked = agreeAll.checked;
-            });
-            optionalAgreements.forEach(checkbox => {
-                checkbox.checked = agreeAll.checked;
-            });
+            const isChecked = agreeAll.checked;
+            
+            // 필수 약관 체크박스들
+            const cb1 = document.getElementById('agreeRequired1');
+            const cb2 = document.getElementById('agreeRequired2');
+            const cb3 = document.getElementById('agreeRequired3');
+            const cb4 = document.getElementById('agreeRequired4');
+            const cbMarketing = document.getElementById('agreeMarketing');
+            
+            if (cb1) cb1.checked = isChecked;
+            if (cb2) cb2.checked = isChecked;
+            if (cb3) cb3.checked = isChecked;
+            if (cb4) cb4.checked = isChecked;
+            if (cbMarketing) cbMarketing.checked = isChecked;
             
             checkRequiredAgreements();
         }
@@ -1630,12 +1625,18 @@ body {
         // 전체 동의 상태 업데이트 (개별 체크박스 변경 시)
         function updateAllAgreement() {
             const agreeAll = document.getElementById('agreeAll');
-            const requiredAgreements = document.querySelectorAll('.required-agreement');
-            const optionalAgreements = document.querySelectorAll('.optional-agreement');
-            const allCheckboxes = [...requiredAgreements, ...optionalAgreements];
+            if (!agreeAll) return;
             
-            const allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
-            const someChecked = Array.from(allCheckboxes).some(cb => cb.checked);
+            const checkboxes = [
+                document.getElementById('agreeRequired1'),
+                document.getElementById('agreeRequired2'),
+                document.getElementById('agreeRequired3'),
+                document.getElementById('agreeRequired4'),
+                document.getElementById('agreeMarketing')
+            ];
+            
+            const allChecked = checkboxes.every(cb => cb && cb.checked);
+            const someChecked = checkboxes.some(cb => cb && cb.checked);
             
             agreeAll.checked = allChecked;
             agreeAll.indeterminate = someChecked && !allChecked;
@@ -1643,11 +1644,18 @@ body {
 
         // 필수 약관 체크
         function checkRequiredAgreements() {
-            const requiredAgreements = document.querySelectorAll('.required-agreement');
-            const allChecked = Array.from(requiredAgreements).every(cb => cb.checked);
+            const requiredCheckboxes = [
+                document.getElementById('agreeRequired1'),
+                document.getElementById('agreeRequired2'),
+                document.getElementById('agreeRequired3'),
+                document.getElementById('agreeRequired4')
+            ];
+            const allChecked = requiredCheckboxes.every(cb => cb && cb.checked);
             const step1Next = document.getElementById('step1-next');
             
-            step1Next.disabled = !allChecked;
+            if (step1Next) {
+                step1Next.disabled = !allChecked;
+            }
             
             // 전체 동의 상태 업데이트
             updateAllAgreement();
@@ -1833,22 +1841,22 @@ body {
         function checkIndividualUserId() {
             const userId = document.getElementById('individualUserId').value;
             const errorDiv = document.getElementById('individualUserIdError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             
             if (!userId) {
-                errorDiv.textContent = '아이디를 입력해주세요.';
+                errorDiv.textContent = '이메일을 입력해주세요.';
                 errorDiv.classList.add('show');
                 return;
             }
             
-            if (userId.length < 8 || userId.length > 12) {
-                errorDiv.textContent = '아이디는 8-12자로 입력해주세요.';
+            if (!emailRegex.test(userId)) {
+                errorDiv.textContent = '올바른 이메일 형식으로 입력해주세요.';
                 errorDiv.classList.add('show');
                 return;
             }
             
             // 실제로는 서버에 중복확인 요청
-            // 여기서는 시뮬레이션
-            alert('사용 가능한 아이디입니다.');
+            alert('사용 가능한 이메일입니다.');
             errorDiv.classList.remove('show');
         }
 
@@ -1856,21 +1864,22 @@ body {
         function checkBusinessUserId() {
             const userId = document.getElementById('businessUserId').value;
             const errorDiv = document.getElementById('businessUserIdError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             
             if (!userId) {
-                errorDiv.textContent = '아이디를 입력해주세요.';
+                errorDiv.textContent = '이메일을 입력해주세요.';
                 errorDiv.classList.add('show');
                 return;
             }
             
-            if (userId.length < 8 || userId.length > 12) {
-                errorDiv.textContent = '아이디는 8-12자로 입력해주세요.';
+            if (!emailRegex.test(userId)) {
+                errorDiv.textContent = '올바른 이메일 형식으로 입력해주세요.';
                 errorDiv.classList.add('show');
                 return;
             }
             
             // 실제로는 서버에 중복확인 요청
-            alert('사용 가능한 아이디입니다.');
+            alert('사용 가능한 이메일입니다.');
             errorDiv.classList.remove('show');
         }
 
@@ -1914,21 +1923,22 @@ body {
         function checkElectionUserId() {
             const userId = document.getElementById('electionUserId').value;
             const errorDiv = document.getElementById('electionUserIdError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             
             if (!userId) {
-                errorDiv.textContent = '아이디를 입력해주세요.';
+                errorDiv.textContent = '이메일을 입력해주세요.';
                 errorDiv.classList.add('show');
                 return;
             }
             
-            if (userId.length < 8 || userId.length > 12) {
-                errorDiv.textContent = '아이디는 8-12자로 입력해주세요.';
+            if (!emailRegex.test(userId)) {
+                errorDiv.textContent = '올바른 이메일 형식으로 입력해주세요.';
                 errorDiv.classList.add('show');
                 return;
             }
             
             // 실제로는 서버에 중복확인 요청
-            alert('사용 가능한 아이디입니다.');
+            alert('사용 가능한 이메일입니다.');
             errorDiv.classList.remove('show');
         }
 
@@ -2092,10 +2102,15 @@ body {
                 const password = document.getElementById('individualPassword').value;
                 const passwordConfirm = document.getElementById('individualPasswordConfirm').value;
                 const contact = document.getElementById('individualContact').value;
-                const email = document.getElementById('individualEmail').value;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 
-                if (!userId || !password || !passwordConfirm || !email) {
+                if (!userId || !password || !passwordConfirm) {
                     alert('모든 필수 항목을 입력해주세요.');
+                    return;
+                }
+                
+                if (!emailRegex.test(userId)) {
+                    alert('올바른 이메일 형식으로 아이디를 입력해주세요.');
                     return;
                 }
                 
@@ -2107,7 +2122,7 @@ body {
                 // 실제로는 서버에 회원가입 요청
                 alert('회원가입이 완료되었습니다.');
                 window.location.href = 'index.html';
-            } else {
+            } else if (type === 'business') {
                 // 기업 회원가입 검증
                 const userId = document.getElementById('businessUserId').value;
                 const password = document.getElementById('businessPassword').value;
@@ -2160,13 +2175,18 @@ body {
                 const organization = document.getElementById('electionOrganization').value;
                 const region = document.getElementById('electionRegion').value;
                 const contact = document.getElementById('electionContact').value;
-                const email = document.getElementById('electionEmail').value;
                 const messageContent = document.getElementById('electionMessageContent').value;
                 const agreeTerms = document.getElementById('electionAgreeTerms').checked;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 
                 if (!userId || !password || !passwordConfirm || !candidateName || !organization || 
-                    !region || !contact || !email || !messageContent) {
+                    !region || !contact || !messageContent) {
                     alert('모든 필수 항목을 입력해주세요.');
+                    return;
+                }
+                
+                if (!emailRegex.test(userId)) {
+                    alert('올바른 이메일 형식으로 아이디를 입력해주세요.');
                     return;
                 }
                 

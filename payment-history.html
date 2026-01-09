@@ -978,6 +978,108 @@ body {
         .status-completed { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
         .status-waiting { background: rgba(245, 158, 11, 0.1); color: var(--warning-color); }
         .status-cancelled { background: rgba(100, 116, 139, 0.1); color: var(--secondary-color); }
+        .status-refunded { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+        
+        /* 취소 버튼 스타일 */
+        .btn-cancel {
+            background-color: transparent;
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+            padding: 4px 8px;
+            font-size: 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-cancel:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        .btn-cancel:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            border-color: var(--text-muted);
+            color: var(--text-muted);
+        }
+        .btn-cancel:disabled:hover {
+            background-color: transparent;
+            color: var(--text-muted);
+        }
+        
+        /* 환불 정보 박스 */
+        .refund-info-box {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .refund-info-box h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        .refund-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .refund-info-row:last-child {
+            border-bottom: none;
+        }
+        .refund-info-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        .refund-info-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .refund-info-value.highlight {
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+        .refund-info-value.danger {
+            color: var(--danger-color);
+        }
+        
+        /* 환불 정책 안내 */
+        .refund-policy {
+            background-color: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: var(--warning-color);
+        }
+        .refund-policy ul {
+            margin: 8px 0 0 16px;
+            padding: 0;
+        }
+        .refund-policy li {
+            margin-bottom: 4px;
+        }
+        
+        /* 계좌 입력 폼 */
+        .account-form {
+            display: none;
+            background-color: var(--bg-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .account-form.show {
+            display: block;
+        }
+        .account-form .form-group {
+            margin-bottom: 12px;
+        }
+        .account-form .form-group:last-child {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
@@ -998,6 +1100,7 @@ body {
                 <div class="tab-list">
                     <button class="tab-item" onclick="window.location.href='payment-charge.html'">충전하기</button>
                     <button class="tab-item active" onclick="window.location.href='payment-history.html'">충전 내역</button>
+                    <button class="tab-item" onclick="window.location.href='payment-refund.html'">환불</button>
                     <button class="tab-item" onclick="window.location.href='payment-tax.html'">세금계산서 발행</button>
                 </div>
             </div>
@@ -1041,21 +1144,78 @@ body {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr data-id="1" data-date="2024-11-19" data-amount="100000" data-method="card" data-used="false" data-days="2">
                                     <td>2024-11-19 14:30</td>
                                     <td>100,000 포인트</td>
                                     <td>신용카드</td>
                                     <td><span class="status-badge status-completed">충전완료</span></td>
                                     <td>-</td>
-                                    <td><button class="btn btn-sm btn-outline" onclick="viewReceipt(1)">영수증</button></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReceipt(1)">영수증</button>
+                                        <button class="btn-cancel" onclick="openRefundModal(1)">취소</button>
+                                    </td>
                                 </tr>
-                                <tr>
+                                <tr data-id="2" data-date="2024-11-18" data-amount="500000" data-method="bank" data-used="false" data-days="3">
                                     <td>2024-11-18 10:20</td>
                                     <td>500,000 포인트</td>
                                     <td>무통장입금</td>
                                     <td><span class="status-badge status-waiting">입금대기</span></td>
                                     <td>입금 확인 중</td>
                                     <td>-</td>
+                                </tr>
+                                <tr data-id="3" data-date="2024-11-15" data-amount="200000" data-method="card" data-used="true" data-days="6">
+                                    <td>2024-11-15 09:15</td>
+                                    <td>200,000 포인트</td>
+                                    <td>신용카드</td>
+                                    <td><span class="status-badge status-completed">충전완료</span></td>
+                                    <td>일부 사용</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReceipt(3)">영수증</button>
+                                        <button class="btn-cancel" onclick="openRefundModal(3)">취소</button>
+                                    </td>
+                                </tr>
+                                <tr data-id="4" data-date="2024-11-10" data-amount="300000" data-method="realtime" data-used="true" data-days="11">
+                                    <td>2024-11-10 16:45</td>
+                                    <td>300,000 포인트</td>
+                                    <td>실시간계좌이체</td>
+                                    <td><span class="status-badge status-completed">충전완료</span></td>
+                                    <td>일부 사용</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReceipt(4)">영수증</button>
+                                        <button class="btn-cancel" onclick="openRefundModal(4)">취소</button>
+                                    </td>
+                                </tr>
+                                <tr data-id="5" data-date="2024-11-05" data-amount="50000" data-method="virtual" data-used="false" data-days="16">
+                                    <td>2024-11-05 11:30</td>
+                                    <td>50,000 포인트</td>
+                                    <td>가상계좌</td>
+                                    <td><span class="status-badge status-completed">충전완료</span></td>
+                                    <td>-</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReceipt(5)">영수증</button>
+                                        <button class="btn-cancel" onclick="openRefundModal(5)">취소</button>
+                                    </td>
+                                </tr>
+                                <tr data-id="6" data-date="2024-10-28" data-amount="100000" data-method="card" data-used="true" data-days="24">
+                                    <td>2024-10-28 14:00</td>
+                                    <td>100,000 포인트</td>
+                                    <td>신용카드</td>
+                                    <td><span class="status-badge status-refunded">환불완료</span></td>
+                                    <td>환불 처리됨</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReceipt(6)">영수증</button>
+                                    </td>
+                                </tr>
+                                <tr data-id="7" data-date="2024-10-20" data-amount="5000" data-method="card" data-used="true" data-days="32">
+                                    <td>2024-10-20 10:00</td>
+                                    <td>5,000 포인트</td>
+                                    <td>신용카드</td>
+                                    <td><span class="status-badge status-completed">충전완료</span></td>
+                                    <td>잔액 부족</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline" onclick="viewReceipt(7)">영수증</button>
+                                        <button class="btn-cancel" disabled title="잔여금액 1만원 미만">취소</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1454,6 +1614,150 @@ document.addEventListener('DOMContentLoaded', function() {
             showToast('환불 요청 페이지로 이동합니다.', 'info');
         }
 
+        // 환불 데이터 (실제로는 서버에서 조회)
+        const refundData = {
+            1: {
+                chargeDate: '2024-11-19',
+                chargeAmount: 100000,
+                paymentMethod: 'card',
+                paymentMethodLabel: '신용카드',
+                used: false,
+                daysElapsed: 2,
+                remainingAmount: 100000
+            },
+            3: {
+                chargeDate: '2024-11-15',
+                chargeAmount: 200000,
+                paymentMethod: 'card',
+                paymentMethodLabel: '신용카드',
+                used: true,
+                daysElapsed: 6,
+                remainingAmount: 150000
+            },
+            4: {
+                chargeDate: '2024-11-10',
+                chargeAmount: 300000,
+                paymentMethod: 'realtime',
+                paymentMethodLabel: '실시간계좌이체',
+                used: true,
+                daysElapsed: 11,
+                remainingAmount: 200000
+            },
+            5: {
+                chargeDate: '2024-11-05',
+                chargeAmount: 50000,
+                paymentMethod: 'virtual',
+                paymentMethodLabel: '가상계좌',
+                used: false,
+                daysElapsed: 16,
+                remainingAmount: 50000
+            }
+        };
+
+        let currentRefundId = null;
+
+        function openRefundModal(id) {
+            const data = refundData[id];
+            if (!data) {
+                showToast('환불 정보를 불러올 수 없습니다.', 'error');
+                return;
+            }
+
+            currentRefundId = id;
+            
+            // 기본 정보 표시
+            document.getElementById('refundChargeDate').textContent = data.chargeDate;
+            document.getElementById('refundChargeAmount').textContent = formatNumber(data.chargeAmount) + '원';
+            document.getElementById('refundPaymentMethod').textContent = data.paymentMethodLabel;
+            document.getElementById('refundUsageStatus').textContent = data.used ? '일부 사용' : '미사용';
+            document.getElementById('refundDaysElapsed').textContent = data.daysElapsed + '일';
+            document.getElementById('refundRemainingAmount').textContent = formatNumber(data.remainingAmount) + '원';
+            
+            // 환불 금액 계산
+            let refundAmount = data.remainingAmount;
+            let fee = 0;
+            let refundTypeHtml = '';
+            const feeRow = document.getElementById('refundFeeRow');
+            const accountForm = document.getElementById('accountForm');
+            
+            if (data.paymentMethod === 'card') {
+                // 카드결제
+                if (data.daysElapsed <= 7 && !data.used) {
+                    // 7일 이내 미사용: 전액 환불
+                    refundTypeHtml = '<strong>💳 카드 결제 취소</strong><br>충전 후 7일 이내이며 포인트를 사용하지 않아 <strong>전액 환불</strong>됩니다.';
+                    feeRow.style.display = 'none';
+                    accountForm.classList.remove('show');
+                } else {
+                    // 7일 이후 또는 사용 후: 10% 수수료
+                    fee = Math.floor(data.remainingAmount * 0.1);
+                    refundAmount = data.remainingAmount - fee;
+                    refundTypeHtml = '<strong>💳 카드 결제 환불</strong><br>충전 후 7일이 지났거나 포인트를 사용하여 <strong>잔여금액의 10% 수수료</strong>가 차감됩니다.';
+                    document.getElementById('refundFee').textContent = '-' + formatNumber(fee) + '원';
+                    feeRow.style.display = 'flex';
+                    accountForm.classList.remove('show');
+                }
+            } else {
+                // 계좌이체, 가상계좌 등
+                if (data.daysElapsed <= 7 && !data.used) {
+                    refundTypeHtml = '<strong>🏦 계좌 환불</strong><br>충전 후 7일 이내이며 포인트를 사용하지 않아 <strong>전액 환불</strong>됩니다.<br>환불 받을 계좌 정보를 입력해주세요.';
+                    feeRow.style.display = 'none';
+                } else {
+                    fee = Math.floor(data.remainingAmount * 0.1);
+                    refundAmount = data.remainingAmount - fee;
+                    refundTypeHtml = '<strong>🏦 계좌 환불</strong><br>충전 후 7일이 지났거나 포인트를 사용하여 <strong>잔여금액의 10% 수수료</strong>가 차감됩니다.<br>환불 받을 계좌 정보를 입력해주세요.';
+                    document.getElementById('refundFee').textContent = '-' + formatNumber(fee) + '원';
+                    feeRow.style.display = 'flex';
+                }
+                accountForm.classList.add('show');
+            }
+            
+            document.getElementById('refundTypeInfo').innerHTML = refundTypeHtml;
+            document.getElementById('refundFinalAmount').textContent = formatNumber(refundAmount) + '원';
+            
+            // 입력 필드 초기화
+            document.getElementById('refundBankName').value = '';
+            document.getElementById('refundAccountNumber').value = '';
+            document.getElementById('refundAccountHolder').value = '';
+            document.getElementById('refundReason').value = '';
+            
+            openModal('refundModal');
+        }
+
+        function submitRefund() {
+            const data = refundData[currentRefundId];
+            if (!data) return;
+            
+            // 계좌이체/가상계좌인 경우 계좌 정보 검증
+            if (data.paymentMethod !== 'card') {
+                const bankName = document.getElementById('refundBankName').value;
+                const accountNumber = document.getElementById('refundAccountNumber').value;
+                const accountHolder = document.getElementById('refundAccountHolder').value;
+                
+                if (!bankName) {
+                    alert('은행을 선택해주세요.');
+                    return;
+                }
+                if (!accountNumber) {
+                    alert('계좌번호를 입력해주세요.');
+                    return;
+                }
+                if (!accountHolder) {
+                    alert('예금주를 입력해주세요.');
+                    return;
+                }
+            }
+            
+            // 확인 메시지
+            const finalAmount = document.getElementById('refundFinalAmount').textContent;
+            if (!confirm('환불 금액 ' + finalAmount + '을 신청하시겠습니까?\n\n환불 금액은 영업일 기준 7일 이내 지급됩니다.')) {
+                return;
+            }
+            
+            // 실제로는 서버에 환불 요청
+            closeModal('refundModal');
+            showToast('환불 신청이 완료되었습니다. 영업일 기준 7일 이내 처리됩니다.', 'success');
+        }
+
         // 초기화
         setPeriod('month');
     </script>
@@ -1491,6 +1795,115 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button class="btn btn-outline" onclick="closeModal('receiptModal')">닫기</button>
                 <button class="btn btn-primary" onclick="printReceipt()">인쇄</button>
                 <button class="btn btn-primary" onclick="downloadReceipt()">다운로드</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 환불 신청 모달 -->
+    <div class="modal-overlay" id="refundModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">환불 신청</h3>
+                <button class="modal-close" onclick="closeModal('refundModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 환불 정책 안내 -->
+                <div class="refund-policy">
+                    <strong>📋 환불 정책 안내</strong>
+                    <ul>
+                        <li>잔여금액이 1만원 이상인 경우에만 환불 신청이 가능합니다.</li>
+                        <li>모든 메시지 발송이 완료된 상태에서만 환불이 가능합니다.</li>
+                        <li>환불 금액은 영업일 기준 7일 이내 지급됩니다.</li>
+                    </ul>
+                </div>
+                
+                <!-- 충전 정보 -->
+                <div class="refund-info-box">
+                    <h4>충전 정보</h4>
+                    <div class="refund-info-row">
+                        <span class="refund-info-label">충전일</span>
+                        <span class="refund-info-value" id="refundChargeDate">2024-11-19</span>
+                    </div>
+                    <div class="refund-info-row">
+                        <span class="refund-info-label">충전 금액</span>
+                        <span class="refund-info-value" id="refundChargeAmount">100,000원</span>
+                    </div>
+                    <div class="refund-info-row">
+                        <span class="refund-info-label">결제 수단</span>
+                        <span class="refund-info-value" id="refundPaymentMethod">신용카드</span>
+                    </div>
+                    <div class="refund-info-row">
+                        <span class="refund-info-label">사용 여부</span>
+                        <span class="refund-info-value" id="refundUsageStatus">미사용</span>
+                    </div>
+                    <div class="refund-info-row">
+                        <span class="refund-info-label">경과일</span>
+                        <span class="refund-info-value" id="refundDaysElapsed">2일</span>
+                    </div>
+                </div>
+                
+                <!-- 환불 금액 계산 -->
+                <div class="refund-info-box">
+                    <h4>환불 금액</h4>
+                    <div class="refund-info-row">
+                        <span class="refund-info-label">잔여 금액</span>
+                        <span class="refund-info-value" id="refundRemainingAmount">100,000원</span>
+                    </div>
+                    <div class="refund-info-row" id="refundFeeRow" style="display: none;">
+                        <span class="refund-info-label">환불 수수료 (10%)</span>
+                        <span class="refund-info-value danger" id="refundFee">-10,000원</span>
+                    </div>
+                    <div class="refund-info-row" style="border-top: 2px solid var(--border-color); margin-top: 8px; padding-top: 12px;">
+                        <span class="refund-info-label" style="font-weight: 600;">예상 환불 금액</span>
+                        <span class="refund-info-value highlight" id="refundFinalAmount">100,000원</span>
+                    </div>
+                </div>
+                
+                <!-- 환불 유형 안내 -->
+                <div class="alert alert-info" id="refundTypeInfo" style="margin-bottom: 16px;">
+                    <strong>💳 카드 결제 취소</strong><br>
+                    충전 후 7일 이내이며 포인트를 사용하지 않아 <strong>전액 환불</strong>됩니다.
+                </div>
+                
+                <!-- 계좌 입력 폼 (계좌이체/가상계좌용) -->
+                <div class="account-form" id="accountForm">
+                    <h4 style="margin-bottom: 12px; font-size: 14px; font-weight: 600;">환불 받을 계좌 정보</h4>
+                    <div class="form-group">
+                        <label class="form-label required">은행명</label>
+                        <select class="form-select" id="refundBankName">
+                            <option value="">은행 선택</option>
+                            <option value="kb">KB국민은행</option>
+                            <option value="shinhan">신한은행</option>
+                            <option value="woori">우리은행</option>
+                            <option value="hana">하나은행</option>
+                            <option value="nh">NH농협은행</option>
+                            <option value="ibk">IBK기업은행</option>
+                            <option value="sc">SC제일은행</option>
+                            <option value="citi">한국씨티은행</option>
+                            <option value="kakao">카카오뱅크</option>
+                            <option value="toss">토스뱅크</option>
+                            <option value="kbank">케이뱅크</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">계좌번호</label>
+                        <input type="text" class="form-input" id="refundAccountNumber" placeholder="'-' 없이 숫자만 입력">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">예금주</label>
+                        <input type="text" class="form-input" id="refundAccountHolder" placeholder="예금주명 입력">
+                    </div>
+                </div>
+                
+                <!-- 환불 사유 -->
+                <div class="form-group">
+                    <label class="form-label">환불 사유 (선택)</label>
+                    <textarea class="form-textarea" id="refundReason" placeholder="환불 사유를 입력해주세요 (선택사항)" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('refundModal')">취소</button>
+                <button class="btn btn-danger" onclick="submitRefund()">환불 신청</button>
             </div>
         </div>
     </div>
