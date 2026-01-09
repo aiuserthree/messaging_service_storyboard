@@ -839,15 +839,264 @@
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
-            { selector: '#paymentTabs', title: '탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '결제 관련 페이지 이동' },
-            { selector: '#balanceSummary', title: '잔액 요약', position: { top: '10px', left: '10px' }, function: '포인트/마일리지 현황 표시' },
-            { selector: '#refundPolicyBox', title: '환불 정책 안내', position: { top: '10px', left: '10px' }, function: '환불 조건 및 정책 안내' },
-            { selector: '#historyCard', title: '포인트/마일리지 내역', position: { top: '10px', left: '10px' }, function: '충전/사용/적립 내역 조회', behavior: ['탭으로 필터링', '페이지당 20건 표시'] },
-            { selector: '#historyTabs', title: '내역 탭', position: { top: '-5px', left: '-10px' }, function: '내역 종류별 필터링' },
-            { selector: '#refundFormCard', title: '환불 신청 폼', position: { top: '10px', left: '10px' }, function: '환불 신청서 작성 (플로팅)' },
-            { selector: '#refundCalculation', title: '환불 금액 계산', position: { top: '5px', right: '5px' }, function: '수수료 차감 후 예상 환불 금액' },
-            { selector: '#accountSection', title: '계좌 정보 입력', position: { top: '5px', left: '5px' }, function: '환불 받을 계좌 정보', behavior: ['은행명', '계좌번호', '예금주'] },
-            { selector: '.pagination', title: '페이지네이션', position: { top: '-5px', left: '50%' }, function: '페이지 이동 (20건씩)' }
+            // ===== 탭 메뉴 영역 =====
+            // 1. 탭 메뉴
+            {
+                selector: '#paymentTabs',
+                title: '탭 메뉴',
+                position: { top: '-5px', left: '-10px' },
+                function: '결제관리 하위 페이지 네비게이션',
+                behavior: ['충전하기', '충전내역', '환불', '세금계산서 발행 4개 탭 구성']
+            },
+            // 2. 충전하기 탭
+            {
+                selector: '#paymentTabs .tab-item:nth-child(1)',
+                title: '충전하기 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '포인트 충전 페이지로 이동',
+                behavior: ['클릭 시 payment-charge.html 이동']
+            },
+            // 3. 충전내역 탭
+            {
+                selector: '#paymentTabs .tab-item:nth-child(2)',
+                title: '충전내역 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '충전 이력 및 취소 관리 페이지로 이동',
+                behavior: ['클릭 시 payment-history.html 이동']
+            },
+            // 4. 환불 탭 (현재)
+            {
+                selector: '#paymentTabs .tab-item:nth-child(3)',
+                title: '환불 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '환불 신청 페이지 (현재 페이지)',
+                behavior: ['활성 상태 스타일 적용']
+            },
+            // 5. 세금계산서 탭
+            {
+                selector: '#paymentTabs .tab-item:nth-child(4)',
+                title: '세금계산서 탭',
+                position: { top: '-5px', right: '-10px' },
+                function: '세금계산서 발행 페이지로 이동',
+                behavior: ['클릭 시 payment-tax.html 이동']
+            },
+            // ===== 잔액 요약 카드 영역 =====
+            // 6. 잔액 요약 카드 영역
+            {
+                selector: '#balanceSummary',
+                title: '잔액 요약 카드',
+                position: { top: '10px', left: '10px' },
+                function: '현재 포인트/마일리지 잔액 및 환불 가능 금액 한눈에 표시',
+                behavior: ['3개 카드 그리드 배치', '반응형: 모바일에서 세로 배치'],
+                api: 'GET /api/users/me/balance'
+            },
+            // 7. 잔여 포인트 카드
+            {
+                selector: '#balanceSummary .balance-card:nth-child(1)',
+                title: '잔여 포인트',
+                position: { top: '5px', left: '5px' },
+                function: '현재 보유 포인트 잔액 표시',
+                behavior: ['충전한 포인트의 총 잔액', '실시간 업데이트']
+            },
+            // 8. 환불 가능 금액 카드
+            {
+                selector: '#balanceSummary .balance-card:nth-child(2)',
+                title: '환불 가능 금액',
+                position: { top: '5px', left: '5px' },
+                function: '실제 환불 받을 수 있는 금액 (수수료 10% 차감 후)',
+                behavior: ['잔여포인트 × 0.9 계산', '1만원 미만 시 환불 불가 안내']
+            },
+            // 9. 마일리지 카드
+            {
+                selector: '#balanceSummary .balance-card:nth-child(3)',
+                title: '마일리지 잔액',
+                position: { top: '5px', left: '5px' },
+                function: '마일리지 잔액 표시 (환불 불가 안내)',
+                behavior: ['문자발송 시에만 사용 가능', '환불 대상에서 제외']
+            },
+            // ===== 환불 정책 안내 =====
+            // 10. 환불 정책 안내 박스
+            {
+                selector: '#refundPolicyBox',
+                title: '환불 정책 안내',
+                position: { top: '10px', left: '10px' },
+                function: '환불 조건 및 정책을 명확히 안내하여 CS 문의 감소',
+                behavior: [
+                    '환불 조건: 1만원 이상, 발송 완료 상태',
+                    '카드결제: 7일 이내 미사용 시 전액환불, 이후 10% 수수료',
+                    '계좌이체/가상계좌: 계좌정보 필수 입력',
+                    '환불 기간: 영업일 7일 이내',
+                    '마일리지 환불 불가'
+                ]
+            },
+            // ===== 포인트/마일리지 내역 =====
+            // 11. 내역 카드
+            {
+                selector: '#historyCard',
+                title: '포인트/마일리지 내역',
+                position: { top: '10px', left: '10px' },
+                function: '충전/사용/마일리지 전체 내역을 탭으로 구분하여 조회',
+                behavior: ['탭 전환으로 필터링', '페이지당 20건 표시', '페이지네이션 지원'],
+                api: 'GET /api/users/me/transactions'
+            },
+            // 12. 내역 탭 버튼 그룹
+            {
+                selector: '#historyTabs',
+                title: '내역 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '내역 종류별 필터링 (전체/포인트충전/마일리지/사용내역)',
+                behavior: ['전체: 모든 내역 표시', '포인트 충전: 충전 내역만', '마일리지 적립: 마일리지만', '사용 내역: 차감 내역만']
+            },
+            // 13. 전체 내역 탭
+            {
+                selector: '#historyTabs .history-tab:nth-child(1)',
+                title: '전체 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '모든 거래 내역 조회'
+            },
+            // 14. 포인트 충전 탭
+            {
+                selector: '#historyTabs .history-tab:nth-child(2)',
+                title: '포인트 충전 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '포인트 충전 내역만 필터링',
+                behavior: ['결제수단별 충전 내역 표시']
+            },
+            // 15. 마일리지 적립 탭
+            {
+                selector: '#historyTabs .history-tab:nth-child(3)',
+                title: '마일리지 적립 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '마일리지 적립 내역만 필터링',
+                behavior: ['적립 사유별 내역 표시']
+            },
+            // 16. 사용 내역 탭
+            {
+                selector: '#historyTabs .history-tab:nth-child(4)',
+                title: '사용 내역 탭',
+                position: { top: '-5px', right: '-10px' },
+                function: '포인트 사용 및 환불 내역 필터링',
+                behavior: ['서비스별 사용 내역', '환불 내역 포함']
+            },
+            // 17. 내역 테이블
+            {
+                selector: '#historyAllBody',
+                title: '내역 테이블',
+                position: { top: '5px', left: '5px' },
+                function: '거래 내역 목록 표시',
+                behavior: ['날짜, 구분(뱃지), 내용, 금액, 잔액 컬럼', '금액: +는 초록, -는 빨강 색상 적용']
+            },
+            // 18. 페이지네이션
+            {
+                selector: '#paginationAll',
+                title: '페이지네이션',
+                position: { top: '-5px', left: '50%' },
+                function: '내역 목록 페이지 이동 (20건씩)',
+                behavior: ['이전/다음 버튼', '페이지 번호 직접 선택', '현재 위치 표시 (n-m / 총 N건)']
+            },
+            // ===== 환불 신청 폼 (우측 플로팅) =====
+            // 19. 환불 신청 폼 카드
+            {
+                selector: '#refundFormCard',
+                title: '환불 신청 폼',
+                position: { top: '10px', left: '10px' },
+                function: '환불 신청서 작성 영역 (스크롤 시 플로팅 고정)',
+                behavior: ['position: sticky로 스크롤 따라다님', '모바일에서는 고정 해제'],
+                api: 'POST /api/refund/request'
+            },
+            // 20. 환불 금액 계산 영역
+            {
+                selector: '#refundCalculation',
+                title: '환불 금액 계산',
+                position: { top: '5px', right: '5px' },
+                function: '실시간 환불 예상 금액 계산 및 표시',
+                behavior: [
+                    '잔여 포인트 표시',
+                    '환불 수수료(10%) 차감 금액 표시',
+                    '최종 예상 환불 금액 강조 표시'
+                ]
+            },
+            // 21. 잔여 포인트 행
+            {
+                selector: '#calcRemainingPoints',
+                title: '잔여 포인트',
+                position: { top: '-5px', right: '-10px' },
+                function: '현재 보유 포인트 금액 표시'
+            },
+            // 22. 수수료 행
+            {
+                selector: '#calcFee',
+                title: '환불 수수료',
+                position: { top: '-5px', right: '-10px' },
+                function: '10% 수수료 금액 표시 (빨간색)',
+                behavior: ['7일 이내 미사용 카드결제는 수수료 면제']
+            },
+            // 23. 예상 환불 금액 행
+            {
+                selector: '#calcFinalAmount',
+                title: '예상 환불 금액',
+                position: { top: '-5px', right: '-10px' },
+                function: '최종 환불 예상 금액 (강조 표시)',
+                behavior: ['파란색 큰 글씨로 강조']
+            },
+            // ===== 계좌 정보 입력 =====
+            // 24. 계좌 정보 섹션
+            {
+                selector: '#accountSection',
+                title: '계좌 정보 입력',
+                position: { top: '5px', left: '5px' },
+                function: '환불 받을 계좌 정보 입력 폼',
+                behavior: ['은행명, 계좌번호, 예금주 모두 필수 입력', '계좌이체/가상계좌 결제 시 필수']
+            },
+            // 25. 은행 선택
+            {
+                selector: '#refundBankName',
+                title: '은행 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '환불 받을 은행 선택',
+                behavior: ['주요 시중은행 및 인터넷은행 목록 제공'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 26. 계좌번호 입력
+            {
+                selector: '#refundAccountNumber',
+                title: '계좌번호',
+                position: { top: '-5px', left: '-10px' },
+                function: '환불 받을 계좌번호 입력',
+                behavior: ['하이픈(-) 없이 숫자만 입력', '입력값 숫자 검증'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 27. 예금주 입력
+            {
+                selector: '#refundAccountHolder',
+                title: '예금주',
+                position: { top: '-5px', left: '-10px' },
+                function: '예금주명 입력',
+                behavior: ['회원 본인 명의 계좌 권장'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 28. 환불 사유 입력
+            {
+                selector: '#refundReason',
+                title: '환불 사유',
+                position: { top: '-5px', left: '-10px' },
+                function: '환불 사유 입력 (선택사항)',
+                behavior: ['미입력 시에도 환불 진행 가능']
+            },
+            // 29. 환불 신청 버튼
+            {
+                selector: '.btn-danger.btn-lg',
+                title: '환불 신청하기',
+                position: { top: '-5px', right: '-10px' },
+                function: '환불 신청 최종 제출',
+                behavior: [
+                    '필수 입력값 검증 (은행, 계좌번호, 예금주)',
+                    '확인 다이얼로그 표시',
+                    '성공 시 충전내역 페이지로 이동'
+                ],
+                api: 'POST /api/refund/request',
+                tags: [{ text: 'API', type: 'api' }]
+            }
         ];
         initSpecOverlay(specData);
     </script>

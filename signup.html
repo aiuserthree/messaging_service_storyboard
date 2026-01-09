@@ -2491,6 +2491,131 @@ body {
                 function: '사업장 주소 입력',
                 behavior: ['다음 주소 API 연동'],
                 tags: [{ text: '필수', type: 'required' }]
+            },
+            // ===== 선거회원 전용 폼 =====
+            // 30. Step 4 선거회원 폼
+            {
+                selector: '#step4-election',
+                title: 'Step 4: 선거회원 정보입력',
+                position: { top: '10px', right: '10px' },
+                function: '선거회원 정보 및 필수 서류 입력 폼',
+                behavior: [
+                    '선거관리위원회 제출용 서류 수집',
+                    '신분증, 등록확인서, 발신자증빙, 선거문자신고서(선택) 업로드'
+                ]
+            },
+            // 31. 아이디(이메일) 입력 (선거)
+            {
+                selector: '#electionUserId',
+                title: '아이디(이메일) 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '선거회원 이메일 주소 입력 (아이디로 사용)',
+                behavior: ['이메일 형식 검증', '중복확인 필수'],
+                api: 'GET /api/users/check-email',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 32. 비밀번호 입력 (선거)
+            {
+                selector: '#electionPassword',
+                title: '비밀번호 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '비밀번호 입력',
+                behavior: ['8~16자 영문, 숫자, 특수문자 혼합', '강도 표시'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 33. 비밀번호 확인 (선거)
+            {
+                selector: '#electionPasswordConfirm',
+                title: '비밀번호 확인',
+                position: { top: '-5px', left: '-10px' },
+                function: '비밀번호 재입력 확인',
+                behavior: ['비밀번호 일치 여부 검증'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 34. 후보자/단체명 입력
+            {
+                selector: '#electionCandidateName',
+                title: '후보자/단체명',
+                position: { top: '-5px', left: '-10px' },
+                function: '후보자 또는 단체명 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 35. 선거구 입력
+            {
+                selector: '#electionRegion',
+                title: '선거구',
+                position: { top: '-5px', left: '-10px' },
+                function: '출마 선거구 입력',
+                behavior: ['예: 서울시 강남구'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 36. 신분증 사본 업로드
+            {
+                selector: '#electionIdCardFileInput',
+                title: '신분증 사본',
+                position: { top: '-5px', left: '-10px' },
+                function: '신분증 사본 파일 첨부',
+                behavior: ['주민등록증/운전면허증/여권 사본', 'PDF, JPG, PNG 허용', '최대 10MB'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 37. 후보자등록확인서 업로드
+            {
+                selector: '#electionCertificateFileInput',
+                title: '후보자등록확인서',
+                position: { top: '-5px', left: '-10px' },
+                function: '선관위 발급 후보자등록확인서 첨부',
+                behavior: ['선거관리위원회에서 발급', 'PDF, JPG, PNG 허용', '최대 10MB'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 38. 발신자증빙 업로드
+            {
+                selector: '#electionCallerProofFileInput',
+                title: '발신자증빙',
+                position: { top: '-5px', left: '-10px' },
+                function: '발신자 증빙서류 첨부 (통신가입증명원 등)',
+                behavior: ['통신사 가입증명원 또는 이에 준하는 서류', 'PDF, JPG, PNG 허용', '최대 10MB'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 39. 선거문자신고서 업로드
+            {
+                selector: '#electionReportCopyFileInput',
+                title: '선거문자신고서',
+                position: { top: '-5px', left: '-10px' },
+                function: '선거문자 발송 신고서 사본 첨부 (선택)',
+                behavior: ['선관위 제출 신고서 사본', 'PDF, JPG, PNG 허용', '최대 10MB'],
+                tags: [{ text: '선택', type: 'optional' }]
+            },
+            // 40. 발송예정문자내용 입력
+            {
+                selector: '#electionMessageContent',
+                title: '발송예정 문자내용',
+                position: { top: '-5px', left: '-10px' },
+                function: '선거문자 발송 예정 내용 미리 입력',
+                behavior: ['사전 검토용', '실제 발송 시 수정 가능'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 41. 선거문자 이용약관 동의
+            {
+                selector: '#electionAgreeTerms',
+                title: '선거문자 이용약관',
+                position: { top: '-5px', left: '-10px' },
+                function: '선거문자 발송 관련 이용약관 동의',
+                behavior: ['공직선거법 준수 동의', '선관위 신고 의무 안내'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 42. 가입완료 버튼
+            {
+                selector: '.btn-primary.btn-lg',
+                title: '가입완료 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '회원가입 최종 제출',
+                behavior: [
+                    '모든 필수 입력값 검증',
+                    '파일 업로드 완료 확인',
+                    '성공 시 로그인 페이지로 이동'
+                ],
+                api: 'POST /api/users/signup',
+                tags: [{ text: 'API', type: 'api' }]
             }
         ];
         initSpecOverlay(specData);
