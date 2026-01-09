@@ -1962,8 +1962,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     '선거문자 템플릿 (현재)'
                 ]
             },
+            // 3. 선거문자 발송 탭 버튼
+            {
+                selector: '#tabMenu .tab-item:nth-child(1)',
+                title: '선거문자 발송 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '선거문자 발송 페이지로 이동',
+                behavior: ['클릭 시 message-send-election.html로 이동']
+            },
+            // 4. 선거문자 템플릿 탭 버튼
+            {
+                selector: '#tabMenu .tab-item:nth-child(2)',
+                title: '선거문자 템플릿 탭',
+                position: { top: '-5px', right: '-10px' },
+                function: '선거문자 템플릿 관리 (현재 페이지)',
+                behavior: ['활성 상태 스타일 적용']
+            },
             // ===== 통계 영역 =====
-            // 3. 통계 요약 섹션
+            // 5. 통계 요약 섹션
             {
                 selector: '#statsSection',
                 title: '통계 요약',
@@ -1971,14 +1987,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: '선거문자 템플릿 현황 통계 카드',
                 api: 'GET /api/election/templates/stats'
             },
-            // 4. 전체 템플릿 수
+            // 6. 전체 템플릿 수
             {
                 selector: '#statsSection .stat-card:nth-child(1)',
                 title: '전체 템플릿',
                 position: { top: '-5px', left: '-10px' },
                 function: '등록된 전체 템플릿 수 표시'
             },
-            // 5. SMS 템플릿 수
+            // 7. SMS 템플릿 수
             {
                 selector: '#statsSection .stat-card:nth-child(2)',
                 title: 'SMS 템플릿',
@@ -1986,7 +2002,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: 'SMS 타입 템플릿 수',
                 behavior: ['90바이트 이하 문자 템플릿']
             },
-            // 6. LMS 템플릿 수
+            // 8. LMS 템플릿 수
             {
                 selector: '#statsSection .stat-card:nth-child(3)',
                 title: 'LMS 템플릿',
@@ -1994,7 +2010,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: 'LMS 타입 템플릿 수',
                 behavior: ['2,000바이트 이하 장문 문자 템플릿']
             },
-            // 7. MMS 템플릿 수
+            // 9. MMS 템플릿 수
             {
                 selector: '#statsSection .stat-card:nth-child(4)',
                 title: 'MMS 템플릿',
@@ -2003,14 +2019,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 behavior: ['이미지 포함 멀티미디어 문자 템플릿']
             },
             // ===== 검색 영역 =====
-            // 8. 검색 및 필터 섹션
+            // 10. 검색 및 필터 섹션
             {
                 selector: '#searchFilterSection',
                 title: '검색 및 필터',
                 position: { top: '10px', left: '10px' },
                 function: '템플릿 검색 및 필터링 영역'
             },
-            // 9. 검색어 입력
+            // 11. 검색어 입력
             {
                 selector: '#searchFilterSection input[type="text"]',
                 title: '검색 입력',
@@ -2018,7 +2034,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: '템플릿명 또는 내용으로 검색',
                 behavior: ['입력 후 검색 버튼 클릭 또는 Enter']
             },
-            // 10. 메시지 타입 필터
+            // 12. 메시지 타입 필터
             {
                 selector: '#searchFilterSection .form-select',
                 title: '타입 필터',
@@ -2026,7 +2042,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: 'SMS/LMS/MMS 타입별 필터링',
                 behavior: ['전체/SMS/LMS/MMS 선택']
             },
-            // 11. 검색 버튼
+            // 13. 검색 버튼
             {
                 selector: '#searchFilterSection .btn-primary',
                 title: '검색 버튼',
@@ -2034,7 +2050,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: '검색 조건으로 템플릿 조회',
                 api: 'GET /api/election/templates?keyword={keyword}&type={type}'
             },
-            // 12. 초기화 버튼
+            // 14. 초기화 버튼
             {
                 selector: '#searchFilterSection .btn-outline',
                 title: '초기화 버튼',
@@ -2043,14 +2059,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 behavior: ['모든 필터 해제 후 전체 목록 표시']
             },
             // ===== 템플릿 목록 영역 =====
-            // 13. 템플릿 목록 섹션
+            // 15. 템플릿 목록 섹션
             {
                 selector: '#templateListSection',
                 title: '템플릿 목록 섹션',
                 position: { top: '10px', left: '10px' },
                 function: '선거문자 템플릿 카드 그리드 영역'
             },
-            // 14. 새 템플릿 등록 버튼
+            // 16. 새 템플릿 등록 버튼
             {
                 selector: '#addTemplateBtn',
                 title: '새 템플릿 등록',
@@ -2062,7 +2078,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     '후보자/정당명 필수 입력'
                 ]
             },
-            // 15. 일괄 삭제 버튼
+            // 17. 일괄 삭제 버튼
             {
                 selector: '#batchDeleteBtn',
                 title: '일괄 삭제',
@@ -2071,7 +2087,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 behavior: ['체크박스 선택된 템플릿만 삭제'],
                 api: 'DELETE /api/election/templates/batch'
             },
-            // 16. 내보내기 버튼
+            // 18. 내보내기 버튼
             {
                 selector: '#exportBtn',
                 title: '내보내기',
@@ -2079,7 +2095,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: '템플릿 데이터 Excel/CSV로 내보내기',
                 behavior: ['현재 필터 조건에 해당하는 템플릿 목록 다운로드']
             },
-            // 17. 템플릿 카드 그리드
+            // 19. 템플릿 카드 그리드
             {
                 selector: '#templateGrid',
                 title: '템플릿 카드 목록',
@@ -2091,21 +2107,44 @@ document.addEventListener('DOMContentLoaded', function() {
                     '등록일 표시'
                 ]
             },
-            // 18. 개별 템플릿 카드
+            // 20. 개별 템플릿 카드
             {
                 selector: '#templateGrid .template-item:first-child',
                 title: '템플릿 카드',
                 position: { top: '-5px', left: '-10px' },
-                function: '개별 템플릿 정보 카드',
-                behavior: [
-                    '체크박스: 일괄 작업용 선택',
-                    '미리보기: 전체 내용 확인 모달',
-                    '수정: 템플릿 편집 모달',
-                    '복사: 템플릿 복제',
-                    '삭제: 템플릿 삭제'
-                ]
+                function: '개별 템플릿 정보 카드'
             },
-            // 19. 페이지네이션
+            // 21. 템플릿 카드 - 미리보기 버튼
+            {
+                selector: '.btn-outline[onclick*="previewTemplate"]',
+                title: '미리보기 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '템플릿 전체 내용 미리보기 모달 열기'
+            },
+            // 22. 템플릿 카드 - 수정 버튼
+            {
+                selector: '.btn-outline[onclick*="editTemplate"]',
+                title: '수정 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '템플릿 편집 모달 열기',
+                behavior: ['기존 내용 불러와서 수정']
+            },
+            // 23. 템플릿 카드 - 복사 버튼
+            {
+                selector: '.btn-outline[onclick*="copyTemplate"]',
+                title: '복사 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '템플릿 복제하여 새로 생성',
+                api: 'POST /api/election/templates/copy'
+            },
+            // 24. 템플릿 카드 - 삭제 버튼
+            {
+                selector: '.btn-outline[onclick*="deleteTemplate"]',
+                title: '삭제 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '삭제 확인 모달 열기'
+            },
+            // 25. 페이지네이션
             {
                 selector: '#pagination',
                 title: '페이지네이션',
@@ -2118,14 +2157,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 ]
             },
             // ===== 템플릿 등록/수정 모달 =====
-            // 20. 템플릿 등록 모달
+            // 26. 템플릿 등록 모달
             {
                 selector: '#addTemplateModal',
                 title: '템플릿 등록 모달',
                 position: { top: '60px', left: '20px' },
                 function: '새 선거문자 템플릿 등록/수정 폼'
             },
-            // 21. 템플릿명 입력
+            // 27. 템플릿 등록 모달 닫기 버튼
+            {
+                selector: '#addTemplateModal .modal-close',
+                title: '모달 닫기(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '템플릿 등록 모달 닫기'
+            },
+            // 28. 템플릿명 입력
             {
                 selector: '#templateForm input[type="text"]:first-of-type',
                 title: '템플릿명 입력',
@@ -2133,7 +2179,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: '템플릿 이름 입력 (목록에서 식별용)',
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 22. 메시지 타입 선택
+            // 29. 메시지 타입 선택
             {
                 selector: '#templateForm input[name="messageType"]',
                 title: '메시지 타입 선택',
@@ -2146,7 +2192,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 23. 제목 입력 (LMS/MMS)
+            // 30. 제목 입력 (LMS/MMS)
             {
                 selector: '#titleGroup',
                 title: '제목 입력',
@@ -2154,7 +2200,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: 'LMS/MMS용 제목 입력',
                 behavior: ['LMS/MMS 선택 시에만 표시', '최대 40자']
             },
-            // 24. 선거운동정보 입력
+            // 31. 선거운동정보 입력
             {
                 selector: '#candidateNameInput',
                 title: '선거운동정보',
@@ -2167,19 +2213,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 25. 변수 삽입 버튼
+            // 32. #{이름} 변수 버튼
             {
-                selector: '#templateForm .flex.gap-2.mb-1 button',
-                title: '변수 삽입 버튼',
+                selector: '#addTemplateModal .btn-outline[onclick*="insertVariable(\'#{이름}\')"]',
+                title: '#{이름} 변수',
                 position: { top: '-5px', left: '-10px' },
-                function: '메시지에 개인화 변수 삽입',
-                behavior: [
-                    '#{이름}: 수신자 이름',
-                    '#{전화번호}: 수신자 번호',
-                    '커서 위치에 변수 삽입'
-                ]
+                function: '수신자 이름 변수 삽입',
+                behavior: ['커서 위치에 #{이름} 삽입']
             },
-            // 26. 메시지 내용
+            // 33. #{전화번호} 변수 버튼
+            {
+                selector: '#addTemplateModal .btn-outline[onclick*="insertVariable(\'#{전화번호}\')"]',
+                title: '#{전화번호} 변수',
+                position: { top: '-5px', left: '-10px' },
+                function: '수신자 전화번호 변수 삽입',
+                behavior: ['커서 위치에 #{전화번호} 삽입']
+            },
+            // 34. #{변수1} 변수 버튼
+            {
+                selector: '#addTemplateModal .btn-outline[onclick*="insertVariable(\'#{변수1}\')"]',
+                title: '#{변수1} 변수',
+                position: { top: '-5px', left: '-10px' },
+                function: '커스텀 변수1 삽입',
+                behavior: ['커서 위치에 #{변수1} 삽입']
+            },
+            // 35. #{변수2} 변수 버튼
+            {
+                selector: '#addTemplateModal .btn-outline[onclick*="insertVariable(\'#{변수2}\')"]',
+                title: '#{변수2} 변수',
+                position: { top: '-5px', left: '-10px' },
+                function: '커스텀 변수2 삽입',
+                behavior: ['커서 위치에 #{변수2} 삽입']
+            },
+            // 36. #{변수3} 변수 버튼
+            {
+                selector: '#addTemplateModal .btn-outline[onclick*="insertVariable(\'#{변수3}\')"]',
+                title: '#{변수3} 변수',
+                position: { top: '-5px', right: '-10px' },
+                function: '커스텀 변수3 삽입',
+                behavior: ['커서 위치에 #{변수3} 삽입']
+            },
+            // 37. 메시지 내용
             {
                 selector: '#templateContent',
                 title: '메시지 내용',
@@ -2192,7 +2266,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 27. 바이트 카운터
+            // 38. 바이트 카운터
             {
                 selector: '#byteCounter',
                 title: '바이트 카운터',
@@ -2203,7 +2277,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     '초과 시 색상 변경 경고'
                 ]
             },
-            // 28. 금지어 경고
+            // 39. 금지어 경고
             {
                 selector: '#forbiddenWordWarning',
                 title: '금지어 경고',
@@ -2215,7 +2289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     '저장 전 수정 필요'
                 ]
             },
-            // 29. 이미지 첨부 그룹 (MMS)
+            // 40. 이미지 첨부 그룹 (MMS)
             {
                 selector: '#imageGroup',
                 title: '이미지 첨부',
@@ -2227,14 +2301,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     '최대 300KB'
                 ]
             },
-            // 30. 이미지 추가 버튼
+            // 41. 이미지 추가 버튼
             {
                 selector: '#addImageBtn',
                 title: '이미지 추가 버튼',
                 position: { top: '-5px', left: '-10px' },
                 function: '이미지 파일 선택 창 열기'
             },
-            // 31. 이미지 미리보기
+            // 42. 이미지 미리보기
             {
                 selector: '#imagePreview',
                 title: '이미지 미리보기',
@@ -2242,7 +2316,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: '첨부된 이미지 미리보기 및 삭제',
                 behavior: ['X 버튼 클릭으로 이미지 제거']
             },
-            // 32. 메모 입력
+            // 43. 이미지 삭제 버튼
+            {
+                selector: '.remove-btn[onclick*="removeImage"]',
+                title: '이미지 삭제(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '첨부된 이미지 제거'
+            },
+            // 44. 메모 입력
             {
                 selector: '#templateForm textarea:last-of-type',
                 title: '메모 입력',
@@ -2250,7 +2331,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: '템플릿 설명 또는 용도 메모 (내부 관리용)',
                 tags: [{ text: '선택', type: 'optional' }]
             },
-            // 33. 메시지 미리보기
+            // 45. 메시지 미리보기
             {
                 selector: '#addTemplateModal .preview-phone',
                 title: '메시지 미리보기',
@@ -2261,14 +2342,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     '변수는 예시 값으로 표시'
                 ]
             },
-            // 34. 취소 버튼
+            // 46. 취소 버튼
             {
                 selector: '#addTemplateModal .modal-footer .btn-outline',
                 title: '취소 버튼',
                 position: { top: '-5px', left: '-10px' },
                 function: '모달 닫기 (입력 내용 폐기)'
             },
-            // 35. 저장 버튼
+            // 47. 저장 버튼
             {
                 selector: '#addTemplateModal .modal-footer .btn-primary',
                 title: '저장 버튼',
@@ -2283,46 +2364,74 @@ document.addEventListener('DOMContentLoaded', function() {
                 tags: [{ text: 'API', type: 'api' }]
             },
             // ===== 템플릿 미리보기 모달 =====
-            // 36. 템플릿 미리보기 모달
+            // 48. 템플릿 미리보기 모달
             {
                 selector: '#previewModal',
                 title: '템플릿 미리보기 모달',
                 position: { top: '60px', left: '20px' },
                 function: '저장된 템플릿 전체 내용 미리보기'
             },
-            // 37. 미리보기 내용
+            // 49. 미리보기 모달 닫기 버튼
+            {
+                selector: '#previewModal .modal-close',
+                title: '모달 닫기(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '미리보기 모달 닫기'
+            },
+            // 50. 미리보기 내용
             {
                 selector: '#previewTemplateContent',
                 title: '미리보기 내용',
                 position: { top: '5px', left: '5px' },
                 function: '템플릿 메시지 전체 내용 표시'
             },
-            // 38. 발송하기 버튼
+            // 51. 닫기 버튼
             {
-                selector: '#previewModal .btn-primary',
-                title: '발송하기 버튼',
+                selector: '#previewModal .btn-outline[onclick*="closeModal"]',
+                title: '닫기 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '미리보기 모달 닫기'
+            },
+            // 52. 이 템플릿으로 발송하기 버튼
+            {
+                selector: '#previewModal .btn-primary[onclick*="useTemplate"]',
+                title: '이 템플릿으로 발송하기',
                 position: { top: '-5px', right: '-10px' },
-                function: '이 템플릿으로 선거문자 발송 페이지 이동',
+                function: '선거문자 발송 페이지로 이동하여 템플릿 적용',
                 behavior: ['템플릿 내용이 발송 폼에 자동 입력됨']
             },
             // ===== 삭제 확인 모달 =====
-            // 39. 삭제 확인 모달
+            // 53. 삭제 확인 모달
             {
                 selector: '#deleteModal',
                 title: '삭제 확인 모달',
                 position: { top: '60px', left: '20px' },
                 function: '템플릿 삭제 전 최종 확인'
             },
-            // 40. 삭제 경고 메시지
+            // 54. 삭제 모달 닫기 버튼
+            {
+                selector: '#deleteModal .modal-close',
+                title: '모달 닫기(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '삭제 확인 모달 닫기'
+            },
+            // 55. 삭제 경고 메시지
             {
                 selector: '#deleteModal .alert-warning',
                 title: '삭제 경고',
                 position: { top: '-5px', left: '-10px' },
                 function: '삭제 시 복구 불가 경고 메시지'
             },
-            // 41. 삭제 실행 버튼
+            // 56. 삭제 모달 취소 버튼
             {
-                selector: '#deleteModal .btn-danger',
+                selector: '#deleteModal .btn-outline[onclick*="closeModal"]',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '삭제 취소하고 모달 닫기'
+            },
+            // 57. 삭제 실행 버튼
+            {
+                selector: '#deleteModal .btn-danger[onclick*="confirmDelete"]',
                 title: '삭제 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '템플릿 삭제 실행',

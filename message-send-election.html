@@ -4336,8 +4336,37 @@ if (document.readyState === 'loading') {
                     '변수는 예시 값으로 표시'
                 ]
             },
+            // ===== 변수 삽입 버튼 개별 =====
+            // 33. #{이름} 변수 버튼
+            {
+                selector: '.btn-outline[onclick*="insertVariable(\'#{이름}\')"]',
+                title: '#{이름} 변수',
+                position: { top: '-5px', left: '-10px' },
+                function: '수신자 이름 변수 삽입',
+                behavior: ['커서 위치에 #{이름} 삽입']
+            },
+            // 34. #{전화번호} 변수 버튼
+            {
+                selector: '.btn-outline[onclick*="insertVariable(\'#{전화번호}\')"]',
+                title: '#{전화번호} 변수',
+                position: { top: '-5px', left: '-10px' },
+                function: '수신자 전화번호 변수 삽입',
+                behavior: ['커서 위치에 #{전화번호} 삽입']
+            },
+            // 35. 이미지 추가 버튼
+            {
+                selector: '#addImageBtn',
+                title: '이미지 추가',
+                position: { top: '-5px', left: '-10px' },
+                function: 'MMS 이미지 파일 선택',
+                behavior: [
+                    'MMS 선택 시에만 활성화',
+                    'jpg, png, gif 지원',
+                    '최대 300KB'
+                ]
+            },
             // ===== 템플릿 선택 모달 =====
-            // 33. 템플릿 선택 모달
+            // 36. 템플릿 선택 모달
             {
                 selector: '#templateSelectModal',
                 title: '템플릿 선택 모달',
@@ -4345,7 +4374,14 @@ if (document.readyState === 'loading') {
                 function: '저장된 선거문자 템플릿 목록 조회',
                 api: 'GET /api/election/templates'
             },
-            // 34. 템플릿 검색
+            // 37. 템플릿 선택 모달 닫기 버튼
+            {
+                selector: '#templateSelectModal .modal-close',
+                title: '모달 닫기(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '템플릿 선택 모달 닫기'
+            },
+            // 38. 템플릿 검색
             {
                 selector: '#templateSelectModal input[type="text"]',
                 title: '템플릿 검색',
@@ -4353,7 +4389,7 @@ if (document.readyState === 'loading') {
                 function: '템플릿명/내용으로 검색',
                 behavior: ['입력 시 실시간 필터링']
             },
-            // 35. 템플릿 목록 테이블
+            // 39. 템플릿 목록 테이블
             {
                 selector: '#templateSelectModal table',
                 title: '템플릿 목록',
@@ -4361,16 +4397,37 @@ if (document.readyState === 'loading') {
                 function: '선택 가능한 템플릿 표시',
                 behavior: ['템플릿명, 타입, 내용 미리보기, 등록일 표시']
             },
+            // 40. 템플릿 선택 버튼
+            {
+                selector: '#templateSelectModal .btn-primary[onclick*="selectTemplate"]',
+                title: '템플릿 선택',
+                position: { top: '-5px', right: '-10px' },
+                function: '해당 템플릿 선택하여 메시지에 적용',
+                behavior: ['선택 시 모달 닫히고 메시지 내용 채움']
+            },
+            // 41. 템플릿 선택 모달 취소 버튼
+            {
+                selector: '#templateSelectModal .btn-outline[onclick*="closeModal"]',
+                title: '취소',
+                position: { top: '-5px', left: '-10px' },
+                function: '모달 닫기 (선택 취소)'
+            },
             // ===== 템플릿 저장 모달 =====
-            // 36. 템플릿 저장 모달
+            // 42. 템플릿 저장 모달
             {
                 selector: '#templateSaveModal',
                 title: '템플릿 저장 모달',
                 position: { top: '60px', left: '20px' },
-                function: '현재 메시지를 템플릿으로 저장',
-                api: 'POST /api/election/templates'
+                function: '현재 메시지를 템플릿으로 저장'
             },
-            // 37. 템플릿명 입력
+            // 43. 템플릿 저장 모달 닫기 버튼
+            {
+                selector: '#templateSaveModal .modal-close',
+                title: '모달 닫기(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '템플릿 저장 모달 닫기'
+            },
+            // 44. 템플릿명 입력
             {
                 selector: '#templateName',
                 title: '템플릿명 입력',
@@ -4378,8 +4435,24 @@ if (document.readyState === 'loading') {
                 function: '저장할 템플릿 이름 입력',
                 tags: [{ text: '필수', type: 'required' }]
             },
+            // 45. 템플릿 저장 모달 취소 버튼
+            {
+                selector: '#templateSaveModal .btn-outline[onclick*="closeModal"]',
+                title: '취소',
+                position: { top: '-5px', left: '-10px' },
+                function: '모달 닫기 (저장 취소)'
+            },
+            // 46. 템플릿 저장 모달 저장 버튼
+            {
+                selector: '#templateSaveModal .btn-primary[onclick*="saveTemplateConfirm"]',
+                title: '저장',
+                position: { top: '-5px', right: '-10px' },
+                function: '템플릿 저장 실행',
+                api: 'POST /api/election/templates',
+                tags: [{ text: 'API', type: 'api' }]
+            },
             // ===== 발송 확인 모달 =====
-            // 38. 발송 확인 모달
+            // 47. 발송 확인 모달
             {
                 selector: '#confirmModal',
                 title: '발송 확인 모달',
@@ -4388,12 +4461,34 @@ if (document.readyState === 'loading') {
                 behavior: [
                     '선거운동정보 확인',
                     '수신번호 건수 확인',
-                    '발송 시간 확인',
-                    '최종 발송 버튼'
+                    '발송 시간 확인'
                 ]
             },
+            // 48. 발송 확인 모달 닫기 버튼
+            {
+                selector: '#confirmModal .modal-close',
+                title: '모달 닫기(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '발송 확인 모달 닫기'
+            },
+            // 49. 발송 확인 모달 취소 버튼
+            {
+                selector: '#confirmModal .btn-outline[onclick*="closeModal"]',
+                title: '취소',
+                position: { top: '-5px', left: '-10px' },
+                function: '발송 취소하고 모달 닫기'
+            },
+            // 50. 발송 확인 모달 발송하기 버튼
+            {
+                selector: '#confirmModal .btn-primary[onclick*="confirmSend"]',
+                title: '발송하기',
+                position: { top: '-5px', right: '-10px' },
+                function: '최종 발송 실행',
+                api: 'POST /api/election/send',
+                tags: [{ text: 'API', type: 'api' }]
+            },
             // ===== 20건 수동 발송 모달 =====
-            // 39. 20건 수동 발송 모달
+            // 51. 20건 수동 발송 모달
             {
                 selector: '#manualSendModal',
                 title: '20건 수동 발송 모달',
@@ -4402,16 +4497,99 @@ if (document.readyState === 'loading') {
                 behavior: [
                     '20건 이하만 가능',
                     '수신자 목록 표시',
-                    '개별 발송 상태 표시',
-                    '발송 완료 시 결과 표시'
+                    '개별 발송 상태 표시'
                 ]
             },
-            // 40. 마지막 발송일
+            // 52. 20건 수동 발송 모달 닫기 버튼
+            {
+                selector: '#manualSendModal .modal-close',
+                title: '모달 닫기(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '수동 발송 모달 닫기'
+            },
+            // 53. 마지막 발송일
             {
                 selector: '#manualLastSendDate',
                 title: '마지막 발송일',
                 position: { top: '-5px', right: '-10px' },
                 function: '가장 최근 수동 발송 일시 표시'
+            },
+            // 54. 페이지 이동 버튼
+            {
+                selector: '.btn-outline[onclick*="goToManualPage"]',
+                title: '페이지 이동',
+                position: { top: '-5px', left: '-10px' },
+                function: '입력한 페이지로 이동'
+            },
+            // 55. 첫 페이지 버튼
+            {
+                selector: '.btn-outline[onclick*="manualFirstPage"]',
+                title: '첫 페이지(◀◀)',
+                position: { top: '-5px', left: '-10px' },
+                function: '첫 페이지로 이동'
+            },
+            // 56. 이전 페이지 버튼
+            {
+                selector: '.btn-outline[onclick*="manualPrevPage"]',
+                title: '이전 페이지(◀)',
+                position: { top: '-5px', left: '-10px' },
+                function: '이전 페이지로 이동'
+            },
+            // 57. 다음 페이지 버튼
+            {
+                selector: '.btn-outline[onclick*="manualNextPage"]',
+                title: '다음 페이지(▶)',
+                position: { top: '-5px', left: '-10px' },
+                function: '다음 페이지로 이동'
+            },
+            // 58. 마지막 페이지 버튼
+            {
+                selector: '.btn-outline[onclick*="manualLastPage"]',
+                title: '마지막 페이지(▶▶)',
+                position: { top: '-5px', right: '-10px' },
+                function: '마지막 페이지로 이동'
+            },
+            // 59. 전송 버튼
+            {
+                selector: '#manualSendModal .btn-primary[onclick*="executeManualSend"]',
+                title: '전송',
+                position: { top: '-5px', right: '-10px' },
+                function: '수동 발송 실행',
+                behavior: [
+                    '선택된 수신자에게 문자 전송',
+                    '전송 결과 실시간 표시'
+                ]
+            },
+            // ===== 엑셀 업로드 모달 =====
+            // 60. 엑셀 업로드 모달
+            {
+                selector: '#excelUploadModal',
+                title: '엑셀 업로드 모달',
+                position: { top: '60px', left: '20px' },
+                function: '엑셀 파일 업로드 및 샘플 다운로드'
+            },
+            // 61. 엑셀 업로드 모달 닫기 버튼
+            {
+                selector: '#excelUploadModal .modal-close',
+                title: '모달 닫기(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '엑셀 업로드 모달 닫기'
+            },
+            // 62. 엑셀업로드 탭 버튼
+            {
+                selector: '#excelUploadTab',
+                title: '엑셀업로드 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '엑셀 파일 업로드 탭 선택',
+                behavior: ['xlsx, xls, csv 파일 업로드']
+            },
+            // 63. 엑셀샘플 다운로드 탭 버튼
+            {
+                selector: '#excelSampleTab',
+                title: '엑셀샘플 다운로드 탭',
+                position: { top: '-5px', right: '-10px' },
+                function: '엑셀 샘플 파일 다운로드 탭 선택',
+                behavior: ['업로드 양식 샘플 다운로드']
             }
         ];
 
