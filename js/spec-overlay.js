@@ -245,6 +245,23 @@
             overflow: visible !important;
         }
 
+        /* 모달 내부 마커는 z-index 높게 */
+        .modal-overlay .spec-marker {
+            z-index: 100001 !important;
+        }
+
+        /* 모달이 열렸을 때 바닥 페이지 마커 숨기기 */
+        body.spec-modal-open .spec-marker {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* 모달이 열렸을 때 모달 내부 마커만 표시 */
+        body.spec-modal-open .modal-overlay .spec-marker {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+
     `;
     document.head.appendChild(style);
 
@@ -453,6 +470,73 @@
         }
     }
 
+    // 모달 상태 감지 및 마커 표시/숨김 처리
+    function checkModalState() {
+        const modals = document.querySelectorAll('.modal-overlay');
+        let isModalOpen = false;
+
+        modals.forEach(modal => {
+            const style = window.getComputedStyle(modal);
+            // display가 none이 아니고, visibility가 hidden이 아니면 열린 것으로 판단
+            if (style.display !== 'none' && style.visibility !== 'hidden') {
+                isModalOpen = true;
+            }
+        });
+
+        if (isModalOpen) {
+            document.body.classList.add('spec-modal-open');
+        } else {
+            document.body.classList.remove('spec-modal-open');
+        }
+    }
+
+    // MutationObserver로 모달 상태 변화 감지
+    function observeModalChanges() {
+        const observer = new MutationObserver((mutations) => {
+            let shouldCheck = false;
+            
+            mutations.forEach(mutation => {
+                // attribute 변경 (style, class 등)
+                if (mutation.type === 'attributes') {
+                    if (mutation.target.classList.contains('modal-overlay')) {
+                        shouldCheck = true;
+                    }
+                }
+                // 자식 노드 추가/제거
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === 1 && (node.classList?.contains('modal-overlay') || node.querySelector?.('.modal-overlay'))) {
+                            shouldCheck = true;
+                        }
+                    });
+                    mutation.removedNodes.forEach(node => {
+                        if (node.nodeType === 1 && node.classList?.contains('modal-overlay')) {
+                            shouldCheck = true;
+                        }
+                    });
+                }
+            });
+
+            if (shouldCheck) {
+                checkModalState();
+            }
+        });
+
+        // body와 모든 모달 요소 관찰
+        observer.observe(document.body, {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            attributeFilter: ['style', 'class']
+        });
+
+        // 초기 상태 체크
+        checkModalState();
+
+        // 주기적 체크 (안전장치)
+        setInterval(checkModalState, 500);
+    }
+
     // 초기화
     window.initSpecOverlay = function(data) {
         specData = data;
@@ -473,6 +557,9 @@
                 window.closeSpecTooltip();
             }
         });
+
+        // 모달 상태 감지 시작
+        observeModalChanges();
 
         console.log('✅ Spec Overlay 초기화 완료 - ' + specData.length + '개 컴포넌트');
     };
