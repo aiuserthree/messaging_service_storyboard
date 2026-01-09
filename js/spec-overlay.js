@@ -250,16 +250,18 @@
             z-index: 100001 !important;
         }
 
-        /* 모달이 열렸을 때 바닥 페이지 마커 숨기기 */
-        body.spec-modal-open .spec-marker {
+        /* 모달이 열렸을 때 바닥 페이지 마커 숨기기 (모달 외부) */
+        body.spec-modal-open.spec-overlay-active .spec-marker {
             opacity: 0 !important;
             pointer-events: none !important;
+            transform: scale(0) !important;
         }
 
-        /* 모달이 열렸을 때 모달 내부 마커만 표시 */
-        body.spec-modal-open .modal-overlay .spec-marker {
+        /* 모달이 열렸을 때 열린 모달 내부 마커만 표시 */
+        body.spec-modal-open.spec-overlay-active .modal-overlay.spec-modal-visible .spec-marker {
             opacity: 1 !important;
             pointer-events: auto !important;
+            transform: scale(1) !important;
         }
 
     `;
@@ -480,6 +482,11 @@
             // display가 none이 아니고, visibility가 hidden이 아니면 열린 것으로 판단
             if (style.display !== 'none' && style.visibility !== 'hidden') {
                 isModalOpen = true;
+                // 열린 모달에 클래스 추가
+                modal.classList.add('spec-modal-visible');
+            } else {
+                // 닫힌 모달에서 클래스 제거
+                modal.classList.remove('spec-modal-visible');
             }
         });
 
