@@ -1676,75 +1676,91 @@ document.addEventListener('DOMContentLoaded', function() {
         const specData = [
             // ===== 페이지 기본 요소 =====
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '수신거부 관리 페이지', function: '페이지 제목 표시' },
-            // 2. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '주소록/수신거부 전환', function: '페이지 네비게이션' },
-            // 3. 주소록 탭
-            { selector: '#tabMenu .tab-item:first-child', title: '주소록 탭', position: { top: '-5px', left: '-10px' }, description: '주소록 관리 페이지', function: '연락처 관리' },
-            // 4. 수신거부 탭
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '수신거부 탭', position: { top: '-5px', right: '-10px' }, description: '수신거부 관리 (현재)', function: '수신거부 번호 관리', behavior: ['현재 활성 탭'] },
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '수신거부 관리 페이지 제목 및 설명', function: '페이지 제목 표시' },
+            // 2-4. 탭 메뉴
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '주소록 메뉴 탭 영역', function: '주소록관리/수신거부관리 탭 전환' },
+            { selector: '#tabMenu .tab-item:first-child', title: '주소록 관리 탭', position: { top: '-5px', left: '-10px' }, description: '주소록 관리 페이지 이동', function: '클릭 시 addressbook.html로 이동' },
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '수신거부관리 탭', position: { top: '-5px', right: '-10px' }, description: '수신거부 관리 탭 (현재)', function: '현재 페이지 활성화', behavior: ['현재 활성 탭'] },
             
             // ===== 통계 섹션 =====
             // 5. 통계 섹션
-            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, description: '수신거부 현황', function: '전체/월간/경로별 통계' },
+            { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, description: '수신거부 현황 통계 카드', function: '전체 수신거부/이번 달 추가/등록 경로 표시' },
             
             // ===== 검색 섹션 =====
             // 6. 검색 섹션
-            { selector: '#searchSection', title: '검색 영역', position: { top: '10px', left: '-15px' }, description: '수신거부 번호 검색', function: '번호 검색' },
+            { selector: '#searchSection', title: '검색 영역', position: { top: '10px', left: '-15px' }, description: '수신거부 번호 검색 영역', function: '번호 검색 조건 입력' },
             // 7. 검색 입력
-            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '전화번호 검색', function: '키워드 입력' },
+            { selector: '#searchFilterSection input', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '전화번호로 검색', function: '키워드 입력' },
             // 8. 검색 버튼
-            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, description: '검색 실행', function: '목록 필터링', api: 'GET /api/reject-numbers' },
+            { selector: '#searchFilterSection .btn-primary', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, description: '검색 실행', function: '목록 필터링', api: 'GET /api/reject-numbers?phone={phone}' },
+            // 9. 초기화 버튼
+            { selector: '#searchFilterSection .btn-outline', title: '초기화 버튼', position: { top: '-5px', right: '-10px' }, description: '검색 조건 초기화', function: '검색 필드 초기화 및 전체 목록 표시' },
             
             // ===== 관리 버튼 영역 =====
-            // 9. 관리 버튼 영역
-            { selector: '#rejectActions', title: '관리 버튼', position: { top: '10px', left: '-15px' }, description: '수신거부 관리 액션', function: '추가/업로드/다운로드' },
-            // 10. 수신거부 추가 버튼
-            { selector: '#addRejectBtn', title: '수신거부 추가', position: { top: '-5px', left: '-10px' }, description: '수동 번호 추가', function: '추가 모달 열기', api: 'POST /api/reject-numbers' },
-            // 11. 엑셀 업로드 버튼
-            { selector: '#excelUploadBtn', title: '엑셀 업로드', position: { top: '-5px', left: '-10px' }, description: '대량 등록', function: '업로드 모달 열기' },
-            // 12. 엑셀 다운로드 버튼
-            { selector: '#excelDownloadBtn', title: '엑셀 다운로드', position: { top: '-5px', right: '-10px' }, description: '목록 내보내기', function: 'Excel 다운로드' },
+            // 10. 관리 버튼 영역
+            { selector: '#rejectActions', title: '관리 버튼 영역', position: { top: '10px', left: '-15px' }, description: '수신거부 관리 액션 버튼', function: '추가/업로드' },
+            // 11. 수신거부 추가 버튼
+            { selector: '#rejectActions .btn-primary', title: '수신거부 추가 버튼', position: { top: '-5px', left: '-10px' }, description: '수동 번호 추가', function: "openModal('addRejectModal') 호출", api: 'POST /api/reject-numbers', behavior: ['클릭 시 수신거부 추가 모달 열기'] },
+            // 12. 엑셀 업로드 버튼
+            { selector: '#rejectActions .btn-outline', title: '엑셀 업로드 버튼', position: { top: '-5px', right: '-10px' }, description: '대량 등록', function: "openModal('excelUploadModal') 호출", behavior: ['클릭 시 엑셀 업로드 모달 열기'] },
             
             // ===== 수신거부 테이블 =====
             // 13. 수신거부 테이블
-            { selector: '#rejectListSection .table', title: '수신거부 테이블', position: { top: '10px', left: '10px' }, description: '수신거부 목록', function: '번호/발신번호/등록일/경로 표시' },
+            { selector: '#rejectListSection .table', title: '수신거부 테이블', position: { top: '10px', left: '10px' }, description: '수신거부 목록', function: '전화번호/발신번호/등록일/등록경로/메모/관리 표시' },
             // 14. 전체 선택 체크박스
-            { selector: '#selectAllReject', title: '전체 선택', position: { top: '-5px', left: '-10px' }, description: '모든 항목 선택', function: '전체 선택/해제' },
-            // 15. 선택 삭제 버튼
-            { selector: '#deleteSelectedBtn', title: '선택 삭제', position: { top: '-5px', left: '-10px' }, description: '선택 항목 삭제', function: '체크된 번호 삭제', api: 'DELETE /api/reject-numbers' },
-            // 16. 페이지네이션
-            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, description: '페이지 이동', function: '목록 페이지 전환' },
+            { selector: '#selectAll', title: '전체 선택', position: { top: '-5px', left: '-10px' }, description: '모든 항목 선택', function: 'toggleAll(this) 호출', behavior: ['전체 선택/해제 토글'] },
+            // 15. 개별 삭제 버튼
+            { selector: 'tbody .btn-sm[onclick*="deleteReject"]', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, description: '개별 수신거부 삭제', function: 'deleteReject(id) 호출', api: 'DELETE /api/reject-numbers/{id}', behavior: ['삭제 확인 모달 표시'] },
+            // 16. 선택 삭제 버튼
+            { selector: '#selectDeleteBtn', title: '선택 삭제 버튼', position: { top: '-5px', left: '-10px' }, description: '선택 항목 삭제', function: 'deleteSelected() 호출', api: 'DELETE /api/reject-numbers', behavior: ['체크된 항목만 삭제', '선택 없으면 비활성화'] },
+            // 17. 엑셀 다운로드 버튼
+            { selector: '.btn-sm[onclick*="downloadExcel"]', title: '엑셀 다운로드 버튼', position: { top: '-5px', right: '-10px' }, description: '목록 엑셀 다운로드', function: 'downloadExcel() 호출', api: 'GET /api/reject-numbers/export', behavior: ['현재 목록을 엑셀로 다운로드'] },
+            // 18. 페이지네이션
+            { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, description: '페이지 이동', function: '목록 페이지 전환' },
             
             // ===== 수신거부 추가 모달 =====
-            // 17. 추가 모달
-            { selector: '#addRejectModal', title: '수신거부 추가 모달', position: { top: '20px', left: '20px' }, description: '번호 추가 팝업', function: '수신거부 번호 등록' },
-            // 18. 전화번호 입력
-            { selector: '#addRejectModal input[type="text"]', title: '전화번호 입력', position: { top: '-5px', left: '-10px' }, description: '수신거부할 번호', function: '전화번호 입력', tags: [{ text: '필수', type: 'required' }] },
-            // 19. 발신번호 선택
-            { selector: '#addRejectModal select', title: '발신번호 선택', position: { top: '-5px', left: '-10px' }, description: '관련 발신번호', function: '발신번호 지정' },
-            // 20. 추가 취소
-            { selector: '#addRejectModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '추가 취소', function: '모달 닫기' },
-            // 21. 추가 확인
-            { selector: '#addRejectModal .btn-primary', title: '추가 버튼', position: { top: '-5px', right: '-10px' }, description: '추가 실행', function: '수신거부 등록', api: 'POST /api/reject-numbers' },
+            // 19. 추가 모달
+            { selector: '#addRejectModal', title: '수신거부 추가 모달', position: { top: '20px', left: '20px' }, description: '수신거부 번호 등록 팝업', function: '수신거부 번호 입력 및 등록' },
+            // 20. 모달 닫기 (X)
+            { selector: '#addRejectModal .modal-close', title: '모달 닫기 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: "closeModal('addRejectModal') 호출" },
+            // 21. 전화번호 입력
+            { selector: '#rejectPhoneNumber', title: '전화번호 입력', position: { top: '-5px', left: '-10px' }, description: '수신거부할 번호', function: '전화번호 입력', tags: [{ text: '필수', type: 'required' }], behavior: ['하이픈 포함 또는 숫자만 입력'] },
+            // 22. 발신번호 입력
+            { selector: '#rejectSenderNumber', title: '발신번호 입력', position: { top: '-5px', left: '-10px' }, description: '관련 발신번호', function: '발신번호 입력', tags: [{ text: '필수', type: 'required' }] },
+            // 23. 등록 경로 입력
+            { selector: '#rejectRegistrationPath', title: '등록 경로 입력', position: { top: '-5px', left: '-10px' }, description: '등록 경로', function: '등록 경로 입력', tags: [{ text: '필수', type: 'required' }], behavior: ['예: 수동 등록, 080 수신거부, 고객 요청'] },
+            // 24. 메모 입력
+            { selector: '#rejectMemo', title: '메모 입력', position: { top: '-5px', left: '-10px' }, description: '메모 (선택)', function: '메모 입력', behavior: ['최대 200자'] },
+            // 25. 취소 버튼
+            { selector: '#addRejectModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '추가 취소', function: "closeModal('addRejectModal') 호출" },
+            // 26. 추가 버튼
+            { selector: '#addRejectModal .btn-primary', title: '추가 버튼', position: { top: '-5px', right: '-10px' }, description: '수신거부 등록', function: 'addReject() 호출', api: 'POST /api/reject-numbers' },
             
             // ===== 엑셀 업로드 모달 =====
-            // 22. 업로드 모달
-            { selector: '#excelUploadModal', title: '엑셀 업로드 모달', position: { top: '20px', left: '20px' }, description: '대량 등록 팝업', function: '엑셀 파일 업로드' },
-            // 23. 파일 선택
-            { selector: '#excelUploadModal input[type="file"]', title: '파일 선택', position: { top: '-5px', left: '-10px' }, description: '엑셀 파일 선택', function: '파일 선택' },
-            // 24. 업로드 취소
-            { selector: '#excelUploadModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '업로드 취소', function: '모달 닫기' },
-            // 25. 업로드 확인
-            { selector: '#excelUploadModal .btn-primary', title: '업로드 버튼', position: { top: '-5px', right: '-10px' }, description: '업로드 실행', function: '파일 업로드', api: 'POST /api/reject-numbers/upload' },
+            // 27. 업로드 모달
+            { selector: '#excelUploadModal', title: '엑셀 업로드 모달', position: { top: '20px', left: '20px' }, description: '대량 등록 팝업', function: '엑셀 파일 업로드로 대량 등록' },
+            // 28. 모달 닫기 (X)
+            { selector: '#excelUploadModal .modal-close', title: '모달 닫기 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: "closeModal('excelUploadModal') 호출" },
+            // 29. 샘플 다운로드 버튼
+            { selector: '#excelUploadModal .btn-outline[onclick*="downloadSample"]', title: '샘플 다운로드', position: { top: '-5px', left: '-10px' }, description: '샘플 파일 다운로드', function: 'downloadSample() 호출', behavior: ['업로드 양식 제공'] },
+            // 30. 파일 선택
+            { selector: '#excelUploadModal input[type="file"]', title: '파일 선택', position: { top: '-5px', left: '-10px' }, description: '엑셀 파일 선택', function: 'handleExcelUpload(event) 호출', behavior: ['.xlsx,.xls,.csv 지원', '최대 10MB, 10,000건'] },
+            // 31. 검증 결과 영역
+            { selector: '#excelResult', title: '검증 결과', position: { top: '5px', left: '5px' }, description: '파일 검증 결과 표시', function: '등록 가능/중복/오류 건수 표시' },
+            // 32. 취소 버튼 (업로드 모달)
+            { selector: '#excelUploadModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '업로드 취소', function: "closeModal('excelUploadModal') 호출" },
+            // 33. 등록하기 버튼
+            { selector: '#excelUploadModal .modal-footer .btn-primary', title: '등록하기 버튼', position: { top: '-5px', right: '-10px' }, description: '파일 업로드 실행', function: 'applyExcelData() 호출', api: 'POST /api/reject-numbers/upload' },
             
             // ===== 삭제 확인 모달 =====
-            // 26. 삭제 모달
-            { selector: '#deleteModal', title: '삭제 확인 모달', position: { top: '20px', left: '20px' }, description: '삭제 확인 팝업', function: '삭제 전 확인' },
-            // 27. 삭제 취소
-            { selector: '#deleteModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '삭제 취소', function: '모달 닫기' },
-            // 28. 삭제 확인
-            { selector: '#deleteModal .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, description: '삭제 실행', function: '선택 항목 삭제', api: 'DELETE /api/reject-numbers' }
+            // 34. 삭제 모달
+            { selector: '#deleteModal', title: '삭제 확인 모달', position: { top: '20px', left: '20px' }, description: '삭제 확인 팝업', function: '삭제 전 확인 요청' },
+            // 35. 모달 닫기 (X)
+            { selector: '#deleteModal .modal-close', title: '모달 닫기 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: "closeModal('deleteModal') 호출" },
+            // 36. 취소 버튼 (삭제 모달)
+            { selector: '#deleteModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '삭제 취소', function: "closeModal('deleteModal') 호출" },
+            // 37. 삭제 버튼
+            { selector: '#deleteModal .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, description: '삭제 실행', function: 'confirmDelete() 호출', api: 'DELETE /api/reject-numbers', behavior: ['삭제된 번호는 다시 발송 대상에 포함'] }
         ];
         initSpecOverlay(specData);
     </script>
