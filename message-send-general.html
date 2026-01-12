@@ -3692,6 +3692,110 @@ document.addEventListener('DOMContentLoaded', function() {
                     '메시지 내용 실시간 반영',
                     '변수는 예시 값으로 표시'
                 ]
+            },
+            // ===== 모달 팝업 영역 =====
+            // 27. 템플릿 선택 모달
+            {
+                selector: '#templateSelectModal',
+                title: '템플릿 선택 모달',
+                position: { top: '10px', right: '50px' },
+                description: '저장된 템플릿 목록에서 선택하여 메시지 내용을 불러오는 모달',
+                function: '템플릿 검색 및 선택',
+                behavior: [
+                    '템플릿명 또는 내용으로 검색 가능',
+                    '템플릿명, 타입(SMS/LMS), 내용, 등록일 표시',
+                    '선택 버튼 클릭 시 메시지 내용에 자동 적용',
+                    '닫기(X) 버튼으로 모달 닫기'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 28. 템플릿으로 저장 모달
+            {
+                selector: '#templateSaveModal',
+                title: '템플릿으로 저장 모달',
+                position: { top: '10px', right: '50px' },
+                description: '현재 작성된 메시지를 템플릿으로 저장하는 모달',
+                function: '새 템플릿 생성',
+                behavior: [
+                    '템플릿명 입력 필수',
+                    '저장 버튼 클릭 시 현재 메시지 내용이 템플릿으로 저장',
+                    '취소 버튼 또는 X로 모달 닫기'
+                ],
+                api: 'POST /api/templates',
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 29. 엑셀 업로드 모달 (수신번호 관리)
+            {
+                selector: '#excelUploadModal',
+                title: '수신번호 관리 모달',
+                position: { top: '10px', right: '50px' },
+                description: '엑셀 파일 업로드 및 주소록 불러오기를 통한 대량 수신번호 등록',
+                function: '엑셀 파일 또는 주소록에서 수신번호 대량 등록',
+                behavior: [
+                    '엑셀업로드/엑셀샘플 다운로드 탭 전환',
+                    '드래그앤드롭 또는 파일 선택으로 업로드',
+                    '.xlsx, .xls, .csv 형식 지원 (최대 10MB, 10,000건)',
+                    '주소록 불러오기 버튼으로 기존 주소록 연동',
+                    '폴더/그룹 선택하여 필터링',
+                    '업로드된 데이터 테이블 미리보기 (이름, 휴대폰, 변수1~8)',
+                    '적용 버튼으로 수신번호 테이블에 반영'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 30. 발송 확인 모달
+            {
+                selector: '#sendConfirmModal',
+                title: '발송 확인 모달',
+                position: { top: '10px', right: '50px' },
+                description: '메시지 발송 전 최종 확인 정보를 표시하는 모달',
+                function: '발송 정보 최종 확인',
+                behavior: [
+                    '발신번호 표시',
+                    '수신번호 개수 표시',
+                    '메시지 타입(SMS/LMS/MMS) 표시',
+                    '발송 시간(즉시/예약) 표시',
+                    '예상 발송 포인트 표시',
+                    '경고 문구: "발송 후에는 취소할 수 없습니다"',
+                    '취소 버튼으로 모달 닫기',
+                    '발송하기 버튼으로 최종 발송 실행'
+                ],
+                api: 'POST /api/messages/send',
+                tags: [{ text: '모달', type: 'info' }, { text: '필수확인', type: 'warning' }]
+            },
+            // 31. 주소록에 추가 모달
+            {
+                selector: '#addToAddressBookModal',
+                title: '주소록에 추가 모달',
+                position: { top: '10px', right: '50px' },
+                description: '현재 입력된 수신번호를 주소록에 저장하는 모달',
+                function: '수신번호를 주소록 그룹에 저장',
+                behavior: [
+                    '추가 방식 선택: 기존 그룹에 추가 / 새 그룹 생성',
+                    '기존 그룹 선택 시 드롭다운에서 그룹 선택',
+                    '새 그룹 생성 시 그룹명 입력',
+                    '추가할 데이터 개수 표시',
+                    '취소/추가 버튼'
+                ],
+                api: 'POST /api/addressbook',
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 32. 테스트 발송 모달
+            {
+                selector: '#testSendModal',
+                title: '테스트 발송 모달',
+                position: { top: '10px', right: '50px' },
+                description: '실제 발송 전 테스트 번호로 메시지를 확인하는 모달',
+                function: '테스트 번호로 메시지 발송',
+                behavior: [
+                    '테스트 수신번호 입력 (필수)',
+                    '최대 3개 번호까지 입력 가능',
+                    '추가/삭제 버튼으로 번호 관리',
+                    '발송될 메시지 미리보기 (발신번호, 제목, 내용, 이미지)',
+                    '취소 버튼으로 모달 닫기',
+                    '테스트 발송 버튼으로 발송 실행'
+                ],
+                api: 'POST /api/messages/test-send',
+                tags: [{ text: '모달', type: 'info' }]
             }
         ];
 

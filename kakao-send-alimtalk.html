@@ -2469,10 +2469,46 @@ document.addEventListener('DOMContentLoaded', function() {
             // 63. 테스트 발송 실행 버튼
             { selector: '#testSendSubmitBtn', title: '테스트 발송 버튼', position: { top: '-5px', right: '-10px' }, function: '테스트 메시지 발송', api: 'POST /api/kakao/alimtalk/test', tags: [{ text: 'API', type: 'api' }] },
             
+            // ===== 템플릿으로 저장 모달 =====
+            // 64. 템플릿으로 저장 모달
+            { 
+                selector: '#templateSaveModal', 
+                title: '템플릿으로 저장 모달', 
+                position: { top: '60px', left: '20px' }, 
+                description: '현재 작성된 메시지를 템플릿으로 저장하는 모달',
+                function: '새 템플릿 생성',
+                behavior: [
+                    '템플릿명 입력 필수',
+                    '저장 버튼 클릭 시 현재 메시지 내용이 템플릿으로 저장',
+                    '취소 버튼 또는 X로 모달 닫기'
+                ],
+                api: 'POST /api/kakao/alimtalk/templates',
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 65. 템플릿 저장 모달 닫기 버튼
+            { selector: '#templateSaveModal .modal-close', title: '모달 닫기(X)', position: { top: '-5px', right: '-10px' }, function: '템플릿 저장 모달 닫기' },
+            // 66. 템플릿명 입력
+            { selector: '#templateName', title: '템플릿명 입력', position: { top: '-5px', left: '-10px' }, function: '저장할 템플릿 이름 입력', tags: [{ text: '필수', type: 'required' }] },
+            // 67. 템플릿 저장 취소 버튼
+            { selector: '#templateSaveModal .btn-outline', title: '취소', position: { top: '-5px', left: '-10px' }, function: '모달 닫기 (저장 취소)' },
+            // 68. 템플릿 저장 실행 버튼
+            { selector: '#templateSaveModal .btn-primary', title: '저장', position: { top: '-5px', right: '-10px' }, function: '템플릿 저장 실행', api: 'POST /api/kakao/alimtalk/templates', tags: [{ text: 'API', type: 'api' }] },
+            
             // ===== 대체문자 미리보기 모달 =====
-            // 64. 대체문자 미리보기 모달
-            { selector: '#fallbackPreviewModal', title: '대체문자 미리보기 모달', position: { top: '60px', left: '20px' }, function: '대체문자 발송 형태 확인' },
-            // 65. 대체문자 미리보기 확인 버튼
+            // 69. 대체문자 미리보기 모달
+            { 
+                selector: '#fallbackPreviewModal', 
+                title: '대체문자 미리보기 모달', 
+                position: { top: '60px', left: '20px' }, 
+                description: '알림톡 발송 실패 시 대체문자로 전환되는 내용 확인',
+                function: '대체문자 발송 형태 확인',
+                behavior: [
+                    '실제 문자 수신 화면과 유사하게 표시',
+                    '발신번호, 상호명, 메시지 내용 표시'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 70. 대체문자 미리보기 확인 버튼
             { selector: '#fallbackPreviewModal .btn-primary', title: '확인 버튼', position: { top: '-5px', right: '-10px' }, function: '모달 닫기' }
         ];
         initSpecOverlay(specData);

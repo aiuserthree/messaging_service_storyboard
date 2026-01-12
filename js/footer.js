@@ -168,15 +168,14 @@ function openPolicyModal(type) {
     const titleMap = {
         'company': '회사소개',
         'service': '서비스 소개',
-        'terms': '톡벨(TalkBell) 서비스 이용약관',
+        'terms': '이용약관',
         'privacy': '개인정보처리방침',
-        'spam': '톡벨 스팸방지정책',
+        'spam': '스팸방지정책',
         'refund': '환불정책'
     };
     
     const contentMap = {
         'company': `
-            <h3 style="margin-bottom: 16px;">회사소개</h3>
             <div style="line-height: 1.8; color: var(--text-primary);">
                 <p style="margin-bottom: 24px;">
                     <strong>주식회사 아이뱅크</strong>는 기업과 개인을 위한 차세대 메시징 서비스 플랫폼 <strong>톡벨(TalkBell)</strong>을 운영하는 전문 기업입니다.
@@ -240,7 +239,6 @@ function openPolicyModal(type) {
             </div>
         `,
         'service': `
-            <h3 style="margin-bottom: 16px;">서비스 소개</h3>
             <div style="line-height: 1.8; color: var(--text-primary);">
                 <p style="margin-bottom: 24px;">
                     <strong>톡벨(TalkBell)</strong>은 인터넷 문자 발송 및 카카오톡 비즈메시지를 통합 제공하는 메시징 플랫폼입니다.
@@ -304,9 +302,8 @@ function openPolicyModal(type) {
             </div>
         `,
         'terms': `
-            <h3 style="margin-bottom: 16px;">톡벨(TalkBell) 서비스 이용약관</h3>
             <div style="line-height: 1.8; color: var(--text-primary);">
-                <h4 style="margin-top: 20px; margin-bottom: 12px; color: var(--primary-color);">제1장 총칙</h4>
+                <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--primary-color);">제1장 총칙</h4>
                 
                 <p style="margin-bottom: 12px;"><strong>제1조 (목적)</strong></p>
                 <p style="margin-bottom: 24px; padding-left: 16px;">
@@ -471,7 +468,6 @@ function openPolicyModal(type) {
             </div>
         `,
         'privacy': `
-            <h3 style="margin-bottom: 16px;">개인정보처리방침</h3>
             <div style="line-height: 1.8; color: var(--text-primary);">
                 <p style="margin-bottom: 24px;">
                     ㈜아이뱅크(이하 "회사")는 「개인정보보호법」 제30조에 따라 이용자(정보주체)의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보처리방침을 수립•공개합니다. 본 개인정보처리방침은 톡벨(TalkBell) 서비스(이하 "서비스")를 이용하는 이용자에게 적용됩니다.
@@ -711,7 +707,6 @@ function openPolicyModal(type) {
             </div>
         `,
         'spam': `
-            <h3 style="margin-bottom: 16px;">톡벨 스팸방지정책</h3>
             <div style="line-height: 1.8; color: var(--text-primary);">
                 <p style="margin-bottom: 24px;">
                     주식회사 아이뱅크(이하 "회사")는 다수 이용자의 편리한 서비스 이용과 스팸, 불법스팸으로 인한 폐해를 방지하기 위해 스팸방지정책을 수립하여 운영하고 있습니다. 아래와 같이 불법스팸(문자, 팩스, 카카오 비즈메시지)을 발송한 이용자에 대해서는 이용정지 및 해지, 형사고발 등의 조치를 취하겠습니다.
@@ -846,7 +841,6 @@ function openPolicyModal(type) {
             </div>
         `,
         'refund': `
-            <h3 style="margin-bottom: 16px;">환불정책</h3>
             <div style="line-height: 1.8; color: var(--text-primary);">
                 <p style="margin-bottom: 24px;">
                     본 환불정책은 톡벨(TalkBell) 서비스 이용약관에 근거하여 포인트 충전, 마일리지, 환불에 관한 세부 사항을 안내합니다.
@@ -1010,6 +1004,10 @@ function openPolicyModal(type) {
                 justify-content: space-between;
                 padding: 20px 24px;
                 border-bottom: 1px solid var(--border-color, #e2e8f0);
+                position: sticky;
+                top: 0;
+                background-color: var(--surface-color, #ffffff);
+                z-index: 10;
             }
             .modal-title {
                 font-size: 18px;
@@ -1046,6 +1044,10 @@ function openPolicyModal(type) {
                 gap: 12px;
                 padding: 20px 24px;
                 border-top: 1px solid var(--border-color, #e2e8f0);
+                position: sticky;
+                bottom: 0;
+                background-color: var(--surface-color, #ffffff);
+                z-index: 10;
             }
             .btn {
                 display: inline-flex;

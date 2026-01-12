@@ -2177,6 +2177,78 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: '닫기 버튼',
                 position: { top: '-5px', left: '-10px' },
                 function: '상세보기 모달 닫기'
+            },
+            // === 환불 신청 모달 ===
+            // 37. 환불 신청 모달
+            {
+                selector: '#refundModal',
+                title: '환불 신청 모달',
+                position: { top: '60px', left: '20px' },
+                description: '포인트 환불 신청을 위한 모달',
+                function: '환불 정책 확인 및 환불 신청',
+                behavior: [
+                    '환불 정책 안내 표시',
+                    '충전 정보 표시 (충전일, 충전금액, 결제수단, 사용여부, 경과일)',
+                    '환불 예상 금액 계산',
+                    '환불 사유 입력',
+                    '환불 동의 체크박스'
+                ],
+                api: 'POST /api/payment/refund',
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 38. 환불 모달 닫기 버튼
+            {
+                selector: '#refundModal .modal-close',
+                title: '모달 닫기',
+                position: { top: '5px', right: '5px' },
+                function: '환불 신청 모달 닫기'
+            },
+            // 39. 환불 충전 정보
+            {
+                selector: '.refund-info-box',
+                title: '충전 정보',
+                position: { top: '5px', left: '5px' },
+                function: '환불 대상 충전 정보 표시',
+                behavior: ['충전일, 충전금액, 결제수단, 사용여부, 경과일']
+            },
+            // 40. 환불 예상 금액
+            {
+                selector: '#refundEstimate',
+                title: '환불 예상 금액',
+                position: { top: '-5px', right: '-10px' },
+                function: '환불 시 예상 금액 표시'
+            },
+            // 41. 환불 사유 입력
+            {
+                selector: '#refundReason',
+                title: '환불 사유',
+                position: { top: '5px', right: '5px' },
+                function: '환불 사유 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 42. 환불 동의 체크박스
+            {
+                selector: '#refundAgree',
+                title: '환불 동의',
+                position: { top: '-5px', left: '-10px' },
+                function: '환불 정책 동의',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 43. 환불 취소 버튼
+            {
+                selector: '#refundModal .modal-footer .btn-outline',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '환불 신청 취소 및 모달 닫기'
+            },
+            // 44. 환불 신청 버튼
+            {
+                selector: '#refundModal .modal-footer .btn-primary',
+                title: '환불 신청 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '환불 신청 제출',
+                api: 'POST /api/payment/refund',
+                tags: [{ text: 'API', type: 'api' }]
             }
         ];
         initSpecOverlay(specData);

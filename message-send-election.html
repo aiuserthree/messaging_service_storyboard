@@ -4307,7 +4307,7 @@ if (document.readyState === 'loading') {
                 behavior: [
                     '자동 동보통신이 아닌 수동 발송',
                     '20건 이하만 가능',
-                    '휴대폰에서 직접 발송하는 방식'
+                    '직접 발송하는 방식'
                 ]
             },
             // 31. 발송하기 버튼
@@ -4590,6 +4590,108 @@ if (document.readyState === 'loading') {
                 position: { top: '-5px', right: '-10px' },
                 function: '엑셀 샘플 파일 다운로드 탭 선택',
                 behavior: ['업로드 양식 샘플 다운로드']
+            },
+            // ===== 주소록에 추가 모달 =====
+            // 64. 주소록에 추가 모달
+            {
+                selector: '#addToAddressBookModal',
+                title: '주소록에 추가 모달',
+                position: { top: '60px', left: '20px' },
+                description: '현재 입력된 수신번호를 주소록에 저장하는 모달',
+                function: '수신번호를 주소록 그룹에 저장',
+                behavior: [
+                    '추가 방식 선택: 기존 그룹에 추가 / 새 그룹 생성',
+                    '기존 그룹 선택 시 드롭다운에서 그룹 선택',
+                    '새 그룹 생성 시 그룹명 입력',
+                    '추가할 데이터 개수 표시'
+                ],
+                api: 'POST /api/addressbook',
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 65. 주소록에 추가 모달 닫기 버튼
+            {
+                selector: '#addToAddressBookModal .modal-close',
+                title: '모달 닫기(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '주소록 추가 모달 닫기'
+            },
+            // 66. 기존 그룹에 추가 라디오
+            {
+                selector: 'input[name="addressBookAddType"][value="existing"]',
+                title: '기존 그룹에 추가',
+                position: { top: '-5px', left: '-10px' },
+                function: '기존 주소록 그룹에 추가'
+            },
+            // 67. 새 그룹 생성 라디오
+            {
+                selector: 'input[name="addressBookAddType"][value="new"]',
+                title: '새 그룹 생성',
+                position: { top: '-5px', left: '-10px' },
+                function: '새로운 그룹 생성 후 추가'
+            },
+            // 68. 그룹 선택 드롭다운
+            {
+                selector: '#addressBookGroupSelect',
+                title: '그룹 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '기존 그룹 목록에서 선택',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 69. 새 그룹명 입력
+            {
+                selector: '#newGroupNameInput',
+                title: '새 그룹명',
+                position: { top: '-5px', left: '-10px' },
+                function: '새로 생성할 그룹명 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // ===== 테스트 발송 모달 =====
+            // 70. 테스트 발송 모달
+            {
+                selector: '#testSendModal',
+                title: '테스트 발송 모달',
+                position: { top: '60px', left: '20px' },
+                description: '실제 발송 전 테스트 번호로 메시지를 확인하는 모달',
+                function: '테스트 번호로 메시지 발송',
+                behavior: [
+                    '테스트 수신번호 입력 (필수)',
+                    '최대 3개 번호까지 입력 가능',
+                    '추가/삭제 버튼으로 번호 관리',
+                    '발송될 메시지 미리보기 (발신번호, 제목, 내용, 이미지)'
+                ],
+                api: 'POST /api/election/test-send',
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 71. 테스트 발송 모달 닫기 버튼
+            {
+                selector: '#testSendModal .modal-close',
+                title: '모달 닫기(X)',
+                position: { top: '-5px', right: '-10px' },
+                function: '테스트 발송 모달 닫기'
+            },
+            // 72. 테스트 수신번호 입력
+            {
+                selector: '.test-phone-input',
+                title: '테스트 수신번호',
+                position: { top: '-5px', left: '-10px' },
+                function: '테스트 발송할 전화번호 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 73. 테스트 번호 추가 버튼
+            {
+                selector: '#addTestPhoneBtn',
+                title: '번호 추가',
+                position: { top: '-5px', left: '-10px' },
+                function: '테스트 번호 추가 (최대 3개)'
+            },
+            // 74. 테스트 발송 실행 버튼
+            {
+                selector: '#testSendModal .btn-primary',
+                title: '테스트 발송',
+                position: { top: '-5px', right: '-10px' },
+                function: '테스트 발송 실행',
+                api: 'POST /api/election/test-send',
+                tags: [{ text: 'API', type: 'api' }]
             }
         ];
 

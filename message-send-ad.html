@@ -3870,6 +3870,81 @@ document.addEventListener('DOMContentLoaded', function() {
                     '입력값 변경 시 실시간 업데이트'
                 ],
                 tags: [{ text: '정보', type: 'optional' }]
+            },
+            // ===== 모달 팝업 영역 =====
+            // 템플릿 선택 모달
+            {
+                selector: '#templateModal',
+                title: '템플릿 선택 모달',
+                position: { top: '60px', left: '20px' },
+                description: '저장된 광고문자 템플릿 목록에서 선택',
+                function: '템플릿 검색 및 선택',
+                behavior: ['템플릿명/내용 검색', '선택 시 메시지 내용에 자동 적용'],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 엑셀 업로드 모달
+            {
+                selector: '#excelUploadModal',
+                title: '수신번호 관리 모달',
+                position: { top: '60px', left: '20px' },
+                description: '엑셀 파일 업로드 또는 주소록에서 대량 수신번호 등록',
+                function: '대량 수신번호 관리',
+                behavior: ['엑셀업로드/샘플 다운로드 탭', '.xlsx,.xls,.csv 지원', '주소록 불러오기'],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 발송 확인 모달
+            {
+                selector: '#confirmModal',
+                title: '발송 확인 모달',
+                position: { top: '60px', left: '20px' },
+                description: '광고문자 발송 전 최종 확인',
+                function: '발송 정보 최종 확인',
+                behavior: ['발신번호/수신번호수/메시지타입 표시', '예상 발송 포인트 표시'],
+                api: 'POST /api/messages/ad/send',
+                tags: [{ text: '모달', type: 'info' }, { text: '필수확인', type: 'warning' }]
+            },
+            // 주소록에 추가 모달
+            {
+                selector: '#addToAddressBookModal',
+                title: '주소록에 추가 모달',
+                position: { top: '60px', left: '20px' },
+                description: '현재 수신번호를 주소록에 저장',
+                function: '수신번호를 주소록 그룹에 저장',
+                behavior: ['기존 그룹에 추가/새 그룹 생성 선택', '추가할 데이터 개수 표시'],
+                api: 'POST /api/addressbook',
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 테스트 발송 모달
+            {
+                selector: '#testSendModal',
+                title: '테스트 발송 모달',
+                position: { top: '60px', left: '20px' },
+                description: '실제 발송 전 테스트 번호로 메시지 확인',
+                function: '테스트 번호로 메시지 발송',
+                behavior: ['테스트 수신번호 입력 (최대 3개)', '발송될 메시지 미리보기'],
+                api: 'POST /api/messages/ad/test-send',
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 템플릿 선택 모달 (두번째)
+            {
+                selector: '#templateSelectModal',
+                title: '템플릿 선택 모달',
+                position: { top: '60px', left: '20px' },
+                description: '저장된 광고문자 템플릿 선택',
+                function: '템플릿 목록 조회 및 선택',
+                api: 'GET /api/templates/ad',
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 템플릿 저장 모달
+            {
+                selector: '#templateSaveModal',
+                title: '템플릿으로 저장 모달',
+                position: { top: '60px', left: '20px' },
+                description: '현재 작성된 메시지를 템플릿으로 저장',
+                function: '새 템플릿 생성',
+                behavior: ['템플릿명 입력 필수', '저장 시 템플릿으로 등록'],
+                api: 'POST /api/templates/ad',
+                tags: [{ text: '모달', type: 'info' }]
             }
         ];
         initSpecOverlay(specData);
