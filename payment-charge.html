@@ -1264,15 +1264,15 @@ body {
                                 </tr>
                                 <tr>
                                     <td rowspan="3" style="font-weight: 600;">카카오</td>
-                                    <td>카카오 알림톡</td>
+                                    <td>알림톡</td>
                                     <td style="font-weight: 600; color: var(--primary-color);">6.2원</td>
                                 </tr>
                                 <tr>
-                                    <td>브랜드톡(친구)</td>
+                                    <td>브랜드 메시지(친구)</td>
                                     <td style="font-weight: 600; color: var(--primary-color);">21.5원</td>
                                 </tr>
                                 <tr>
-                                    <td>브랜드톡(비친구)</td>
+                                    <td>브랜드 메시지(비친구)</td>
                                     <td style="font-weight: 600; color: var(--primary-color);">25.8원</td>
                                 </tr>
                             </tbody>
@@ -1299,11 +1299,11 @@ body {
                             <input type="number" class="form-input" id="calcAlimtalk" value="0" min="0" oninput="calculateCharge()">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">브랜드톡(친구) 건수</label>
+                            <label class="form-label">브랜드 메시지(친구) 건수</label>
                             <input type="number" class="form-input" id="calcBrandtalkFriend" value="0" min="0" oninput="calculateCharge()">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">브랜드톡(비친구) 건수</label>
+                            <label class="form-label">브랜드 메시지(비친구) 건수</label>
                             <input type="number" class="form-input" id="calcBrandtalkNonFriend" value="0" min="0" oninput="calculateCharge()">
                         </div>
                         <div class="price-info">
@@ -1967,7 +1967,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: '요금 안내',
                 position: { top: '10px', left: '10px' },
                 function: '메시지 타입별 단가 안내',
-                behavior: ['SMS', 'LMS', 'MMS', '알림톡', '브랜드메시지 요금']
+                behavior: ['SMS', 'LMS', 'MMS', '알림톡', '브랜드 메시지 요금']
             },
             // 18. 충전 금액 계산기
             {
@@ -2047,7 +2047,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: '메시지 타입 선택',
                 position: { top: '-5px', left: '-10px' },
                 function: '주요 사용 메시지 타입 선택',
-                behavior: ['SMS, LMS, MMS, 알림톡, 브랜드메시지 중 복수 선택']
+                behavior: ['SMS, LMS, MMS, 알림톡, 브랜드 메시지 중 복수 선택']
             },
             // 28. 문의내용 입력
             {
