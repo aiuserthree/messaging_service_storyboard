@@ -2452,88 +2452,79 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
-            // 1. 탭 메뉴
-            { selector: '#mypageTabs', title: '탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '마이페이지 내 이동' },
-            // 2. 내 정보 수정 탭
-            { selector: '#mypageTabs .tab-item:nth-child(1)', title: '내 정보 수정 탭', position: { top: '-5px', left: '-10px' }, function: '프로필 수정 페이지' },
-            // 3. 비밀번호 변경 탭
-            { selector: '#mypageTabs .tab-item:nth-child(2)', title: '비밀번호 변경 탭', position: { top: '-5px', left: '-10px' }, function: '비밀번호 변경 페이지' },
-            // 4. 발신번호 관리 탭
-            { selector: '#mypageTabs .tab-item:nth-child(3)', title: '발신번호 관리 탭', position: { top: '-5px', right: '-10px' }, function: '발신번호 관리 (현재)' },
+            // ===== 페이지 기본 요소 =====
+            // 1-4. 탭 메뉴
+            { selector: '#mypageTabs', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '마이페이지 탭 영역', function: '마이페이지 내 페이지 전환' },
+            { selector: '#mypageTabs .tab-item:nth-child(1)', title: '내 정보 수정 탭', position: { top: '-5px', left: '-10px' }, description: '프로필 수정 페이지', function: '클릭 시 mypage-profile.html로 이동' },
+            { selector: '#mypageTabs .tab-item:nth-child(2)', title: '비밀번호 변경 탭', position: { top: '-5px', left: '-10px' }, description: '비밀번호 변경 페이지', function: '클릭 시 mypage-password.html로 이동' },
+            { selector: '#mypageTabs .tab-item:nth-child(3)', title: '발신번호 관리 탭', position: { top: '-5px', right: '-10px' }, description: '발신번호 관리 (현재)', function: '현재 페이지', behavior: ['현재 활성 탭'] },
             // 5. 안내 메시지
-            { selector: '#callerNumberNotice', title: '사전등록제 안내', position: { top: '10px', left: '10px' }, function: '발신번호 등록 의무화 안내' },
-            // 6. 발신번호 등록 버튼
-            { selector: '#registerCallerBtn', title: '발신번호 등록', position: { top: '-5px', left: '-10px' }, function: '신규 발신번호 등록 시작', behavior: ['4단계 등록 프로세스'] },
-            // 7. 상태 필터
-            { selector: '#statusFilter', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '승인 상태별 필터링', behavior: ['전체', '승인대기', '승인완료', '반려'] },
-            // 8. 검색 입력
-            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '발신번호로 검색' },
-            // 9. 검색 버튼
-            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 실행' },
-            // 10. 발신번호 테이블
-            { selector: '#callerNumberTableContainer', title: '발신번호 테이블', position: { top: '10px', left: '10px' }, function: '등록된 발신번호 목록', api: 'GET /api/caller-numbers' },
-            // 11. 전체 선택
-            { selector: '#selectAllCallers', title: '전체 선택', position: { top: '-5px', left: '-10px' }, function: '모든 발신번호 선택' },
-            // 12. 발신번호 행
-            { selector: '#callerNumberTableContainer tbody tr:first-child', title: '발신번호 행', position: { top: '-5px', left: '-10px' }, function: '개별 발신번호 정보' },
-            // 13. 상세보기 버튼
-            { selector: '.btn-view', title: '상세보기', position: { top: '-5px', left: '-10px' }, function: '발신번호 상세 정보' },
-            // 14. 삭제 버튼
-            { selector: '.btn-delete', title: '삭제', position: { top: '-5px', right: '-10px' }, function: '발신번호 삭제', api: 'DELETE /api/caller-numbers/:id' },
-            // 15. 페이지네이션
-            { selector: '#pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '페이지 이동' },
-            // === 발신번호 등록 모달 ===
+            { selector: '#callerNumberNotice', title: '사전등록제 안내', position: { top: '10px', left: '10px' }, description: '발신번호 등록 의무화 안내', function: '정보통신망법 안내' },
+            // 6. 발신번호 카드
+            { selector: '#callerNumberCard', title: '발신번호 목록 카드', position: { top: '10px', left: '-15px' }, description: '발신번호 목록 영역', function: '등록된 발신번호 관리' },
+            // 7. 발신번호 등록 버튼
+            { selector: '#registerCallerBtn', title: '발신번호 등록 버튼', position: { top: '-5px', right: '-10px' }, description: '신규 발신번호 등록', function: 'openRegisterModal() 호출', behavior: ['클릭 시 5단계 등록 모달 열기'] },
+            // 8-11. 상태 필터
+            { selector: '#statusFilter', title: '상태 필터 영역', position: { top: '-5px', left: '-10px' }, description: '승인 상태별 필터링', function: '상태별 목록 필터링' },
+            { selector: '#statusFilter .status-filter-btn:nth-child(1)', title: '전체 필터', position: { top: '-5px', left: '-10px' }, description: '전체 발신번호 표시', function: "filterStatus('all') 호출" },
+            { selector: '#statusFilter .status-filter-btn:nth-child(2)', title: '승인대기 필터', position: { top: '-5px', left: '-10px' }, description: '승인대기 상태만 표시', function: "filterStatus('pending') 호출" },
+            { selector: '#statusFilter .status-filter-btn:nth-child(3)', title: '승인완료 필터', position: { top: '-5px', left: '-10px' }, description: '승인완료 상태만 표시', function: "filterStatus('approved') 호출" },
+            { selector: '#statusFilter .status-filter-btn:nth-child(4)', title: '반려 필터', position: { top: '-5px', right: '-10px' }, description: '반려 상태만 표시', function: "filterStatus('rejected') 호출" },
+            // 12. 발신번호 테이블
+            { selector: '#callerNumberTable', title: '발신번호 테이블', position: { top: '10px', left: '10px' }, description: '등록된 발신번호 목록', function: '발신번호/통신사/용도/상태/등록일/승인일/관리 표시', api: 'GET /api/caller-numbers' },
+            // 13-15. 테이블 내 버튼
+            { selector: 'tr[data-status="approved"] .btn-sm', title: '삭제 버튼 (승인완료)', position: { top: '-5px', right: '-10px' }, description: '승인된 발신번호 삭제', function: 'deleteCallerNumber(id) 호출', api: 'DELETE /api/caller-numbers/{id}', behavior: ['확인 다이얼로그 후 삭제'] },
+            { selector: 'tr[data-status="pending"] .btn-sm', title: '상세보기 버튼 (승인대기)', position: { top: '-5px', right: '-10px' }, description: '승인대기 상세 정보', function: 'viewDetail(id) 호출', behavior: ['클릭 시 상세보기 모달 열기'] },
+            { selector: 'tr[data-status="rejected"] .btn-sm', title: '반려사유 버튼', position: { top: '-5px', right: '-10px' }, description: '반려 사유 확인', function: 'viewRejectionReason(id) 호출', behavior: ['반려 사유 알림 표시'] },
+            
+            // ===== 발신번호 등록 모달 =====
             // 16. 발신번호 등록 모달
-            { selector: '#registerModal', title: '발신번호 등록 모달', position: { top: '60px', left: '20px' }, function: '발신번호 신규 등록 5단계 프로세스', behavior: ['회원 유형 → 기본 정보 → 인증 및 서류 → 연락처 → 제출'], api: 'POST /api/caller-numbers' },
-            // 17. 등록 모달 닫기 버튼
-            { selector: '#registerModal .modal-close', title: '모달 닫기', position: { top: '5px', right: '5px' }, function: '발신번호 등록 취소' },
+            { selector: '#registerModal', title: '발신번호 등록 모달', position: { top: '60px', left: '20px' }, description: '발신번호 신규 등록 5단계 프로세스', function: '발신번호 등록 절차 진행', behavior: ['회원유형→기본정보→인증/서류→연락처→제출'], api: 'POST /api/caller-numbers' },
+            // 17. 모달 닫기 (X)
+            { selector: '#registerModal .modal-close', title: '모달 닫기 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: "closeModal('registerModal') 호출" },
             // 18. 단계 표시기
-            { selector: '.step-indicator', title: '단계 표시기', position: { top: '-10px', left: '50%', transform: 'translateX(-50%)' }, function: '등록 진행 단계 표시', behavior: ['1.회원유형 → 2.기본정보 → 3.인증/서류 → 4.연락처 → 5.제출'] },
-            // 19. STEP 1: 회원 유형 선택
-            { selector: '#step1Content', title: 'STEP 1: 회원 유형', position: { top: '10px', left: '10px' }, function: '개인/기업 유형 선택', behavior: ['개인: 본인인증 + 통신서비스 이용증명원', '기업: 사업자등록증 + 재직증명서 등'] },
-            // 20. 개인 선택 카드
-            { selector: '#step1Content .card:first-child', title: '개인 선택', position: { top: '10px', left: '10px' }, function: '개인 명의 발신번호 등록' },
-            // 21. 기업 선택 카드
-            { selector: '#step1Content .card:last-child', title: '기업 선택', position: { top: '10px', right: '10px' }, function: '기업/사업자 명의 발신번호 등록' },
-            // 22. STEP 2: 기본 정보
-            { selector: '#step2Content', title: 'STEP 2: 기본 정보', position: { top: '10px', left: '10px' }, function: '발신번호 기본 정보 입력', behavior: ['본인 명의/타인 명의', '전화번호/인터넷전화', '발신번호 입력', '용도 입력'] },
-            // 23. STEP 3: 인증 및 서류
-            { selector: '#step3Content', title: 'STEP 3: 인증 및 서류', position: { top: '10px', left: '10px' }, function: '휴대폰 본인인증 및 서류 업로드', behavior: ['본인인증(PASS 등)', '통신서비스 이용증명원', '위임장(타인 명의 시)'] },
-            // 24. STEP 4: 연락처
-            { selector: '#step4Content', title: 'STEP 4: 연락처', position: { top: '10px', left: '10px' }, function: '담당자 연락처 정보 입력', behavior: ['담당자명', '담당자 연락처', '담당자 이메일'] },
-            // 25. STEP 5: 제출
-            { selector: '#step5Content', title: 'STEP 5: 제출', position: { top: '10px', left: '10px' }, function: '입력 정보 확인 및 최종 제출', behavior: ['입력 정보 요약 표시', '약관 동의 확인'] },
-            // 26. 취소 버튼
-            { selector: '#registerModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '발신번호 등록 취소 및 모달 닫기' },
-            // 27. 다음 버튼
-            { selector: '#nextBtn', title: '다음 버튼', position: { top: '-5px', left: '10px' }, function: '다음 단계로 이동', behavior: ['현재 단계 유효성 검증 후 진행'] },
-            // 28. 승인요청 버튼
-            { selector: '#submitBtn', title: '승인요청 버튼', position: { top: '-5px', right: '-10px' }, function: '발신번호 등록 신청', api: 'POST /api/caller-numbers', tags: [{ text: 'API', type: 'api' }] },
-            // === 발신번호 상세보기 모달 ===
-            // 29. 상세보기 모달
-            { selector: '#detailModal', title: '발신번호 상세 모달', position: { top: '60px', left: '20px' }, function: '등록된 발신번호 상세 정보 확인', behavior: ['기본 정보', '신청 정보', '서류 첨부 내역'] },
-            // 30. 상세 모달 닫기 버튼
-            { selector: '#detailModal .modal-close', title: '모달 닫기', position: { top: '5px', right: '5px' }, function: '상세보기 모달 닫기' },
-            // 31. 발신번호 정보
-            { selector: '#detailCallerNumber', title: '발신번호', position: { top: '-5px', right: '-10px' }, function: '등록된 발신번호 표시' },
-            // 32. 통신사 정보
-            { selector: '#detailCarrier', title: '통신사', position: { top: '-5px', right: '-10px' }, function: '발신번호 통신사 표시' },
-            // 33. 용도 정보
-            { selector: '#detailPurpose', title: '용도', position: { top: '-5px', right: '-10px' }, function: '발신번호 사용 용도 표시' },
-            // 34. 상태 정보
-            { selector: '#detailStatus', title: '상태', position: { top: '-5px', right: '-10px' }, function: '승인대기/승인완료/반려 상태 표시' },
-            // 35. 등록일 정보
-            { selector: '#detailRegisterDate', title: '등록일', position: { top: '-5px', right: '-10px' }, function: '발신번호 등록 신청일' },
-            // 36. 승인일 정보
-            { selector: '#detailApproveDate', title: '승인일', position: { top: '-5px', right: '-10px' }, function: '발신번호 승인 날짜' },
-            // 37. 회원 유형 정보
-            { selector: '#detailMemberType', title: '회원 유형', position: { top: '-5px', right: '-10px' }, function: '개인/기업 유형 표시' },
-            // 38. 명의 구분 정보
-            { selector: '#detailOwnershipType', title: '명의 구분', position: { top: '-5px', right: '-10px' }, function: '본인/타인 명의 표시' },
-            // 39. 번호 유형 정보
-            { selector: '#detailNumberType', title: '번호 유형', position: { top: '-5px', right: '-10px' }, function: '전화번호/인터넷전화 표시' },
-            // 40. 상세 닫기 버튼
-            { selector: '#detailModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, function: '상세보기 모달 닫기' }
+            { selector: '.step-indicator', title: '단계 표시기', position: { top: '-10px', left: '50%', transform: 'translateX(-50%)' }, description: '등록 진행 단계 표시', function: '현재 진행 단계 시각화', behavior: ['완료 단계: 녹색', '현재 단계: 파란색', '대기 단계: 회색'] },
+            // 19-21. STEP 1
+            { selector: '#step1Content', title: 'STEP 1: 회원 유형', position: { top: '10px', left: '10px' }, description: '회원 유형 선택 단계', function: '개인/기업 유형 선택' },
+            { selector: '#step1Content .card:first-of-type', title: '개인 선택 카드', position: { top: '10px', left: '10px' }, description: '개인 명의 등록', function: "selectMemberType('personal') 호출", behavior: ['클릭 시 개인 유형 선택', '다음 버튼 활성화'] },
+            { selector: '#step1Content .card:last-of-type', title: '기업 선택 카드', position: { top: '10px', right: '10px' }, description: '기업/사업자 명의 등록', function: "selectMemberType('business') 호출", behavior: ['클릭 시 기업 유형 선택', '다음 버튼 활성화'] },
+            // 22-25. STEP 2
+            { selector: '#step2Content', title: 'STEP 2: 기본 정보', position: { top: '10px', left: '10px' }, description: '발신번호 기본 정보 입력', function: '발신번호 및 용도 입력' },
+            { selector: '#callerNumberInput', title: '발신번호 입력', position: { top: '-5px', left: '-10px' }, description: '등록할 발신번호', function: '전화번호 입력', behavior: ['휴대폰 또는 유선번호 형식'], tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#step2Content .btn-outline', title: '확인 버튼', position: { top: '-5px', right: '-10px' }, description: '발신번호 중복 확인', function: 'checkDuplicateNumber() 호출', api: 'GET /api/caller-numbers/check' },
+            { selector: '#purposeInput', title: '발신번호 용도', position: { top: '-5px', left: '-10px' }, description: '발신번호 사용 용도', function: '용도 입력', behavior: ['예: 마케팅팀, 고객센터'] },
+            // 26-28. STEP 3
+            { selector: '#step3Content', title: 'STEP 3: 인증 및 서류', position: { top: '10px', left: '10px' }, description: '명의 구분 및 서류 제출', function: '본인인증 및 서류 업로드' },
+            { selector: '#authButton', title: '휴대폰 본인인증 버튼', position: { top: '-5px', left: '-10px' }, description: '본인인증 수행', function: 'openPhoneAuth() 호출', behavior: ['PASS 등 본인인증 서비스 연동', '인증 완료 시 표시 변경'] },
+            { selector: '#documentSection', title: '서류 업로드 영역', position: { top: '10px', left: '10px' }, description: '필수 서류 업로드', function: '서류 파일 업로드', behavior: ['명의 구분에 따라 필요 서류 변경', '5MB 이하 파일만 가능'] },
+            // 29-30. STEP 4
+            { selector: '#step4Content', title: 'STEP 4: 연락처', position: { top: '10px', left: '10px' }, description: '연락처 정보 입력', function: '담당자 연락처 입력' },
+            { selector: '#contactPhoneInput', title: '휴대폰번호 입력', position: { top: '-5px', left: '-10px' }, description: '결과 알림 연락처', function: '휴대폰번호 입력', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#contactEmailInput', title: '이메일 입력', position: { top: '-5px', left: '-10px' }, description: '결과 수신 이메일 (선택)', function: '이메일 입력' },
+            // 31. STEP 5
+            { selector: '#step5Content', title: 'STEP 5: 제출', position: { top: '10px', left: '10px' }, description: '최종 확인 및 제출', function: '입력 정보 확인', behavior: ['모든 입력 정보 요약 표시', '제출 후 수정 불가 안내'] },
+            // 32-34. 모달 하단 버튼
+            { selector: '#registerModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '등록 취소', function: "closeModal('registerModal') 호출" },
+            { selector: '#nextBtn', title: '다음 버튼', position: { top: '-5px', left: '10px' }, description: '다음 단계로 이동', function: 'nextStep() 호출', behavior: ['현재 단계 유효성 검증 후 진행'] },
+            { selector: '#submitBtn', title: '승인요청 버튼', position: { top: '-5px', right: '-10px' }, description: '발신번호 등록 신청', function: 'submitRegister() 호출', api: 'POST /api/caller-numbers', behavior: ['영업일 1~3일 내 승인 처리'] },
+            
+            // ===== 발신번호 상세보기 모달 =====
+            // 35. 상세보기 모달
+            { selector: '#detailModal', title: '발신번호 상세 모달', position: { top: '60px', left: '20px' }, description: '발신번호 상세 정보', function: '등록 정보 및 서류 확인' },
+            // 36. 모달 닫기 (X)
+            { selector: '#detailModal .modal-close', title: '모달 닫기 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: "closeModal('detailModal') 호출" },
+            // 37-44. 상세 정보
+            { selector: '#detailCallerNumber', title: '발신번호', position: { top: '-5px', right: '-10px' }, description: '등록된 발신번호' },
+            { selector: '#detailCarrier', title: '통신사', position: { top: '-5px', right: '-10px' }, description: '발신번호 통신사' },
+            { selector: '#detailPurpose', title: '용도', position: { top: '-5px', right: '-10px' }, description: '사용 용도' },
+            { selector: '#detailStatus', title: '상태', position: { top: '-5px', right: '-10px' }, description: '승인 상태 배지' },
+            { selector: '#detailRegisterDate', title: '등록일', position: { top: '-5px', right: '-10px' }, description: '등록 신청일' },
+            { selector: '#detailApproveDate', title: '승인일', position: { top: '-5px', right: '-10px' }, description: '승인 날짜' },
+            { selector: '#documentList', title: '서류 목록', position: { top: '10px', left: '10px' }, description: '제출 서류 목록', function: '서류 다운로드 가능' },
+            // 45. 서류 다운로드 버튼
+            { selector: '#documentList .btn-sm', title: '다운로드 버튼', position: { top: '-5px', right: '-10px' }, description: '서류 다운로드', function: 'downloadDocument(fileName) 호출' },
+            // 46. 닫기 버튼
+            { selector: '#detailModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, description: '모달 닫기', function: "closeModal('detailModal') 호출" }
         ];
         initSpecOverlay(specData);
     </script>
