@@ -1243,30 +1243,37 @@ body {
                         <table class="fee-table" id="feeTable">
                             <thead>
                                 <tr>
-                                    <th>메시지 타입</th>
+                                    <th>항목</th>
+                                    <th></th>
                                     <th>단가</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td rowspan="3" style="font-weight: 600;">문자</td>
                                     <td>SMS</td>
-                                    <td>20원</td>
+                                    <td style="font-weight: 600; color: var(--primary-color);">8.3원</td>
                                 </tr>
                                 <tr>
                                     <td>LMS</td>
-                                    <td>50원</td>
+                                    <td style="font-weight: 600; color: var(--primary-color);">26.5원</td>
                                 </tr>
                                 <tr>
                                     <td>MMS</td>
-                                    <td>200원</td>
+                                    <td style="font-weight: 600; color: var(--primary-color);">59원</td>
                                 </tr>
                                 <tr>
-                                    <td>알림톡</td>
-                                    <td>30원</td>
+                                    <td rowspan="3" style="font-weight: 600;">카카오</td>
+                                    <td>카카오 알림톡</td>
+                                    <td style="font-weight: 600; color: var(--primary-color);">6.2원</td>
                                 </tr>
                                 <tr>
-                                    <td>브랜드 메시지</td>
-                                    <td>30원</td>
+                                    <td>브랜드톡(친구)</td>
+                                    <td style="font-weight: 600; color: var(--primary-color);">21.5원</td>
+                                </tr>
+                                <tr>
+                                    <td>브랜드톡(비친구)</td>
+                                    <td style="font-weight: 600; color: var(--primary-color);">25.8원</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1292,8 +1299,12 @@ body {
                             <input type="number" class="form-input" id="calcAlimtalk" value="0" min="0" oninput="calculateCharge()">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">브랜드 메시지 건수</label>
-                            <input type="number" class="form-input" id="calcBrandtalk" value="0" min="0" oninput="calculateCharge()">
+                            <label class="form-label">브랜드톡(친구) 건수</label>
+                            <input type="number" class="form-input" id="calcBrandtalkFriend" value="0" min="0" oninput="calculateCharge()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">브랜드톡(비친구) 건수</label>
+                            <input type="number" class="form-input" id="calcBrandtalkNonFriend" value="0" min="0" oninput="calculateCharge()">
                         </div>
                         <div class="price-info">
                             <div class="price-row price-total">
@@ -1775,10 +1786,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const lms = parseInt(document.getElementById('calcLMS').value) || 0;
             const mms = parseInt(document.getElementById('calcMMS').value) || 0;
             const alimtalk = parseInt(document.getElementById('calcAlimtalk').value) || 0;
-            const brandtalk = parseInt(document.getElementById('calcBrandtalk').value) || 0;
+            const brandtalkFriend = parseInt(document.getElementById('calcBrandtalkFriend').value) || 0;
+            const brandtalkNonFriend = parseInt(document.getElementById('calcBrandtalkNonFriend').value) || 0;
 
-            const total = (sms * 20) + (lms * 50) + (mms * 200) + (alimtalk * 30) + (brandtalk * 30);
-            document.getElementById('recommendedAmount').textContent = formatNumber(total) + '원';
+            const total = (sms * 8.3) + (lms * 26.5) + (mms * 59) + (alimtalk * 6.2) + (brandtalkFriend * 21.5) + (brandtalkNonFriend * 25.8);
+            document.getElementById('recommendedAmount').textContent = formatNumber(Math.ceil(total)) + '원';
         }
 
         function applyRecommended() {
