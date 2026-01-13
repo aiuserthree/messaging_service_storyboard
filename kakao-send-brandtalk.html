@@ -3002,8 +3002,29 @@ document.addEventListener('DOMContentLoaded', function() {
             // 33~36. 발송 시간, 비용, 액션 버튼
             { selector: '#sendTimeGroup', title: '발송 시간', position: { top: '5px', left: '-15px' }, function: '즉시/예약 발송 설정', tags: [{ text: '필수', type: 'required' }] },
             { selector: '.cost-info', title: '발송 비용 정보', position: { top: '10px', left: '-15px' }, function: '수신번호 기준 비용 자동 계산' },
-            { selector: 'button[onclick="testSend()"]', title: '테스트 발송', position: { top: '-5px', left: '-10px' }, function: '소량 테스트 발송', api: 'POST /api/kakao/brand/test' },
-            { selector: '#sendForm button[type="submit"]', title: '발송하기', position: { top: '-5px', right: '-10px' }, function: '메시지 발송', api: 'POST /api/kakao/brand/send', tags: [{ text: 'API', type: 'api' }] },
+            { selector: 'button[onclick="testSend()"]', title: '테스트 발송', position: { top: '-5px', left: '-10px' }, function: '소량 테스트 발송', behavior: ['테스트 발송 모달 노출'], api: 'POST /api/kakao/brand/test' },
+            { 
+                selector: '#sendForm button[type="submit"]', 
+                title: '발송하기', 
+                position: { top: '-5px', right: '-10px' }, 
+                function: '브랜드 메시지 발송',
+                behavior: [
+                    '[ 유효성 검증 - 실패 시 얼럿 ]',
+                    '발신 프로필 미선택: "발신 프로필을 선택해주세요"',
+                    '메시지 미입력: "메시지를 입력해주세요"',
+                    '수신번호 미입력: "수신번호를 입력해주세요"',
+                    '잔액 부족: "잔액이 부족합니다. 충전 후 이용해주세요"',
+                    '[ 유효성 검증 통과 시 ]',
+                    '발송 확인 모달 노출 → 발송하기 버튼 클릭',
+                    '[ 발송 결과 ]',
+                    '발송 성공: "발송이 완료되었습니다" 토스트',
+                    '서버 오류: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"',
+                    '네트워크 오류: "네트워크 연결을 확인해주세요"',
+                    '카카오 API 오류: "카카오 서버 연결에 실패했습니다"'
+                ],
+                api: 'POST /api/kakao/brand/send', 
+                tags: [{ text: 'API', type: 'api' }] 
+            },
             // 37~38. 미리보기 영역
             { selector: '.preview-section', title: '미리보기 영역', position: { top: '10px', left: '10px' }, function: '발송될 메시지 형태 확인' },
             { selector: '.preview-brand', title: '브랜드 메시지 미리보기', position: { top: '10px', right: '10px' }, function: '실제 수신 화면 미리보기' },
@@ -3036,7 +3057,27 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#testBalance', title: '현재 잔액', position: { top: '-5px', right: '-10px' }, function: '사용 가능 포인트 표시' },
             { selector: '#testSendResult', title: '발송 결과 영역', position: { top: '10px', left: '10px' }, function: '테스트 발송 성공/실패 표시' },
             { selector: '#testSendCancelBtn', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '테스트 발송 취소' },
-            { selector: '#testSendSubmitBtn', title: '테스트 발송 버튼', position: { top: '-5px', right: '-10px' }, function: '테스트 메시지 발송', api: 'POST /api/kakao/brand/test', tags: [{ text: 'API', type: 'api' }] },
+            { 
+                selector: '#testSendSubmitBtn', 
+                title: '테스트 발송 버튼', 
+                position: { top: '-5px', right: '-10px' }, 
+                function: '테스트 메시지 발송',
+                behavior: [
+                    '[ 유효성 검증 - 실패 시 토스트 ]',
+                    '수신번호 미입력: "테스트 수신번호를 입력해주세요"',
+                    '잘못된 번호 형식: "올바른 전화번호 형식이 아닙니다. (010-XXXX-XXXX)"',
+                    '잔액 부족: "잔액이 부족합니다"',
+                    '[ 발송 처리 ]',
+                    '발송 중: 버튼 비활성화 + "발송 중..." 텍스트',
+                    '[ 발송 결과 ]',
+                    '발송 성공: "테스트 발송이 완료되었습니다" 토스트 + 발송 시간 표시',
+                    '서버 오류: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"',
+                    '네트워크 오류: "네트워크 연결을 확인해주세요"',
+                    '카카오 API 오류: "카카오 서버 연결에 실패했습니다"'
+                ],
+                api: 'POST /api/kakao/brand/test', 
+                tags: [{ text: 'API', type: 'api' }] 
+            },
             
             // ===== 템플릿으로 저장 모달 (templateSaveModal) =====
             { selector: '#templateSaveModal', title: '템플릿으로 저장 모달', position: { top: '60px', left: '20px' }, function: '현재 메시지 템플릿 저장' },

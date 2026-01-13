@@ -478,19 +478,34 @@
     function checkModalState() {
         const modals = document.querySelectorAll('.modal-overlay');
         let isModalOpen = false;
+        const currentlyOpenModals = new Set();
 
         modals.forEach(modal => {
             const style = window.getComputedStyle(modal);
+            const modalId = modal.id || modal.className;
+            
             // display가 none이 아니고, visibility가 hidden이 아니면 열린 것으로 판단
             if (style.display !== 'none' && style.visibility !== 'hidden') {
                 isModalOpen = true;
+                currentlyOpenModals.add(modalId);
                 // 열린 모달에 클래스 추가
                 modal.classList.add('spec-modal-visible');
+                
+                // 새로 열린 모달인 경우 마커 재생성
+                if (!previouslyOpenModals.has(modalId)) {
+                    // 약간의 지연 후 마커 재생성 (모달 애니메이션 완료 후)
+                    setTimeout(() => {
+                        refreshMarkersInModal(modal);
+                    }, 100);
+                }
             } else {
                 // 닫힌 모달에서 클래스 제거
                 modal.classList.remove('spec-modal-visible');
             }
         });
+        
+        // 현재 열린 모달 상태 저장
+        previouslyOpenModals = currentlyOpenModals;
 
         if (isModalOpen) {
             document.body.classList.add('spec-modal-open');
@@ -501,6 +516,8 @@
 
     // MutationObserver로 모달 상태 변화 감지 (최적화)
     let modalObserver = null;
+    let previouslyOpenModals = new Set();
+    
     function observeModalChanges() {
         if (modalObserver) return; // 이미 실행 중이면 스킵
         
@@ -521,6 +538,29 @@
 
         // 초기 상태 체크
         checkModalState();
+    }
+    
+    // 모달 내부 마커 재생성
+    function refreshMarkersInModal(modal) {
+        if (!isOverlayActive) return;
+        
+        // 해당 모달 내부에 있어야 할 마커들 확인 및 재생성
+        specData.forEach((item, index) => {
+            const target = document.querySelector(item.selector);
+            if (!target) return;
+            
+            // 타겟이 해당 모달 내부에 있는지 확인
+            if (modal.contains(target)) {
+                // 기존 마커 제거
+                const existingMarker = target.querySelector('.spec-marker');
+                if (existingMarker) {
+                    existingMarker.remove();
+                }
+                
+                // 새로 마커 생성
+                createMarker(item, index);
+            }
+        });
     }
 
     // 마커 생성 여부
@@ -554,6 +594,43 @@
                 window.closeSpecTooltip();
             }
         });
+        
+        // openModal 함수 후킹 - 모달 열릴 때 마커 업데이트
+        if (typeof window.openModal === 'function') {
+            const originalOpenModal = window.openModal;
+            window.openModal = function(modalId) {
+                originalOpenModal(modalId);
+                
+                // 모달이 열린 후 마커 업데이트
+                if (isOverlayActive) {
+                    setTimeout(() => {
+                        const modal = document.getElementById(modalId);
+                        if (modal) {
+                            modal.classList.add('spec-modal-visible');
+                            document.body.classList.add('spec-modal-open');
+                            previouslyOpenModals.add(modalId);
+                            refreshMarkersInModal(modal);
+                        }
+                    }, 50);
+                }
+            };
+        }
+        
+        // closeModal 함수 후킹 - 모달 닫힐 때 상태 업데이트
+        if (typeof window.closeModal === 'function') {
+            const originalCloseModal = window.closeModal;
+            window.closeModal = function(modalId) {
+                originalCloseModal(modalId);
+                
+                // 모달이 닫힌 후 상태 업데이트
+                if (isOverlayActive) {
+                    setTimeout(() => {
+                        previouslyOpenModals.delete(modalId);
+                        checkModalState();
+                    }, 50);
+                }
+            };
+        }
 
         console.log('✅ Spec Overlay 준비 완료 - ' + specData.length + '개 컴포넌트 (지연 로딩)');
     };

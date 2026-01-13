@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이디 찾기 - Tokbell Admin</title>
+    <script src="js/header.js"></script>
+    <style>
+/* 공통 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --bg-color: #f8fafc;
+    --surface-color: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-color);
+}
+
+/* 레이아웃 스타일 */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 */
+.header {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.logo h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.logo a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.logo a:hover h1 {
+    opacity: 0.8;
+}
+
+.main-nav {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+    position: relative;
+}
+
+.nav-item {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-item:hover {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.nav-item.has-dropdown {
+    position: relative;
+}
+
+.nav-item.has-dropdown .nav-link::after {
+    content: '▼';
+    font-size: 10px;
+    margin-left: 4px;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.nav-item.has-dropdown.open .nav-link::after {
+    transform: rotate(180deg);
+}
+
+.nav-item.has-dropdown .nav-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+/* 드롭다운 메뉴 */
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.nav-item.open .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-dropdown-item {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.nav-dropdown-item:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.nav-dropdown-item.active {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.balance-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: var(--bg-color);
+    border-radius: var(--radius-md);
+}
+
+.balance-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.balance-amount {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 잔액 툴팁 스타일 */
+.balance-tooltip-wrapper {
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+}
+
+.balance-tooltip-content {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 8px;
+    background: #1e293b;
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: normal;
+    width: 200px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    z-index: 1000;
+}
+
+.balance-tooltip-wrapper:hover .balance-tooltip-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+.balance-tooltip-content::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-bottom-color: #1e293b;
+}
+
+/* 버튼 스타일 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    gap: 8px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background-color: var(--bg-color);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 메인 컨텐츠 */
+.main-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    min-height: calc(100vh - 64px);
+}
+
+.find-container {
+    background-color: var(--surface-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 480px;
+    padding: 48px 40px;
+}
+
+.find-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.find-logo {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.find-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.find-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* 탭 스타일 */
+.tab-container {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 24px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 14px 16px;
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.form-label .required {
+    color: var(--danger-color);
+    margin-left: 2px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-input::placeholder {
+    color: var(--text-muted);
+}
+
+.input-with-btn {
+    display: flex;
+    gap: 8px;
+}
+
+.input-with-btn .form-input {
+    flex: 1;
+}
+
+.input-with-btn .btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.form-error {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--danger-color);
+    display: none;
+}
+
+.form-error.show {
+    display: block;
+}
+
+.form-hint {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.submit-button {
+    margin-top: 24px;
+    width: 100%;
+}
+
+.find-footer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.find-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    margin: 0 8px;
+}
+
+.find-footer a:hover {
+    text-decoration: underline;
+}
+
+/* 결과 화면 */
+.result-container {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.result-container.show {
+    display: block;
+}
+
+.result-icon {
+    width: 80px;
+    height: 80px;
+    background-color: rgba(16, 185, 129, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+}
+
+.result-icon svg {
+    width: 40px;
+    height: 40px;
+    color: var(--success-color);
+}
+
+.result-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.result-message {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.result-id {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: var(--bg-color);
+    border-radius: var(--radius-md);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 16px 0;
+    letter-spacing: 0.5px;
+}
+
+.result-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.result-actions .btn {
+    flex: 1;
+}
+
+/* 타이머 */
+.timer {
+    font-size: 12px;
+    color: var(--danger-color);
+    margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 24px 16px;
+    }
+
+    .find-container {
+        padding: 32px 24px;
+    }
+    
+    .find-logo {
+        font-size: 28px;
+    }
+    
+    .find-title {
+        font-size: 20px;
+    }
+
+    .input-with-btn {
+        flex-direction: column;
+    }
+
+    .result-actions {
+        flex-direction: column;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader());
+        </script>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <div class="find-container" id="findIdContainer">
+                <div class="find-header" id="findIdHeader">
+                    <div class="find-logo">Tokbell</div>
+                    <h2 class="find-title">아이디 찾기</h2>
+                    <p class="find-subtitle">가입 시 등록한 정보로 아이디를 찾을 수 있습니다.</p>
+                </div>
+
+                <!-- 인증 방법 탭 -->
+                <div class="tab-container" id="tabContainer">
+                    <button class="tab-btn active" data-tab="phone" id="phoneTabBtn" onclick="switchTab('phone')">휴대폰 인증</button>
+                    <button class="tab-btn" data-tab="email" id="emailTabBtn" onclick="switchTab('email')">이메일 인증</button>
+                </div>
+
+                <!-- 입력 폼 영역 -->
+                <div id="formArea">
+                    <!-- 휴대폰 인증 -->
+                    <div class="tab-content active" id="phoneTab">
+                        <form id="phoneForm" onsubmit="handlePhoneSubmit(event)">
+                            <div class="form-group" id="userNameGroup">
+                                <label class="form-label" for="userName">이름<span class="required">*</span></label>
+                                <input 
+                                    type="text" 
+                                    id="userName" 
+                                    class="form-input" 
+                                    placeholder="이름을 입력하세요"
+                                >
+                                <div class="form-error" id="userNameError">이름을 입력해주세요.</div>
+                            </div>
+
+                            <div class="form-group" id="phoneNumberGroup">
+                                <label class="form-label" for="phoneNumber">휴대폰 번호<span class="required">*</span></label>
+                                <div class="input-with-btn">
+                                    <input 
+                                        type="tel" 
+                                        id="phoneNumber" 
+                                        class="form-input" 
+                                        placeholder="'-' 없이 숫자만 입력"
+                                        maxlength="11"
+                                    >
+                                    <button type="button" class="btn btn-outline" id="sendPhoneCodeBtn" onclick="sendPhoneCode()">인증번호 발송</button>
+                                </div>
+                                <div class="form-error" id="phoneNumberError">휴대폰 번호를 입력해주세요.</div>
+                            </div>
+
+                            <div class="form-group" id="phoneVerifyGroup" style="display: none;">
+                                <label class="form-label" for="phoneVerifyCode">인증번호<span class="required">*</span></label>
+                                <div class="input-with-btn">
+                                    <input 
+                                        type="text" 
+                                        id="phoneVerifyCode" 
+                                        class="form-input" 
+                                        placeholder="인증번호 6자리 입력"
+                                        maxlength="6"
+                                    >
+                                    <button type="button" class="btn btn-outline" id="phoneResendBtn" onclick="sendPhoneCode()">재발송</button>
+                                </div>
+                                <div class="timer" id="phoneTimer">03:00</div>
+                                <div class="form-error" id="phoneVerifyError">인증번호를 입력해주세요.</div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary submit-button" id="phoneFindBtn">아이디 찾기</button>
+                        </form>
+                    </div>
+
+                    <!-- 이메일 인증 -->
+                    <div class="tab-content" id="emailTab">
+                        <form id="emailForm" onsubmit="handleEmailSubmit(event)">
+                            <div class="form-group" id="userNameEmailGroup">
+                                <label class="form-label" for="userNameEmail">이름<span class="required">*</span></label>
+                                <input 
+                                    type="text" 
+                                    id="userNameEmail" 
+                                    class="form-input" 
+                                    placeholder="이름을 입력하세요"
+                                >
+                                <div class="form-error" id="userNameEmailError">이름을 입력해주세요.</div>
+                            </div>
+
+                            <div class="form-group" id="userEmailGroup">
+                                <label class="form-label" for="userEmail">이메일<span class="required">*</span></label>
+                                <div class="input-with-btn">
+                                    <input 
+                                        type="email" 
+                                        id="userEmail" 
+                                        class="form-input" 
+                                        placeholder="가입 시 등록한 이메일"
+                                    >
+                                    <button type="button" class="btn btn-outline" id="sendEmailCodeBtn" onclick="sendEmailCode()">인증번호 발송</button>
+                                </div>
+                                <div class="form-error" id="userEmailError">이메일을 입력해주세요.</div>
+                            </div>
+
+                            <div class="form-group" id="emailVerifyGroup" style="display: none;">
+                                <label class="form-label" for="emailVerifyCode">인증번호<span class="required">*</span></label>
+                                <div class="input-with-btn">
+                                    <input 
+                                        type="text" 
+                                        id="emailVerifyCode" 
+                                        class="form-input" 
+                                        placeholder="인증번호 6자리 입력"
+                                        maxlength="6"
+                                    >
+                                    <button type="button" class="btn btn-outline" id="emailResendBtn" onclick="sendEmailCode()">재발송</button>
+                                </div>
+                                <div class="timer" id="emailTimer">03:00</div>
+                                <div class="form-error" id="emailVerifyError">인증번호를 입력해주세요.</div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary submit-button" id="emailFindBtn">아이디 찾기</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 결과 화면 -->
+                <div class="result-container" id="resultArea">
+                    <div class="result-icon" id="resultIcon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h3 class="result-title" id="resultTitle">아이디를 찾았습니다</h3>
+                    <p class="result-message" id="resultMessage">고객님의 아이디는 아래와 같습니다.</p>
+                    <div class="result-id" id="foundId">tok***@example.com</div>
+                    <p class="result-message" id="resultDate" style="font-size: 12px; color: var(--text-muted);">가입일: 2024-01-15</p>
+                    <div class="result-actions" id="resultActions">
+                        <a href="login.html" class="btn btn-primary" id="goLoginBtn">로그인</a>
+                        <a href="find-password.html" class="btn btn-outline" id="goFindPwBtn">비밀번호 찾기</a>
+                    </div>
+                </div>
+
+                <div class="find-footer" id="findFooter">
+                    <a href="login.html" id="footerLoginLink">로그인</a>
+                    <span>|</span>
+                    <a href="find-password.html" id="footerFindPwLink">비밀번호 찾기</a>
+                    <span>|</span>
+                    <a href="signup.html" id="footerSignupLink">회원가입</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let phoneTimerInterval = null;
+        let emailTimerInterval = null;
+
+        // 탭 전환
+        function switchTab(tabName) {
+            // 탭 버튼 활성화
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // 탭 컨텐츠 활성화
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // 휴대폰 인증번호 발송
+        function sendPhoneCode() {
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            
+            if (!phoneNumber) {
+                document.getElementById('phoneNumberError').classList.add('show');
+                return;
+            }
+            
+            document.getElementById('phoneNumberError').classList.remove('show');
+            document.getElementById('phoneVerifyGroup').style.display = 'block';
+            
+            // 타이머 시작
+            startTimer('phoneTimer', phoneTimerInterval);
+            
+            alert('인증번호가 발송되었습니다.');
+        }
+
+        // 이메일 인증번호 발송
+        function sendEmailCode() {
+            const email = document.getElementById('userEmail').value.trim();
+            
+            if (!email) {
+                document.getElementById('userEmailError').classList.add('show');
+                return;
+            }
+            
+            document.getElementById('userEmailError').classList.remove('show');
+            document.getElementById('emailVerifyGroup').style.display = 'block';
+            
+            // 타이머 시작
+            startTimer('emailTimer', emailTimerInterval);
+            
+            alert('인증번호가 발송되었습니다.');
+        }
+
+        // 타이머 시작
+        function startTimer(timerId, interval) {
+            const timerEl = document.getElementById(timerId);
+            let timeLeft = 180; // 3분
+            
+            if (interval) clearInterval(interval);
+            
+            interval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    timerEl.textContent = '시간 만료';
+                }
+                timeLeft--;
+            }, 1000);
+            
+            if (timerId === 'phoneTimer') {
+                phoneTimerInterval = interval;
+            } else {
+                emailTimerInterval = interval;
+            }
+        }
+
+        // 휴대폰 인증 제출
+        function handlePhoneSubmit(event) {
+            event.preventDefault();
+            
+            const userName = document.getElementById('userName').value.trim();
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const verifyCode = document.getElementById('phoneVerifyCode').value.trim();
+            
+            let isValid = true;
+            
+            if (!userName) {
+                document.getElementById('userNameError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('userNameError').classList.remove('show');
+            }
+            
+            if (!phoneNumber) {
+                document.getElementById('phoneNumberError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('phoneNumberError').classList.remove('show');
+            }
+            
+            if (!verifyCode) {
+                document.getElementById('phoneVerifyError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('phoneVerifyError').classList.remove('show');
+            }
+            
+            if (isValid) {
+                showResult();
+            }
+        }
+
+        // 이메일 인증 제출
+        function handleEmailSubmit(event) {
+            event.preventDefault();
+            
+            const userName = document.getElementById('userNameEmail').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            const verifyCode = document.getElementById('emailVerifyCode').value.trim();
+            
+            let isValid = true;
+            
+            if (!userName) {
+                document.getElementById('userNameEmailError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('userNameEmailError').classList.remove('show');
+            }
+            
+            if (!email) {
+                document.getElementById('userEmailError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('userEmailError').classList.remove('show');
+            }
+            
+            if (!verifyCode) {
+                document.getElementById('emailVerifyError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('emailVerifyError').classList.remove('show');
+            }
+            
+            if (isValid) {
+                showResult();
+            }
+        }
+
+        // 결과 화면 표시
+        function showResult() {
+            document.getElementById('tabContainer').style.display = 'none';
+            document.getElementById('formArea').style.display = 'none';
+            document.getElementById('resultArea').classList.add('show');
+            document.getElementById('findFooter').style.display = 'none';
+            
+            // 타이머 정리
+            if (phoneTimerInterval) clearInterval(phoneTimerInterval);
+            if (emailTimerInterval) clearInterval(emailTimerInterval);
+        }
+
+        // 드롭다운 메뉴 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initDropdownMenus();
+        });
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // ===== 아이디 찾기 영역 =====
+            // 1. 아이디 찾기 컨테이너
+            {
+                selector: '#findIdContainer',
+                title: '아이디 찾기 컨테이너',
+                position: { top: '10px', left: '10px' },
+                function: '아이디 찾기 폼 전체 영역 (중앙 정렬 카드 형태)',
+                behavior: [
+                    '화면 중앙 배치',
+                    '반응형: 모바일에서 너비 100%',
+                    '헤더, 탭, 폼, 결과 영역 포함'
+                ]
+            },
+            // 2. 헤더 영역
+            {
+                selector: '#findIdHeader',
+                title: '헤더 영역',
+                position: { top: '10px', right: '10px' },
+                function: '페이지 타이틀 및 설명 영역',
+                behavior: [
+                    '로고, 제목, 부제목 표시',
+                    '페이지 목적 안내'
+                ]
+            },
+            // 3. 인증 방법 탭
+            {
+                selector: '#tabContainer',
+                title: '인증 방법 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '휴대폰/이메일 인증 방법 선택 탭',
+                behavior: [
+                    '탭 클릭 시 해당 인증 폼으로 전환',
+                    '선택된 탭 하단에 파란색 라인 표시',
+                    '기본값: 휴대폰 인증'
+                ]
+            },
+            // 4. 휴대폰 인증 탭 버튼
+            {
+                selector: '#phoneTabBtn',
+                title: '휴대폰 인증 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '휴대폰 인증 폼으로 전환',
+                behavior: [
+                    '클릭 시 휴대폰 인증 폼 활성화',
+                    '이메일 인증 폼 숨김'
+                ]
+            },
+            // 5. 이메일 인증 탭 버튼
+            {
+                selector: '#emailTabBtn',
+                title: '이메일 인증 탭',
+                position: { top: '-5px', right: '-10px' },
+                function: '이메일 인증 폼으로 전환',
+                behavior: [
+                    '클릭 시 이메일 인증 폼 활성화',
+                    '휴대폰 인증 폼 숨김'
+                ]
+            },
+            // 6. 휴대폰 인증 폼
+            {
+                selector: '#phoneForm',
+                title: '휴대폰 인증 폼',
+                position: { top: '10px', left: '10px' },
+                function: '휴대폰 번호로 아이디 찾기 폼',
+                behavior: [
+                    '이름 + 휴대폰 번호 + 인증번호 입력',
+                    'Enter 키 입력 시 제출',
+                    '폼 유효성 검증 후 API 호출'
+                ]
+            },
+            // 7. 이름 입력 그룹 (휴대폰)
+            {
+                selector: '#userNameGroup',
+                title: '이름 입력 그룹',
+                position: { top: '-5px', left: '-10px' },
+                function: '사용자 이름 입력 필드',
+                behavior: [
+                    '실명 입력 필수',
+                    '빈 값 시 "이름을 입력해주세요" 에러'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 8. 휴대폰 번호 입력 그룹
+            {
+                selector: '#phoneNumberGroup',
+                title: '휴대폰 번호 입력 그룹',
+                position: { top: '-5px', left: '-10px' },
+                function: '휴대폰 번호 입력 및 인증번호 발송',
+                behavior: [
+                    '숫자만 입력 가능 (최대 11자리)',
+                    '"-" 없이 입력',
+                    '빈 값 시 에러 메시지 표시'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 9. 인증번호 발송 버튼 (휴대폰)
+            {
+                selector: '#sendPhoneCodeBtn',
+                title: '인증번호 발송 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '휴대폰으로 인증번호 SMS 발송',
+                behavior: [
+                    '클릭 시 6자리 인증번호 SMS 발송',
+                    '발송 성공 시 인증번호 입력 필드 표시',
+                    '3분 타이머 시작',
+                    '발송 실패 시 에러 메시지 표시'
+                ],
+                api: 'POST /api/auth/send-sms-code',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            // 10. 인증번호 입력 그룹 (휴대폰)
+            {
+                selector: '#phoneVerifyGroup',
+                title: '인증번호 입력 그룹',
+                position: { top: '-5px', left: '-10px' },
+                function: '수신된 인증번호 입력',
+                behavior: [
+                    '인증번호 발송 후 표시됨',
+                    '6자리 숫자 입력',
+                    '3분 타이머 표시',
+                    '시간 초과 시 재발송 필요'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 11. 아이디 찾기 버튼 (휴대폰)
+            {
+                selector: '#phoneFindBtn',
+                title: '아이디 찾기 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '휴대폰 인증으로 아이디 찾기 실행',
+                behavior: [
+                    '모든 필드 유효성 검증',
+                    '인증번호 일치 여부 확인',
+                    '성공 시 결과 화면으로 전환',
+                    '실패 시 에러 메시지 표시'
+                ],
+                api: 'POST /api/auth/find-id/phone',
+                tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
+            },
+            // 12. 이메일 인증 폼
+            {
+                selector: '#emailForm',
+                title: '이메일 인증 폼',
+                position: { top: '10px', right: '10px' },
+                function: '이메일로 아이디 찾기 폼',
+                behavior: [
+                    '이름 + 이메일 + 인증번호 입력',
+                    'Enter 키 입력 시 제출',
+                    '폼 유효성 검증 후 API 호출'
+                ]
+            },
+            // 13. 이메일 입력 그룹
+            {
+                selector: '#userEmailGroup',
+                title: '이메일 입력 그룹',
+                position: { top: '-5px', left: '-10px' },
+                function: '가입 시 등록한 이메일 입력',
+                behavior: [
+                    '이메일 형식 검증',
+                    '빈 값 시 에러 메시지 표시'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 14. 인증번호 발송 버튼 (이메일)
+            {
+                selector: '#sendEmailCodeBtn',
+                title: '인증번호 발송 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '이메일로 인증번호 발송',
+                behavior: [
+                    '클릭 시 6자리 인증번호 이메일 발송',
+                    '발송 성공 시 인증번호 입력 필드 표시',
+                    '3분 타이머 시작'
+                ],
+                api: 'POST /api/auth/send-email-code',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            // 15. 인증번호 입력 그룹 (이메일)
+            {
+                selector: '#emailVerifyGroup',
+                title: '인증번호 입력 그룹',
+                position: { top: '-5px', left: '-10px' },
+                function: '수신된 인증번호 입력',
+                behavior: [
+                    '인증번호 발송 후 표시됨',
+                    '6자리 숫자 입력',
+                    '3분 타이머 표시'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 16. 아이디 찾기 버튼 (이메일)
+            {
+                selector: '#emailFindBtn',
+                title: '아이디 찾기 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '이메일 인증으로 아이디 찾기 실행',
+                behavior: [
+                    '모든 필드 유효성 검증',
+                    '인증번호 일치 여부 확인',
+                    '성공 시 결과 화면으로 전환'
+                ],
+                api: 'POST /api/auth/find-id/email',
+                tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
+            },
+            // 17. 결과 화면
+            {
+                selector: '#resultArea',
+                title: '결과 화면',
+                position: { top: '10px', left: '10px' },
+                function: '아이디 찾기 성공 결과 표시',
+                behavior: [
+                    '인증 성공 후 표시됨',
+                    '탭과 폼 영역 숨김',
+                    '아이디 마스킹 처리하여 표시',
+                    '가입일 정보 표시'
+                ]
+            },
+            // 18. 찾은 아이디
+            {
+                selector: '#foundId',
+                title: '찾은 아이디',
+                position: { top: '-5px', left: '-10px' },
+                function: '찾은 아이디 마스킹 표시',
+                behavior: [
+                    '아이디 일부 마스킹 처리 (예: tok***@example.com)',
+                    '보안상 전체 아이디 노출 안함'
+                ]
+            },
+            // 19. 결과 액션 버튼
+            {
+                selector: '#resultActions',
+                title: '결과 액션 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '결과 화면 후속 액션 버튼',
+                behavior: [
+                    '로그인: login.html 이동',
+                    '비밀번호 찾기: find-password.html 이동'
+                ]
+            },
+            // 20. 푸터 링크 영역
+            {
+                selector: '#findFooter',
+                title: '푸터 링크 영역',
+                position: { top: '-5px', left: '-10px' },
+                function: '관련 페이지 이동 링크',
+                behavior: [
+                    '로그인 / 비밀번호 찾기 / 회원가입 링크',
+                    '구분자(|)로 링크 구분'
+                ]
+            }
+        ];
+        initSpecOverlay(specData);
+    </script>
+</body>
+</html>

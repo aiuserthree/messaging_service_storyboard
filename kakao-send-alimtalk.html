@@ -2395,9 +2395,30 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // ===== 액션 버튼 =====
             // 31. 테스트 발송 버튼
-            { selector: '#testSendBtn', title: '테스트 발송 버튼', position: { top: '-5px', left: '-10px' }, function: '테스트 발송 모달 열기', behavior: ['최대 3개 번호 지정 가능'] },
+            { selector: '#testSendBtn', title: '테스트 발송 버튼', position: { top: '-5px', left: '-10px' }, function: '테스트 발송 모달 열기', behavior: ['최대 3개 번호 지정 가능', '테스트 발송 모달 노출'] },
             // 32. 발송하기 버튼
-            { selector: '#submitBtn', title: '발송하기 버튼', position: { top: '-5px', right: '-10px' }, function: '알림톡 메시지 발송', behavior: ['필수 항목 검증 후 발송'], api: 'POST /api/kakao/alimtalk/send', tags: [{ text: 'API', type: 'api' }] },
+            { 
+                selector: '#submitBtn', 
+                title: '발송하기 버튼', 
+                position: { top: '-5px', right: '-10px' }, 
+                function: '알림톡 메시지 발송', 
+                behavior: [
+                    '[ 유효성 검증 - 실패 시 얼럿 ]',
+                    '발신 프로필 미선택: "발신 프로필을 선택해주세요"',
+                    '템플릿 미선택: "템플릿을 선택해주세요"',
+                    '수신번호 미입력: "수신번호를 입력해주세요"',
+                    '잔액 부족: "잔액이 부족합니다. 충전 후 이용해주세요"',
+                    '[ 유효성 검증 통과 시 ]',
+                    '발송 확인 모달 노출 → 발송하기 버튼 클릭',
+                    '[ 발송 결과 ]',
+                    '발송 성공: "발송이 완료되었습니다" 토스트',
+                    '서버 오류: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"',
+                    '네트워크 오류: "네트워크 연결을 확인해주세요"',
+                    '카카오 API 오류: "카카오 서버 연결에 실패했습니다"'
+                ], 
+                api: 'POST /api/kakao/alimtalk/send', 
+                tags: [{ text: 'API', type: 'api' }] 
+            },
             
             // ===== 미리보기 영역 =====
             // 33. 미리보기 섹션
@@ -2467,7 +2488,27 @@ document.addEventListener('DOMContentLoaded', function() {
             // 62. 테스트 취소 버튼
             { selector: '#testSendCancelBtn', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '테스트 발송 취소' },
             // 63. 테스트 발송 실행 버튼
-            { selector: '#testSendSubmitBtn', title: '테스트 발송 버튼', position: { top: '-5px', right: '-10px' }, function: '테스트 메시지 발송', api: 'POST /api/kakao/alimtalk/test', tags: [{ text: 'API', type: 'api' }] },
+            { 
+                selector: '#testSendSubmitBtn', 
+                title: '테스트 발송 버튼', 
+                position: { top: '-5px', right: '-10px' }, 
+                function: '테스트 메시지 발송',
+                behavior: [
+                    '[ 유효성 검증 - 실패 시 토스트 ]',
+                    '수신번호 미입력: "테스트 수신번호를 입력해주세요"',
+                    '잘못된 번호 형식: "올바른 전화번호 형식이 아닙니다. (010-XXXX-XXXX)"',
+                    '잔액 부족: "잔액이 부족합니다"',
+                    '[ 발송 처리 ]',
+                    '발송 중: 버튼 비활성화 + "발송 중..." 텍스트',
+                    '[ 발송 결과 ]',
+                    '발송 성공: "테스트 발송이 완료되었습니다" 토스트 + 발송 시간 표시',
+                    '서버 오류: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"',
+                    '네트워크 오류: "네트워크 연결을 확인해주세요"',
+                    '카카오 API 오류: "카카오 서버 연결에 실패했습니다"'
+                ],
+                api: 'POST /api/kakao/alimtalk/test', 
+                tags: [{ text: 'API', type: 'api' }] 
+            },
             
             // ===== 템플릿으로 저장 모달 =====
             // 64. 템플릿으로 저장 모달

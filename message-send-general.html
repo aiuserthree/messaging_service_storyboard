@@ -1328,16 +1328,16 @@ body {
 
     <!-- 템플릿 선택 모달 -->
     <div class="modal-overlay" id="templateSelectModal">
-        <div class="modal" style="max-width: 800px;">
-            <div class="modal-header">
+        <div class="modal" id="templateSelectModalContent" style="max-width: 800px;">
+            <div class="modal-header" id="templateSelectModalHeader">
                 <h3 class="modal-title">템플릿 선택</h3>
                 <button class="modal-close" onclick="closeModal('templateSelectModal')">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="templateSelectModalBody">
                 <div class="form-group">
-                    <input type="text" class="form-input" placeholder="템플릿명 또는 내용으로 검색">
+                    <input type="text" class="form-input" id="templateSearchInput" placeholder="템플릿명 또는 내용으로 검색">
                 </div>
-                <div class="table-container">
+                <div class="table-container" id="templateSelectTable">
                     <table class="table">
                         <thead>
                             <tr>
@@ -1348,71 +1348,71 @@ body {
                                 <th>관리</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="templateSelectTableBody">
                             <tr>
                                 <td>주문 확인</td>
                                 <td><span class="badge badge-primary">SMS</span></td>
                                 <td>주문이 접수되었습니다...</td>
                                 <td>2024-01-15</td>
-                                <td><button class="btn btn-sm btn-primary" onclick="selectTemplate('주문 확인', '주문이 접수되었습니다. 주문번호: #{주문번호}')">선택</button></td>
+                                <td><button class="btn btn-sm btn-primary templateSelectBtn" onclick="selectTemplate('주문 확인', '주문이 접수되었습니다. 주문번호: #{주문번호}')">선택</button></td>
                             </tr>
                             <tr>
                                 <td>배송 안내</td>
                                 <td><span class="badge badge-primary">LMS</span></td>
                                 <td>배송이 시작되었습니다...</td>
                                 <td>2024-01-14</td>
-                                <td><button class="btn btn-sm btn-primary" onclick="selectTemplate('배송 안내', '배송이 시작되었습니다. 운송장번호: #{운송장번호}')">선택</button></td>
+                                <td><button class="btn btn-sm btn-primary templateSelectBtn" onclick="selectTemplate('배송 안내', '배송이 시작되었습니다. 운송장번호: #{운송장번호}')">선택</button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeModal('templateSelectModal')">취소</button>
+            <div class="modal-footer" id="templateSelectModalFooter">
+                <button class="btn btn-outline" id="templateSelectCancelBtn" onclick="closeModal('templateSelectModal')">취소</button>
             </div>
         </div>
     </div>
 
     <!-- 템플릿 저장 모달 -->
     <div class="modal-overlay" id="templateSaveModal">
-        <div class="modal" style="max-width: 500px;">
-            <div class="modal-header">
+        <div class="modal" id="templateSaveModalContent" style="max-width: 500px;">
+            <div class="modal-header" id="templateSaveModalHeader">
                 <h3 class="modal-title">템플릿으로 저장</h3>
                 <button class="modal-close" onclick="closeModal('templateSaveModal')">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="templateSaveModalBody">
                 <div class="form-group">
                     <label class="form-label required">템플릿명</label>
-                    <input type="text" class="form-input" id="templateName" placeholder="템플릿명을 입력하세요" required>
+                    <input type="text" class="form-input" id="templateNameInput" placeholder="템플릿명을 입력하세요" required>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeModal('templateSaveModal')">취소</button>
-                <button class="btn btn-primary" onclick="saveTemplateConfirm()">저장</button>
+            <div class="modal-footer" id="templateSaveModalFooter">
+                <button class="btn btn-outline" id="templateSaveCancelBtn" onclick="closeModal('templateSaveModal')">취소</button>
+                <button class="btn btn-primary" id="templateSaveSubmitBtn" onclick="saveTemplateConfirm()">저장</button>
             </div>
         </div>
     </div>
 
     <!-- 엑셀 업로드 모달 -->
     <div class="modal-overlay" id="excelUploadModal">
-        <div class="modal" style="max-width: 1200px; width: 95%;">
-            <div class="modal-header">
+        <div class="modal" id="excelUploadModalContent" style="max-width: 1200px; width: 95%;">
+            <div class="modal-header" id="excelUploadModalHeader">
                 <h3 class="modal-title">수신번호 관리</h3>
                 <button class="modal-close" onclick="closeModal('excelUploadModal')">&times;</button>
             </div>
-            <div class="modal-body" style="padding: 0;">
+            <div class="modal-body" id="excelUploadModalBody" style="padding: 0;">
                 <!-- 상단 탭 및 주소록 버튼 영역 -->
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+                <div id="excelUploadTabArea" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
                     <div style="display: flex; gap: 8px;">
                         <button type="button" class="btn btn-primary" id="excelUploadTab" onclick="switchExcelTab('upload')">엑셀업로드</button>
                         <button type="button" class="btn btn-outline" id="excelSampleTab" onclick="switchExcelTab('sample')">엑셀샘플 다운로드</button>
                     </div>
                     <div style="display: flex; gap: 8px;">
-                        <button type="button" class="btn btn-outline btn-sm" onclick="loadAddressBook()">주소록 불러오기</button>
-                        <select class="form-select" style="width: 120px;" id="folderSelect">
+                        <button type="button" class="btn btn-outline btn-sm" id="excelLoadAddressBtn" onclick="loadAddressBook()">주소록 불러오기</button>
+                        <select class="form-select" style="width: 120px;" id="excelFolderSelect">
                             <option value="">폴더선택</option>
                         </select>
-                        <select class="form-select" style="width: 120px;" id="groupSelect">
+                        <select class="form-select" style="width: 120px;" id="excelGroupSelect">
                             <option value="">그룹선택</option>
                         </select>
                     </div>
@@ -1421,7 +1421,7 @@ body {
                 <!-- 엑셀 업로드 탭 내용 -->
                 <div id="excelUploadContent" style="display: block;">
                     <div style="padding: 20px;">
-                        <div class="form-group">
+                        <div class="form-group" id="excelFileDropZone">
                             <label class="form-label">파일 선택</label>
                             <div style="border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 40px; text-align: center;">
                                 <p>파일을 드래그하여 놓거나 클릭하여 선택하세요</p>
@@ -1432,7 +1432,7 @@ body {
                     </div>
                     
                     <!-- 데이터 테이블 영역 -->
-                    <div style="padding: 0 20px 20px 20px;">
+                    <div id="excelDataArea" style="padding: 0 20px 20px 20px;">
                         <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
                             <div style="overflow-x: auto; max-height: 400px;">
                                 <table class="data-table" id="excelDataTable" style="width: 100%; border-collapse: collapse;">
@@ -1460,16 +1460,16 @@ body {
                     </div>
                     
                     <!-- 하단 버튼 영역 -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-top: 1px solid var(--border-color);">
+                    <div id="excelActionArea" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-top: 1px solid var(--border-color);">
                         <div style="display: flex; gap: 8px;">
-                            <button type="button" class="btn btn-outline btn-sm" onclick="selectAllRows()">전체선택</button>
-                            <button type="button" class="btn btn-outline btn-sm" onclick="copySelectedRows()">복사</button>
-                            <button type="button" class="btn btn-outline btn-sm" onclick="deleteAllRows()">전체삭제</button>
-                            <button type="button" class="btn btn-outline btn-sm" onclick="deleteSelectedRows()">삭제</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="excelSelectAllBtn" onclick="selectAllRows()">전체선택</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="excelCopyBtn" onclick="copySelectedRows()">복사</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="excelDeleteAllBtn" onclick="deleteAllRows()">전체삭제</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="excelDeleteBtn" onclick="deleteSelectedRows()">삭제</button>
                         </div>
                         <div style="display: flex; gap: 8px;">
-                            <button type="button" class="btn btn-outline btn-sm" onclick="removeDuplicateNumbers()">중복번호 삭제</button>
-                            <button type="button" class="btn btn-outline btn-sm" onclick="removeRejectNumbers()">수신거부번호 삭제</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="excelRemoveDuplicateBtn" onclick="removeDuplicateNumbers()">중복번호 삭제</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="excelRemoveRejectBtn" onclick="removeRejectNumbers()">수신거부번호 삭제</button>
                         </div>
                     </div>
                 </div>
@@ -1478,26 +1478,26 @@ body {
                 <div id="excelSampleContent" style="display: none; padding: 20px;">
                     <div class="form-group">
                         <p style="margin-bottom: 16px;">샘플 파일을 다운로드하여 수신번호를 입력하세요.</p>
-                        <button type="button" class="btn btn-primary" onclick="downloadSampleFile()">샘플 파일 다운로드</button>
+                        <button type="button" class="btn btn-primary" id="excelSampleDownloadBtn" onclick="downloadSampleFile()">샘플 파일 다운로드</button>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeModal('excelUploadModal')">닫기</button>
-                <button class="btn btn-primary" onclick="addExcelRecipients()">추가</button>
+            <div class="modal-footer" id="excelUploadModalFooter">
+                <button class="btn btn-outline" id="excelUploadCloseBtn" onclick="closeModal('excelUploadModal')">닫기</button>
+                <button class="btn btn-primary" id="excelUploadAddBtn" onclick="addExcelRecipients()">추가</button>
             </div>
         </div>
     </div>
 
     <!-- 발송 확인 모달 -->
     <div class="modal-overlay" id="sendConfirmModal">
-        <div class="modal">
-            <div class="modal-header">
+        <div class="modal" id="sendConfirmModalContent">
+            <div class="modal-header" id="sendConfirmModalHeader">
                 <h3 class="modal-title">발송 확인</h3>
                 <button class="modal-close" onclick="closeModal('sendConfirmModal')">&times;</button>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
+            <div class="modal-body" id="sendConfirmModalBody">
+                <div class="form-group" id="sendConfirmInfo">
                     <div class="cost-row">
                         <span>발신번호</span>
                         <span id="confirmCallerNumber">-</span>
@@ -1519,34 +1519,34 @@ body {
                         <span id="confirmCost">0</span>
                     </div>
                 </div>
-                <div class="alert alert-warning">
+                <div class="alert alert-warning" id="sendConfirmWarning">
                     발송 후에는 취소할 수 없습니다. 수신번호를 다시 한번 확인해주세요.
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeModal('sendConfirmModal')">취소</button>
-                <button class="btn btn-primary" onclick="confirmSend()">발송하기</button>
+            <div class="modal-footer" id="sendConfirmModalFooter">
+                <button class="btn btn-outline" id="sendConfirmCancelBtn" onclick="closeModal('sendConfirmModal')">취소</button>
+                <button class="btn btn-primary" id="sendConfirmSubmitBtn" onclick="confirmSend()">발송하기</button>
             </div>
         </div>
     </div>
 
-    <!-- 테스트 발송 모달 -->
+    <!-- 주소록에 추가 모달 -->
     <div class="modal-overlay" id="addToAddressBookModal">
-        <div class="modal-content" style="max-width: 600px; width: 90%; background-color: var(--surface-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
-            <div class="modal-header">
+        <div class="modal-content" id="addToAddressBookModalContent" style="max-width: 600px; width: 90%; background-color: var(--surface-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+            <div class="modal-header" id="addToAddressBookModalHeader">
                 <h3>주소록에 추가</h3>
                 <button class="modal-close" onclick="closeModal('addToAddressBookModal')">&times;</button>
             </div>
-            <div class="modal-body">
-                <div class="form-group" style="margin-bottom: 20px;">
+            <div class="modal-body" id="addToAddressBookModalBody">
+                <div class="form-group" id="addressBookAddTypeGroup" style="margin-bottom: 20px;">
                     <label class="form-label">추가 방식 선택</label>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="radio" name="addressBookAddType" value="existing" checked onchange="toggleAddressBookAddType()">
+                            <input type="radio" name="addressBookAddType" id="addTypeExisting" value="existing" checked onchange="toggleAddressBookAddType()">
                             <span>기존 그룹에 추가</span>
                         </label>
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="radio" name="addressBookAddType" value="new" onchange="toggleAddressBookAddType()">
+                            <input type="radio" name="addressBookAddType" id="addTypeNew" value="new" onchange="toggleAddressBookAddType()">
                             <span>새 그룹 생성</span>
                         </label>
                     </div>
@@ -1567,43 +1567,43 @@ body {
                     <input type="text" class="form-input" id="newGroupNameInput" placeholder="그룹명을 입력하세요">
                 </div>
                 
-                <div style="margin-top: 16px; padding: 12px; background-color: var(--bg-color); border-radius: var(--radius-md);">
+                <div id="addressBookDataInfo" style="margin-top: 16px; padding: 12px; background-color: var(--bg-color); border-radius: var(--radius-md);">
                     <div style="font-size: 13px; color: var(--text-secondary);">
                         추가할 데이터: <strong id="addressBookDataCount">0</strong>개
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline" onclick="closeModal('addToAddressBookModal')">취소</button>
-                <button type="button" class="btn btn-primary" onclick="confirmAddToAddressBook()">추가</button>
+            <div class="modal-footer" id="addToAddressBookModalFooter">
+                <button type="button" class="btn btn-outline" id="addressBookCancelBtn" onclick="closeModal('addToAddressBookModal')">취소</button>
+                <button type="button" class="btn btn-primary" id="addressBookSubmitBtn" onclick="confirmAddToAddressBook()">추가</button>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="testSendModal">
-        <div class="modal" style="width: 500px; max-height: 80vh;">
-            <div class="modal-header">
+        <div class="modal" id="testSendModalContent" style="width: 500px; max-height: 80vh;">
+            <div class="modal-header" id="testSendModalHeader">
                 <h3 class="modal-title">테스트 발송</h3>
                 <button class="modal-close" onclick="closeModal('testSendModal')">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="testSendModalBody">
                 <!-- 테스트 번호 입력 -->
-                <div class="form-group">
+                <div class="form-group" id="testPhoneInputGroup">
                     <label class="form-label required">테스트 수신번호</label>
                     <div id="testPhoneNumbers">
                         <div class="flex gap-2 mb-2">
-                            <input type="text" class="form-input test-phone-input" placeholder="010-1234-5678" value="010-1234-5678">
+                            <input type="text" class="form-input test-phone-input" id="testPhoneInput1" placeholder="010-1234-5678" value="010-1234-5678">
                             <button type="button" class="btn btn-sm btn-outline" onclick="removeTestPhone(this)" style="display: none;">삭제</button>
                         </div>
                     </div>
                     <button type="button" class="btn btn-sm btn-outline" onclick="addTestPhone()" id="addTestPhoneBtn">추가</button>
-                    <div class="form-help">최대 3개 번호까지 입력 가능합니다</div>
+                    <div class="form-help" id="testPhoneHelp">최대 3개 번호까지 입력 가능합니다</div>
                 </div>
 
                 <!-- 테스트 내용 확인 -->
-                <div class="form-group">
+                <div class="form-group" id="testPreviewGroup">
                     <label class="form-label">발송될 메시지 미리보기</label>
-                    <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; background-color: var(--bg-color);">
+                    <div id="testPreviewBox" style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; background-color: var(--bg-color);">
                         <div style="margin-bottom: 8px;">
                             <strong>발신번호:</strong> <span id="testPreviewCallerNumber">-</span>
                         </div>
@@ -1622,15 +1622,15 @@ body {
                 </div>
 
                 <!-- 비용 안내 -->
-                <div class="form-group">
-                    <div class="alert alert-warning" style="margin-bottom: 8px;">
+                <div class="form-group" id="testCostGroup">
+                    <div class="alert alert-warning" id="testCostWarning" style="margin-bottom: 8px;">
                         테스트 발송도 포인트가 차감됩니다
                     </div>
-                    <div class="cost-row">
+                    <div class="cost-row" id="testCostRow">
                         <span>예상 차감 포인트</span>
                         <span id="testCost">0원</span>
                     </div>
-                    <div class="cost-row">
+                    <div class="cost-row" id="testBalanceRow">
                         <span>현재 잔액</span>
                         <span id="testBalance">1,000,000원</span>
                     </div>
@@ -1642,7 +1642,7 @@ body {
                     <div id="testSendTime" style="text-align: center; margin-top: 8px; color: var(--text-secondary); font-size: 12px;"></div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" id="testSendModalFooter">
                 <button class="btn btn-outline" onclick="closeModal('testSendModal')" id="testSendCancelBtn">취소</button>
                 <button class="btn btn-primary" onclick="confirmTestSend()" id="testSendSubmitBtn">테스트 발송</button>
             </div>
@@ -3675,9 +3675,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 position: { top: '-5px', right: '-10px' },
                 function: '메시지 발송 실행',
                 behavior: [
-                    '유효성 검증',
-                    '발송 확인 모달',
-                    'API 호출 후 결과 페이지 이동'
+                    '[ 유효성 검증 - 실패 시 얼럿 ]',
+                    '발신번호 미선택: "발신번호를 선택해주세요"',
+                    '메시지 미입력: "메시지를 입력해주세요"',
+                    '수신번호 미입력: "수신번호를 입력해주세요"',
+                    '잔액 부족: "잔액이 부족합니다. 충전 후 이용해주세요"',
+                    '[ 유효성 검증 통과 시 ]',
+                    '발송 확인 모달 노출 → 발송하기 버튼 클릭',
+                    '[ 발송 결과 ]',
+                    '발송 성공: "발송이 완료되었습니다" 토스트',
+                    '서버 오류: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"',
+                    '네트워크 오류: "네트워크 연결을 확인해주세요"'
                 ],
                 api: 'POST /api/messages/send',
                 tags: [{ text: '필수', type: 'required' }]
@@ -3796,6 +3804,499 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 api: 'POST /api/messages/test-send',
                 tags: [{ text: '모달', type: 'info' }]
+            },
+            // ===== 테스트 발송 모달 내부 요소 =====
+            // 33. 테스트 수신번호 입력 영역
+            {
+                selector: '#testPhoneInputGroup',
+                title: '테스트 수신번호 입력',
+                position: { top: '5px', left: '5px' },
+                function: '테스트 발송할 수신번호 입력',
+                behavior: [
+                    '최대 3개 번호까지 입력 가능',
+                    '추가 버튼 클릭 시 입력 필드 추가',
+                    '삭제 버튼 클릭 시 해당 번호 삭제',
+                    '최소 1개 번호 필수'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 34. 번호 추가 버튼
+            {
+                selector: '#addTestPhoneBtn',
+                title: '번호 추가 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '테스트 수신번호 입력 필드 추가',
+                behavior: [
+                    '클릭 시 새 입력 필드 추가',
+                    '3개 도달 시 버튼 숨김'
+                ]
+            },
+            // 35. 메시지 미리보기 영역
+            {
+                selector: '#testPreviewBox',
+                title: '메시지 미리보기',
+                position: { top: '5px', right: '5px' },
+                function: '발송될 메시지 내용 미리보기',
+                behavior: [
+                    '발신번호 표시',
+                    '제목 표시 (LMS/MMS인 경우)',
+                    '메시지 내용 표시 (변수 치환 예시 포함)',
+                    '이미지 표시 (MMS인 경우)'
+                ]
+            },
+            // 36. 비용 안내 영역
+            {
+                selector: '#testCostGroup',
+                title: '테스트 발송 비용 안내',
+                position: { top: '5px', left: '5px' },
+                function: '테스트 발송 비용 정보 표시',
+                behavior: [
+                    '"테스트 발송도 포인트가 차감됩니다" 경고 표시',
+                    '예상 차감 포인트 표시 (수신번호 × 단가)',
+                    '현재 잔액 표시'
+                ]
+            },
+            // 37. 발송 결과 영역
+            {
+                selector: '#testSendResult',
+                title: '발송 결과 표시',
+                position: { top: '5px', right: '5px' },
+                function: '테스트 발송 결과 메시지 표시',
+                behavior: [
+                    '발송 성공 시: "테스트 발송이 완료되었습니다" + 발송 시간',
+                    '발송 실패 시: 오류 메시지 표시',
+                    '발송 완료 후 버튼 상태 변경'
+                ]
+            },
+            // 38. 취소 버튼
+            {
+                selector: '#testSendCancelBtn',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '테스트 발송 취소',
+                behavior: [
+                    '클릭 시 모달 닫기',
+                    '입력 내용 초기화'
+                ]
+            },
+            // 39. 테스트 발송 버튼
+            {
+                selector: '#testSendSubmitBtn',
+                title: '테스트 발송 실행 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '테스트 메시지 발송 실행',
+                behavior: [
+                    '[ 유효성 검증 - 실패 시 토스트 ]',
+                    '수신번호 미입력: "테스트 수신번호를 입력해주세요"',
+                    '잘못된 번호 형식: "올바른 전화번호 형식이 아닙니다. (010-XXXX-XXXX)"',
+                    '잔액 부족: "잔액이 부족합니다"',
+                    '[ 발송 처리 ]',
+                    '발송 중: 버튼 비활성화 + "발송 중..." 텍스트',
+                    '[ 발송 결과 ]',
+                    '발송 성공: "테스트 발송이 완료되었습니다" 토스트 + 발송 시간 표시',
+                    '서버 오류: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"',
+                    '네트워크 오류: "네트워크 연결을 확인해주세요"'
+                ],
+                api: 'POST /api/messages/test-send',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            
+            // ===== 템플릿 선택 모달 =====
+            // 40. 템플릿 선택 모달
+            {
+                selector: '#templateSelectModal',
+                title: '템플릿 선택 모달',
+                position: { top: '60px', left: '20px' },
+                function: '저장된 템플릿 목록에서 선택',
+                behavior: [
+                    '"템플릿 선택" 버튼 클릭 시 노출',
+                    '템플릿명/내용으로 검색 가능',
+                    '템플릿 목록 테이블 표시'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 41. 템플릿 검색 입력
+            {
+                selector: '#templateSearchInput',
+                title: '템플릿 검색',
+                position: { top: '-5px', right: '-10px' },
+                function: '템플릿명 또는 내용으로 검색',
+                behavior: [
+                    '입력 시 실시간 필터링',
+                    '검색어와 일치하는 템플릿만 표시'
+                ]
+            },
+            // 42. 템플릿 목록 테이블
+            {
+                selector: '#templateSelectTable',
+                title: '템플릿 목록',
+                position: { top: '10px', left: '10px' },
+                function: '저장된 템플릿 목록 표시',
+                behavior: [
+                    '템플릿명, 타입, 내용, 등록일 표시',
+                    '"선택" 버튼으로 템플릿 적용',
+                    '선택 시 메시지 입력창에 내용 자동 입력'
+                ]
+            },
+            // 43. 템플릿 선택 버튼
+            {
+                selector: '.templateSelectBtn',
+                title: '템플릿 선택 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '해당 템플릿을 메시지에 적용',
+                behavior: [
+                    '클릭 시 템플릿 내용을 메시지 입력창에 반영',
+                    '모달 자동 닫힘',
+                    '"템플릿이 적용되었습니다" 토스트'
+                ]
+            },
+            // 44. 템플릿 선택 취소 버튼
+            {
+                selector: '#templateSelectCancelBtn',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '모달 닫기',
+                behavior: ['클릭 시 모달 닫힘']
+            },
+            
+            // ===== 템플릿 저장 모달 =====
+            // 45. 템플릿 저장 모달
+            {
+                selector: '#templateSaveModal',
+                title: '템플릿으로 저장 모달',
+                position: { top: '60px', left: '20px' },
+                function: '현재 메시지를 템플릿으로 저장',
+                behavior: [
+                    '"템플릿으로 저장" 버튼 클릭 시 노출',
+                    '템플릿명 입력 필수'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 46. 템플릿명 입력
+            {
+                selector: '#templateNameInput',
+                title: '템플릿명 입력',
+                position: { top: '-5px', right: '-10px' },
+                function: '저장할 템플릿 이름 입력',
+                behavior: [
+                    '필수 입력 항목',
+                    '미입력 시 "템플릿명을 입력해주세요" 얼럿'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 47. 템플릿 저장 취소 버튼
+            {
+                selector: '#templateSaveCancelBtn',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '모달 닫기'
+            },
+            // 48. 템플릿 저장 버튼
+            {
+                selector: '#templateSaveSubmitBtn',
+                title: '저장 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '템플릿 저장 실행',
+                behavior: [
+                    '[ 유효성 검증 ]',
+                    '템플릿명 미입력: "템플릿명을 입력해주세요" 얼럿',
+                    '[ 저장 결과 ]',
+                    '저장 성공: "템플릿이 저장되었습니다" 토스트',
+                    '저장 실패: "템플릿 저장에 실패했습니다" 토스트'
+                ],
+                api: 'POST /api/templates',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            
+            // ===== 엑셀 업로드(수신번호 관리) 모달 =====
+            // 49. 엑셀 업로드 모달
+            {
+                selector: '#excelUploadModal',
+                title: '수신번호 관리 모달',
+                position: { top: '60px', left: '20px' },
+                function: '엑셀 파일로 수신번호 일괄 등록',
+                behavior: [
+                    '"엑셀업로드" 버튼 클릭 시 노출',
+                    '탭 구성: 엑셀업로드, 엑셀샘플 다운로드'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 50. 엑셀업로드 탭
+            {
+                selector: '#excelUploadTab',
+                title: '엑셀업로드 탭',
+                position: { top: '-5px', left: '-10px' },
+                function: '엑셀 파일 업로드 화면으로 전환'
+            },
+            // 51. 엑셀샘플 다운로드 탭
+            {
+                selector: '#excelSampleTab',
+                title: '엑셀샘플 다운로드 탭',
+                position: { top: '-5px', right: '-10px' },
+                function: '샘플 파일 다운로드 화면으로 전환'
+            },
+            // 52. 주소록 불러오기 버튼
+            {
+                selector: '#excelLoadAddressBtn',
+                title: '주소록 불러오기',
+                position: { top: '-5px', right: '50px' },
+                function: '기존 주소록에서 연락처 불러오기',
+                behavior: [
+                    '클릭 시 주소록 선택 영역 활성화',
+                    '폴더/그룹 선택 후 불러오기'
+                ]
+            },
+            // 53. 파일 업로드 영역
+            {
+                selector: '#excelFileDropZone',
+                title: '파일 업로드 영역',
+                position: { top: '10px', left: '10px' },
+                function: '엑셀 파일 업로드',
+                behavior: [
+                    '드래그앤드롭 또는 클릭으로 파일 선택',
+                    '지원 형식: .xlsx, .xls, .csv',
+                    '최대 10MB, 최대 10,000건',
+                    '[ 파일 오류 ]',
+                    '형식 오류: "지원하지 않는 파일 형식입니다"',
+                    '용량 초과: "파일 크기가 10MB를 초과합니다"',
+                    '건수 초과: "최대 10,000건까지 등록 가능합니다"'
+                ]
+            },
+            // 54. 데이터 테이블
+            {
+                selector: '#excelDataArea',
+                title: '데이터 테이블',
+                position: { top: '10px', right: '10px' },
+                function: '업로드된 데이터 미리보기',
+                behavior: [
+                    '이름, 휴대폰, 변수1~8 컬럼',
+                    '체크박스로 행 선택 가능'
+                ]
+            },
+            // 55. 전체선택 버튼
+            {
+                selector: '#excelSelectAllBtn',
+                title: '전체선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '모든 행 선택'
+            },
+            // 56. 복사 버튼
+            {
+                selector: '#excelCopyBtn',
+                title: '복사',
+                position: { top: '-5px', left: '60px' },
+                function: '선택한 행 복사',
+                behavior: [
+                    '선택 없을 시: "복사할 항목을 선택해주세요" 토스트',
+                    '복사 성공: "{n}건이 복사되었습니다" 토스트'
+                ]
+            },
+            // 57. 전체삭제 버튼
+            {
+                selector: '#excelDeleteAllBtn',
+                title: '전체삭제',
+                position: { top: '-5px', left: '120px' },
+                function: '모든 데이터 삭제',
+                behavior: [
+                    '"전체 데이터를 삭제하시겠습니까?" 컨펌',
+                    '확인 시 모든 행 삭제'
+                ]
+            },
+            // 58. 삭제 버튼
+            {
+                selector: '#excelDeleteBtn',
+                title: '삭제',
+                position: { top: '-5px', left: '200px' },
+                function: '선택한 행 삭제',
+                behavior: [
+                    '선택 없을 시: "삭제할 항목을 선택해주세요" 토스트',
+                    '삭제 성공: "{n}건이 삭제되었습니다" 토스트'
+                ]
+            },
+            // 59. 중복번호 삭제 버튼
+            {
+                selector: '#excelRemoveDuplicateBtn',
+                title: '중복번호 삭제',
+                position: { top: '-5px', right: '120px' },
+                function: '중복 전화번호 자동 제거',
+                behavior: [
+                    '중복 없을 시: "중복된 번호가 없습니다" 토스트',
+                    '중복 제거 시: "중복번호 {n}건이 삭제되었습니다" 토스트'
+                ]
+            },
+            // 60. 수신거부번호 삭제 버튼
+            {
+                selector: '#excelRemoveRejectBtn',
+                title: '수신거부번호 삭제',
+                position: { top: '-5px', right: '-10px' },
+                function: '수신거부 등록 번호 자동 제거',
+                behavior: [
+                    '수신거부 번호 없을 시: "수신거부 번호가 없습니다" 토스트',
+                    '수신거부 제거 시: "수신거부번호 {n}건이 삭제되었습니다" 토스트'
+                ],
+                api: 'GET /api/reject-numbers'
+            },
+            // 61. 샘플 파일 다운로드 버튼
+            {
+                selector: '#excelSampleDownloadBtn',
+                title: '샘플 파일 다운로드',
+                position: { top: '-5px', left: '-10px' },
+                function: '엑셀 양식 파일 다운로드',
+                behavior: ['클릭 시 sample.xlsx 다운로드']
+            },
+            // 62. 닫기 버튼
+            {
+                selector: '#excelUploadCloseBtn',
+                title: '닫기',
+                position: { top: '-5px', left: '-10px' },
+                function: '모달 닫기'
+            },
+            // 63. 추가 버튼
+            {
+                selector: '#excelUploadAddBtn',
+                title: '추가 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '수신번호 목록에 추가',
+                behavior: [
+                    '데이터 없을 시: "추가할 데이터가 없습니다" 토스트',
+                    '추가 성공: "{n}건이 추가되었습니다" 토스트 + 모달 닫힘'
+                ]
+            },
+            
+            // ===== 발송 확인 모달 =====
+            // 64. 발송 확인 모달
+            {
+                selector: '#sendConfirmModal',
+                title: '발송 확인 모달',
+                position: { top: '60px', left: '20px' },
+                function: '발송 전 최종 확인',
+                behavior: [
+                    '"발송하기" 버튼 클릭 + 유효성 검증 통과 시 노출',
+                    '발송 정보 요약 표시'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 65. 발송 정보 영역
+            {
+                selector: '#sendConfirmInfo',
+                title: '발송 정보',
+                position: { top: '10px', left: '10px' },
+                function: '발송 상세 정보 표시',
+                behavior: [
+                    '발신번호, 수신번호 개수 표시',
+                    '메시지 타입, 발송 시간 표시',
+                    '예상 발송 포인트 표시'
+                ]
+            },
+            // 66. 경고 메시지
+            {
+                selector: '#sendConfirmWarning',
+                title: '경고 안내',
+                position: { top: '10px', right: '10px' },
+                function: '발송 취소 불가 안내',
+                behavior: ['"발송 후에는 취소할 수 없습니다" 경고 표시']
+            },
+            // 67. 발송 확인 취소 버튼
+            {
+                selector: '#sendConfirmCancelBtn',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '모달 닫기'
+            },
+            // 68. 발송 확인 발송하기 버튼
+            {
+                selector: '#sendConfirmSubmitBtn',
+                title: '발송하기 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '최종 발송 실행',
+                behavior: [
+                    '클릭 시 API 호출',
+                    '[ 발송 결과 ]',
+                    '발송 성공: "발송이 완료되었습니다" 토스트 + 결과 페이지 이동',
+                    '발송 실패: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"'
+                ],
+                api: 'POST /api/messages/send',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            
+            // ===== 주소록에 추가 모달 =====
+            // 69. 주소록에 추가 모달
+            {
+                selector: '#addToAddressBookModal',
+                title: '주소록에 추가 모달',
+                position: { top: '60px', left: '20px' },
+                function: '수신번호를 주소록에 저장',
+                behavior: [
+                    '"주소록에 추가" 버튼 클릭 시 노출',
+                    '기존 그룹 추가 또는 새 그룹 생성 선택'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 70. 추가 방식 선택
+            {
+                selector: '#addressBookAddTypeGroup',
+                title: '추가 방식 선택',
+                position: { top: '10px', left: '10px' },
+                function: '기존 그룹/새 그룹 선택',
+                behavior: [
+                    '기존 그룹: 그룹 선택 드롭다운 표시',
+                    '새 그룹: 그룹명 입력 필드 표시'
+                ]
+            },
+            // 71. 그룹 선택
+            {
+                selector: '#addressBookGroupSelect',
+                title: '그룹 선택',
+                position: { top: '-5px', right: '-10px' },
+                function: '기존 그룹 선택',
+                behavior: [
+                    '등록된 그룹 목록 표시',
+                    '미선택 시: "그룹을 선택해주세요" 얼럿'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 72. 새 그룹명 입력
+            {
+                selector: '#newGroupNameInput',
+                title: '새 그룹명 입력',
+                position: { top: '-5px', right: '-10px' },
+                function: '새로 생성할 그룹 이름 입력',
+                behavior: [
+                    '새 그룹 선택 시 표시',
+                    '미입력 시: "그룹명을 입력해주세요" 얼럿'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 73. 추가할 데이터 정보
+            {
+                selector: '#addressBookDataInfo',
+                title: '데이터 정보',
+                position: { top: '10px', right: '10px' },
+                function: '추가할 데이터 개수 표시'
+            },
+            // 74. 주소록 추가 취소 버튼
+            {
+                selector: '#addressBookCancelBtn',
+                title: '취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                function: '모달 닫기'
+            },
+            // 75. 주소록 추가 버튼
+            {
+                selector: '#addressBookSubmitBtn',
+                title: '추가 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '주소록에 데이터 추가',
+                behavior: [
+                    '[ 유효성 검증 ]',
+                    '그룹 미선택(기존): "그룹을 선택해주세요" 얼럿',
+                    '그룹명 미입력(새 그룹): "그룹명을 입력해주세요" 얼럿',
+                    '[ 추가 결과 ]',
+                    '추가 성공: "주소록에 {n}건이 추가되었습니다" 토스트',
+                    '추가 실패: "주소록 추가에 실패했습니다" 토스트'
+                ],
+                api: 'POST /api/addressbook',
+                tags: [{ text: 'API', type: 'api' }]
             }
         ];
 

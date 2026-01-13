@@ -547,9 +547,9 @@ body {
                 </div>
 
                 <div class="login-footer" id="loginFooter">
-                    <a href="#" id="findIdLink" onclick="showFindId(); return false;">아이디 찾기</a>
+                    <a href="find-id.html" id="findIdLink">아이디 찾기</a>
                     <span>|</span>
-                    <a href="#" id="findPasswordLink" onclick="showFindPassword(); return false;">비밀번호 찾기</a>
+                    <a href="find-password.html" id="findPasswordLink">비밀번호 찾기</a>
                 </div>
             </div>
         </main>
@@ -573,16 +573,6 @@ body {
             // 로그인 성공 처리 (아이디, 비밀번호 검증 없이 바로 로그인)
             localStorage.setItem('isLoggedIn', 'true');
             window.location.href = 'main.html';
-        }
-
-        // 아이디 찾기
-        function showFindId() {
-            alert('아이디 찾기 기능은 준비 중입니다.');
-        }
-
-        // 비밀번호 찾기
-        function showFindPassword() {
-            alert('비밀번호 찾기 기능은 준비 중입니다.');
         }
 
         // 아이디 저장 기능
