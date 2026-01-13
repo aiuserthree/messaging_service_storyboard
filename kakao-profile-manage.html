@@ -888,7 +888,7 @@ body {
                                 <td><span class="status-badge status-pending">검수중</span></td>
                                 <td>
                                     <span style="margin-right: 8px;">N</span>
-                                    <button class="btn btn-sm btn-primary" onclick="openBrandMessageApplicationModal()" style="padding: 6px 16px; font-size: 13px; background-color: white; color: black; border: 1px solid var(--border-color);">신청</button>
+                                    <button class="btn btn-sm btn-primary" id="brandApplyBtn" onclick="openBrandMessageApplicationModal()" style="padding: 6px 16px; font-size: 13px; background-color: white; color: black; border: 1px solid var(--border-color);">신청</button>
                                 </td>
                                 <td>2025-11-15</td>
                                 <td>
@@ -1098,7 +1098,6 @@ body {
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" id="editBtn" onclick="editProfile()" style="display: none;">수정</button>
                 <button class="btn btn-danger" id="deleteBtn" onclick="deleteProfile()" style="display: none;">삭제</button>
                 <button class="btn btn-outline" onclick="closeModal('detailModal')">닫기</button>
             </div>
@@ -1194,8 +1193,9 @@ body {
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeModal('brandMessageApplicationModal')">닫기</button>
+            <div class="modal-footer" id="brandMessageApplicationModalFooter">
+                <button class="btn btn-outline" id="brandApplyCancelBtn" onclick="closeModal('brandMessageApplicationModal')">닫기</button>
+                <button class="btn btn-primary" id="brandApplySubmitBtn" onclick="submitBrandApplication()">신청하기</button>
             </div>
         </div>
     </div>
@@ -1485,13 +1485,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             document.getElementById('detailTemplateCount').textContent = `${profileData.templateCount}개`;
 
-            // 상태에 따라 수정/삭제 버튼 표시
-            if (profileData.status === 'ACTIVE') {
-                document.getElementById('editBtn').style.display = 'inline-flex';
-            } else {
-                document.getElementById('editBtn').style.display = 'none';
-            }
-
+            // 상태에 따라 삭제 버튼 표시
             if (profileData.templateCount === 0) {
                 document.getElementById('deleteBtn').style.display = 'inline-flex';
             } else {
@@ -1499,11 +1493,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             openModal('detailModal');
-        }
-
-        // 카카오톡 발신 프로필 수정
-        function editProfile() {
-            showToast('수정 기능은 준비 중입니다.', 'info');
         }
 
         // 카카오톡 발신 프로필 삭제
@@ -1514,6 +1503,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // 브랜드메시지 M,N 타깃 사용신청 모달 열기
         function openBrandMessageApplicationModal() {
             openModal('brandMessageApplicationModal');
+        }
+
+        // 브랜드메시지 M,N 타깃 사용신청 제출
+        function submitBrandApplication() {
+            // API 호출: POST /api/kakao/brand-message/apply
+            console.log('브랜드메시지 M,N 타깃 사용신청 API 호출');
+            alert('브랜드메시지 M,N 타깃 사용신청이 완료되었습니다.');
+            closeModal('brandMessageApplicationModal');
         }
 
         // 광고성 정보 수신동의 증적자료 파일 업로드 처리
@@ -1649,7 +1646,6 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#detailBrandMessage', title: '브랜드메시지 여부', position: { top: '-5px', right: '-10px' }, function: 'M,N 타깃 사용 가능 여부' },
             { selector: '#detailPhoneNumber', title: '담당자 번호 표시', position: { top: '-5px', right: '-10px' }, function: '등록된 담당자 번호' },
             { selector: '#detailCategories', title: '카테고리 표시', position: { top: '-5px', right: '-10px' }, function: '등록된 카테고리' },
-            { selector: '#editBtn', title: '수정 버튼', position: { top: '-5px', left: '-10px' }, function: '프로필 정보 수정' },
             { selector: '#deleteBtn', title: '삭제 버튼', position: { top: '-5px', left: '-10px' }, function: '프로필 삭제 확인' },
             { selector: '#detailModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', right: '-10px' }, function: '모달 닫기' },
             
@@ -1660,13 +1656,62 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#deleteModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '삭제 취소' },
             { selector: '#deleteModal .modal-footer .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '프로필 삭제 실행', api: 'DELETE /api/kakao/profiles/:id', tags: [{ text: 'API', type: 'api' }] },
             
+            // ===== 브랜드메시지 신청 버튼 (테이블) =====
+            { 
+                selector: '#brandApplyBtn', 
+                title: '브랜드메시지 신청 버튼', 
+                position: { top: '-5px', right: '-10px' }, 
+                function: '브랜드메시지 M,N 타깃 사용 신청 모달 열기 및 API 호출',
+                behavior: [
+                    '클릭 시 브랜드메시지 채널 API 호출',
+                    'API 호출 성공 시 brandMessageApplicationModal 모달 열림',
+                    '모달에서 조건 충족 여부 확인',
+                    '증적자료 첨부 후 신청 가능'
+                ],
+                api: 'GET /api/kakao/brand-message/channel/:profileId',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            
             // ===== 브랜드메시지 M,N 타깃 사용신청 모달 =====
-            { selector: '#brandMessageApplicationModal', title: 'M,N 타깃 신청 모달', position: { top: '60px', left: '20px' }, function: '브랜드메시지 M,N 타깃 사용 신청' },
+            { 
+                selector: '#brandMessageApplicationModal', 
+                title: 'M,N 타깃 신청 모달', 
+                position: { top: '60px', left: '20px' }, 
+                function: '브랜드메시지 M,N 타깃 사용 신청',
+                behavior: [
+                    '신청 조건 충족 여부 표시',
+                    '채널 친구 수 5만명 이상',
+                    '비즈니스 채널 인증',
+                    '채널정보 등록',
+                    '3개월 이내 알림톡 발송 이력',
+                    '광고성 정보 수신동의 증적자료 파일 업로드'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
             { selector: '#brandMessageApplicationModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
             { selector: '#consentFileInput', title: '증적자료 첨부', position: { top: '-5px', left: '-10px' }, function: '광고성 수신동의 증적자료 업로드', behavior: ['jpg, png, 최대 5MB'] },
             { selector: '#brandMessageApplicationModal button[onclick*="consentFileInput"]', title: '파일첨부 버튼', position: { top: '-5px', left: '-10px' }, function: '파일 선택 대화상자 열기' },
             { selector: '#consentFileName', title: '첨부파일명 표시', position: { top: '-5px', right: '-10px' }, function: '업로드된 파일명 표시' },
-            { selector: '#brandMessageApplicationModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', right: '-10px' }, function: '모달 닫기' }
+            { selector: '#brandApplyCancelBtn', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, function: '모달 닫기' },
+            { 
+                selector: '#brandApplySubmitBtn', 
+                title: '신청하기 버튼', 
+                position: { top: '-5px', right: '-10px' }, 
+                function: '브랜드메시지 M,N 타깃 사용 신청 실행',
+                behavior: [
+                    '[ 유효성 검증 - 실패 시 얼럿 ]',
+                    '조건 미충족: "신청 조건을 모두 충족해야 합니다"',
+                    '증적자료 미첨부: "광고성 정보 수신동의 증적자료를 첨부해주세요"',
+                    '[ 신청 처리 ]',
+                    '버튼 클릭 시 브랜드메시지 API 호출',
+                    '[ 신청 결과 ]',
+                    '신청 성공: "브랜드메시지 M,N 타깃 사용신청이 완료되었습니다" 토스트 + 상태 "검토중" 변경',
+                    '서버 오류: "신청에 실패했습니다. 잠시 후 다시 시도해주세요"',
+                    '네트워크 오류: "네트워크 연결을 확인해주세요"'
+                ],
+                api: 'POST /api/kakao/brand-message/apply',
+                tags: [{ text: 'API', type: 'api' }]
+            }
         ];
         initSpecOverlay(specData);
     </script>
