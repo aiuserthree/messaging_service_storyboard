@@ -2399,20 +2399,77 @@ body {
                 title: 'Step 3: 본인인증',
                 position: { top: '10px', right: '10px' },
                 function: '휴대폰 본인인증',
-                behavior: ['인증번호 SMS 발송', '6자리 인증번호 검증'],
+                behavior: [
+                    '이름, 생년월일, 휴대폰번호로 본인 확인',
+                    '인증번호 SMS 발송',
+                    '6자리 인증번호 검증'
+                ],
                 api: 'POST /api/auth/verify-phone',
                 tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
-            // 14. 휴대폰 번호 입력
+            // 14. 이름 입력
+            {
+                selector: '#verifyName',
+                title: '이름 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '본인 실명 입력',
+                behavior: [
+                    '2자 이상 입력 필수',
+                    '한글/영문 입력 가능',
+                    '본인인증 시 통신사 정보와 대조'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 15. 생년월일 입력
+            {
+                selector: '#verifyBirthDate',
+                title: '생년월일 입력',
+                position: { top: '-5px', left: '-10px' },
+                function: '본인 생년월일 입력',
+                behavior: [
+                    'YYYYMMDD 8자리 숫자 형식',
+                    '예: 19900101',
+                    '숫자만 입력 가능 (자동 필터링)',
+                    '[ 유효성 검증 ]',
+                    '년도: 1900 ~ 현재년도',
+                    '월: 1 ~ 12',
+                    '일: 1 ~ 31'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 16. 휴대폰 번호 입력
             {
                 selector: '#phoneNumber',
                 title: '휴대폰 번호 입력',
                 position: { top: '-5px', left: '-10px' },
                 function: '인증받을 휴대폰 번호 입력',
-                behavior: ['자동 하이픈 포맷팅', '010-XXXX-XXXX 형식'],
+                behavior: [
+                    '자동 하이픈 포맷팅',
+                    '010-XXXX-XXXX 형식',
+                    '본인 명의 휴대폰만 인증 가능'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 15. 인증번호 입력
+            // 17. 인증번호 발송 버튼
+            {
+                selector: '#verificationForm .btn-primary',
+                title: '인증번호 발송 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '휴대폰으로 인증번호 SMS 발송',
+                behavior: [
+                    '[ 유효성 검증 - 실패 시 얼럿 ]',
+                    '이름 미입력: "이름을 입력해주세요"',
+                    '생년월일 미입력/형식오류: "생년월일 8자리를 입력해주세요"',
+                    '생년월일 유효하지 않음: "유효한 생년월일을 입력해주세요"',
+                    '휴대폰번호 형식오류: "올바른 휴대폰 번호를 입력해주세요"',
+                    '[ 발송 성공 ]',
+                    '인증번호 6자리 SMS 발송',
+                    '"인증번호가 발송되었습니다" 얼럿'
+                ],
+                api: 'POST /api/auth/send-verification',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            // 18. 인증번호 입력
             {
                 selector: '#verificationCode',
                 title: '인증번호 입력',
@@ -2421,15 +2478,30 @@ body {
                 behavior: ['6자리 숫자', '3분 유효시간'],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 16. Step 3 다음 버튼
+            // 19. 인증 확인 버튼
+            {
+                selector: '#verificationForm .btn-outline',
+                title: '인증 확인 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '입력한 인증번호 검증',
+                behavior: [
+                    '[ 인증 결과 ]',
+                    '인증 성공: "인증이 완료되었습니다" 표시 + 다음 버튼 활성화',
+                    '인증 실패: "인증번호가 일치하지 않습니다" 표시',
+                    '미발송: "인증번호를 먼저 발송해주세요" 표시'
+                ],
+                api: 'POST /api/auth/verify-code',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            // 20. Step 3 다음 버튼
             {
                 selector: '#step3-next',
                 title: '본인인증 다음 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: 'Step 4로 이동',
-                behavior: ['인증 미완료 시 비활성화']
+                behavior: ['인증 미완료 시 비활성화', '인증 완료 시 활성화']
             },
-            // 17. Step 4 개인회원 폼
+            // 21. Step 4 개인회원 폼
             {
                 selector: '#step4-individual',
                 title: 'Step 4: 개인회원 정보입력',
@@ -2437,7 +2509,7 @@ body {
                 function: '개인회원 정보 입력 폼',
                 behavior: ['아이디 중복확인', '비밀번호 강도 검사', '이메일 유효성 검증']
             },
-            // 18. 아이디 입력 (개인)
+            // 22. 아이디 입력 (개인)
             {
                 selector: '#individualUserId',
                 title: '아이디 입력',
@@ -2447,7 +2519,7 @@ body {
                 api: 'GET /api/users/check-id',
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 19. 비밀번호 입력 (개인)
+            // 23. 비밀번호 입력 (개인)
             {
                 selector: '#individualPassword',
                 title: '비밀번호 입력',
@@ -2456,7 +2528,7 @@ body {
                 behavior: ['8~16자 영문, 숫자, 특수문자 혼합', '강도 표시'],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 20. 비밀번호 확인 (개인)
+            // 24. 비밀번호 확인 (개인)
             {
                 selector: '#individualPasswordConfirm',
                 title: '비밀번호 확인',
@@ -2465,7 +2537,7 @@ body {
                 behavior: ['비밀번호 일치 여부 검증'],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 21. 이메일 입력 (개인)
+            // 25. 이메일 입력 (개인)
             {
                 selector: '#individualEmail',
                 title: '이메일 입력',
@@ -2474,7 +2546,7 @@ body {
                 behavior: ['이메일 형식 검증', '비밀번호 찾기용'],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 22. Step 4 기업회원 폼
+            // 26. Step 4 기업회원 폼
             {
                 selector: '#step4-business',
                 title: 'Step 4: 기업회원 정보입력',
