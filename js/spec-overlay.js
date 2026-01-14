@@ -15,8 +15,8 @@
         /* Spec 오버레이 토글 버튼 */
         .spec-toggle-btn {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 80px;
+            left: 20px;
             z-index: 99999;
             display: flex;
             align-items: center;
