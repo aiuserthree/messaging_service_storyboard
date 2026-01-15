@@ -2251,8 +2251,8 @@ if (document.readyState === 'loading') {
             
             // 전체 잔여 포인트 조회 (예시: 실제로는 API 호출)
             const balance = '1,000,000'; // 실제로는 API에서 가져와야 함
-            balanceAmount.textContent = balance;
-            balanceDisplay.style.display = 'flex';
+            if (balanceAmount) balanceAmount.textContent = balance;
+            if (balanceDisplay) balanceDisplay.style.display = 'flex';
         }
 
         function updateCandidateNamePreview() {
@@ -2359,7 +2359,10 @@ if (document.readyState === 'loading') {
         }
 
         function checkForbiddenWords() {
-            const content = document.getElementById('messageContent').value;
+            const messageContent = document.getElementById('messageContent');
+            if (!messageContent) return;
+            
+            const content = messageContent.value;
             const forbiddenWords = ['허위', '비방', '사기', '속임수']; // 예시
             const found = forbiddenWords.filter(word => content.includes(word));
             
@@ -2368,14 +2371,18 @@ if (document.readyState === 'loading') {
             const checkItem = document.getElementById('checkForbidden');
             
             if (found.length > 0) {
-                warning.style.display = 'block';
-                list.innerHTML = '검출된 단어: ' + found.join(', ');
-                checkItem.classList.remove('valid');
-                checkItem.classList.add('invalid');
+                if (warning) warning.style.display = 'block';
+                if (list) list.innerHTML = '검출된 단어: ' + found.join(', ');
+                if (checkItem) {
+                    checkItem.classList.remove('valid');
+                    checkItem.classList.add('invalid');
+                }
             } else {
-                warning.style.display = 'none';
-                checkItem.classList.add('valid');
-                checkItem.classList.remove('invalid');
+                if (warning) warning.style.display = 'none';
+                if (checkItem) {
+                    checkItem.classList.add('valid');
+                    checkItem.classList.remove('invalid');
+                }
             }
         }
 
@@ -3107,12 +3114,9 @@ if (document.readyState === 'loading') {
             checkForbiddenWords();
             
             // 모달 닫기
-            const modal = document.getElementById('templateSelectModal');
-            if (modal) {
-                modal.classList.remove('active');
-                modal.style.display = 'none';
-                document.body.style.overflow = '';
-            }
+            closeModal('templateSelectModal');
+            
+            showToast(`'${name}' 템플릿이 적용되었습니다.`, 'success');
         }
 
         function saveTemplate() {
