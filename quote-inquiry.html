@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>견적 문의 - 톡벨</title>
+    <script src="js/header.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-top: 20px;
+        }
+
+        .page-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .page-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* 폼 컨테이너 */
+        .quote-form-container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .quote-form {
+            background-color: var(--surface-color);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-section {
+            margin-bottom: 32px;
+        }
+
+        .form-section:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .form-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .form-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group.full-width {
+            width: 100%;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: var(--danger-color);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background-color: var(--surface-color);
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* 체크박스 그룹 */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 16px;
+            background-color: #f8fafc;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* 개인정보 동의 */
+        .privacy-agreement {
+            margin-top: 32px;
+            padding: 24px;
+            background-color: #f8fafc;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .privacy-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .privacy-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .privacy-checkbox label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .privacy-details {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            padding-left: 28px;
+        }
+
+        /* 폼 버튼 */
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-reset {
+            background-color: #f1f5f9;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+        }
+
+        /* 안내 문구 */
+        .form-help-text {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* 완료 모달 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            padding: 48px 40px;
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .modal-icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+
+        .modal-message {
+            font-size: 15px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .modal-btn {
+            display: inline-block;
+            padding: 14px 48px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .quote-form {
+                padding: 24px;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader(''));
+        </script>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h2 id="pageTitle">견적 문의</h2>
+                <p id="pageDescription">대량 발송 견적이나 맞춤 상담이 필요하시면 아래 양식을 작성해 주세요.<br>담당자가 빠르게 연락드리겠습니다.</p>
+            </div>
+
+            <div class="quote-form-container">
+                <form class="quote-form" id="quoteForm" onsubmit="handleSubmit(event)">
+                    <!-- 기업 정보 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">기업/담당자 정보</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required" for="companyName">회사명</label>
+                                <input 
+                                    type="text" 
+                                    id="companyName" 
+                                    class="form-input" 
+                                    placeholder="회사명을 입력해 주세요"
+                                    required
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required" for="contactName">담당자명</label>
+                                <input 
+                                    type="text" 
+                                    id="contactName" 
+                                    class="form-input" 
+                                    placeholder="담당자명을 입력해 주세요"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required" for="contactPhone">연락처</label>
+                                <input 
+                                    type="tel" 
+                                    id="contactPhone" 
+                                    class="form-input" 
+                                    placeholder="010-0000-0000"
+                                    required
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required" for="contactEmail">이메일</label>
+                                <input 
+                                    type="email" 
+                                    id="contactEmail" 
+                                    class="form-input" 
+                                    placeholder="example@company.com"
+                                    required
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 문의 정보 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">견적 문의 내용</h3>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label class="form-label">관심 서비스 (복수 선택 가능)</label>
+                                <div class="checkbox-group" id="serviceTypes">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="serviceSms" name="serviceType" value="sms">
+                                        <label for="serviceSms">일반문자 (SMS/LMS/MMS)</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="serviceAd" name="serviceType" value="ad">
+                                        <label for="serviceAd">광고문자</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="serviceElection" name="serviceType" value="election">
+                                        <label for="serviceElection">선거문자</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="serviceAlimtalk" name="serviceType" value="alimtalk">
+                                        <label for="serviceAlimtalk">카카오 알림톡</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="serviceBrandtalk" name="serviceType" value="brandtalk">
+                                        <label for="serviceBrandtalk">카카오 브랜드메시지</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="serviceOther" name="serviceType" value="other">
+                                        <label for="serviceOther">기타 / 모름</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="expectedVolume">예상 월간 발송량</label>
+                                <select class="form-select" id="expectedVolume">
+                                    <option value="">선택해 주세요</option>
+                                    <option value="under-10k">월 1만건 미만</option>
+                                    <option value="10k-50k">월 1만건 ~ 5만건</option>
+                                    <option value="50k-100k">월 5만건 ~ 10만건</option>
+                                    <option value="100k-500k">월 10만건 ~ 50만건</option>
+                                    <option value="over-500k">월 50만건 이상</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="contactTime">희망 연락 시간</label>
+                                <select class="form-select" id="contactTime">
+                                    <option value="">선택해 주세요</option>
+                                    <option value="morning">오전 (09:00 ~ 12:00)</option>
+                                    <option value="afternoon">오후 (13:00 ~ 18:00)</option>
+                                    <option value="anytime">상관없음</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label class="form-label" for="inquiryContent">상세 문의 내용</label>
+                                <textarea 
+                                    id="inquiryContent" 
+                                    class="form-textarea" 
+                                    placeholder="견적에 필요한 상세 내용이나 추가 질문이 있으시면 작성해 주세요."
+                                ></textarea>
+                                <div class="form-help-text">예: 발송 목적, 발송 대상, 특이사항 등</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 개인정보 동의 -->
+                    <div class="privacy-agreement" id="privacySection">
+                        <div class="privacy-checkbox">
+                            <input type="checkbox" id="privacyAgree" required>
+                            <label for="privacyAgree">개인정보 수집 및 이용에 동의합니다. (필수)</label>
+                        </div>
+                        <div class="privacy-details">
+                            - 수집 항목 : 회사명, 담당자명, 연락처, 이메일<br>
+                            - 수집 목적 : 견적 상담 및 서비스 안내<br>
+                            - 보유 기간 : 상담 완료 후 1년간 보관 후 파기<br>
+                            - 동의를 거부하실 수 있으나, 동의하지 않으실 경우 견적 상담이 어렵습니다.
+                        </div>
+                    </div>
+
+                    <!-- 버튼 -->
+                    <div class="form-actions" id="formActions">
+                        <button type="button" class="btn btn-reset" id="resetBtn" onclick="handleReset()">초기화</button>
+                        <button type="submit" class="btn btn-submit" id="submitBtn">견적 문의하기</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <!-- 푸터 -->
+        <script src="js/footer.js"></script>
+        <script>
+            document.write(createFooter());
+        </script>
+    </div>
+
+    <!-- 완료 모달 -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                </svg>
+            </div>
+            <h3 class="modal-title">문의가 접수되었습니다</h3>
+            <p class="modal-message">
+                담당자가 확인 후 빠른 시일 내에 연락드리겠습니다.<br>
+                영업일 기준 1~2일 이내에 답변을 받으실 수 있습니다.
+            </p>
+            <a href="index.html" class="modal-btn">홈으로 돌아가기</a>
+        </div>
+    </div>
+
+    <script>
+        // 전화번호 자동 포맷팅
+        document.getElementById('contactPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length > 3 && value.length <= 7) {
+                value = value.slice(0, 3) + '-' + value.slice(3);
+            } else if (value.length > 7) {
+                value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+            }
+            e.target.value = value;
+        });
+
+        // 폼 초기화
+        function handleReset() {
+            document.getElementById('quoteForm').reset();
+        }
+
+        // 폼 제출
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // 개인정보 동의 확인
+            if (!document.getElementById('privacyAgree').checked) {
+                alert('개인정보 수집 및 이용에 동의해 주세요.');
+                return;
+            }
+
+            // 필수 입력값 확인
+            const companyName = document.getElementById('companyName').value.trim();
+            const contactName = document.getElementById('contactName').value.trim();
+            const contactPhone = document.getElementById('contactPhone').value.trim();
+            const contactEmail = document.getElementById('contactEmail').value.trim();
+
+            if (!companyName || !contactName || !contactPhone || !contactEmail) {
+                alert('필수 항목을 모두 입력해 주세요.');
+                return;
+            }
+
+            // 이메일 형식 확인
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(contactEmail)) {
+                alert('올바른 이메일 형식을 입력해 주세요.');
+                return;
+            }
+
+            // 성공 모달 표시
+            document.getElementById('successModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 모달 닫기 (배경 클릭 시)
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // 드롭다운 메뉴 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initDropdownMenus === 'function') {
+                initDropdownMenus();
+            }
+        });
+    </script>
+
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // ===== 페이지 헤더 영역 =====
+            // 1. 페이지 제목
+            {
+                selector: '#pageTitle',
+                title: '1. 페이지 제목',
+                position: { top: '-10px', left: '-15px' },
+                description: '견적 문의 페이지 메인 타이틀',
+                function: '페이지 목적 안내',
+                behavior: [
+                    '비로그인 상태에서도 접근 가능한 페이지',
+                    '대량발송 견적 상담 요청 페이지임을 안내'
+                ]
+            },
+            // ===== 견적 문의 폼 영역 =====
+            // 2. 견적 문의 폼
+            {
+                selector: '#quoteForm',
+                title: '2. 견적 문의 폼',
+                position: { top: '10px', left: '10px' },
+                description: '비로그인 견적 문의 입력 양식',
+                function: '기업 정보 및 문의 내용 수집',
+                behavior: [
+                    '로그인 없이 견적 상담 요청 가능',
+                    '기업/담당자 정보 + 문의 내용 섹션으로 구성',
+                    'onsubmit 이벤트로 제출 처리',
+                    '필수 항목 미입력 시 제출 차단'
+                ]
+            },
+            // ===== 기업/담당자 정보 섹션 =====
+            // 3. 회사명 입력
+            {
+                selector: '#companyName',
+                title: '3. 회사명 입력',
+                position: { top: '-5px', left: '-10px' },
+                description: '견적 요청 기업/단체명 입력 필드',
+                function: '기업 식별 정보 수집',
+                behavior: [
+                    '필수 입력 항목 (미입력 시 제출 불가)',
+                    '텍스트 입력 (최대 100자)',
+                    'placeholder: "회사명을 입력해 주세요"'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 4. 담당자명 입력
+            {
+                selector: '#contactName',
+                title: '4. 담당자명 입력',
+                position: { top: '-5px', right: '-10px' },
+                description: '상담 담당자 성함 입력 필드',
+                function: '담당자 연락 시 호칭으로 활용',
+                behavior: [
+                    '필수 입력 항목 (미입력 시 제출 불가)',
+                    '텍스트 입력 (최대 50자)',
+                    'placeholder: "담당자명을 입력해 주세요"'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 5. 연락처 입력
+            {
+                selector: '#contactPhone',
+                title: '5. 연락처 입력',
+                position: { top: '-5px', left: '-10px' },
+                description: '담당자 연락처 입력 필드',
+                function: '견적 상담 연락용 전화번호 수집',
+                behavior: [
+                    '필수 입력 항목 (미입력 시 제출 불가)',
+                    '숫자 입력 시 자동 하이픈(-) 포맷팅',
+                    '010-0000-0000 형식으로 자동 변환',
+                    '최대 13자 (하이픈 포함)'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 6. 이메일 입력
+            {
+                selector: '#contactEmail',
+                title: '6. 이메일 입력',
+                position: { top: '-5px', right: '-10px' },
+                description: '담당자 이메일 입력 필드',
+                function: '견적서 발송 및 상담 답변 수신',
+                behavior: [
+                    '필수 입력 항목 (미입력 시 제출 불가)',
+                    '이메일 형식 유효성 검사 (@ 포함 여부)',
+                    '견적서 PDF 발송 주소로 활용',
+                    'placeholder: "example@company.com"'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // ===== 견적 문의 내용 섹션 =====
+            // 7. 관심 서비스 선택
+            {
+                selector: '#serviceTypes',
+                title: '7. 관심 서비스 선택',
+                position: { top: '-5px', left: '-10px' },
+                description: '견적 요청 서비스 유형 체크박스 그룹',
+                function: '관심 있는 메시지 서비스 복수 선택',
+                behavior: [
+                    '복수 선택 가능 (체크박스)',
+                    '일반문자(SMS/LMS/MMS), 광고문자, 선거문자',
+                    '카카오 알림톡, 카카오 브랜드메시지, 기타/모름',
+                    '선택 항목 기반 맞춤 견적 산정',
+                    '선택 입력 항목 (미선택 가능)'
+                ]
+            },
+            // 8. 예상 발송량 선택
+            {
+                selector: '#expectedVolume',
+                title: '8. 예상 발송량 선택',
+                position: { top: '-5px', left: '-10px' },
+                description: '월간 예상 메시지 발송량 선택 드롭다운',
+                function: '대량 할인 견적 산정 기준 정보 수집',
+                behavior: [
+                    '선택 입력 항목 (미선택 가능)',
+                    '월 1만건 미만 / 1만~5만건 / 5만~10만건',
+                    '월 10만~50만건 / 50만건 이상',
+                    '발송량에 따른 단가 할인 적용 기준'
+                ]
+            },
+            // 9. 희망 연락 시간
+            {
+                selector: '#contactTime',
+                title: '9. 희망 연락 시간',
+                position: { top: '-5px', right: '-10px' },
+                description: '담당자 연락 희망 시간대 선택 드롭다운',
+                function: '상담 연락 시간대 지정',
+                behavior: [
+                    '선택 입력 항목 (미선택 가능)',
+                    '오전 (09:00~12:00) / 오후 (13:00~18:00) / 상관없음',
+                    '담당자가 연락 가능한 시간대 파악용'
+                ]
+            },
+            // 10. 상세 문의 내용
+            {
+                selector: '#inquiryContent',
+                title: '10. 상세 문의 내용',
+                position: { top: '5px', right: '5px' },
+                description: '추가 요청사항 및 질문 입력 텍스트영역',
+                function: '견적 산정에 필요한 상세 정보 수집',
+                behavior: [
+                    '선택 입력 항목 (미입력 가능)',
+                    '발송 목적, 발송 대상, 특이사항 등 자유롭게 기재',
+                    '최소 높이 150px, 리사이즈 가능',
+                    'placeholder로 입력 안내 제공'
+                ]
+            },
+            // ===== 개인정보 동의 섹션 =====
+            // 11. 개인정보 동의 영역
+            {
+                selector: '#privacySection',
+                title: '11. 개인정보 동의 영역',
+                position: { top: '-5px', left: '-10px' },
+                description: '개인정보 수집 및 이용 동의 안내 영역',
+                function: '개인정보 수집 동의 획득',
+                behavior: [
+                    '수집 항목: 회사명, 담당자명, 연락처, 이메일',
+                    '수집 목적: 견적 상담 및 서비스 안내',
+                    '보유 기간: 상담 완료 후 1년간 보관 후 파기',
+                    '동의 거부 시 견적 상담 불가 안내'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 12. 개인정보 동의 체크박스
+            {
+                selector: '#privacyAgree',
+                title: '12. 개인정보 동의 체크박스',
+                position: { top: '-5px', right: '-10px' },
+                description: '개인정보 수집 동의 확인 체크박스',
+                function: '개인정보 수집 동의 여부 확인',
+                behavior: [
+                    '필수 체크 항목 (미체크 시 제출 불가)',
+                    '체크 여부 유효성 검사',
+                    '미체크 시 alert 메시지 표시'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // ===== 폼 버튼 영역 =====
+            // 13. 초기화 버튼
+            {
+                selector: '#resetBtn',
+                title: '13. 초기화 버튼',
+                position: { top: '-5px', left: '-10px' },
+                description: '폼 입력 내용 전체 초기화 버튼',
+                function: '입력 내용 리셋',
+                behavior: [
+                    '클릭 시 모든 입력 필드 초기화',
+                    '체크박스 선택 해제',
+                    'handleReset() 함수 호출',
+                    '확인 없이 즉시 초기화'
+                ]
+            },
+            // 14. 견적 문의하기 버튼
+            {
+                selector: '#submitBtn',
+                title: '14. 견적 문의하기 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '견적 문의 제출 버튼 (Primary CTA)',
+                function: '견적 문의 데이터 서버 전송',
+                behavior: [
+                    '필수 입력값 검증 (회사명, 담당자명, 연락처, 이메일)',
+                    '이메일 형식 유효성 검사',
+                    '개인정보 동의 체크 확인',
+                    '검증 실패 시 alert 메시지 표시',
+                    '성공 시 완료 모달(#successModal) 표시'
+                ],
+                api: 'POST /api/quote-inquiry',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            // ===== 완료 모달 영역 =====
+            // 15. 완료 모달
+            {
+                selector: '#successModal',
+                title: '15. 완료 모달',
+                position: { top: '60px', left: '20px' },
+                description: '문의 접수 완료 안내 모달 팝업',
+                function: '문의 접수 완료 알림 및 후속 안내',
+                behavior: [
+                    '제출 성공 시 자동 표시',
+                    '체크 아이콘 + 완료 메시지 + 안내 문구',
+                    '"영업일 기준 1~2일 이내 답변" 안내',
+                    '배경 클릭 시 모달 닫힘',
+                    'body overflow: hidden 처리 (스크롤 방지)'
+                ]
+            },
+            // 16. 홈으로 돌아가기 버튼
+            {
+                selector: '#successModal .modal-btn',
+                title: '16. 홈으로 돌아가기 버튼',
+                position: { top: '-5px', left: '-10px' },
+                description: '메인 페이지 이동 버튼',
+                function: '문의 완료 후 메인 페이지로 복귀',
+                behavior: [
+                    '클릭 시 index.html로 이동',
+                    'a 태그 링크 방식',
+                    '문의 완료 후 사용자 이탈 유도'
+                ]
+            }
+        ];
+        initSpecOverlay(specData);
+    </script>
+</body>
+</html>

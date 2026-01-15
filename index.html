@@ -70,33 +70,38 @@
             margin: 0 auto;
         }
 
-        /* 가격 탭 */
-        .pricing-tabs {
+        /* 가격 섹션 타이틀 */
+        .pricing-section-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        /* 가격 카테고리 */
+        .pricing-category {
+            margin-bottom: 48px;
+        }
+
+        .pricing-category:last-of-type {
+            margin-bottom: 32px;
+        }
+
+        .pricing-category-title {
             display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 40px;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
         }
 
-        .pricing-tab {
-            padding: 12px 32px;
-            border: none;
-            background: #f1f5f9;
-            border-radius: 24px;
-            font-size: 15px;
-            font-weight: 600;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .pricing-tab.active {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            color: white;
-        }
-
-        .pricing-tab:hover:not(.active) {
-            background: #e2e8f0;
+        .pricing-category-icon {
+            font-size: 24px;
         }
 
         /* 가격 카드 */
@@ -207,6 +212,32 @@
             font-size: 13px;
             color: #64748b;
             line-height: 1.6;
+        }
+
+        .pricing-note-global {
+            text-align: center;
+            padding: 32px 24px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            margin-top: 24px;
+        }
+
+        .quote-inquiry-btn {
+            display: inline-block;
+            padding: 16px 48px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+
+        .quote-inquiry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
         }
 
         /* 배너 & 공지사항 그리드 섹션 */
@@ -1124,9 +1155,16 @@
                 font-size: 24px;
             }
 
-            .pricing-tabs,
             .service-tabs {
                 flex-wrap: wrap;
+            }
+
+            .pricing-section-title {
+                font-size: 24px;
+            }
+
+            .pricing-category-title {
+                font-size: 18px;
             }
 
             .service-cards {
@@ -1190,80 +1228,135 @@
                 <div class="hero-content">
                     <h1 class="hero-title" id="heroTitle">예산에 맞게, 목적에 맞게.<br>부담없이 경험해보세요</h1>
                     <p class="hero-subtitle" id="heroSubtitle">기업규모에 맞는 단가로 모든 마케팅 메시지를 사용할 수 있어요</p>
-                    <a href="support-inquiry.html" class="hero-cta" id="heroCta">견적 문의하기</a>
+                    <a href="quote-inquiry.html" class="hero-cta" id="heroCta">견적 문의하기</a>
                 </div>
             </section>
 
             <!-- 가격 카드 섹션 -->
             <section class="pricing-section" id="pricingSection">
                 <div class="pricing-container">
-                    <div class="pricing-tabs" id="pricingTabs">
-                        <button class="pricing-tab active" id="tabSms" onclick="switchPricingTab('sms')">문자</button>
-                        <button class="pricing-tab" id="tabKakao" onclick="switchPricingTab('kakao')">카카오</button>
-                        <button class="pricing-tab" id="tabElection" onclick="switchPricingTab('election')">선거문자</button>
-                    </div>
+                    <h2 class="pricing-section-title">합리적인 가격, 최고의 품질</h2>
+                    
+                    <!-- 문자 요금 -->
+                    <div class="pricing-category">
+                        <h3 class="pricing-category-title">
+                            <span class="pricing-category-icon">✉️</span>
+                            문자
+                        </h3>
+                        <div class="pricing-cards" id="pricingCardsSms">
+                            <!-- SMS -->
+                            <div class="pricing-card">
+                                <div class="pricing-card-header">
+                                    <div class="pricing-type">단문 문자 (SMS)</div>
+                                    <span class="pricing-badge">최저가</span>
+                                </div>
+                                <div class="pricing-price">
+                                    <span class="pricing-amount">8.3</span>
+                                    <span class="pricing-unit">원 / 건</span>
+                                </div>
+                                <div class="pricing-byte">90byte</div>
+                                <div class="pricing-features">
+                                    <div class="pricing-feature">건당 단가 기준 대비 20% 이상 낮은 시작해요.</div>
+                                    <div class="pricing-feature">단 한 건도 놓치지 않도록 최선을 다합니다.</div>
+                                </div>
+                            </div>
 
-                    <div class="pricing-cards" id="pricingCards">
-                        <!-- SMS -->
-                        <div class="pricing-card">
-                            <div class="pricing-card-header">
-                                <div class="pricing-type">단문 문자 (SMS)</div>
-                                <span class="pricing-badge">최저가</span>
+                            <!-- LMS -->
+                            <div class="pricing-card">
+                                <div class="pricing-card-header">
+                                    <div class="pricing-type">장문 문자 (LMS)</div>
+                                    <span class="pricing-badge">최저가</span>
+                                </div>
+                                <div class="pricing-price">
+                                    <span class="pricing-amount">26.5</span>
+                                    <span class="pricing-unit">원 / 건</span>
+                                </div>
+                                <div class="pricing-byte">2,000 byte</div>
+                                <div class="pricing-features">
+                                    <div class="pricing-feature">건당 30% 할인으로 더욱 합리적인 가격으로 시작해요.</div>
+                                    <div class="pricing-feature">더 많은 내용을 전달하고 싶다면 LMS를 추천드립니다.</div>
+                                </div>
                             </div>
-                            <div class="pricing-price">
-                                <span class="pricing-amount">8.3</span>
-                                <span class="pricing-unit">원 / 건</span>
-                            </div>
-                            <div class="pricing-byte">90byte</div>
-                            <div class="pricing-features">
-                                <div class="pricing-feature">건당 단가 기준 대비 20% 이상 낮은 시작해요.</div>
-                                <div class="pricing-feature">단 한 건도 놓치지 않도록 최선을 다합니다.</div>
-                            </div>
-                            <div class="pricing-note">
-                                이 가격은 순수 발송 비용입니다. 서비스 이용료는 무료입니다.
-                            </div>
-                        </div>
 
-                        <!-- LMS -->
-                        <div class="pricing-card">
-                            <div class="pricing-card-header">
-                                <div class="pricing-type">장문 문자 (LMS)</div>
-                                <span class="pricing-badge">최저가</span>
-                            </div>
-                            <div class="pricing-price">
-                                <span class="pricing-amount">26.5</span>
-                                <span class="pricing-unit">원 / 건</span>
-                            </div>
-                            <div class="pricing-byte">2,000 byte</div>
-                            <div class="pricing-features">
-                                <div class="pricing-feature">건당 30% 할인으로 더욱 합리적인 가격으로 시작해요.</div>
-                                <div class="pricing-feature">더 많은 내용을 전달하고 싶다면 LMS를 추천드립니다.</div>
-                            </div>
-                            <div class="pricing-note">
-                                이 가격은 순수 발송 비용입니다.
-                            </div>
-                        </div>
-
-                        <!-- MMS -->
-                        <div class="pricing-card">
-                            <div class="pricing-card-header">
-                                <div class="pricing-type">그림 문자 (MMS)</div>
-                                <span class="pricing-badge">최저가</span>
-                            </div>
-                            <div class="pricing-price">
-                                <span class="pricing-amount">59</span>
-                                <span class="pricing-unit">원 / 건</span>
-                            </div>
-                            <div class="pricing-byte">2,000 byte</div>
-                            <div class="pricing-features">
-                                <div class="pricing-feature">건당 34% 할인으로 가장 합리적인 가격으로 시작해요.</div>
-                                <div class="pricing-feature">쿠폰이나 20% 이상의 광고 할인 가격이 적용됩니다.</div>
-                            </div>
-                            <div class="pricing-note">
-                                1회 1건 발송 시 수행 비용이 추가됩니다.
+                            <!-- MMS -->
+                            <div class="pricing-card">
+                                <div class="pricing-card-header">
+                                    <div class="pricing-type">그림 문자 (MMS)</div>
+                                    <span class="pricing-badge">최저가</span>
+                                </div>
+                                <div class="pricing-price">
+                                    <span class="pricing-amount">59</span>
+                                    <span class="pricing-unit">원 / 건</span>
+                                </div>
+                                <div class="pricing-byte">2,000 byte</div>
+                                <div class="pricing-features">
+                                    <div class="pricing-feature">건당 34% 할인으로 가장 합리적인 가격으로 시작해요.</div>
+                                    <div class="pricing-feature">이미지와 함께 메시지를 전달할 수 있어요.</div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- 카카오 요금 -->
+                    <div class="pricing-category">
+                        <h3 class="pricing-category-title">
+                            <span class="pricing-category-icon">💬</span>
+                            카카오
+                        </h3>
+                        <div class="pricing-cards" id="pricingCardsKakao">
+                            <!-- 알림톡 -->
+                            <div class="pricing-card">
+                                <div class="pricing-card-header">
+                                    <div class="pricing-type">알림톡</div>
+                                    <span class="pricing-badge" style="background: #e0f2fe; color: #0369a1;">정보성</span>
+                                </div>
+                                <div class="pricing-price">
+                                    <span class="pricing-amount">6.2</span>
+                                    <span class="pricing-unit">원 / 건</span>
+                                </div>
+                                <div class="pricing-byte">1,000자</div>
+                                <div class="pricing-features">
+                                    <div class="pricing-feature">주문/결제/배송 등 정보성 메시지 발송</div>
+                                    <div class="pricing-feature">스팸 걱정 없이 문자보다 저렴하게 발송</div>
+                                </div>
+                            </div>
+
+                            <!-- 브랜드 메시지 (친구) -->
+                            <div class="pricing-card">
+                                <div class="pricing-card-header">
+                                    <div class="pricing-type">브랜드 메시지 (친구)</div>
+                                    <span class="pricing-badge" style="background: #dcfce7; color: #15803d;">New</span>
+                                </div>
+                                <div class="pricing-price">
+                                    <span class="pricing-amount">21.5</span>
+                                    <span class="pricing-unit">원 / 건</span>
+                                </div>
+                                <div class="pricing-byte">광고성</div>
+                                <div class="pricing-features">
+                                    <div class="pricing-feature">카카오톡 채널 친구에게 광고성 메시지 발송</div>
+                                    <div class="pricing-feature">이미지, 버튼 등 다양한 메시지 형식 지원</div>
+                                </div>
+                            </div>
+
+                            <!-- 브랜드 메시지 (비친구) -->
+                            <div class="pricing-card">
+                                <div class="pricing-card-header">
+                                    <div class="pricing-type">브랜드 메시지 (비친구)</div>
+                                    <span class="pricing-badge" style="background: #dcfce7; color: #15803d;">New</span>
+                                </div>
+                                <div class="pricing-price">
+                                    <span class="pricing-amount">25.8</span>
+                                    <span class="pricing-unit">원 / 건</span>
+                                </div>
+                                <div class="pricing-byte">광고성</div>
+                                <div class="pricing-features">
+                                    <div class="pricing-feature">마케팅 수신 동의자에게 광고성 메시지 발송</div>
+                                    <div class="pricing-feature">채널 친구가 아닌 고객에게도 발송 가능</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -1484,12 +1577,6 @@
     </div>
 
     <script>
-        function switchPricingTab(tab) {
-            const tabs = document.querySelectorAll('.pricing-tab');
-            tabs.forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
         function switchServiceTab(element, tab) {
             const tabs = document.querySelectorAll('.service-tab');
             tabs.forEach(t => t.classList.remove('active'));
@@ -1844,33 +1931,46 @@
                 position: { top: '-10px', left: '-15px' },
                 function: '잠재 고객의 견적 상담 유도 (Primary CTA)',
                 behavior: [
-                    '클릭 시 support-inquiry.html 페이지로 이동',
+                    '클릭 시 quote-inquiry.html 페이지로 이동',
+                    '비로그인 상태에서도 견적 문의 가능',
                     '호버 시 배경색 변경 및 상승 효과'
                 ]
             },
             // ===== 가격 정보 영역 =====
-            // 3. 가격 탭 메뉴
+            // 3. 가격 섹션
             {
-                selector: '#pricingTabs',
-                title: '가격 탭 메뉴',
-                position: { top: '-10px', left: '-15px' },
-                function: '서비스 유형별 가격표 전환 탭',
+                selector: '#pricingSection',
+                title: '요금 안내 섹션',
+                position: { top: '20px', left: '20px' },
+                function: '서비스별 요금 정보 통합 제공',
                 behavior: [
-                    '문자(SMS/LMS/MMS), 카카오톡, 선거문자 3개 탭',
-                    '탭 클릭 시 해당 서비스 가격 카드로 전환',
-                    '활성 탭 하이라이트 표시'
+                    '문자(SMS/LMS/MMS), 카카오(알림톡/브랜드메시지) 요금 표시',
+                    '카테고리별 그룹핑으로 가독성 향상',
+                    '카드 호버 시 강조 효과'
                 ]
             },
-            // 4. 가격 카드 영역
+            // 4. 문자 요금 카드
             {
-                selector: '#pricingCards',
-                title: '가격 카드 영역',
+                selector: '#pricingCardsSms',
+                title: '문자 요금 카드',
                 position: { top: '-10px', left: '-15px' },
-                function: 'SMS/LMS/MMS 또는 알림톡/브랜드메시지 단가 표시',
+                function: 'SMS/LMS/MMS 단가 표시',
                 behavior: [
-                    '탭 선택에 따라 카드 내용 동적 변경',
-                    '건당 단가, 대량 할인율 정보 포함',
-                    '카드 호버 시 강조 효과'
+                    'SMS: 8.3원/건 (90byte)',
+                    'LMS: 26.5원/건 (2,000byte)',
+                    'MMS: 59원/건 (2,000byte)'
+                ]
+            },
+            // 5. 카카오 요금 카드
+            {
+                selector: '#pricingCardsKakao',
+                title: '카카오 요금 카드',
+                position: { top: '-10px', left: '-15px' },
+                function: '알림톡/브랜드메시지 단가 표시',
+                behavior: [
+                    '알림톡: 6.2원/건 (정보성 메시지)',
+                    '브랜드메시지(친구): 21.5원/건',
+                    '브랜드메시지(비친구): 25.8원/건'
                 ]
             },
             // ===== 배너 및 공지 영역 =====
@@ -1911,6 +2011,19 @@
                     '일반문자, 광고문자, 알림톡, 브랜드메시지 등 서비스 카드',
                     '카드 클릭 시 해당 서비스 발송 페이지로 이동',
                     '카드 호버 시 상승 애니메이션'
+                ]
+            },
+            // 8. 서비스 카드 그리드
+            {
+                selector: '#serviceCards',
+                title: '서비스 카드 그리드',
+                position: { top: '-10px', left: '-15px' },
+                function: '주요 서비스 카드 목록 표시',
+                behavior: [
+                    '공직선거 문자: message-send-election.html 이동',
+                    '카카오 브랜드 메시지: kakao-send-brandtalk.html 이동',
+                    '카카오 알림톡: kakao-send-alimtalk.html 이동',
+                    '문자 메시지: message-send-general.html 이동'
                 ]
             },
             // 8. 브랜드 메시지 섹션
