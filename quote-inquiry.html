@@ -439,7 +439,7 @@
                         </div>
 
                         <div class="form-row">
-                            <div class="form-group">
+                            <div class="form-group" id="expectedVolumeGroup">
                                 <label class="form-label" for="expectedVolume">예상 월간 발송량</label>
                                 <select class="form-select" id="expectedVolume">
                                     <option value="">선택해 주세요</option>
@@ -450,7 +450,7 @@
                                     <option value="over-500k">월 50만건 이상</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" id="contactTimeGroup">
                                 <label class="form-label" for="contactTime">희망 연락 시간</label>
                                 <select class="form-select" id="contactTime">
                                     <option value="">선택해 주세요</option>
@@ -684,41 +684,54 @@
                 selector: '#serviceTypes',
                 title: '7. 관심 서비스 선택',
                 position: { top: '-5px', left: '-10px' },
-                description: '견적 요청 서비스 유형 체크박스 그룹',
-                function: '관심 있는 메시지 서비스 복수 선택',
+                description: '체크박스 그룹 (Checkbox Group)',
+                function: '관심 있는 메시지 서비스 복수 선택 - 맞춤 견적 산정 기준',
                 behavior: [
                     '복수 선택 가능 (체크박스)',
-                    '일반문자(SMS/LMS/MMS), 광고문자, 선거문자',
-                    '카카오 알림톡, 카카오 브랜드메시지, 기타/모름',
-                    '선택 항목 기반 맞춤 견적 산정',
-                    '선택 입력 항목 (미선택 가능)'
+                    '선택 입력 항목 (미선택 가능)',
+                    '【체크박스 항목】',
+                    '• 일반문자 (SMS/LMS/MMS) (value: sms) - 단문/장문/멀티미디어 문자',
+                    '• 광고문자 (value: ad) - 광고성 메시지 (080 수신거부 필수)',
+                    '• 선거문자 (value: election) - 공직선거법 기반 선거 문자',
+                    '• 카카오 알림톡 (value: alimtalk) - 카카오톡 정보성 알림',
+                    '• 카카오 브랜드메시지 (value: brandtalk) - 카카오톡 브랜드 메시지',
+                    '• 기타 / 모름 (value: other) - 기타 문의 또는 서비스 미정'
                 ]
             },
-            // 8. 예상 발송량 선택
+            // 8. 예상 월간 발송량
             {
-                selector: '#expectedVolume',
-                title: '8. 예상 발송량 선택',
+                selector: '#expectedVolumeGroup',
+                title: '8. 예상 월간 발송량',
                 position: { top: '-5px', left: '-10px' },
-                description: '월간 예상 메시지 발송량 선택 드롭다운',
-                function: '대량 할인 견적 산정 기준 정보 수집',
+                description: '콤보박스 (Combobox/Select)',
+                function: '월간 예상 메시지 발송량 선택 - 대량 할인 견적 산정 기준',
                 behavior: [
                     '선택 입력 항목 (미선택 가능)',
-                    '월 1만건 미만 / 1만~5만건 / 5만~10만건',
-                    '월 10만~50만건 / 50만건 이상',
-                    '발송량에 따른 단가 할인 적용 기준'
+                    '발송량에 따른 단가 할인 적용 기준',
+                    '【콤보박스 항목】',
+                    '• 선택해 주세요 (value: "", 기본값)',
+                    '• 월 1만건 미만 (value: under-10k)',
+                    '• 월 1만건 ~ 5만건 (value: 10k-50k)',
+                    '• 월 5만건 ~ 10만건 (value: 50k-100k)',
+                    '• 월 10만건 ~ 50만건 (value: 100k-500k)',
+                    '• 월 50만건 이상 (value: over-500k)'
                 ]
             },
             // 9. 희망 연락 시간
             {
-                selector: '#contactTime',
+                selector: '#contactTimeGroup',
                 title: '9. 희망 연락 시간',
                 position: { top: '-5px', right: '-10px' },
-                description: '담당자 연락 희망 시간대 선택 드롭다운',
-                function: '상담 연락 시간대 지정',
+                description: '콤보박스 (Combobox/Select)',
+                function: '담당자 연락 희망 시간대 선택 - 상담 연락 시간 조율',
                 behavior: [
                     '선택 입력 항목 (미선택 가능)',
-                    '오전 (09:00~12:00) / 오후 (13:00~18:00) / 상관없음',
-                    '담당자가 연락 가능한 시간대 파악용'
+                    '담당자가 연락 가능한 시간대 파악용',
+                    '【콤보박스 항목】',
+                    '• 선택해 주세요 (value: "", 기본값)',
+                    '• 오전 (09:00 ~ 12:00) (value: morning)',
+                    '• 오후 (13:00 ~ 18:00) (value: afternoon)',
+                    '• 상관없음 (value: anytime)'
                 ]
             },
             // 10. 상세 문의 내용
