@@ -1939,13 +1939,39 @@ document.addEventListener('DOMContentLoaded', function() {
         const specData = [
             // === 메인 페이지 ===
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '광고문자 템플릿 페이지 제목 및 설명' },
-            // 2-5. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, function: '문자발송 탭 전환 메뉴' },
-            { selector: '#tabMenu .tab-item:nth-child(1)', title: '일반문자 발송 탭', position: { top: '-5px', left: '-10px' }, function: '일반문자 발송 페이지로 이동' },
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '광고문자 발송 탭', position: { top: '-5px', left: '-10px' }, function: '광고문자 발송 페이지로 이동' },
-            { selector: '#tabMenu .tab-item:nth-child(3)', title: '일반문자 템플릿 탭', position: { top: '-5px', left: '-10px' }, function: '일반문자 템플릿 관리 페이지' },
-            { selector: '#tabMenu .tab-item:nth-child(4)', title: '광고문자 템플릿 탭', position: { top: '-5px', right: '-10px' }, function: '광고문자 템플릿 관리 (현재 페이지)' },
+            {
+                selector: '#pageHeader',
+                title: '1. 페이지 헤더',
+                position: { top: '10px', left: '-15px' },
+                description: '텍스트 (Text)',
+                function: '광고문자 템플릿 관리 페이지의 타이틀 및 설명 표시',
+                behavior: [
+                    '【표시 내용】',
+                    '• 타이틀: "광고문자 템플릿"',
+                    '• 설명: "광고문자용 템플릿을 관리합니다."'
+                ]
+            },
+            // 2. 탭 메뉴
+            {
+                selector: '#tabMenu',
+                title: '2. 탭 메뉴',
+                position: { top: '-10px', left: '10px' },
+                description: '탭 메뉴 (Tab Navigation)',
+                function: '문자발송 관련 페이지 전환',
+                behavior: [
+                    '【탭 항목】',
+                    '• 일반문자 발송 → message-send-general.html',
+                    '• 광고문자 발송 → message-send-ad.html',
+                    '• 일반문자 템플릿 → template-message.html',
+                    '• 광고문자 템플릿 (현재 페이지, 활성 상태)',
+                    '【동작】',
+                    '• 탭 클릭 시 해당 페이지로 이동'
+                ]
+            },
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '3. 일반문자 발송 탭', position: { top: '-5px', left: '-10px' }, description: '탭 항목', function: 'message-send-general.html 페이지로 이동' },
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '4. 광고문자 발송 탭', position: { top: '-5px', left: '-10px' }, description: '탭 항목', function: 'message-send-ad.html 페이지로 이동' },
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '5. 일반문자 템플릿 탭', position: { top: '-5px', left: '-10px' }, description: '탭 항목', function: 'template-message.html 페이지로 이동' },
+            { selector: '#tabMenu .tab-item:nth-child(4)', title: '6. 광고문자 템플릿 탭', position: { top: '-5px', right: '-10px' }, description: '탭 항목 (Active)', function: '현재 페이지 (활성 상태)' },
             // 7-11. 통계 섹션
             { selector: '#statsSection', title: '통계 요약', position: { top: '10px', left: '-15px' }, function: '광고문자 템플릿 현황 통계 카드' },
             { selector: '#statsSection .stat-card:nth-child(1)', title: '전체 템플릿', position: { top: '-5px', left: '-10px' }, function: '등록된 전체 템플릿 수 표시' },
@@ -1959,10 +1985,44 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#searchFilterSection .btn-primary', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, function: '검색 조건으로 템플릿 검색 실행', api: 'GET /api/templates/ad?keyword=&type=' },
             { selector: '#searchFilterSection .btn-outline', title: '초기화 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 조건 초기화' },
             // 17-20. 템플릿 목록 액션
-            { selector: '#templateListSection', title: '템플릿 목록 섹션', position: { top: '10px', left: '10px' }, function: '광고문자 템플릿 카드 그리드 표시' },
-            { selector: '#addTemplateBtn', title: '새 템플릿 등록', position: { top: '-10px', left: '-15px' }, function: '새 광고문자 템플릿 등록 모달 열기', behavior: ['(광고) 문구 자동 포함', '080 수신거부 번호 필수'], api: 'POST /api/templates/ad' },
-            { selector: '#batchDeleteBtn', title: '일괄 삭제', position: { top: '-10px', left: '-15px' }, function: '선택된 템플릿 일괄 삭제', api: 'DELETE /api/templates/batch' },
-            { selector: '#exportBtn', title: '내보내기', position: { top: '-10px', right: '-15px' }, function: '템플릿 데이터 Excel/CSV로 내보내기' },
+            { selector: '#templateListSection', title: '17. 템플릿 목록 섹션', position: { top: '10px', left: '10px' }, description: '목록 영역 (Grid Section)', function: '광고문자 템플릿 카드 그리드 표시' },
+            {
+                selector: '#addTemplateBtn',
+                title: '18. 새 템플릿 등록',
+                position: { top: '-10px', left: '-15px' },
+                description: '버튼 (Button - Primary)',
+                function: '새 광고문자 템플릿 등록',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 템플릿 등록 모달 열림',
+                    '【모달 내용】',
+                    '• (광고) 문구 자동 포함',
+                    '• 080 수신거부 번호 필수 선택'
+                ],
+                api: 'POST /api/templates/ad',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#batchDeleteBtn',
+                title: '19. 일괄 삭제',
+                position: { top: '-10px', left: '-15px' },
+                description: '버튼 (Button - Danger)',
+                function: '선택된 템플릿 일괄 삭제',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 1개 이상 선택 필수',
+                    '【Alert 메시지】',
+                    '• 미선택 시: "삭제할 템플릿을 선택해주세요."',
+                    '【Confirm 메시지】',
+                    '• "선택한 N개의 템플릿을 삭제하시겠습니까?"',
+                    '【삭제 결과】',
+                    '• 성공: "N개의 템플릿이 삭제되었습니다." (Toast)',
+                    '• 실패: "템플릿 삭제에 실패했습니다."'
+                ],
+                api: 'DELETE /api/templates/batch',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            { selector: '#exportBtn', title: '20. 내보내기', position: { top: '-10px', right: '-15px' }, description: '버튼 (Button)', function: '템플릿 데이터 Excel/CSV로 내보내기' },
             // 21-22. 템플릿 그리드
             { selector: '#templateGrid', title: '템플릿 카드 목록', position: { top: '10px', left: '10px' }, function: '광고문자 템플릿 카드 그리드 표시' },
             { selector: '#templateGrid .template-item:first-child', title: '템플릿 카드', position: { top: '-5px', left: '-10px' }, function: '개별 템플릿 정보 카드', behavior: ['클릭 시 상세보기', '미리보기/수정/복사/삭제 버튼'] },

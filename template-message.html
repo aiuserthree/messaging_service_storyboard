@@ -1873,15 +1873,41 @@ document.addEventListener('DOMContentLoaded', function() {
         const specData = [
             // ===== 페이지 기본 요소 =====
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '일반문자 템플릿 관리 페이지', function: '페이지 제목 및 설명 표시' },
+            {
+                selector: '#pageHeader',
+                title: '1. 페이지 헤더',
+                position: { top: '10px', left: '-15px' },
+                description: '텍스트 (Text)',
+                function: '일반문자 템플릿 관리 페이지의 타이틀 및 설명 표시',
+                behavior: [
+                    '【표시 내용】',
+                    '• 타이틀: "일반문자 템플릿"',
+                    '• 설명: "자주 사용하는 메시지를 템플릿으로 관리합니다."'
+                ]
+            },
             // 2. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '문자발송 관련 탭 전환', function: '페이지 네비게이션' },
+            {
+                selector: '#tabMenu',
+                title: '2. 탭 메뉴',
+                position: { top: '-10px', left: '10px' },
+                description: '탭 메뉴 (Tab Navigation)',
+                function: '문자발송 관련 페이지 전환',
+                behavior: [
+                    '【탭 항목】',
+                    '• 일반문자 발송 → message-send-general.html',
+                    '• 광고문자 발송 → message-send-ad.html',
+                    '• 일반문자 템플릿 (현재 페이지, 활성 상태)',
+                    '• 광고문자 템플릿 → template-message-ad.html',
+                    '【동작】',
+                    '• 탭 클릭 시 해당 페이지로 이동'
+                ]
+            },
             // 3. 일반문자 탭
-            { selector: '#tabMenu .tab-item:nth-child(1)', title: '일반문자 탭', position: { top: '-5px', left: '-10px' }, description: '일반문자 발송 페이지로 이동', function: '일반문자 발송 화면' },
+            { selector: '#tabMenu .tab-item:nth-child(1)', title: '3. 일반문자 탭', position: { top: '-5px', left: '-10px' }, description: '탭 항목 (Tab Item)', function: 'message-send-general.html 페이지로 이동' },
             // 4. 광고문자 탭
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '광고문자 탭', position: { top: '-5px', left: '-10px' }, description: '광고문자 발송 페이지로 이동', function: '광고문자 발송 화면' },
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '4. 광고문자 탭', position: { top: '-5px', left: '-10px' }, description: '탭 항목 (Tab Item)', function: 'message-send-ad.html 페이지로 이동' },
             // 5. 템플릿 탭
-            { selector: '#tabMenu .tab-item:nth-child(3)', title: '템플릿 탭', position: { top: '-5px', right: '-10px' }, description: '템플릿 관리 (현재)', function: '템플릿 목록 및 관리', behavior: ['현재 활성 탭'] },
+            { selector: '#tabMenu .tab-item:nth-child(3)', title: '5. 템플릿 탭', position: { top: '-5px', right: '-10px' }, description: '탭 항목 (Tab Item - Active)', function: '현재 페이지 (활성 상태)' },
             
             // ===== 통계 섹션 =====
             // 6. 통계 섹션
@@ -1897,21 +1923,105 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // ===== 검색/필터 섹션 =====
             // 11. 검색 섹션
-            { selector: '#searchSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, description: '템플릿 검색 영역', function: '조건별 템플릿 검색' },
+            { selector: '#searchSection', title: '11. 검색 및 필터', position: { top: '10px', left: '-15px' }, description: '검색 영역 (Search Section)', function: '조건별 템플릿 검색' },
             // 12. 검색 입력
-            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '키워드 검색 입력', function: '템플릿명/내용 검색', behavior: ['입력 후 검색 버튼 클릭'] },
+            {
+                selector: '#searchInput',
+                title: '12. 검색 입력',
+                position: { top: '-5px', left: '-10px' },
+                description: '텍스트 입력 필드 (Text Input)',
+                function: '템플릿명 또는 내용으로 검색',
+                behavior: [
+                    '【입력 조건】',
+                    '• 선택 입력 항목',
+                    '• placeholder: "템플릿명 또는 내용 검색"',
+                    '【동작】',
+                    '• 입력 후 검색 버튼 클릭 또는 Enter 키로 검색'
+                ]
+            },
             // 13. 타입 필터
-            { selector: '#typeFilter', title: '타입 필터', position: { top: '-5px', left: '-10px' }, description: '메시지 타입 필터', function: 'SMS/LMS/MMS 필터', behavior: ['전체/SMS/LMS/MMS 선택'] },
+            {
+                selector: '#typeFilter',
+                title: '13. 타입 필터',
+                position: { top: '-5px', left: '-10px' },
+                description: '콤보박스 (Select/Dropdown)',
+                function: '메시지 타입별 필터링',
+                behavior: [
+                    '【콤보박스 항목】',
+                    '• 전체 (기본값, value: "")',
+                    '• SMS (value: sms)',
+                    '• LMS (value: lms)',
+                    '• MMS (value: mms)',
+                    '【동작】',
+                    '• 선택 시 해당 타입의 템플릿만 표시'
+                ]
+            },
             // 14. 검색 버튼
-            { selector: '#searchBtn', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, description: '검색 실행', function: '필터 조건으로 목록 갱신', api: 'GET /api/templates' },
+            {
+                selector: '#searchBtn',
+                title: '14. 검색 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button)',
+                function: '검색 조건으로 목록 조회',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 검색어 + 타입 필터 조건으로 API 호출',
+                    '• 결과 목록 갱신'
+                ],
+                api: 'GET /api/templates'
+            },
             
             // ===== 액션 버튼 =====
             // 15. 새 템플릿 등록
-            { selector: '#addTemplateBtn', title: '새 템플릿 등록', position: { top: '-10px', left: '-15px' }, description: '템플릿 등록 모달 열기', function: '새 템플릿 작성', behavior: ['클릭 시 등록 모달 열림'], api: 'POST /api/templates' },
+            {
+                selector: '#addTemplateBtn',
+                title: '15. 새 템플릿 등록',
+                position: { top: '-10px', left: '-15px' },
+                description: '버튼 (Button - Primary)',
+                function: '새 템플릿 작성',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 템플릿 등록 모달 열림',
+                    '【모달 내용】',
+                    '• 템플릿명, 메시지 타입, 내용 입력'
+                ],
+                api: 'POST /api/templates',
+                tags: [{ text: 'API', type: 'api' }]
+            },
             // 16. 일괄 삭제
-            { selector: '#batchDeleteBtn', title: '일괄 삭제', position: { top: '-10px', left: '-15px' }, description: '선택된 템플릿 삭제', function: '복수 템플릿 삭제', behavior: ['체크된 템플릿 일괄 삭제'], api: 'DELETE /api/templates/batch' },
+            {
+                selector: '#batchDeleteBtn',
+                title: '16. 일괄 삭제',
+                position: { top: '-10px', left: '-15px' },
+                description: '버튼 (Button - Danger)',
+                function: '선택된 템플릿 일괄 삭제',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 1개 이상 선택 필수',
+                    '【Alert 메시지】',
+                    '• 미선택 시: "삭제할 템플릿을 선택해주세요."',
+                    '【Confirm 메시지】',
+                    '• "선택한 N개의 템플릿을 삭제하시겠습니까?"',
+                    '【삭제 결과】',
+                    '• 성공: "N개의 템플릿이 삭제되었습니다." (Toast)',
+                    '• 실패: "템플릿 삭제에 실패했습니다."'
+                ],
+                api: 'DELETE /api/templates/batch',
+                tags: [{ text: 'API', type: 'api' }]
+            },
             // 17. 내보내기
-            { selector: '#exportBtn', title: '내보내기', position: { top: '-10px', right: '-15px' }, description: '템플릿 데이터 내보내기', function: 'CSV/Excel 다운로드' },
+            {
+                selector: '#exportBtn',
+                title: '17. 내보내기',
+                position: { top: '-10px', right: '-15px' },
+                description: '버튼 (Button)',
+                function: '템플릿 데이터 내보내기',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 현재 필터 조건에 맞는 템플릿 목록 다운로드',
+                    '• 파일명: "템플릿_YYYYMMDD.xlsx"'
+                ]
+            },
             
             // ===== 템플릿 목록 =====
             // 18. 템플릿 그리드

@@ -2784,11 +2784,37 @@ document.addEventListener('DOMContentLoaded', function() {
         const specData = [
             // ===== 페이지 기본 요소 =====
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '주소록 관리 페이지 제목 및 설명', function: '페이지 제목 표시' },
-            // 2-4. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '주소록 메뉴 탭 영역', function: '주소록관리/수신거부관리 탭 전환' },
-            { selector: '#tabMenu .tab-item:first-child', title: '주소록 관리 탭', position: { top: '-5px', left: '-10px' }, description: '주소록 관리 탭 (현재)', function: '클릭 시 주소록 관리 페이지', behavior: ['현재 활성 탭'] },
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '수신거부관리 탭', position: { top: '-5px', right: '-10px' }, description: '수신거부관리 페이지 이동', function: '클릭 시 addressbook-reject.html로 이동' },
+            {
+                selector: '#pageHeader',
+                title: '1. 페이지 헤더',
+                position: { top: '10px', left: '-15px' },
+                description: '텍스트 (Text)',
+                function: '주소록 관리 페이지의 타이틀 및 설명 표시',
+                behavior: [
+                    '【표시 내용】',
+                    '• 타이틀: "주소록 관리"',
+                    '• 설명: "발송 대상 연락처를 그룹별로 관리합니다."'
+                ]
+            },
+            // 2. 탭 메뉴
+            {
+                selector: '#tabMenu',
+                title: '2. 탭 메뉴',
+                position: { top: '-10px', left: '10px' },
+                description: '탭 메뉴 (Tab Navigation)',
+                function: '주소록 관련 페이지 전환',
+                behavior: [
+                    '【탭 항목】',
+                    '• 주소록 관리 (현재 페이지, 활성 상태)',
+                    '• 수신거부 관리 → addressbook-reject.html',
+                    '【동작】',
+                    '• 탭 클릭 시 해당 페이지로 이동'
+                ]
+            },
+            // 3. 주소록 관리 탭
+            { selector: '#tabMenu .tab-item:first-child', title: '3. 주소록 관리 탭', position: { top: '-5px', left: '-10px' }, description: '탭 항목 (Tab Item - Active)', function: '현재 페이지 (활성 상태)' },
+            // 4. 수신거부관리 탭
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '4. 수신거부관리 탭', position: { top: '-5px', right: '-10px' }, description: '탭 항목 (Tab Item)', function: 'addressbook-reject.html 페이지로 이동' },
             
             // ===== 통계 섹션 =====
             // 5. 통계 섹션
@@ -2796,11 +2822,31 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // ===== 그룹 사이드바 =====
             // 6. 그룹 사이드바
-            { selector: '#groupSidebar', title: '그룹 사이드바', position: { top: '10px', left: '-15px' }, description: '주소록 그룹 목록 영역', function: '그룹별 주소록 관리' },
+            { selector: '#groupSidebar', title: '6. 그룹 사이드바', position: { top: '10px', left: '-15px' }, description: '사이드바 영역 (Sidebar)', function: '주소록 그룹 목록 관리' },
             // 7. 그룹 추가 버튼
-            { selector: '#groupSidebar .btn-primary', title: '그룹 추가 버튼', position: { top: '-5px', right: '-10px' }, description: '새 그룹 생성', function: "openModal('addGroupModal') 호출", api: 'POST /api/addressbook/groups', behavior: ['클릭 시 그룹 추가 모달 열기'] },
+            {
+                selector: '#groupSidebar .btn-primary',
+                title: '7. 그룹 추가 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '새 그룹 생성',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 그룹 추가 모달 열림',
+                    '【모달 내용】',
+                    '• 그룹명 입력 필드',
+                    '【유효성 검사】',
+                    '• 그룹명 필수 입력',
+                    '【Alert 메시지】',
+                    '• 그룹명 미입력: "그룹명을 입력해주세요."',
+                    '• 그룹명 중복: "이미 존재하는 그룹명입니다."',
+                    '• 생성 성공: "그룹이 생성되었습니다." (Toast)'
+                ],
+                api: 'POST /api/addressbook/groups',
+                tags: [{ text: 'API', type: 'api' }]
+            },
             // 8. 그룹 목록
-            { selector: '.group-list', title: '그룹 목록', position: { top: '5px', left: '5px' }, description: '등록된 그룹 표시', function: '그룹 선택', behavior: ['클릭 시 그룹 선택', '활성 그룹 하이라이트'] },
+            { selector: '.group-list', title: '8. 그룹 목록', position: { top: '5px', left: '5px' }, description: '목록 영역 (List)', function: '등록된 그룹 목록 표시 및 선택' },
             // 9. 그룹 항목
             { selector: '.group-item', title: '그룹 항목', position: { top: '-5px', left: '-10px' }, description: '개별 그룹', function: 'selectGroup(groupId) 호출', behavior: ['클릭 시 해당 그룹의 주소록 표시'] },
             // 10. 그룹 메뉴 버튼 (⋮)

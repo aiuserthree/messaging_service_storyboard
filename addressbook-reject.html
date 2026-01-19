@@ -1676,9 +1676,33 @@ document.addEventListener('DOMContentLoaded', function() {
         const specData = [
             // ===== 페이지 기본 요소 =====
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '수신거부 관리 페이지 제목 및 설명', function: '페이지 제목 표시' },
-            // 2-4. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '주소록 메뉴 탭 영역', function: '주소록관리/수신거부관리 탭 전환' },
+            {
+                selector: '#pageHeader',
+                title: '1. 페이지 헤더',
+                position: { top: '10px', left: '-15px' },
+                description: '텍스트 (Text)',
+                function: '수신거부 관리 페이지의 타이틀 및 설명 표시',
+                behavior: [
+                    '【표시 내용】',
+                    '• 타이틀: "수신거부 관리"',
+                    '• 설명: "수신거부 요청 연락처를 관리합니다."'
+                ]
+            },
+            // 2. 탭 메뉴
+            {
+                selector: '#tabMenu',
+                title: '2. 탭 메뉴',
+                position: { top: '-10px', left: '10px' },
+                description: '탭 메뉴 (Tab Navigation)',
+                function: '주소록 관련 페이지 전환',
+                behavior: [
+                    '【탭 항목】',
+                    '• 주소록 관리 → addressbook.html',
+                    '• 수신거부 관리 (현재 페이지, 활성 상태)',
+                    '【동작】',
+                    '• 탭 클릭 시 해당 페이지로 이동'
+                ]
+            },
             { selector: '#tabMenu .tab-item:first-child', title: '주소록 관리 탭', position: { top: '-5px', left: '-10px' }, description: '주소록 관리 페이지 이동', function: '클릭 시 addressbook.html로 이동' },
             { selector: '#tabMenu .tab-item:nth-child(2)', title: '수신거부관리 탭', position: { top: '-5px', right: '-10px' }, description: '수신거부 관리 탭 (현재)', function: '현재 페이지 활성화', behavior: ['현재 활성 탭'] },
             

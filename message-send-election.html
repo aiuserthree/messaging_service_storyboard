@@ -4017,43 +4017,70 @@ if (document.readyState === 'loading') {
             // 1. 페이지 헤더
             {
                 selector: '#pageHeader',
-                title: '페이지 헤더',
+                title: '1. 페이지 헤더',
                 position: { top: '10px', right: '10px' },
-                function: '선거문자 발송 페이지의 타이틀 영역',
-                description: '선거문자 발송 페이지 제목 및 설명'
+                description: '텍스트 (Text)',
+                function: '선거문자 발송 페이지의 타이틀 및 설명 표시',
+                behavior: [
+                    '【표시 내용】',
+                    '• 타이틀: "선거문자 발송"',
+                    '• 설명: "공직선거법에 따른 선거문자를 발송합니다."'
+                ]
             },
             // 2. 탭 메뉴
             {
                 selector: '#tabMenu',
-                title: '탭 메뉴',
+                title: '2. 탭 메뉴',
                 position: { top: '5px', left: '10px' },
-                function: '선거문자 관련 기능 탭',
+                description: '탭 메뉴 (Tab Navigation)',
+                function: '선거문자 관련 페이지 전환',
                 behavior: [
-                    '선거문자 발송 (현재)',
-                    '선거문자 템플릿'
+                    '【탭 항목】',
+                    '• 선거문자 발송 (현재 페이지, 활성 상태)',
+                    '• 선거문자 템플릿 → template-message-election.html',
+                    '【동작】',
+                    '• 탭 클릭 시 해당 페이지로 이동'
                 ]
             },
             // 3. 법적 안내사항
             {
                 selector: '#legalNotice',
-                title: '법적 안내사항',
+                title: '3. 법적 안내사항',
                 position: { top: '10px', left: '10px' },
-                function: '공직선거법 준수 필수 안내 영역',
+                description: '안내 영역 (Notice Box - Warning)',
+                function: '공직선거법 준수 필수 안내',
                 behavior: [
-                    '공직선거법 제82조의4 준수 안내',
-                    '허위사실 공표 금지 (제250조)',
-                    '후보자 비방 금지 (제251조)',
-                    '발송 가능 시간: 07:00~23:00',
-                    '투표일 당일 발송 불가',
-                    '자동 동보통신 8회 제한 안내'
-                ]
+                    '【표시 내용】',
+                    '• 공직선거법 제82조의4 준수 안내',
+                    '• 허위사실 공표 금지 (제250조)',
+                    '• 후보자 비방 금지 (제251조)',
+                    '• 발송 가능 시간: 07:00~23:00',
+                    '• 투표일 당일 발송 불가',
+                    '• 자동 동보통신 8회 제한 안내',
+                    '【경고】',
+                    '• 법령 위반 시 형사처벌 대상'
+                ],
+                tags: [{ text: '경고', type: 'warning' }]
             },
             // 4. 발신번호 선택
             {
                 selector: '#callerNumberGroup',
-                title: '발신번호 선택',
+                title: '4. 발신번호 선택',
                 position: { top: '5px', right: '10px' },
+                description: '콤보박스 (Select/Dropdown)',
                 function: '선관위 사전등록 발신번호 중 선택',
+                behavior: [
+                    '【입력 조건】',
+                    '• 필수 선택 항목',
+                    '• 단일 선택',
+                    '【콤보박스 항목】',
+                    '• 발신번호를 선택하세요 (기본값, value: "")',
+                    '• 선관위 사전등록된 발신번호 목록 (API 조회)',
+                    '【유효성 검사】',
+                    '• 발송 시 미선택 확인',
+                    '【Alert 메시지】',
+                    '• 미선택 시: "발신번호를 선택해주세요."'
+                ],
                 api: 'GET /api/election/caller-numbers',
                 tags: [{ text: '필수', type: 'required' }]
             },
@@ -4152,14 +4179,22 @@ if (document.readyState === 'loading') {
             // 16. 메시지 타입 선택
             {
                 selector: '#messageTypeGroup',
-                title: '메시지 타입',
+                title: '16. 메시지 타입',
                 position: { top: '5px', right: '10px' },
-                function: 'SMS/LMS/MMS 선택',
+                description: '라디오 버튼 그룹 (Radio Button Group)',
+                function: 'SMS/LMS/MMS 메시지 유형 선택',
                 behavior: [
-                    'SMS: 90바이트, 25원/건',
-                    'LMS: 2,000바이트, 55원/건',
-                    'MMS: 이미지 포함, 110원/건'
-                ]
+                    '【라디오 버튼 항목】',
+                    '• SMS (value: sms) - 90바이트 이하, 단가 25원/건',
+                    '• LMS (value: lms) - 2,000바이트 이하, 단가 55원/건',
+                    '• MMS (value: mms) - 이미지 포함, 단가 110원/건',
+                    '【동작】',
+                    '• SMS 선택 시: 제목 입력 숨김, 이미지 첨부 숨김',
+                    '• LMS 선택 시: 제목 입력 표시, 이미지 첨부 숨김',
+                    '• MMS 선택 시: 제목 입력 표시, 이미지 첨부 표시',
+                    '• 바이트 카운터 최대값 변경'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
             },
             // 17. 선거운동정보 입력
             {

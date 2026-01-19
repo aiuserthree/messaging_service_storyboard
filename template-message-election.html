@@ -1946,37 +1946,46 @@ document.addEventListener('DOMContentLoaded', function() {
             // 1. 페이지 헤더
             {
                 selector: '#pageHeader',
-                title: '페이지 헤더',
+                title: '1. 페이지 헤더',
                 position: { top: '10px', right: '10px' },
-                function: '선거문자 템플릿 관리 페이지의 타이틀 영역',
-                description: '선거문자 템플릿 관리 페이지 제목 및 설명'
+                description: '텍스트 (Text)',
+                function: '선거문자 템플릿 관리 페이지의 타이틀 및 설명 표시',
+                behavior: [
+                    '【표시 내용】',
+                    '• 타이틀: "선거문자 템플릿"',
+                    '• 설명: "공직선거법에 따른 선거문자 템플릿을 관리합니다."'
+                ]
             },
             // 2. 탭 메뉴
             {
                 selector: '#tabMenu',
-                title: '탭 메뉴',
+                title: '2. 탭 메뉴',
                 position: { top: '5px', left: '10px' },
-                function: '선거문자 관련 기능 탭',
+                description: '탭 메뉴 (Tab Navigation)',
+                function: '선거문자 관련 페이지 전환',
                 behavior: [
-                    '선거문자 발송',
-                    '선거문자 템플릿 (현재)'
+                    '【탭 항목】',
+                    '• 선거문자 발송 → message-send-election.html',
+                    '• 선거문자 템플릿 (현재 페이지, 활성 상태)',
+                    '【동작】',
+                    '• 탭 클릭 시 해당 페이지로 이동'
                 ]
             },
             // 3. 선거문자 발송 탭 버튼
             {
                 selector: '#tabMenu .tab-item:nth-child(1)',
-                title: '선거문자 발송 탭',
+                title: '3. 선거문자 발송 탭',
                 position: { top: '-5px', left: '-10px' },
-                function: '선거문자 발송 페이지로 이동',
-                behavior: ['클릭 시 message-send-election.html로 이동']
+                description: '탭 항목 (Tab Item)',
+                function: 'message-send-election.html 페이지로 이동'
             },
             // 4. 선거문자 템플릿 탭 버튼
             {
                 selector: '#tabMenu .tab-item:nth-child(2)',
-                title: '선거문자 템플릿 탭',
+                title: '4. 선거문자 템플릿 탭',
                 position: { top: '-5px', right: '-10px' },
-                function: '선거문자 템플릿 관리 (현재 페이지)',
-                behavior: ['활성 상태 스타일 적용']
+                description: '탭 항목 (Tab Item - Active)',
+                function: '현재 페이지 (활성 상태)'
             },
             // ===== 통계 영역 =====
             // 5. 통계 요약 섹션
