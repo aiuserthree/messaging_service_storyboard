@@ -2506,7 +2506,37 @@ document.addEventListener('DOMContentLoaded', function() {
             // 32-34. 모달 하단 버튼
             { selector: '#registerModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '등록 취소', function: "closeModal('registerModal') 호출" },
             { selector: '#nextBtn', title: '다음 버튼', position: { top: '-5px', left: '10px' }, description: '다음 단계로 이동', function: 'nextStep() 호출', behavior: ['현재 단계 유효성 검증 후 진행'] },
-            { selector: '#submitBtn', title: '승인요청 버튼', position: { top: '-5px', right: '-10px' }, description: '발신번호 등록 신청', function: 'submitRegister() 호출', api: 'POST /api/caller-numbers', behavior: ['영업일 1~3일 내 승인 처리'] },
+            // 승인요청 버튼
+            {
+                selector: '#submitBtn',
+                title: '승인요청 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '발신번호 등록 신청',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 회원 유형 선택 완료',
+                    '• 발신번호 입력 및 중복확인 완료',
+                    '• 본인인증 완료',
+                    '• 필수 서류 업로드 완료',
+                    '• 연락처 정보 입력 완료',
+                    '【Alert 메시지 - 유효성 실패】',
+                    '• 회원 유형 미선택: "회원 유형을 선택해주세요."',
+                    '• 발신번호 미입력: "발신번호를 입력해주세요."',
+                    '• 발신번호 미확인: "발신번호 중복확인을 완료해주세요."',
+                    '• 발신번호 중복: "이미 등록된 발신번호입니다."',
+                    '• 본인인증 미완료: "본인인증을 완료해주세요."',
+                    '• 서류 미첨부: "필수 서류를 첨부해주세요."',
+                    '• 연락처 미입력: "연락처를 입력해주세요."',
+                    '【Toast 메시지】',
+                    '• 신청 성공: "발신번호 등록 신청이 완료되었습니다. 영업일 1~3일 내 승인됩니다."',
+                    '• 신청 실패: "발신번호 등록 신청에 실패했습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
+                api: 'POST /api/caller-numbers'
+            },
             
             // ===== 발신번호 상세보기 모달 =====
             // 35. 상세보기 모달

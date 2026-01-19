@@ -1634,7 +1634,34 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#category1', title: '카테고리 선택 1', position: { top: '-5px', left: '-10px' }, function: '비즈니스 카테고리 선택', tags: [{ text: '필수', type: 'required' }] },
             { selector: '#category2', title: '카테고리 선택 2', position: { top: '-5px', left: '-10px' }, function: '추가 카테고리 선택 (선택)' },
             { selector: '#registerModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '등록 취소' },
-            { selector: '#registerModal .modal-footer .btn-primary', title: '등록 버튼', position: { top: '-5px', right: '-10px' }, function: '발신프로필 등록 실행', api: 'POST /api/kakao/profiles', tags: [{ text: 'API', type: 'api' }] },
+            // 등록 버튼
+            {
+                selector: '#registerModal .modal-footer .btn-primary',
+                title: '등록 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '발신프로필 등록 실행',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 프로필 ID 입력 필수',
+                    '• 담당자 휴대폰번호 입력 및 인증 필수',
+                    '• 카테고리 선택 필수 (최소 1개)',
+                    '【Alert 메시지 - 유효성 실패】',
+                    '• 프로필 ID 미입력: "카카오톡 채널 ID를 입력해주세요."',
+                    '• 휴대폰번호 미입력: "담당자 휴대폰번호를 입력해주세요."',
+                    '• 휴대폰 미인증: "휴대폰 인증을 완료해주세요."',
+                    '• 카테고리 미선택: "카테고리를 선택해주세요."',
+                    '• 이미 등록됨: "이미 등록된 프로필 ID입니다."',
+                    '【Toast 메시지】',
+                    '• 등록 성공: "발신프로필이 등록되었습니다. 검토 후 승인됩니다."',
+                    '• 등록 실패: "발신프로필 등록에 실패했습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 카카오 API 오류: "카카오 서버 연결에 실패했습니다."'
+                ],
+                api: 'POST /api/kakao/profiles',
+                tags: [{ text: 'API', type: 'api' }]
+            },
             
             // ===== 프로필 상세 모달 (detailModal) =====
             { selector: '#detailModal', title: '프로필 상세 모달', position: { top: '60px', left: '20px' }, function: '프로필 상세 정보 조회', api: 'GET /api/kakao/profiles/:id' },
@@ -1654,7 +1681,25 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#deleteModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
             { selector: '#deleteModal .alert-warning', title: '삭제 경고 메시지', position: { top: '10px', left: '10px' }, function: '삭제 시 복구 불가 안내' },
             { selector: '#deleteModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '삭제 취소' },
-            { selector: '#deleteModal .modal-footer .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '프로필 삭제 실행', api: 'DELETE /api/kakao/profiles/:id', tags: [{ text: 'API', type: 'api' }] },
+            // 삭제 버튼
+            {
+                selector: '#deleteModal .modal-footer .btn-danger',
+                title: '삭제 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Danger)',
+                function: '프로필 삭제 실행',
+                behavior: [
+                    '【Confirm 메시지】',
+                    '• "삭제 후에는 복구할 수 없습니다."',
+                    '【Toast 메시지】',
+                    '• 삭제 성공: "발신프로필이 삭제되었습니다."',
+                    '• 삭제 실패: "발신프로필 삭제에 실패했습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."'
+                ],
+                api: 'DELETE /api/kakao/profiles/:id',
+                tags: [{ text: 'API', type: 'api' }]
+            },
             
             // ===== 브랜드메시지 신청 버튼 (테이블) =====
             { 

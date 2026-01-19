@@ -1664,7 +1664,25 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#deleteModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
             { selector: '#deleteModal .alert-warning', title: '삭제 경고', position: { top: '5px', left: '5px' }, function: '삭제 시 복구 불가 경고 메시지' },
             { selector: '#deleteModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '삭제 취소' },
-            { selector: '#deleteModal .modal-footer .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 삭제 실행', api: 'DELETE /api/kakao/templates/{id}', tags: [{ text: 'API', type: 'api' }] }
+            // 삭제 버튼
+            {
+                selector: '#deleteModal .modal-footer .btn-danger',
+                title: '삭제 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Danger)',
+                function: '템플릿 삭제 실행',
+                behavior: [
+                    '【Confirm 메시지】',
+                    '• "삭제 후에는 복구할 수 없습니다."',
+                    '【Toast 메시지】',
+                    '• 삭제 성공: "템플릿이 삭제되었습니다."',
+                    '• 삭제 실패: "템플릿 삭제에 실패했습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."'
+                ],
+                api: 'DELETE /api/kakao/templates/{id}',
+                tags: [{ text: 'API', type: 'api' }]
+            }
         ];
         initSpecOverlay(specData);
     </script>

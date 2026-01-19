@@ -593,7 +593,38 @@
             { selector: '#privacyAgree', title: '개인정보 동의 체크', position: { top: '-5px', left: '-10px' }, description: '개인정보 수집 동의', function: '체크박스 선택', behavior: ['필수 체크', '미체크 시 제출 불가'], tags: [{ text: '필수', type: 'required' }] },
             // 20-21. 폼 버튼
             { selector: '.btn-reset', title: '다시쓰기 버튼', position: { top: '-5px', left: '-10px' }, description: '폼 초기화', function: 'handleReset() 호출', behavior: ['모든 입력 내용 초기화', '기본값 복원'] },
-            { selector: '.btn-submit', title: '문의하기 버튼', position: { top: '-5px', right: '-10px' }, description: '문의 등록', function: 'handleSubmit(event) 호출', api: 'POST /api/inquiries', behavior: ['유효성 검증 후 제출', '개인정보 동의 필수', '성공 시 알림 표시'] },
+            // 문의하기 버튼
+            {
+                selector: '.btn-submit',
+                title: '문의하기 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '1:1 문의 등록',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 이메일 입력 필수',
+                    '• 문의유형 선택 필수',
+                    '• 제목 입력 필수',
+                    '• 문의내용 입력 필수',
+                    '• 개인정보 수집 동의 체크 필수',
+                    '【Alert 메시지 - 유효성 실패】',
+                    '• 이메일 미입력: "이메일을 입력해주세요."',
+                    '• 이메일 형식 오류: "올바른 이메일 형식이 아닙니다."',
+                    '• 문의유형 미선택: "문의유형을 선택해주세요."',
+                    '• 제목 미입력: "제목을 입력해주세요."',
+                    '• 내용 미입력: "문의내용을 입력해주세요."',
+                    '• 동의 미체크: "개인정보 수집 및 이용에 동의해주세요."',
+                    '【Toast 메시지】',
+                    '• 등록 성공: "문의가 등록되었습니다. 빠른 시일 내 답변드리겠습니다."',
+                    '• 등록 실패: "문의 등록에 실패했습니다."',
+                    '【동작】',
+                    '• 성공 시 폼 초기화 및 문의내역 탭으로 이동',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
+                api: 'POST /api/inquiries'
+            },
             
             // ===== 1:1 문의내역 =====
             // 22. 문의 내역 영역
