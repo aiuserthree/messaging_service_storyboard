@@ -2854,7 +2854,25 @@ document.addEventListener('DOMContentLoaded', function() {
             // 11. 그룹명 수정 메뉴
             { selector: '.group-menu-dropdown .group-menu-item:first-child', title: '그룹명 수정', position: { top: '-5px', left: '-10px' }, description: '그룹명 변경', function: 'editGroupName(groupId, name) 호출', behavior: ['클릭 시 그룹명 수정 모달 열기'] },
             // 12. 그룹 삭제 메뉴
-            { selector: '.group-menu-dropdown .group-menu-item.danger', title: '그룹 삭제', position: { top: '-5px', left: '-10px' }, description: '그룹 삭제', function: 'deleteGroup(groupId, name) 호출', api: 'DELETE /api/addressbook/groups/{id}', behavior: ['클릭 시 삭제 확인 모달 열기'] },
+            {
+                selector: '.group-menu-dropdown .group-menu-item.danger',
+                title: '12. 그룹 삭제',
+                position: { top: '-5px', left: '-10px' },
+                description: '메뉴 항목 (Danger)',
+                function: '그룹 삭제',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 삭제 확인 Confirm 표시',
+                    '【Confirm 메시지】',
+                    '• "해당 그룹을 삭제하시겠습니까? 그룹 내 연락처도 함께 삭제됩니다."',
+                    '【Toast 메시지】',
+                    '• 삭제 성공: "그룹이 삭제되었습니다."',
+                    '• 삭제 실패: "그룹 삭제에 실패했습니다."',
+                    '【Alert 메시지】',
+                    '• 기본 그룹: "기본 그룹은 삭제할 수 없습니다."'
+                ],
+                api: 'DELETE /api/addressbook/groups/{id}'
+            },
             
             // ===== 주소록 콘텐츠 =====
             // 13. 검색 필터 영역
@@ -2882,7 +2900,26 @@ document.addEventListener('DOMContentLoaded', function() {
             // 23. 수정 버튼
             { selector: 'tbody .btn-sm[onclick*="editAddress"]', title: '수정 버튼', position: { top: '-5px', left: '-10px' }, description: '주소 정보 수정', function: 'editAddress(id) 호출', behavior: ['클릭 시 주소 수정 모달 열기'] },
             // 24. 삭제 버튼
-            { selector: 'tbody .btn-sm[onclick*="deleteAddress"]', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, description: '주소 삭제', function: 'deleteAddress(id) 호출', api: 'DELETE /api/addressbook/{id}', behavior: ['삭제 확인 후 삭제'] },
+            {
+                selector: 'tbody .btn-sm[onclick*="deleteAddress"]',
+                title: '24. 삭제 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Danger)',
+                function: '연락처 삭제',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 삭제 확인 Confirm 표시',
+                    '【Confirm 메시지】',
+                    '• "해당 연락처를 삭제하시겠습니까?"',
+                    '【Toast 메시지】',
+                    '• 삭제 성공: "연락처가 삭제되었습니다."',
+                    '• 삭제 실패: "연락처 삭제에 실패했습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
+                api: 'DELETE /api/addressbook/{id}'
+            },
             // 25. 페이지네이션
             { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, description: '페이지 이동', function: '목록 페이지 전환' },
             
@@ -2945,7 +2982,31 @@ document.addEventListener('DOMContentLoaded', function() {
             // 40. 취소 버튼 (그룹 모달)
             { selector: '#addGroupModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '그룹 생성 취소', function: "closeModal('addGroupModal') 호출" },
             // 41. 저장 버튼 (그룹 모달)
-            { selector: '#addGroupModal .modal-footer .btn-primary', title: '저장 버튼', position: { top: '-5px', right: '-10px' }, description: '그룹 생성 실행', function: 'saveGroup() 호출', api: 'POST /api/addressbook/groups' },
+            {
+                selector: '#addGroupModal .modal-footer .btn-primary',
+                title: '41. 저장 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '그룹 생성 및 연락처 저장',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 그룹명 필수 입력',
+                    '• 연락처 1건 이상 필수',
+                    '• 전화번호 형식 확인',
+                    '【Alert 메시지 - 유효성 실패】',
+                    '• 그룹명 미입력: "그룹명을 입력해주세요."',
+                    '• 그룹명 중복: "이미 존재하는 그룹명입니다."',
+                    '• 연락처 없음: "1건 이상의 연락처를 입력해주세요."',
+                    '• 전화번호 오류: "올바르지 않은 전화번호가 있습니다."',
+                    '【Toast 메시지】',
+                    '• 저장 성공: "그룹이 생성되었습니다."',
+                    '• 저장 실패: "그룹 생성에 실패했습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
+                api: 'POST /api/addressbook/groups'
+            },
             
             // ===== 그룹명 수정 모달 =====
             // 42. 그룹명 수정 모달
@@ -2963,7 +3024,25 @@ document.addEventListener('DOMContentLoaded', function() {
             // 47. 취소 버튼 (그룹 삭제)
             { selector: '#deleteGroupModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '삭제 취소', function: "closeModal('deleteGroupModal') 호출" },
             // 48. 삭제 버튼 (그룹 삭제)
-            { selector: '#deleteGroupModal .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, description: '그룹 삭제 실행', function: 'confirmDeleteGroup() 호출', api: 'DELETE /api/addressbook/groups/{id}', behavior: ['확인 체크 필수', '그룹 내 주소는 전체 그룹으로 이동'] },
+            {
+                selector: '#deleteGroupModal .btn-danger',
+                title: '48. 삭제 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Danger)',
+                function: '그룹 삭제 실행',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 삭제 확인 체크박스 체크 필수',
+                    '【Alert 메시지】',
+                    '• 미체크 시: "삭제 확인 체크박스를 선택해주세요."',
+                    '【Toast 메시지】',
+                    '• 삭제 성공: "그룹이 삭제되었습니다."',
+                    '• 삭제 실패: "그룹 삭제에 실패했습니다."',
+                    '【동작】',
+                    '• 그룹 내 연락처는 함께 삭제됨'
+                ],
+                api: 'DELETE /api/addressbook/groups/{id}'
+            },
             
             // ===== 엑셀 업로드 모달 =====
             // 49. 엑셀 업로드 모달

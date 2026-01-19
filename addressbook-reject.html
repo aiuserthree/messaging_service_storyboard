@@ -1734,9 +1734,45 @@ document.addEventListener('DOMContentLoaded', function() {
             // 14. 전체 선택 체크박스
             { selector: '#selectAll', title: '전체 선택', position: { top: '-5px', left: '-10px' }, description: '모든 항목 선택', function: 'toggleAll(this) 호출', behavior: ['전체 선택/해제 토글'] },
             // 15. 개별 삭제 버튼
-            { selector: 'tbody .btn-sm[onclick*="deleteReject"]', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, description: '개별 수신거부 삭제', function: 'deleteReject(id) 호출', api: 'DELETE /api/reject-numbers/{id}', behavior: ['삭제 확인 모달 표시'] },
+            {
+                selector: 'tbody .btn-sm[onclick*="deleteReject"]',
+                title: '15. 삭제 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Danger)',
+                function: '개별 수신거부 삭제',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 삭제 확인 모달(#deleteModal) 열림',
+                    '【Confirm 메시지】',
+                    '• "해당 수신거부 번호를 삭제하시겠습니까?"',
+                    '【Toast 메시지】',
+                    '• 삭제 성공: "수신거부 번호가 삭제되었습니다."',
+                    '• 삭제 실패: "수신거부 번호 삭제에 실패했습니다."'
+                ],
+                api: 'DELETE /api/reject-numbers/{id}'
+            },
             // 16. 선택 삭제 버튼
-            { selector: '#selectDeleteBtn', title: '선택 삭제 버튼', position: { top: '-5px', left: '-10px' }, description: '선택 항목 삭제', function: 'deleteSelected() 호출', api: 'DELETE /api/reject-numbers', behavior: ['체크된 항목만 삭제', '선택 없으면 비활성화'] },
+            {
+                selector: '#selectDeleteBtn',
+                title: '16. 선택 삭제 버튼',
+                position: { top: '-5px', left: '-10px' },
+                description: '버튼 (Button - Danger)',
+                function: '선택된 항목 일괄 삭제',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 삭제 확인 Confirm 표시',
+                    '【유효성 검사】',
+                    '• 1건 이상 선택 필수',
+                    '【Alert 메시지】',
+                    '• 미선택 시: "삭제할 항목을 선택해주세요."',
+                    '【Confirm 메시지】',
+                    '• "선택한 N개의 수신거부 번호를 삭제하시겠습니까?"',
+                    '【Toast 메시지】',
+                    '• 삭제 성공: "N개의 수신거부 번호가 삭제되었습니다."',
+                    '• 삭제 실패: "수신거부 번호 삭제에 실패했습니다."'
+                ],
+                api: 'DELETE /api/reject-numbers'
+            },
             // 17. 엑셀 다운로드 버튼
             { selector: '.btn-sm[onclick*="downloadExcel"]', title: '엑셀 다운로드 버튼', position: { top: '-5px', right: '-10px' }, description: '목록 엑셀 다운로드', function: 'downloadExcel() 호출', api: 'GET /api/reject-numbers/export', behavior: ['현재 목록을 엑셀로 다운로드'] },
             // 18. 페이지네이션
@@ -1801,7 +1837,30 @@ document.addEventListener('DOMContentLoaded', function() {
             // 32. 취소 버튼 (업로드 모달)
             { selector: '#excelUploadModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '업로드 취소', function: "closeModal('excelUploadModal') 호출" },
             // 33. 등록하기 버튼
-            { selector: '#excelUploadModal .modal-footer .btn-primary', title: '등록하기 버튼', position: { top: '-5px', right: '-10px' }, description: '파일 업로드 실행', function: 'applyExcelData() 호출', api: 'POST /api/reject-numbers/upload' },
+            {
+                selector: '#excelUploadModal .modal-footer .btn-primary',
+                title: '33. 등록하기 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '엑셀 파일 데이터 등록 실행',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 파일 선택 여부',
+                    '• 유효 데이터 1건 이상',
+                    '【Alert 메시지 - 유효성 실패】',
+                    '• 파일 미선택: "업로드할 파일을 선택해주세요."',
+                    '• 유효 데이터 없음: "등록 가능한 데이터가 없습니다."',
+                    '• 형식 오류: "지원하지 않는 파일 형식입니다."',
+                    '• 용량 초과: "파일 크기가 10MB를 초과합니다."',
+                    '【Toast 메시지】',
+                    '• 등록 성공: "N건의 수신거부 번호가 등록되었습니다."',
+                    '• 등록 실패: "수신거부 번호 등록에 실패했습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
+                api: 'POST /api/reject-numbers/upload'
+            },
             
             // ===== 삭제 확인 모달 =====
             // 34. 삭제 모달
@@ -1811,7 +1870,27 @@ document.addEventListener('DOMContentLoaded', function() {
             // 36. 취소 버튼 (삭제 모달)
             { selector: '#deleteModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '삭제 취소', function: "closeModal('deleteModal') 호출" },
             // 37. 삭제 버튼
-            { selector: '#deleteModal .btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, description: '삭제 실행', function: 'confirmDelete() 호출', api: 'DELETE /api/reject-numbers', behavior: ['삭제된 번호는 다시 발송 대상에 포함'] }
+            {
+                selector: '#deleteModal .btn-danger',
+                title: '37. 삭제 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Danger)',
+                function: '수신거부 삭제 실행',
+                behavior: [
+                    '【클릭 동작】',
+                    '• API 호출하여 삭제 실행',
+                    '• 삭제 후 목록 갱신',
+                    '【Toast 메시지】',
+                    '• 삭제 성공: "수신거부 번호가 삭제되었습니다."',
+                    '• 삭제 실패: "수신거부 번호 삭제에 실패했습니다."',
+                    '【동작】',
+                    '• 삭제된 번호는 다시 발송 대상에 포함',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
+                api: 'DELETE /api/reject-numbers'
+            }
         ];
         initSpecOverlay(specData);
     </script>
