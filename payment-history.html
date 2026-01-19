@@ -2244,9 +2244,28 @@ document.addEventListener('DOMContentLoaded', function() {
             // 44. 환불 신청 버튼
             {
                 selector: '#refundModal .modal-footer .btn-primary',
-                title: '환불 신청 버튼',
+                title: '44. 환불 신청 버튼',
                 position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
                 function: '환불 신청 제출',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 환불 사유 입력 여부',
+                    '• 환불 동의 체크 여부',
+                    '• 환불 가능 금액 1만원 이상',
+                    '【Alert 메시지 - 유효성 실패】',
+                    '• 사유 미입력: "환불 사유를 입력해주세요."',
+                    '• 동의 미체크: "환불 정책에 동의해주세요."',
+                    '• 금액 부족: "환불 가능 금액이 최소 금액(1만원) 미만입니다."',
+                    '【Confirm 메시지】',
+                    '• "환불을 신청하시겠습니까? 환불 처리까지 영업일 기준 7일이 소요됩니다."',
+                    '【Toast 메시지】',
+                    '• 신청 성공: "환불 신청이 완료되었습니다."',
+                    '• 신청 실패: "환불 신청에 실패했습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
                 api: 'POST /api/payment/refund',
                 tags: [{ text: 'API', type: 'api' }]
             }

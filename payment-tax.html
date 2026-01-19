@@ -1809,7 +1809,26 @@ document.addEventListener('DOMContentLoaded', function() {
             // 10. 사유 입력 필드
             { selector: '#taxReason', title: '사유 입력', position: { top: '-5px', right: '-10px' }, function: '200자 이내 사유' },
             // 11. 신청하기 버튼
-            { selector: '#taxRequestBtn', title: '신청하기 버튼', position: { top: '-5px', right: '-10px' }, function: '세금계산서 발행 신청', api: 'POST /api/payment/tax-invoice' },
+            {
+                selector: '#taxRequestBtn',
+                title: '11. 신청하기 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '세금계산서 발행 신청',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 신청 확인 모달(#confirmModal) 열림',
+                    '【유효성 검사】',
+                    '• 발행 대상 기간 선택 여부',
+                    '• 해당 기간 결제 내역 존재 여부',
+                    '• 사업자등록번호 등록 여부',
+                    '【Alert 메시지】',
+                    '• 기간 미선택: "발행 대상 기간을 선택해주세요."',
+                    '• 결제 내역 없음: "해당 기간에 결제 내역이 없습니다."',
+                    '• 사업자 미등록: "사업자등록번호가 등록되어 있지 않습니다. 마이페이지에서 등록해주세요."'
+                ],
+                api: 'POST /api/payment/tax-invoice'
+            },
             // 12. 조회 필터 영역
             { selector: '#taxSearchFilter', title: '조회 필터', position: { top: '-5px', left: '-10px' }, function: '세금계산서 내역 검색 조건' },
             // 13. 상태 필터
@@ -1861,9 +1880,24 @@ document.addEventListener('DOMContentLoaded', function() {
             // 24. 신청하기 버튼 (모달)
             {
                 selector: '#confirmModal .modal-footer .btn-primary',
-                title: '신청하기 버튼',
+                title: '24. 신청하기 버튼',
                 position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
                 function: '세금계산서 발행 최종 신청',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 세금계산서 발행 API 호출',
+                    '• 성공 시 모달 닫힘 및 목록 갱신',
+                    '【Toast 메시지】',
+                    '• 발행 성공: "세금계산서가 발행되었습니다. 등록된 이메일로 발송됩니다."',
+                    '• 발행 실패: "세금계산서 발행에 실패했습니다."',
+                    '【Alert 메시지 - 발행 실패】',
+                    '• 이미 발행됨: "해당 기간의 세금계산서가 이미 발행되었습니다."',
+                    '• 이메일 오류: "이메일 발송에 실패했습니다. 마이페이지에서 이메일을 확인해주세요."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
                 api: 'POST /api/payment/tax-invoice',
                 tags: [{ text: 'API', type: 'api' }]
             },

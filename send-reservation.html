@@ -1490,7 +1490,22 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '.row-checkbox', title: '개별 선택 체크박스', position: { top: '-5px', left: '-10px' }, description: '개별 행 선택', function: '개별 예약 항목 선택' },
             { selector: 'tbody td[onclick*="viewDetail"]', title: '제목/내용 셀', position: { top: '-5px', left: '-10px' }, description: '클릭 시 상세보기', function: 'viewDetail(id) 호출', behavior: ['커서 pointer로 표시'] },
             { selector: 'tbody .btn-sm[onclick*="viewDetail"]', title: '상세보기 버튼', position: { top: '-5px', left: '-10px' }, description: '예약 상세 내역 조회', function: 'viewDetail(id) 호출', behavior: ['클릭 시 상세보기 모달 열기'] },
-            { selector: 'tbody .btn-sm[onclick*="cancelReservation"]', title: '취소 버튼', position: { top: '-5px', right: '-10px' }, description: '예약 취소', function: 'cancelReservation(id) 호출', api: 'DELETE /api/reservations/{id}', behavior: ['예약대기 상태에서만 표시', '클릭 시 취소 확인 모달 열기'] },
+            // 취소 버튼
+            {
+                selector: 'tbody .btn-sm[onclick*="cancelReservation"]',
+                title: '취소 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Danger)',
+                function: '예약 취소',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 취소 확인 모달(#cancelModal) 열림',
+                    '【표시 조건】',
+                    '• 예약대기 상태에서만 표시',
+                    '• 발송 10분 전까지만 취소 가능'
+                ],
+                api: 'DELETE /api/reservations/{id}'
+            },
             // 19. 엑셀 다운로드 버튼
             { selector: '.btn-outline[onclick*="downloadExcel"]', title: '엑셀 다운로드 버튼', position: { top: '-5px', right: '-10px' }, description: '예약 내역 엑셀 다운로드', function: 'downloadExcel() 호출', api: 'GET /api/reservations/export', behavior: ['조회된 결과를 엑셀 파일로 다운로드'] },
             // 20. 페이지네이션
@@ -1512,7 +1527,31 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#cancelModal .modal-close', title: '모달 닫기 버튼 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: 'closeModal("cancelModal") 호출' },
             { selector: '#cancelModal .modal-body', title: '모달 본문', position: { top: '5px', left: '5px' }, description: '취소 확인 메시지', function: '취소 안내 및 환불 안내 표시' },
             { selector: '#cancelModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '모달 닫기', function: 'closeModal("cancelModal") 호출', behavior: ['취소 작업 취소, 모달 닫기'] },
-            { selector: '#cancelModal .modal-footer .btn-danger', title: '예약 취소 버튼', position: { top: '-5px', right: '-10px' }, description: '예약 취소 확정', function: 'confirmCancel() 호출', api: 'DELETE /api/reservations/{id}', behavior: ['예약 취소 처리', '포인트 환불', '목록 갱신'] }
+            // 예약 취소 버튼 (모달)
+            {
+                selector: '#cancelModal .modal-footer .btn-danger',
+                title: '예약 취소 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Danger)',
+                function: '예약 취소 확정',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 예약 취소 API 호출',
+                    '• 성공 시 모달 닫힘 및 목록 갱신',
+                    '【동작】',
+                    '• 예약된 포인트 즉시 환불',
+                    '【Toast 메시지】',
+                    '• 취소 성공: "예약이 취소되었습니다. 포인트가 환불되었습니다."',
+                    '• 취소 실패: "예약 취소에 실패했습니다."',
+                    '【Alert 메시지】',
+                    '• 이미 발송됨: "이미 발송이 시작된 예약은 취소할 수 없습니다."',
+                    '• 시간 초과: "발송 10분 전에는 취소할 수 없습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
+                api: 'DELETE /api/reservations/{id}'
+            }
         ];
         initSpecOverlay(specData);
     </script>

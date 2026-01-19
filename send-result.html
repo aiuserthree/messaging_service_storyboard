@@ -2402,11 +2402,54 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#statCost', title: '비용', position: { top: '-5px', left: '-10px' }, description: '사용 포인트 표시', function: '조회 기간 내 사용된 총 포인트' },
             // 21-22. 발송 내역 카드 헤더
             { selector: '.card .flex-between .card-title', title: '발송 내역 제목', position: { top: '-5px', left: '-10px' }, description: '발송 내역 섹션 제목' },
-            { selector: '.card .flex-between .btn-outline', title: '엑셀 다운로드 버튼', position: { top: '-5px', right: '-10px' }, description: '발송 내역 엑셀 다운로드', function: 'exportExcel() 호출', api: 'GET /api/messages/results/export', behavior: ['조회된 결과를 엑셀 파일로 다운로드'] },
+            // 엑셀 다운로드 버튼
+            {
+                selector: '.card .flex-between .btn-outline',
+                title: '엑셀 다운로드 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button)',
+                function: '발송 내역 엑셀 다운로드',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 조회된 결과를 엑셀 파일로 다운로드',
+                    '• 파일명: "발송결과_YYYYMMDD.xlsx"',
+                    '【유효성 검사】',
+                    '• 조회 결과 1건 이상 필요',
+                    '【Alert 메시지】',
+                    '• 데이터 없음: "다운로드할 데이터가 없습니다."',
+                    '【Toast 메시지】',
+                    '• 다운로드 시작: "파일 다운로드가 시작되었습니다."'
+                ],
+                api: 'GET /api/messages/results/export'
+            },
             // 23-28. 발송결과 테이블
             { selector: '.table', title: '발송결과 테이블', position: { top: '10px', left: '10px' }, description: '발송 결과 목록', function: '발송 내역 표시', behavior: ['발송일시, 발신번호, 메시지타입, 수신번호수, 성공, 실패, 상태, 사용포인트, 관리'] },
             { selector: 'tr[data-row-id] .btn-sm[onclick*="viewDetail"]', title: '상세보기 버튼', position: { top: '-5px', left: '-10px' }, description: '발송 상세 내역 조회', function: 'viewDetail(id) 호출', behavior: ['클릭 시 상세보기 모달 열기'] },
-            { selector: 'tr[data-row-id] .btn-sm[onclick*="resend"]', title: '재발송 버튼', position: { top: '-5px', right: '-10px' }, description: '실패 건 재발송', function: 'resend(id) 호출', api: 'POST /api/messages/resend/{id}', behavior: ['확인 다이얼로그 표시 후 재발송'] },
+            // 재발송 버튼
+            {
+                selector: 'tr[data-row-id] .btn-sm[onclick*="resend"]',
+                title: '재발송 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '실패 건 재발송',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 재발송 확인 Confirm 표시',
+                    '【Confirm 메시지】',
+                    '• "실패한 건을 재발송하시겠습니까?"',
+                    '【유효성 검사】',
+                    '• 포인트 잔액 확인',
+                    '【Alert 메시지】',
+                    '• 잔액 부족: "포인트 잔액이 부족합니다. 충전 후 이용해주세요."',
+                    '【Toast 메시지】',
+                    '• 재발송 요청 완료: "재발송 요청이 완료되었습니다."',
+                    '• 재발송 실패: "재발송 요청에 실패했습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
+                api: 'POST /api/messages/resend/{id}'
+            },
             { selector: '.count-link[onclick*="success"]', title: '성공 건수 링크', position: { top: '-5px', left: '-10px' }, description: '성공 내역 펼치기', function: 'toggleDetailList(id, "success") 호출', behavior: ['클릭 시 성공 내역 목록 토글'] },
             { selector: '.count-link[onclick*="failed"]', title: '실패 건수 링크', position: { top: '-5px', left: '-10px' }, description: '실패 내역 펼치기', function: 'toggleDetailList(id, "failed") 호출', behavior: ['클릭 시 실패 내역 목록 토글'] },
             // 29-33. 성공 내역 펼침 영역
@@ -2417,7 +2460,29 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '.detail-list-row[data-type="failed"]', title: '실패 내역 영역', position: { top: '10px', left: '10px' }, description: '실패한 수신번호 목록', function: '실패 내역 상세 표시', behavior: ['체크박스로 선택 가능', '선택 재발송 지원'] },
             { selector: '.select-all-failed', title: '실패 전체 선택 체크박스', position: { top: '-5px', left: '-10px' }, description: '실패 내역 전체 선택', function: 'toggleAllFailedCheckboxes(rowId, checked) 호출' },
             { selector: '.detail-list-actions .btn-outline[onclick*="selectAllFailed"]', title: '전체 선택 버튼', position: { top: '-5px', left: '-10px' }, description: '실패 항목 전체 선택', function: 'selectAllFailed(id) 호출', behavior: ['모든 실패 항목 체크박스 선택'] },
-            { selector: '.detail-list-actions .btn-primary[onclick*="resendSelected"]', title: '선택 재발송 버튼', position: { top: '-5px', left: '-10px' }, description: '선택된 실패 건 재발송', function: 'resendSelected(id) 호출', api: 'POST /api/messages/resend', behavior: ['선택된 번호만 재발송', '확인 다이얼로그 표시'] },
+            // 선택 재발송 버튼
+            {
+                selector: '.detail-list-actions .btn-primary[onclick*="resendSelected"]',
+                title: '선택 재발송 버튼',
+                position: { top: '-5px', left: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '선택된 실패 건 재발송',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 재발송 확인 Confirm 표시',
+                    '【Confirm 메시지】',
+                    '• "선택한 N건을 재발송하시겠습니까?"',
+                    '【유효성 검사】',
+                    '• 선택된 항목 1건 이상 필요',
+                    '• 포인트 잔액 확인',
+                    '【Alert 메시지】',
+                    '• 미선택 시: "재발송할 항목을 선택해주세요."',
+                    '• 잔액 부족: "포인트 잔액이 부족합니다."',
+                    '【Toast 메시지】',
+                    '• 성공: "N건의 재발송 요청이 완료되었습니다."'
+                ],
+                api: 'POST /api/messages/resend'
+            },
             { selector: '.detail-list-row[data-type="failed"] .detail-list-actions .btn-outline:last-child', title: '실패 내역 닫기 버튼', position: { top: '-5px', right: '-10px' }, description: '실패 내역 목록 닫기', function: 'toggleDetailList(id, "failed") 호출' },
             // 40. 결과리포트 버튼 (선거문자)
             { selector: '.tooltip-wrapper .btn-primary[onclick*="downloadResultReport"]', title: '결과리포트 버튼', position: { top: '-5px', left: '-10px' }, description: '선거문자 결과 리포트 다운로드', function: 'downloadResultReport(id) 호출', api: 'GET /api/messages/election/{id}/report', behavior: ['선거문자에만 표시', '자동 동보통신 발송 결과 리포트'] },

@@ -1954,10 +1954,29 @@ document.addEventListener('DOMContentLoaded', function() {
             // 16. 충전하기 버튼
             {
                 selector: '#chargeButton',
-                title: '충전하기 버튼',
+                title: '16. 충전하기 버튼',
                 position: { top: '-5px', left: '-10px' },
-                function: '결제 진행',
-                behavior: ['최소 금액 검증', 'PG 결제 모듈 호출'],
+                description: '버튼 (Button - Primary)',
+                function: '포인트 충전 결제 진행',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 충전 금액 선택 여부',
+                    '• 최소 금액 10,000원 이상',
+                    '• 결제 수단 선택 여부',
+                    '【Alert 메시지 - 유효성 실패】',
+                    '• 금액 미선택: "충전 금액을 선택해주세요."',
+                    '• 최소 금액 미달: "최소 10,000원 이상 충전 가능합니다."',
+                    '• 결제수단 미선택: "결제 수단을 선택해주세요."',
+                    '【클릭 동작】',
+                    '• PG 결제 모듈 호출',
+                    '【Toast 메시지】',
+                    '• 결제 완료: "N원이 충전되었습니다."',
+                    '• 결제 취소: "결제가 취소되었습니다."',
+                    '【Alert 메시지 - 결제 실패】',
+                    '• 카드 오류: "카드 결제에 실패했습니다. 다른 결제 수단을 이용해주세요."',
+                    '• 네트워크 오류: "네트워크 연결을 확인해주세요."',
+                    '• 결제 한도 초과: "결제 한도를 초과했습니다."'
+                ],
                 api: 'POST /api/payment/charge',
                 tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
@@ -2066,10 +2085,29 @@ document.addEventListener('DOMContentLoaded', function() {
             // 30. 제출하기 버튼
             {
                 selector: '#estimateModal .modal-footer .btn-primary',
-                title: '제출하기 버튼',
+                title: '30. 제출하기 버튼',
                 position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
                 function: '견적 문의 제출',
-                behavior: ['필수 항목 검증', '견적 문의 등록'],
+                behavior: [
+                    '【유효성 검사】',
+                    '• 회사명/단체명 필수',
+                    '• 담당자명 필수',
+                    '• 연락처 필수 (전화번호 형식)',
+                    '• 이메일 필수 (이메일 형식)',
+                    '【Alert 메시지 - 유효성 실패】',
+                    '• 회사명 미입력: "회사명/단체명을 입력해주세요."',
+                    '• 담당자명 미입력: "담당자명을 입력해주세요."',
+                    '• 연락처 미입력: "연락처를 입력해주세요."',
+                    '• 연락처 형식 오류: "올바른 전화번호 형식이 아닙니다."',
+                    '• 이메일 미입력: "이메일을 입력해주세요."',
+                    '• 이메일 형식 오류: "올바른 이메일 형식이 아닙니다."',
+                    '【Toast 메시지】',
+                    '• 제출 성공: "견적 문의가 접수되었습니다. 담당자가 연락드리겠습니다."',
+                    '• 제출 실패: "견적 문의 접수에 실패했습니다."',
+                    '【동작】',
+                    '• 성공 시 모달 닫힘 및 폼 초기화'
+                ],
                 api: 'POST /api/inquiries/estimate',
                 tags: [{ text: 'API', type: 'api' }]
             }
