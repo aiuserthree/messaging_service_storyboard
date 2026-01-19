@@ -2894,7 +2894,32 @@ document.addEventListener('DOMContentLoaded', function() {
             // 28. 취소 버튼
             { selector: '#addAddressModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '추가 취소', function: "closeModal('addAddressModal') 호출" },
             // 29. 저장 버튼
-            { selector: '#addAddressModal .btn-primary', title: '저장 버튼', position: { top: '-5px', right: '-10px' }, description: '주소 저장', function: 'saveAddress() 호출', api: 'POST /api/addressbook' },
+            {
+                selector: '#addAddressModal .btn-primary',
+                title: '29. 저장 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '연락처 저장',
+                behavior: [
+                    '【유효성 검사】',
+                    '• 이름 필수 입력',
+                    '• 전화번호 필수 입력',
+                    '• 전화번호 형식 확인',
+                    '【Alert 메시지 - 유효성 실패】',
+                    '• 이름 미입력: "이름을 입력해주세요."',
+                    '• 전화번호 미입력: "전화번호를 입력해주세요."',
+                    '• 전화번호 형식 오류: "올바른 전화번호 형식이 아닙니다."',
+                    '• 전화번호 중복: "이미 등록된 전화번호입니다."',
+                    '【Toast 메시지】',
+                    '• 저장 성공: "연락처가 저장되었습니다."',
+                    '• 저장 실패: "연락처 저장에 실패했습니다."',
+                    '【Alert 메시지 - 시스템 에러】',
+                    '• 서버 오류: "서버 오류가 발생했습니다."',
+                    '• 세션 만료: "로그인이 만료되었습니다."'
+                ],
+                api: 'POST /api/addressbook',
+                tags: [{ text: 'API', type: 'api' }]
+            },
             
             // ===== 그룹 추가 모달 =====
             // 30. 그룹 추가 모달

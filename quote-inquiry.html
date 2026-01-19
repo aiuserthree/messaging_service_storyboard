@@ -597,11 +597,15 @@
                 selector: '#pageTitle',
                 title: '1. 페이지 제목',
                 position: { top: '-10px', left: '-15px' },
-                description: '견적 문의 페이지 메인 타이틀',
-                function: '페이지 목적 안내',
+                description: '텍스트 (Text)',
+                function: '견적 문의 페이지의 메인 타이틀 표시',
                 behavior: [
-                    '비로그인 상태에서도 접근 가능한 페이지',
-                    '대량발송 견적 상담 요청 페이지임을 안내'
+                    '【표시 조건】',
+                    '• 페이지 로드 시 항상 표시',
+                    '• 비로그인/로그인 상태 모두 접근 가능',
+                    '【표시 내용】',
+                    '• 타이틀: "견적 문의"',
+                    '• 서브 텍스트: "대량 발송 견적이나 맞춤 상담이 필요하시면..."'
                 ]
             },
             // ===== 견적 문의 폼 영역 =====
@@ -610,13 +614,16 @@
                 selector: '#quoteForm',
                 title: '2. 견적 문의 폼',
                 position: { top: '10px', left: '10px' },
-                description: '비로그인 견적 문의 입력 양식',
-                function: '기업 정보 및 문의 내용 수집',
+                description: '폼 (Form)',
+                function: '비로그인 견적 문의 입력 양식 - 기업 정보 및 문의 내용 수집',
                 behavior: [
-                    '로그인 없이 견적 상담 요청 가능',
-                    '기업/담당자 정보 + 문의 내용 섹션으로 구성',
-                    'onsubmit 이벤트로 제출 처리',
-                    '필수 항목 미입력 시 제출 차단'
+                    '【폼 구성】',
+                    '• 기업/담당자 정보 섹션: 회사명, 담당자명, 연락처, 이메일',
+                    '• 견적 문의 내용 섹션: 관심 서비스, 예상 발송량, 희망 연락 시간, 상세 문의',
+                    '• 개인정보 동의 섹션: 동의 체크박스',
+                    '【제출 처리】',
+                    '• onsubmit 이벤트로 handleSubmit() 함수 호출',
+                    '• 유효성 검사 후 API 호출'
                 ]
             },
             // ===== 기업/담당자 정보 섹션 =====
@@ -625,12 +632,18 @@
                 selector: '#companyName',
                 title: '3. 회사명 입력',
                 position: { top: '-5px', left: '-10px' },
-                description: '견적 요청 기업/단체명 입력 필드',
-                function: '기업 식별 정보 수집',
+                description: '텍스트 입력 필드 (Input Text)',
+                function: '견적 요청 기업/단체명 입력',
                 behavior: [
-                    '필수 입력 항목 (미입력 시 제출 불가)',
-                    '텍스트 입력 (최대 100자)',
-                    'placeholder: "회사명을 입력해 주세요"'
+                    '【입력 조건】',
+                    '• 입력 타입: text',
+                    '• 최대 길이: 100자',
+                    '• placeholder: "회사명을 입력해 주세요"',
+                    '【유효성 검사】',
+                    '• 필수 입력 항목',
+                    '• 공백만 입력 시 유효하지 않음 (trim 처리)',
+                    '【Alert 메시지】',
+                    '• 미입력 시: "필수 항목을 모두 입력해 주세요."'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
@@ -639,12 +652,18 @@
                 selector: '#contactName',
                 title: '4. 담당자명 입력',
                 position: { top: '-5px', right: '-10px' },
-                description: '상담 담당자 성함 입력 필드',
-                function: '담당자 연락 시 호칭으로 활용',
+                description: '텍스트 입력 필드 (Input Text)',
+                function: '상담 담당자 성함 입력 - 연락 시 호칭으로 활용',
                 behavior: [
-                    '필수 입력 항목 (미입력 시 제출 불가)',
-                    '텍스트 입력 (최대 50자)',
-                    'placeholder: "담당자명을 입력해 주세요"'
+                    '【입력 조건】',
+                    '• 입력 타입: text',
+                    '• 최대 길이: 50자',
+                    '• placeholder: "담당자명을 입력해 주세요"',
+                    '【유효성 검사】',
+                    '• 필수 입력 항목',
+                    '• 공백만 입력 시 유효하지 않음 (trim 처리)',
+                    '【Alert 메시지】',
+                    '• 미입력 시: "필수 항목을 모두 입력해 주세요."'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
@@ -653,13 +672,22 @@
                 selector: '#contactPhone',
                 title: '5. 연락처 입력',
                 position: { top: '-5px', left: '-10px' },
-                description: '담당자 연락처 입력 필드',
+                description: '전화번호 입력 필드 (Input Tel)',
                 function: '견적 상담 연락용 전화번호 수집',
                 behavior: [
-                    '필수 입력 항목 (미입력 시 제출 불가)',
-                    '숫자 입력 시 자동 하이픈(-) 포맷팅',
-                    '010-0000-0000 형식으로 자동 변환',
-                    '최대 13자 (하이픈 포함)'
+                    '【입력 조건】',
+                    '• 입력 타입: tel',
+                    '• 최대 길이: 13자 (하이픈 포함)',
+                    '• placeholder: "010-0000-0000"',
+                    '【자동 포맷팅】',
+                    '• 숫자 입력 시 자동 하이픈(-) 삽입',
+                    '• 3자리-4자리-4자리 형식으로 변환',
+                    '• 숫자 외 문자 자동 제거',
+                    '【유효성 검사】',
+                    '• 필수 입력 항목',
+                    '• 공백만 입력 시 유효하지 않음 (trim 처리)',
+                    '【Alert 메시지】',
+                    '• 미입력 시: "필수 항목을 모두 입력해 주세요."'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
@@ -668,13 +696,19 @@
                 selector: '#contactEmail',
                 title: '6. 이메일 입력',
                 position: { top: '-5px', right: '-10px' },
-                description: '담당자 이메일 입력 필드',
-                function: '견적서 발송 및 상담 답변 수신',
+                description: '이메일 입력 필드 (Input Email)',
+                function: '견적서 발송 및 상담 답변 수신용 이메일 주소',
                 behavior: [
-                    '필수 입력 항목 (미입력 시 제출 불가)',
-                    '이메일 형식 유효성 검사 (@ 포함 여부)',
-                    '견적서 PDF 발송 주소로 활용',
-                    'placeholder: "example@company.com"'
+                    '【입력 조건】',
+                    '• 입력 타입: email',
+                    '• placeholder: "example@company.com"',
+                    '【유효성 검사】',
+                    '• 필수 입력 항목',
+                    '• 이메일 형식 검사: 정규식 /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/',
+                    '• @ 기호 및 도메인 포함 여부 확인',
+                    '【Alert 메시지】',
+                    '• 미입력 시: "필수 항목을 모두 입력해 주세요."',
+                    '• 형식 오류 시: "올바른 이메일 형식을 입력해 주세요."'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
@@ -687,15 +721,19 @@
                 description: '체크박스 그룹 (Checkbox Group)',
                 function: '관심 있는 메시지 서비스 복수 선택 - 맞춤 견적 산정 기준',
                 behavior: [
-                    '복수 선택 가능 (체크박스)',
-                    '선택 입력 항목 (미선택 가능)',
+                    '【입력 조건】',
+                    '• 복수 선택 가능',
+                    '• 선택 입력 (미선택 시에도 제출 가능)',
                     '【체크박스 항목】',
-                    '• 일반문자 (SMS/LMS/MMS) (value: sms) - 단문/장문/멀티미디어 문자',
-                    '• 광고문자 (value: ad) - 광고성 메시지 (080 수신거부 필수)',
-                    '• 선거문자 (value: election) - 공직선거법 기반 선거 문자',
-                    '• 카카오 알림톡 (value: alimtalk) - 카카오톡 정보성 알림',
-                    '• 카카오 브랜드메시지 (value: brandtalk) - 카카오톡 브랜드 메시지',
-                    '• 기타 / 모름 (value: other) - 기타 문의 또는 서비스 미정'
+                    '• 일반문자 (SMS/LMS/MMS) (value: sms)',
+                    '• 광고문자 (value: ad)',
+                    '• 선거문자 (value: election)',
+                    '• 카카오 알림톡 (value: alimtalk)',
+                    '• 카카오 브랜드메시지 (value: brandtalk)',
+                    '• 기타 / 모름 (value: other)',
+                    '【동작】',
+                    '• 체크박스 클릭 시 선택/해제 토글',
+                    '• 선택된 항목은 accent-color로 강조'
                 ]
             },
             // 8. 예상 월간 발송량
@@ -703,18 +741,22 @@
                 selector: '#expectedVolumeGroup',
                 title: '8. 예상 월간 발송량',
                 position: { top: '-5px', left: '-10px' },
-                description: '콤보박스 (Combobox/Select)',
+                description: '콤보박스 (Select/Dropdown)',
                 function: '월간 예상 메시지 발송량 선택 - 대량 할인 견적 산정 기준',
                 behavior: [
-                    '선택 입력 항목 (미선택 가능)',
-                    '발송량에 따른 단가 할인 적용 기준',
+                    '【입력 조건】',
+                    '• 단일 선택',
+                    '• 선택 입력 (미선택 시에도 제출 가능)',
                     '【콤보박스 항목】',
                     '• 선택해 주세요 (value: "", 기본값)',
                     '• 월 1만건 미만 (value: under-10k)',
                     '• 월 1만건 ~ 5만건 (value: 10k-50k)',
                     '• 월 5만건 ~ 10만건 (value: 50k-100k)',
                     '• 월 10만건 ~ 50만건 (value: 100k-500k)',
-                    '• 월 50만건 이상 (value: over-500k)'
+                    '• 월 50만건 이상 (value: over-500k)',
+                    '【동작】',
+                    '• 클릭 시 드롭다운 목록 표시',
+                    '• 항목 선택 시 해당 값으로 변경'
                 ]
             },
             // 9. 희망 연락 시간
@@ -722,16 +764,20 @@
                 selector: '#contactTimeGroup',
                 title: '9. 희망 연락 시간',
                 position: { top: '-5px', right: '-10px' },
-                description: '콤보박스 (Combobox/Select)',
+                description: '콤보박스 (Select/Dropdown)',
                 function: '담당자 연락 희망 시간대 선택 - 상담 연락 시간 조율',
                 behavior: [
-                    '선택 입력 항목 (미선택 가능)',
-                    '담당자가 연락 가능한 시간대 파악용',
+                    '【입력 조건】',
+                    '• 단일 선택',
+                    '• 선택 입력 (미선택 시에도 제출 가능)',
                     '【콤보박스 항목】',
                     '• 선택해 주세요 (value: "", 기본값)',
                     '• 오전 (09:00 ~ 12:00) (value: morning)',
                     '• 오후 (13:00 ~ 18:00) (value: afternoon)',
-                    '• 상관없음 (value: anytime)'
+                    '• 상관없음 (value: anytime)',
+                    '【동작】',
+                    '• 클릭 시 드롭다운 목록 표시',
+                    '• 항목 선택 시 해당 값으로 변경'
                 ]
             },
             // 10. 상세 문의 내용
@@ -739,13 +785,17 @@
                 selector: '#inquiryContent',
                 title: '10. 상세 문의 내용',
                 position: { top: '5px', right: '5px' },
-                description: '추가 요청사항 및 질문 입력 텍스트영역',
+                description: '텍스트영역 (Textarea)',
                 function: '견적 산정에 필요한 상세 정보 수집',
                 behavior: [
-                    '선택 입력 항목 (미입력 가능)',
-                    '발송 목적, 발송 대상, 특이사항 등 자유롭게 기재',
-                    '최소 높이 150px, 리사이즈 가능',
-                    'placeholder로 입력 안내 제공'
+                    '【입력 조건】',
+                    '• 입력 타입: textarea',
+                    '• 선택 입력 (미입력 시에도 제출 가능)',
+                    '• 최소 높이: 150px',
+                    '• 리사이즈: 세로 방향만 가능 (resize: vertical)',
+                    '• placeholder: "견적에 필요한 상세 내용이나 추가 질문이 있으시면 작성해 주세요."',
+                    '【도움말 텍스트】',
+                    '• "예: 발송 목적, 발송 대상, 특이사항 등"'
                 ]
             },
             // ===== 개인정보 동의 섹션 =====
@@ -754,13 +804,14 @@
                 selector: '#privacySection',
                 title: '11. 개인정보 동의 영역',
                 position: { top: '-5px', left: '-10px' },
-                description: '개인정보 수집 및 이용 동의 안내 영역',
-                function: '개인정보 수집 동의 획득',
+                description: '개인정보 수집 동의 안내 영역',
+                function: '개인정보 수집 및 이용에 대한 동의 획득',
                 behavior: [
-                    '수집 항목: 회사명, 담당자명, 연락처, 이메일',
-                    '수집 목적: 견적 상담 및 서비스 안내',
-                    '보유 기간: 상담 완료 후 1년간 보관 후 파기',
-                    '동의 거부 시 견적 상담 불가 안내'
+                    '【표시 내용】',
+                    '• 수집 항목: 회사명, 담당자명, 연락처, 이메일',
+                    '• 수집 목적: 견적 상담 및 서비스 안내',
+                    '• 보유 기간: 상담 완료 후 1년간 보관 후 파기',
+                    '• 안내 문구: "동의를 거부하실 수 있으나, 동의하지 않으실 경우 견적 상담이 어렵습니다."'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
@@ -769,12 +820,17 @@
                 selector: '#privacyAgree',
                 title: '12. 개인정보 동의 체크박스',
                 position: { top: '-5px', right: '-10px' },
-                description: '개인정보 수집 동의 확인 체크박스',
-                function: '개인정보 수집 동의 여부 확인',
+                description: '체크박스 (Checkbox)',
+                function: '개인정보 수집 및 이용 동의 확인',
                 behavior: [
-                    '필수 체크 항목 (미체크 시 제출 불가)',
-                    '체크 여부 유효성 검사',
-                    '미체크 시 alert 메시지 표시'
+                    '【입력 조건】',
+                    '• 필수 체크 항목',
+                    '• 라벨: "개인정보 수집 및 이용에 동의합니다. (필수)"',
+                    '【유효성 검사】',
+                    '• 체크 여부 확인',
+                    '• 미체크 시 폼 제출 차단',
+                    '【Alert 메시지】',
+                    '• 미체크 시: "개인정보 수집 및 이용에 동의해 주세요."'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
@@ -784,13 +840,20 @@
                 selector: '#resetBtn',
                 title: '13. 초기화 버튼',
                 position: { top: '-5px', left: '-10px' },
-                description: '폼 입력 내용 전체 초기화 버튼',
-                function: '입력 내용 리셋',
+                description: '버튼 (Button - Secondary)',
+                function: '폼 입력 내용 전체 초기화',
                 behavior: [
-                    '클릭 시 모든 입력 필드 초기화',
-                    '체크박스 선택 해제',
-                    'handleReset() 함수 호출',
-                    '확인 없이 즉시 초기화'
+                    '【버튼 스타일】',
+                    '• 타입: button',
+                    '• 스타일: Secondary (회색 배경)',
+                    '• 텍스트: "초기화"',
+                    '【클릭 동작】',
+                    '• handleReset() 함수 호출',
+                    '• 모든 입력 필드 값 초기화',
+                    '• 모든 체크박스 선택 해제',
+                    '• 콤보박스 기본값으로 복원',
+                    '【확인 메시지】',
+                    '• 확인 없이 즉시 초기화 (confirm 없음)'
                 ]
             },
             // 14. 견적 문의하기 버튼
@@ -798,14 +861,27 @@
                 selector: '#submitBtn',
                 title: '14. 견적 문의하기 버튼',
                 position: { top: '-5px', right: '-10px' },
-                description: '견적 문의 제출 버튼 (Primary CTA)',
-                function: '견적 문의 데이터 서버 전송',
+                description: '버튼 (Button - Primary)',
+                function: '견적 문의 폼 제출 및 데이터 서버 전송',
                 behavior: [
-                    '필수 입력값 검증 (회사명, 담당자명, 연락처, 이메일)',
-                    '이메일 형식 유효성 검사',
-                    '개인정보 동의 체크 확인',
-                    '검증 실패 시 alert 메시지 표시',
-                    '성공 시 완료 모달(#successModal) 표시'
+                    '【버튼 스타일】',
+                    '• 타입: submit',
+                    '• 스타일: Primary (파란색 그라데이션)',
+                    '• 텍스트: "견적 문의하기"',
+                    '【클릭 동작】',
+                    '• handleSubmit(event) 함수 호출',
+                    '• event.preventDefault()로 기본 동작 차단',
+                    '【유효성 검사 순서】',
+                    '① 개인정보 동의 체크 확인',
+                    '② 필수 입력값 확인 (회사명, 담당자명, 연락처, 이메일)',
+                    '③ 이메일 형식 유효성 검사',
+                    '【Alert 메시지】',
+                    '• 개인정보 미동의: "개인정보 수집 및 이용에 동의해 주세요."',
+                    '• 필수값 미입력: "필수 항목을 모두 입력해 주세요."',
+                    '• 이메일 형식 오류: "올바른 이메일 형식을 입력해 주세요."',
+                    '【성공 시】',
+                    '• 완료 모달(#successModal) 표시',
+                    '• body overflow: hidden 처리'
                 ],
                 api: 'POST /api/quote-inquiry',
                 tags: [{ text: 'API', type: 'api' }]
@@ -816,14 +892,21 @@
                 selector: '#successModal',
                 title: '15. 완료 모달',
                 position: { top: '60px', left: '20px' },
-                description: '문의 접수 완료 안내 모달 팝업',
-                function: '문의 접수 완료 알림 및 후속 안내',
+                description: '모달 팝업 (Modal)',
+                function: '문의 접수 완료 안내 및 후속 행동 유도',
                 behavior: [
-                    '제출 성공 시 자동 표시',
-                    '체크 아이콘 + 완료 메시지 + 안내 문구',
-                    '"영업일 기준 1~2일 이내 답변" 안내',
-                    '배경 클릭 시 모달 닫힘',
-                    'body overflow: hidden 처리 (스크롤 방지)'
+                    '【표시 조건】',
+                    '• 견적 문의 폼 제출 성공 시 자동 표시',
+                    '• .active 클래스 추가로 display: flex 전환',
+                    '【모달 구성】',
+                    '• 아이콘: 체크 아이콘 (초록색 원형 배경)',
+                    '• 타이틀: "문의가 접수되었습니다"',
+                    '• 메시지: "담당자가 확인 후 빠른 시일 내에 연락드리겠습니다."',
+                    '• 안내: "영업일 기준 1~2일 이내에 답변을 받으실 수 있습니다."',
+                    '【닫기 동작】',
+                    '• 배경(overlay) 클릭 시 모달 닫힘',
+                    '• .active 클래스 제거',
+                    '• body overflow 복원'
                 ]
             },
             // 16. 홈으로 돌아가기 버튼
@@ -831,12 +914,16 @@
                 selector: '#successModal .modal-btn',
                 title: '16. 홈으로 돌아가기 버튼',
                 position: { top: '-5px', left: '-10px' },
-                description: '메인 페이지 이동 버튼',
-                function: '문의 완료 후 메인 페이지로 복귀',
+                description: '버튼 (Button - Primary)',
+                function: '문의 완료 후 메인 페이지로 이동',
                 behavior: [
-                    '클릭 시 index.html로 이동',
-                    'a 태그 링크 방식',
-                    '문의 완료 후 사용자 이탈 유도'
+                    '【버튼 스타일】',
+                    '• 타입: a 태그 (링크)',
+                    '• 스타일: Primary (파란색 그라데이션, 라운드)',
+                    '• 텍스트: "홈으로 돌아가기"',
+                    '【클릭 동작】',
+                    '• href="index.html"로 메인 페이지 이동',
+                    '• 새로고침 방식 페이지 전환'
                 ]
             }
         ];
