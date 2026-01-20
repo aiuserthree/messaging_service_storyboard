@@ -1911,8 +1911,55 @@
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // ===== GNB (Global Navigation Bar) 영역 =====
+            // 1. 헤더 영역
+            {
+                selector: '.header',
+                title: 'GNB 헤더',
+                position: { top: '10px', left: '10px' },
+                function: '서비스 전역 네비게이션 제공',
+                behavior: [
+                    '로고 클릭 시 index.html로 이동',
+                    '스크롤 시 상단 고정 (sticky)',
+                    '반응형: 모바일에서 햄버거 메뉴로 전환'
+                ]
+            },
+            // 2. GNB 대메뉴
+            {
+                selector: '.main-nav',
+                title: 'GNB 대메뉴',
+                position: { top: '10px', left: '10px' },
+                function: '주요 서비스 카테고리 접근',
+                behavior: [
+                    '【대메뉴 5개 구성】',
+                    '① 문자발송: 일반문자 발송, 광고문자 발송, 일반문자 템플릿, 광고문자 템플릿',
+                    '② 선거문자: 선거문자 발송, 선거문자 템플릿',
+                    '③ 카카오톡: 알림톡 발송, 브랜드 메시지 발송, 카카오톡 발신 프로필, 알림톡 템플릿, 브랜드 메시지 템플릿',
+                    '④ 주소록: 주소록 관리, 수신거부관리',
+                    '⑤ 발송현황: 발송결과, 예약내역',
+                    '【인터랙션】',
+                    '• 마우스 호버 시 드롭다운 메뉴 표시',
+                    '• 드롭다운 메뉴 항목 클릭 시 해당 페이지로 이동',
+                    '• 활성 메뉴 강조 표시 (파란색 배경)'
+                ]
+            },
+            // 3. 헤더 우측 액션 영역 (비로그인)
+            {
+                selector: '.header-actions',
+                title: '헤더 액션 영역 (비로그인)',
+                position: { top: '10px', right: '10px' },
+                function: '로그인/회원가입 유도',
+                behavior: [
+                    '【index.html에서는 항상 로그인 버튼 표시】',
+                    '• 로그인 버튼: login.html로 이동',
+                    '• 톡벨 가입하기 버튼: signup.html로 이동',
+                    '【버튼 스타일】',
+                    '• 로그인: 아웃라인 스타일 (btn-outline)',
+                    '• 톡벨 가입하기: 기본 스타일 (btn-primary)'
+                ]
+            },
             // ===== 히어로 영역 =====
-            // 1. 히어로 섹션
+            // 4. 히어로 섹션
             {
                 selector: '#heroSection',
                 title: '히어로 섹션',

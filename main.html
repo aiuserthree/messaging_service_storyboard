@@ -2471,8 +2471,95 @@ body {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // ===== GNB (Global Navigation Bar) 영역 =====
+            // 1. 헤더 영역
+            {
+                selector: '.header',
+                title: 'GNB 헤더',
+                position: { top: '10px', left: '10px' },
+                function: '서비스 전역 네비게이션 제공',
+                behavior: [
+                    '로고 클릭 시 index.html로 이동',
+                    '스크롤 시 상단 고정 (sticky)',
+                    '반응형: 모바일에서 햄버거 메뉴로 전환'
+                ]
+            },
+            // 2. GNB 대메뉴
+            {
+                selector: '.main-nav',
+                title: 'GNB 대메뉴',
+                position: { top: '10px', left: '10px' },
+                function: '주요 서비스 카테고리 접근',
+                behavior: [
+                    '【대메뉴 5개 구성】',
+                    '① 문자발송: 일반문자 발송, 광고문자 발송, 일반문자 템플릿, 광고문자 템플릿',
+                    '② 선거문자: 선거문자 발송, 선거문자 템플릿',
+                    '③ 카카오톡: 알림톡 발송, 브랜드 메시지 발송, 카카오톡 발신 프로필, 알림톡 템플릿, 브랜드 메시지 템플릿',
+                    '④ 주소록: 주소록 관리, 수신거부관리',
+                    '⑤ 발송현황: 발송결과, 예약내역',
+                    '【인터랙션】',
+                    '• 마우스 호버 시 드롭다운 메뉴 표시',
+                    '• 드롭다운 메뉴 항목 클릭 시 해당 페이지로 이동',
+                    '• 활성 메뉴 강조 표시 (파란색 배경)'
+                ]
+            },
+            // 3. 잔액 표시 영역
+            {
+                selector: '.balance-tooltip-wrapper',
+                title: '잔액 표시 영역',
+                position: { top: '10px', right: '10px' },
+                function: '현재 보유 포인트 잔액 표시 및 상세 정보 툴팁',
+                behavior: [
+                    '【잔액 표시】',
+                    '• "잔액 1,000,000 P" 형태로 표시',
+                    '• 단위는 P (포인트)',
+                    '【마우스 호버 시 툴팁 표시】',
+                    '• 포인트: 충전 가능, 환불 가능한 금액',
+                    '• 마일리지: 문자발송 시 사용가능 (환불불가)',
+                    '• 각 항목별 금액 표시'
+                ],
+                api: 'GET /api/users/me/balance'
+            },
+            // 4. 충전/관리 드롭다운
+            {
+                selector: '#chargeDropdown',
+                title: '충전/관리 드롭다운',
+                position: { top: '10px', right: '10px' },
+                function: '결제 관련 메뉴 빠른 접근',
+                behavior: [
+                    '【버튼 스타일】',
+                    '• 파란색 Primary 버튼 + 아래 화살표',
+                    '【마우스 호버 또는 클릭 시 드롭다운 표시】',
+                    '• 충전하기: payment-charge.html 이동',
+                    '• 충전내역: payment-history.html 이동',
+                    '• 세금계산서 발행: payment-tax.html 이동',
+                    '【드롭다운 닫힘】',
+                    '• 외부 클릭 시 자동 닫힘',
+                    '• 메뉴 항목 클릭 후 자동 닫힘'
+                ]
+            },
+            // 5. 사용자 드롭다운
+            {
+                selector: '#userDropdown',
+                title: '사용자 드롭다운',
+                position: { top: '10px', right: '10px' },
+                function: '마이페이지 메뉴 및 로그아웃 접근',
+                behavior: [
+                    '【버튼 스타일】',
+                    '• "홍길동" + 아래 화살표 (사용자 이름 표시)',
+                    '• 아웃라인 스타일 버튼',
+                    '【마우스 호버 또는 클릭 시 드롭다운 표시】',
+                    '• 내 정보 수정: mypage-profile.html 이동',
+                    '• 비밀번호 변경: mypage-password.html 이동',
+                    '• 발신번호 관리: mypage-caller-number.html 이동',
+                    '• ─── (구분선) ───',
+                    '• 로그아웃: localStorage 초기화 후 index.html 이동',
+                    '【드롭다운 닫힘】',
+                    '• 외부 클릭 시 자동 닫힘'
+                ]
+            },
             // ===== 환영 헤더 영역 =====
-            // 1. 환영 헤더
+            // 6. 환영 헤더
             {
                 selector: '#welcomeHeader',
                 title: '환영 헤더',
