@@ -2289,439 +2289,376 @@ body {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // ===== 회원가입 기본 구조 (3단계 프로세스) =====
             // 1. 회원가입 컨테이너
             {
                 selector: '#signupContainer',
-                title: '회원가입 컨테이너',
+                title: '1. 회원가입 컨테이너',
                 position: { top: '10px', left: '10px' },
                 function: '회원가입 전체 폼 영역',
-                behavior: ['4단계 진행형 폼', '단계별 유효성 검증']
+                behavior: [
+                    '【3단계 회원가입 프로세스】',
+                    '• Step 1: 약관 동의',
+                    '• Step 2: 본인인증 (휴대폰)',
+                    '• Step 3: 정보입력 (개인회원)',
+                    '【회원 유형 안내】',
+                    '• 모든 회원은 개인회원으로 가입',
+                    '• 사업자/선거회원 전환은 마이페이지에서 가능'
+                ]
             },
             // 2. 진행 단계 표시
             {
                 selector: '#stepIndicator',
-                title: '진행 단계 표시',
+                title: '2. 진행 단계 표시',
                 position: { top: '-5px', left: '-10px' },
-                function: '현재 진행 단계 시각화',
-                behavior: ['활성 단계 하이라이트', '완료 단계 체크 표시']
+                function: '현재 진행 단계 시각화 (3단계)',
+                behavior: [
+                    '【단계별 상태 표시】',
+                    '• 미완료 단계: 회색 원',
+                    '• 현재 단계: 파란색 원 + 활성화',
+                    '• 완료 단계: 체크 아이콘'
+                ]
             },
-            // 3. Step 1 - 약관 동의
+            // ===== Step 1: 약관 동의 =====
+            // 3. Step 1 컨테이너
             {
                 selector: '#step1',
-                title: 'Step 1: 약관 동의',
+                title: '3. Step 1: 약관 동의',
                 position: { top: '10px', right: '10px' },
                 function: '이용약관 동의 단계',
-                behavior: ['전체 동의 체크 시 모든 항목 선택', '필수 항목 미체크 시 다음 단계 불가'],
+                behavior: [
+                    '【필수 약관 4개】',
+                    '• 이용약관 동의',
+                    '• 개인정보 수집 및 이용 동의',
+                    '• 개인정보 취급 위탁 동의',
+                    '• 불법스팸방지 안내 동의',
+                    '【선택 약관 1개】',
+                    '• 마케팅 수신 동의',
+                    '【동작】',
+                    '• 전체 동의 체크 시 모든 항목 선택',
+                    '• 필수 항목 미체크 시 다음 단계 불가'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 4. 전체 동의 체크박스
             {
                 selector: '#agreeAll',
-                title: '전체 동의',
+                title: '4. 전체 동의 체크박스',
                 position: { top: '-5px', left: '-10px' },
                 function: '모든 약관 일괄 동의',
-                behavior: ['체크 시 모든 약관 선택', '해제 시 모든 약관 해제']
+                behavior: [
+                    '체크 시: 모든 약관 항목 자동 선택',
+                    '해제 시: 모든 약관 항목 자동 해제',
+                    '개별 항목 해제 시: 전체 동의도 해제'
+                ]
             },
             // 5. 이용약관 동의 체크박스
             {
                 selector: '#agreeRequired1',
-                title: '이용약관 동의',
+                title: '5. 이용약관 동의',
                 position: { top: '-5px', left: '-10px' },
                 function: '서비스 이용약관 동의',
+                behavior: ['[보기] 버튼 클릭 시 약관 전문 표시'],
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 6. 개인정보 수집 동의
             {
                 selector: '#agreeRequired2',
-                title: '개인정보 수집 동의',
+                title: '6. 개인정보 수집 동의',
                 position: { top: '-5px', left: '-10px' },
                 function: '개인정보 수집 및 이용 동의',
+                behavior: ['[보기] 버튼 클릭 시 약관 전문 표시'],
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 7. 개인정보 취급 위탁 동의
             {
                 selector: '#agreeRequired3',
-                title: '개인정보 취급 위탁 동의',
+                title: '7. 개인정보 취급 위탁 동의',
                 position: { top: '-5px', left: '-10px' },
                 function: '개인정보 제3자 위탁 동의',
+                behavior: ['[보기] 버튼 클릭 시 약관 전문 표시'],
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 8. 불법스팸방지 동의
             {
                 selector: '#agreeRequired4',
-                title: '불법스팸방지 동의',
+                title: '8. 불법스팸방지 동의',
                 position: { top: '-5px', left: '-10px' },
                 function: '불법스팸 발송 방지 안내 동의',
+                behavior: ['[보기] 버튼 클릭 시 약관 전문 표시'],
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 9. 마케팅 수신 동의
             {
                 selector: '#agreeMarketing',
-                title: '마케팅 수신 동의',
+                title: '9. 마케팅 수신 동의',
                 position: { top: '-5px', left: '-10px' },
                 function: '프로모션 및 이벤트 정보 수신',
+                behavior: ['미동의 시에도 가입 가능'],
                 tags: [{ text: '선택', type: 'optional' }]
             },
             // 10. Step 1 다음 버튼
             {
                 selector: '#step1-next',
-                title: '약관 동의 다음 버튼',
+                title: '10. 동의 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '본인인증 단계(Step 2)로 이동',
-                behavior: ['필수 약관 미동의 시 비활성화']
+                behavior: [
+                    '【활성화 조건】',
+                    '• 필수 약관 4개 모두 동의 시',
+                    '【클릭 시】',
+                    '• nextStep(3) 호출 → Step 2로 이동'
+                ]
             },
-            // (회원유형 선택 단계 제거됨 - 모든 회원은 개인회원으로 가입, 마이페이지에서 전환 가능)
-            // 11. Step 2 - 본인인증 (기존 Step 3)
+            // ===== Step 2: 본인인증 =====
+            // 11. Step 2 컨테이너
             {
                 selector: '#step3',
-                title: 'Step 2: 본인인증',
+                title: '11. Step 2: 본인인증',
                 position: { top: '10px', right: '10px' },
                 function: '휴대폰 본인인증',
                 behavior: [
-                    '이름, 생년월일, 휴대폰번호로 본인 확인',
-                    '인증번호 SMS 발송',
-                    '6자리 인증번호 검증'
+                    '【인증 절차】',
+                    '• 이름, 생년월일, 휴대폰번호 입력',
+                    '• 인증번호 발송 버튼 클릭',
+                    '• SMS로 6자리 인증번호 수신',
+                    '• 인증번호 입력 후 확인',
+                    '【인증 방식】',
+                    '• 본인 명의 휴대폰 필수',
+                    '• 인증번호 유효시간: 3분'
                 ],
                 api: 'POST /api/auth/verify-phone',
                 tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
-            // 14. 이름 입력
+            // 12. 이름 입력
             {
                 selector: '#verifyName',
-                title: '이름 입력',
+                title: '12. 이름 입력',
                 position: { top: '-5px', left: '-10px' },
                 function: '본인 실명 입력',
                 behavior: [
-                    '2자 이상 입력 필수',
-                    '한글/영문 입력 가능',
-                    '본인인증 시 통신사 정보와 대조'
+                    '【입력 조건】',
+                    '• 2자 이상 입력 필수',
+                    '• 한글/영문 입력 가능',
+                    '【검증】',
+                    '• 통신사 정보와 대조'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 15. 생년월일 입력
+            // 13. 생년월일 입력
             {
                 selector: '#verifyBirthDate',
-                title: '생년월일 입력',
+                title: '13. 생년월일 입력',
                 position: { top: '-5px', left: '-10px' },
                 function: '본인 생년월일 입력',
                 behavior: [
-                    'YYYYMMDD 8자리 숫자 형식',
-                    '예: 19900101',
-                    '숫자만 입력 가능 (자동 필터링)',
-                    '[ 유효성 검증 ]',
-                    '년도: 1900 ~ 현재년도',
-                    '월: 1 ~ 12',
-                    '일: 1 ~ 31'
+                    '【입력 형식】',
+                    '• YYYYMMDD 8자리 숫자',
+                    '• 예: 19900101',
+                    '• 숫자만 입력 가능 (자동 필터링)',
+                    '【유효성 검증】',
+                    '• 년도: 1900 ~ 현재년도',
+                    '• 월: 1 ~ 12',
+                    '• 일: 1 ~ 31'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 16. 휴대폰 번호 입력
+            // 14. 휴대폰 번호 입력
             {
                 selector: '#phoneNumber',
-                title: '휴대폰 번호 입력',
+                title: '14. 휴대폰번호 입력',
                 position: { top: '-5px', left: '-10px' },
                 function: '인증받을 휴대폰 번호 입력',
                 behavior: [
-                    '자동 하이픈 포맷팅',
-                    '010-XXXX-XXXX 형식',
-                    '본인 명의 휴대폰만 인증 가능'
+                    '【입력 형식】',
+                    '• 자동 하이픈 포맷팅',
+                    '• 010-XXXX-XXXX 형식',
+                    '【제한 사항】',
+                    '• 본인 명의 휴대폰만 가능'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 17. 인증번호 발송 버튼
+            // 15. 인증번호 발송 버튼
             {
                 selector: '#verificationForm .btn-primary',
-                title: '인증번호 발송 버튼',
+                title: '15. 인증번호 발송 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '휴대폰으로 인증번호 SMS 발송',
                 behavior: [
-                    '[ 유효성 검증 - 실패 시 얼럿 ]',
-                    '이름 미입력: "이름을 입력해주세요"',
-                    '생년월일 미입력/형식오류: "생년월일 8자리를 입력해주세요"',
-                    '생년월일 유효하지 않음: "유효한 생년월일을 입력해주세요"',
-                    '휴대폰번호 형식오류: "올바른 휴대폰 번호를 입력해주세요"',
-                    '[ 발송 성공 ]',
-                    '인증번호 6자리 SMS 발송',
-                    '"인증번호가 발송되었습니다" 얼럿'
+                    '【유효성 검증 - Alert 메시지】',
+                    '• 이름 미입력: "이름을 입력해주세요"',
+                    '• 생년월일 미입력/오류: "생년월일 8자리를 입력해주세요"',
+                    '• 생년월일 유효하지 않음: "유효한 생년월일을 입력해주세요"',
+                    '• 휴대폰번호 형식오류: "올바른 휴대폰 번호를 입력해주세요"',
+                    '【발송 성공】',
+                    '• "인증번호가 발송되었습니다" Alert',
+                    '• 인증번호 입력 필드 활성화'
                 ],
                 api: 'POST /api/auth/send-verification',
                 tags: [{ text: 'API', type: 'api' }]
             },
-            // 18. 인증번호 입력
+            // 16. 인증번호 입력
             {
                 selector: '#verificationCode',
-                title: '인증번호 입력',
+                title: '16. 인증번호 입력',
                 position: { top: '-5px', left: '-10px' },
                 function: 'SMS로 받은 인증번호 입력',
-                behavior: ['6자리 숫자', '3분 유효시간'],
+                behavior: [
+                    '【입력 형식】',
+                    '• 6자리 숫자',
+                    '【유효시간】',
+                    '• 3분 (타이머 표시)'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 19. 인증 확인 버튼
+            // 17. 인증 확인 버튼
             {
                 selector: '#verificationForm .btn-outline',
-                title: '인증 확인 버튼',
+                title: '17. 인증 확인 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '입력한 인증번호 검증',
                 behavior: [
-                    '[ 인증 결과 ]',
-                    '인증 성공: "인증이 완료되었습니다" 표시 + 다음 버튼 활성화',
-                    '인증 실패: "인증번호가 일치하지 않습니다" 표시',
-                    '미발송: "인증번호를 먼저 발송해주세요" 표시'
+                    '【인증 결과 - 성공】',
+                    '• "인증이 완료되었습니다" 표시',
+                    '• 다음 버튼 활성화',
+                    '【인증 결과 - 실패】',
+                    '• "인증번호가 일치하지 않습니다" 표시',
+                    '【인증번호 미발송】',
+                    '• "인증번호를 먼저 발송해주세요" 표시'
                 ],
                 api: 'POST /api/auth/verify-code',
                 tags: [{ text: 'API', type: 'api' }]
             },
-            // 20. Step 3 다음 버튼
+            // 18. Step 2 다음 버튼
             {
                 selector: '#step3-next',
-                title: '본인인증 다음 버튼',
+                title: '18. 본인인증 다음 버튼',
                 position: { top: '-5px', right: '-10px' },
-                function: 'Step 4로 이동',
-                behavior: ['인증 미완료 시 비활성화', '인증 완료 시 활성화']
+                function: 'Step 3 (정보입력)으로 이동',
+                behavior: [
+                    '【활성화 조건】',
+                    '• 인증 완료 시 활성화',
+                    '• 인증 미완료 시 비활성화',
+                    '【클릭 시】',
+                    '• nextStep(4) 호출 → Step 3으로 이동'
+                ]
             },
-            // 21. Step 3 정보입력 폼 (기존 Step 4 - 개인회원만 사용)
+            // ===== Step 3: 정보입력 (개인회원) =====
+            // 19. Step 3 컨테이너
             {
                 selector: '#step4-individual',
-                title: 'Step 3: 정보입력',
+                title: '19. Step 3: 정보입력',
                 position: { top: '10px', right: '10px' },
                 function: '회원 정보 입력 폼 (모든 회원은 개인회원으로 가입)',
-                behavior: ['아이디 중복확인', '비밀번호 강도 검사', '이메일 유효성 검증', '마이페이지에서 기업/선거회원 전환 가능']
+                behavior: [
+                    '【입력 항목】',
+                    '• 아이디 (중복확인 필수)',
+                    '• 비밀번호 (강도 표시)',
+                    '• 비밀번호 확인',
+                    '• 이메일',
+                    '【안내 사항】',
+                    '• 모든 회원은 개인회원으로 가입',
+                    '• 사업자/선거회원 전환은 마이페이지에서 가능'
+                ]
             },
-            // 22. 아이디 입력 (개인)
+            // 20. 아이디 입력
             {
                 selector: '#individualUserId',
-                title: '아이디 입력',
+                title: '20. 아이디 입력',
                 position: { top: '-5px', left: '-10px' },
                 function: '개인회원 아이디 입력',
-                behavior: ['8~12자 영문, 숫자 조합', '중복확인 필수'],
+                behavior: [
+                    '【입력 조건】',
+                    '• 8~12자 영문, 숫자 조합',
+                    '【중복확인】',
+                    '• 중복확인 버튼 클릭 필수',
+                    '• 사용 가능 시: "사용 가능한 아이디입니다"',
+                    '• 중복 시: "이미 사용 중인 아이디입니다"'
+                ],
                 api: 'GET /api/users/check-id',
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 23. 비밀번호 입력 (개인)
+            // 21. 비밀번호 입력
             {
                 selector: '#individualPassword',
-                title: '비밀번호 입력',
+                title: '21. 비밀번호 입력',
                 position: { top: '-5px', left: '-10px' },
                 function: '비밀번호 입력',
-                behavior: ['8~16자 영문, 숫자, 특수문자 혼합', '강도 표시'],
+                behavior: [
+                    '【입력 조건】',
+                    '• 8~16자',
+                    '• 영문, 숫자, 특수문자 혼합',
+                    '【강도 표시】',
+                    '• 약함/보통/강함 표시'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 24. 비밀번호 확인 (개인)
+            // 22. 비밀번호 확인
             {
                 selector: '#individualPasswordConfirm',
-                title: '비밀번호 확인',
+                title: '22. 비밀번호 확인',
                 position: { top: '-5px', left: '-10px' },
                 function: '비밀번호 재입력 확인',
-                behavior: ['비밀번호 일치 여부 검증'],
+                behavior: [
+                    '【일치 검증】',
+                    '• 일치 시: "비밀번호가 일치합니다" 표시',
+                    '• 불일치 시: "비밀번호가 일치하지 않습니다" 표시'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 25. 이메일 입력 (개인)
+            // 23. 이메일 입력
             {
                 selector: '#individualEmail',
-                title: '이메일 입력',
+                title: '23. 이메일 입력',
                 position: { top: '-5px', left: '-10px' },
                 function: '이메일 주소 입력',
-                behavior: ['이메일 형식 검증', '비밀번호 찾기용'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // ===== 기업회원/선거회원 폼 제거됨 - 마이페이지에서 전환 가능 =====
-            // (아래 항목들은 회원가입 시 사용되지 않으며, 마이페이지 회원전환 기능에서 활용됨)
-            /*
-            // 26. Step 4 기업회원 폼
-            {
-                selector: '#step4-business',
-                title: 'Step 4: 기업회원 정보입력',
-                position: { top: '10px', right: '10px' },
-                function: '기업회원 정보 입력 폼',
-                behavior: ['사업자등록증 업로드 필수', '기업정보 입력']
-            },
-            // 23. 기업유형 선택
-            {
-                selector: '#businessType',
-                title: '기업유형 선택',
-                position: { top: '-5px', left: '-10px' },
-                function: '법인/개인 사업자 선택',
-                behavior: ['유형에 따라 필요 서류 분기'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 24. 담당자 유형 선택
-            {
-                selector: '#managerType',
-                title: '담당자 유형',
-                position: { top: '-5px', left: '-10px' },
-                function: '대표자/직원 구분',
-                behavior: ['직원 선택 시 재직증명서 필요'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 25. 사업자등록증 업로드
-            {
-                selector: '#businessRegistrationFileInput',
-                title: '사업자등록증 업로드',
-                position: { top: '-5px', left: '-10px' },
-                function: '사업자등록증 파일 첨부',
-                behavior: ['PDF, JPG, PNG 허용', '최대 10MB'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 26. 기업명 입력
-            {
-                selector: '#businessName',
-                title: '기업명 입력',
-                position: { top: '-5px', left: '-10px' },
-                function: '기업/상호명 입력',
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 27. 사업자번호 입력
-            {
-                selector: '#businessNumber',
-                title: '사업자번호 입력',
-                position: { top: '-5px', left: '-10px' },
-                function: '사업자등록번호 입력',
-                behavior: ['000-00-00000 형식 자동 포맷'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 28. 대표자명 입력
-            {
-                selector: '#representativeName',
-                title: '대표자명 입력',
-                position: { top: '-5px', left: '-10px' },
-                function: '대표자 이름 입력',
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 29. 주소 검색
-            {
-                selector: '#businessAddress',
-                title: '주소 검색',
-                position: { top: '-5px', left: '-10px' },
-                function: '사업장 주소 입력',
-                behavior: ['다음 주소 API 연동'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // ===== 선거회원 전용 폼 =====
-            // 30. Step 4 선거회원 폼
-            {
-                selector: '#step4-election',
-                title: 'Step 4: 선거회원 정보입력',
-                position: { top: '10px', right: '10px' },
-                function: '선거회원 정보 및 필수 서류 입력 폼',
                 behavior: [
-                    '선거관리위원회 제출용 서류 수집',
-                    '신분증, 등록확인서, 발신자증빙, 선거문자신고서(선택) 업로드'
-                ]
-            },
-            // 31. 아이디(이메일) 입력 (선거)
-            {
-                selector: '#electionUserId',
-                title: '아이디(이메일) 입력',
-                position: { top: '-5px', left: '-10px' },
-                function: '선거회원 이메일 주소 입력 (아이디로 사용)',
-                behavior: ['이메일 형식 검증', '중복확인 필수'],
-                api: 'GET /api/users/check-email',
+                    '【용도】',
+                    '• 비밀번호 찾기',
+                    '• 중요 알림 수신',
+                    '【형식 검증】',
+                    '• 이메일 형식 자동 검증'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 32. 비밀번호 입력 (선거)
-            {
-                selector: '#electionPassword',
-                title: '비밀번호 입력',
-                position: { top: '-5px', left: '-10px' },
-                function: '비밀번호 입력',
-                behavior: ['8~16자 영문, 숫자, 특수문자 혼합', '강도 표시'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 33. 비밀번호 확인 (선거)
-            {
-                selector: '#electionPasswordConfirm',
-                title: '비밀번호 확인',
-                position: { top: '-5px', left: '-10px' },
-                function: '비밀번호 재입력 확인',
-                behavior: ['비밀번호 일치 여부 검증'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 34. 후보자/단체명 입력
-            {
-                selector: '#electionCandidateName',
-                title: '후보자/단체명',
-                position: { top: '-5px', left: '-10px' },
-                function: '후보자 또는 단체명 입력',
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 35. 선거구 입력
-            {
-                selector: '#electionRegion',
-                title: '선거구',
-                position: { top: '-5px', left: '-10px' },
-                function: '출마 선거구 입력',
-                behavior: ['예: 서울시 강남구'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 36. 신분증 사본 업로드
-            {
-                selector: '#electionIdCardFileInput',
-                title: '신분증 사본',
-                position: { top: '-5px', left: '-10px' },
-                function: '신분증 사본 파일 첨부',
-                behavior: ['주민등록증/운전면허증/여권 사본', 'PDF, JPG, PNG 허용', '최대 10MB'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 37. 후보자등록확인서 업로드
-            {
-                selector: '#electionCertificateFileInput',
-                title: '후보자등록확인서',
-                position: { top: '-5px', left: '-10px' },
-                function: '선관위 발급 후보자등록확인서 첨부',
-                behavior: ['선거관리위원회에서 발급', 'PDF, JPG, PNG 허용', '최대 10MB'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 38. 발신자증빙 업로드
-            {
-                selector: '#electionCallerProofFileInput',
-                title: '발신자증빙',
-                position: { top: '-5px', left: '-10px' },
-                function: '발신자 증빙서류 첨부 (통신가입증명원 등)',
-                behavior: ['통신사 가입증명원 또는 이에 준하는 서류', 'PDF, JPG, PNG 허용', '최대 10MB'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 39. 선거문자신고서 업로드
-            {
-                selector: '#electionReportCopyFileInput',
-                title: '선거문자신고서',
-                position: { top: '-5px', left: '-10px' },
-                function: '선거문자 발송 신고서 사본 첨부 (선택)',
-                behavior: ['선관위 제출 신고서 사본', 'PDF, JPG, PNG 허용', '최대 10MB'],
-                tags: [{ text: '선택', type: 'optional' }]
-            },
-            // 40. 발송예정문자내용 입력
-            {
-                selector: '#electionMessageContent',
-                title: '발송예정 문자내용',
-                position: { top: '-5px', left: '-10px' },
-                function: '선거문자 발송 예정 내용 미리 입력',
-                behavior: ['사전 검토용', '실제 발송 시 수정 가능'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 41. 선거문자 이용약관 동의
-            {
-                selector: '#electionAgreeTerms',
-                title: '선거문자 이용약관',
-                position: { top: '-5px', left: '-10px' },
-                function: '선거문자 발송 관련 이용약관 동의',
-                behavior: ['공직선거법 준수 동의', '선관위 신고 의무 안내'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            */
-            // ===== 기업회원/선거회원 폼 주석 끝 =====
-            // 42. 가입완료 버튼
+            // ===== 가입완료 버튼 =====
+            // 24. 가입완료 버튼
             {
                 selector: '.btn-primary.btn-lg',
-                title: '가입완료 버튼',
+                title: '24. 가입완료 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '회원가입 최종 제출',
                 behavior: [
-                    '모든 필수 입력값 검증',
-                    '파일 업로드 완료 확인',
-                    '성공 시 로그인 페이지로 이동'
+                    '【유효성 검증】',
+                    '• 아이디 중복확인 완료 여부',
+                    '• 비밀번호 조건 충족 여부',
+                    '• 비밀번호 일치 여부',
+                    '• 이메일 형식 검증',
+                    '【Alert 메시지 - 유효성 실패】',
+                    '• 아이디 미입력: "아이디를 입력해주세요"',
+                    '• 아이디 중복확인 미완료: "아이디 중복확인을 해주세요"',
+                    '• 비밀번호 미입력: "비밀번호를 입력해주세요"',
+                    '• 비밀번호 불일치: "비밀번호가 일치하지 않습니다"',
+                    '• 이메일 미입력: "이메일을 입력해주세요"',
+                    '【가입 성공】',
+                    '• "회원가입이 완료되었습니다" Alert',
+                    '• 로그인 페이지로 이동'
                 ],
                 api: 'POST /api/users/signup',
                 tags: [{ text: 'API', type: 'api' }]
+            },
+            // ===== 안내 사항 =====
+            // 25. 회원 전환 안내
+            {
+                selector: '#step4-individual .alert-info',
+                title: '25. 회원 전환 안내',
+                position: { top: '-5px', left: '-10px' },
+                function: '사업자/선거회원 전환 안내',
+                behavior: [
+                    '【안내 문구】',
+                    '• "사업자 회원 또는 선거회원으로 전환을 원하시면"',
+                    '• "회원가입 후 마이페이지에서 전환 신청이 가능합니다."'
+                ]
             }
         ];
         initSpecOverlay(specData);

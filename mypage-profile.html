@@ -1224,13 +1224,6 @@ body {
                             <input type="email" class="form-input" id="indivTaxEmail" placeholder="example@company.com" required>
                             <div class="form-help">세금계산서 발행 시 해당 이메일로 발송됩니다.</div>
                         </div>
-                        <div class="form-group">
-                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                                <input type="checkbox" id="indivAutoTaxInvoice">
-                                <span>세금계산서 매월 자동발행</span>
-                            </label>
-                            <div class="form-help">체크 시 매월 이용 금액에 대해 세금계산서가 자동으로 발행됩니다.</div>
-                        </div>
                     </div>
                 </form>
             </div>
@@ -1324,13 +1317,6 @@ body {
                             <label class="form-label required">수신 이메일</label>
                             <input type="email" class="form-input" id="corpTaxEmail" placeholder="example@company.com" required>
                             <div class="form-help">세금계산서 발행 시 해당 이메일로 발송됩니다.</div>
-                        </div>
-                        <div class="form-group">
-                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                                <input type="checkbox" id="corpAutoTaxInvoice">
-                                <span>세금계산서 매월 자동발행</span>
-                            </label>
-                            <div class="form-help">체크 시 매월 이용 금액에 대해 세금계산서가 자동으로 발행됩니다.</div>
                         </div>
                     </div>
                 </form>
@@ -1978,25 +1964,40 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // ===== 마이페이지 기본 구조 =====
             // 1. 탭 메뉴
             {
                 selector: '#mypageTabs',
-                title: '탭 메뉴',
+                title: '1. 탭 메뉴',
                 position: { top: '-5px', left: '-10px' },
                 function: '마이페이지 내 페이지 이동',
-                behavior: ['내 정보 수정', '비밀번호 변경', '발신번호 관리']
+                behavior: [
+                    '【탭 항목】',
+                    '• 내 정보 수정 (현재 페이지)',
+                    '• 비밀번호 변경',
+                    '• 발신번호 관리',
+                    '【동작】',
+                    '• 클릭 시 해당 페이지로 이동'
+                ]
             },
             // 2. 프로필 카드
             {
                 selector: '#profileCard',
-                title: '프로필 정보 카드',
+                title: '2. 프로필 정보 카드',
                 position: { top: '10px', left: '10px' },
-                function: '회원 정보 수정 폼 영역'
+                function: '회원 정보 수정 폼 영역',
+                behavior: [
+                    '【포함 섹션】',
+                    '• 기본 정보 (아이디, 이름, 생년월일 등)',
+                    '• 주소 정보',
+                    '• 회원가입일',
+                    '• 저장/취소 버튼'
+                ]
             },
             // 3. 프로필 폼
             {
                 selector: '#profileForm',
-                title: '프로필 폼',
+                title: '3. 프로필 폼',
                 position: { top: '10px', right: '10px' },
                 function: '회원정보 입력 폼',
                 behavior: ['Submit 시 유효성 검증', 'API 호출']
@@ -2119,42 +2120,82 @@ document.addEventListener('DOMContentLoaded', function() {
                 position: { top: '-5px', left: '-10px' },
                 function: '가입일 표시 (읽기 전용)'
             },
+            // ===== 회원유형 전환 영역 =====
             // 19. 회원유형 전환 섹션
             {
                 selector: '#memberTypeCard',
-                title: '회원유형 전환 카드',
+                title: '19. 회원유형 전환 카드',
                 position: { top: '-5px', left: '-10px' },
-                function: '개인사업자/법인사업자/선거회원 전환 영역',
-                behavior: ['현재 회원유형 표시', '3가지 회원유형 전환 가능']
+                function: '회원유형 전환 신청 영역',
+                behavior: [
+                    '【현재 회원유형】',
+                    '• 개인회원 표시',
+                    '【전환 가능 유형】',
+                    '• 개인사업자 회원',
+                    '• 법인사업자 회원',
+                    '• 선거회원',
+                    '【메시지 발송 대행업체 안내】',
+                    '• 대행업체에 해당하는 회원일 경우',
+                    '• 고객사별 별도 계정 생성 필요',
+                    '• 고객센터 문의 안내'
+                ]
             },
             // 20. 개인사업자 전환 버튼
             {
                 selector: '#convertIndivBusinessBtn',
-                title: '개인사업자 전환 버튼',
+                title: '20. 개인사업자 전환 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '개인사업자 회원 전환 모달 열기',
-                behavior: ['세금계산서 발행 가능', '전환 후 되돌릴 수 없음']
+                behavior: [
+                    '【클릭 시】',
+                    '• openModal("convertBusinessModal") 호출',
+                    '• 개인사업자 전환 모달 표시',
+                    '【전환 혜택】',
+                    '• 세금계산서 발행 가능',
+                    '【주의사항】',
+                    '• 전환 후 되돌릴 수 없음',
+                    '• 기존 발신번호 초기화'
+                ]
             },
-            // 20-1. 법인사업자 전환 버튼
+            // 21. 법인사업자 전환 버튼
             {
                 selector: '#convertCorpBusinessBtn',
-                title: '법인사업자 전환 버튼',
+                title: '21. 법인사업자 전환 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '법인사업자 회원 전환 모달 열기',
-                behavior: ['세금계산서 발행 가능', '기존 발신번호 초기화', '전환 후 되돌릴 수 없음']
+                behavior: [
+                    '【클릭 시】',
+                    '• openModal("convertCorporateModal") 호출',
+                    '• 법인사업자 전환 모달 표시',
+                    '【전환 혜택】',
+                    '• 세금계산서 발행 가능',
+                    '【주의사항】',
+                    '• 전환 후 되돌릴 수 없음',
+                    '• 기존 발신번호 초기화'
+                ]
             },
-            // 20-2. 선거회원 전환 버튼
+            // 22. 선거회원 전환 버튼
             {
                 selector: '#convertElectionBtn',
-                title: '선거회원 전환 버튼',
+                title: '22. 선거회원 전환 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '선거회원 전환 모달 열기',
-                behavior: ['선거문자 최저 단가 적용', '발신번호 1개만 등록 가능']
+                behavior: [
+                    '【클릭 시】',
+                    '• openModal("convertElectionModal") 호출',
+                    '• 선거회원 전환 모달 표시',
+                    '【전환 혜택】',
+                    '• 선거문자 최저 단가 적용',
+                    '• 선거 전문 담당자 관리',
+                    '【제한사항】',
+                    '• 발신번호 1개만 등록 가능'
+                ]
             },
-            // 21. 저장하기 버튼
+            // ===== 저장/취소 버튼 =====
+            // 23. 저장하기 버튼
             {
                 selector: '#saveProfileBtn',
-                title: '21. 저장하기 버튼',
+                title: '23. 저장하기 버튼',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button - Primary)',
                 function: '프로필 정보 저장',
@@ -2175,221 +2216,470 @@ document.addEventListener('DOMContentLoaded', function() {
                     '• 이메일 중복: "이미 사용 중인 이메일입니다."',
                     '【Toast 메시지】',
                     '• 저장 성공: "회원정보가 저장되었습니다."',
-                    '• 저장 실패: "회원정보 저장에 실패했습니다."',
-                    '【Alert 메시지 - 시스템 에러】',
-                    '• 서버 오류: "서버 오류가 발생했습니다."',
-                    '• 세션 만료: "로그인이 만료되었습니다."'
+                    '• 저장 실패: "회원정보 저장에 실패했습니다."'
                 ],
                 api: 'PUT /api/users/me',
                 tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
-            // 22. 취소 버튼
+            // 24. 취소 버튼
             {
                 selector: '#cancelProfileBtn',
-                title: '취소 버튼',
+                title: '24. 취소 버튼',
                 position: { top: '-5px', right: '-10px' },
-                function: '수정 내용 초기화'
+                function: '수정 내용 초기화',
+                behavior: [
+                    '【Confirm 메시지】',
+                    '• "변경사항을 취소하시겠습니까?"',
+                    '【확인 시】',
+                    '• 폼 초기화 (원래 값으로 복원)'
+                ]
             },
-            // === 휴대폰 인증 모달 ===
-            // 23. 휴대폰 인증 모달
+            // ===== 휴대폰 인증 모달 =====
+            // 25. 휴대폰 인증 모달
             {
                 selector: '#phoneVerifyModal',
-                title: '휴대폰 인증 모달',
+                title: '25. 휴대폰 인증 모달',
                 position: { top: '60px', left: '20px' },
                 function: '휴대폰 본인 인증',
-                behavior: ['인증번호 6자리 입력', '3분 유효시간', '재전송 가능'],
+                behavior: [
+                    '【모달 내용】',
+                    '• 휴대폰번호 표시 (읽기 전용)',
+                    '• 인증번호 입력 필드',
+                    '• 재전송 버튼',
+                    '【인증 프로세스】',
+                    '• SMS로 6자리 인증번호 발송',
+                    '• 유효시간: 3분',
+                    '• 재전송 가능'
+                ],
                 api: 'POST /api/auth/verify-phone'
             },
-            // 24. 휴대폰 인증 모달 닫기
+            // 26. 휴대폰 인증 모달 닫기
             {
                 selector: '#phoneVerifyModal .modal-close',
-                title: '모달 닫기',
+                title: '26. 모달 닫기 (X)',
                 position: { top: '5px', right: '5px' },
-                function: '휴대폰 인증 취소'
+                function: '휴대폰 인증 취소 및 모달 닫기'
             },
-            // 25. 휴대폰번호 표시
+            // 27. 휴대폰번호 표시
             {
                 selector: '#phoneVerifyModal .form-group:first-child input',
-                title: '휴대폰번호',
+                title: '27. 휴대폰번호 표시',
                 position: { top: '-5px', right: '-10px' },
-                function: '인증 대상 휴대폰번호 (읽기 전용)'
+                function: '인증 대상 휴대폰번호',
+                behavior: ['읽기 전용', '마스킹 처리 (010-XXXX-1234)']
             },
-            // 26. 인증번호 입력
+            // 28. 인증번호 입력
             {
                 selector: '#phoneVerifyModal .form-group:last-child input',
-                title: '인증번호 입력',
+                title: '28. 인증번호 입력',
                 position: { top: '-5px', left: '-10px' },
                 function: '6자리 인증번호 입력',
-                behavior: ['SMS로 발송된 번호 입력', '3분 유효시간'],
+                behavior: [
+                    '【입력 형식】',
+                    '• 6자리 숫자',
+                    '【유효시간】',
+                    '• 3분 (타이머 표시)'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 27. 인증번호 재전송 버튼
+            // 29. 인증번호 재전송 버튼
             {
                 selector: '#phoneVerifyModal .btn-sm',
-                title: '재전송 버튼',
+                title: '29. 재전송 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '인증번호 재발송',
+                behavior: [
+                    '【클릭 시】',
+                    '• 새 인증번호 SMS 발송',
+                    '• 타이머 초기화'
+                ],
                 api: 'POST /api/auth/send-verification'
             },
-            // 28. 휴대폰 인증 취소 버튼
+            // 30. 휴대폰 인증 취소 버튼
             {
                 selector: '#phoneVerifyModal .modal-footer .btn-outline',
-                title: '취소 버튼',
+                title: '30. 취소 버튼',
                 position: { top: '-5px', left: '-10px' },
                 function: '인증 취소 및 모달 닫기'
             },
-            // 29. 휴대폰 인증 확인 버튼
+            // 31. 휴대폰 인증 확인 버튼
             {
                 selector: '#phoneVerifyModal .modal-footer .btn-primary',
-                title: '확인 버튼',
+                title: '31. 확인 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '인증번호 확인',
+                behavior: [
+                    '【인증 성공】',
+                    '• "인증이 완료되었습니다" Toast',
+                    '• 모달 닫기',
+                    '• 인증 상태 업데이트',
+                    '【인증 실패】',
+                    '• "인증번호가 일치하지 않습니다" Toast'
+                ],
                 api: 'POST /api/auth/verify-phone',
                 tags: [{ text: 'API', type: 'api' }]
             },
-            // === 개인사업자 전환 모달 ===
-            // 30. 개인사업자 전환 모달
+            // ===== 개인사업자 전환 모달 =====
+            // 32. 개인사업자 전환 모달
             {
                 selector: '#convertBusinessModal',
-                title: '개인사업자 전환 모달',
+                title: '32. 개인사업자 전환 모달',
                 position: { top: '60px', left: '20px' },
                 function: '개인사업자 회원 전환 정보 입력',
                 behavior: [
-                    '【안내 메시지】',
-                    '• "사업자 회원으로 전환 후에는 개인 회원으로 되돌릴 수 없습니다."',
-                    '• "개인사업자로 전환 시 등록했던 발신번호가 초기화됩니다. 전환 후 발신번호를 다시 등록해주세요."',
-                    '【기업 정보 등록】',
-                    '• 담당자 (대표/직원)',
-                    '• 기업명',
-                    '• 대표자명',
-                    '• 사업자등록증 사본 (파일 첨부)',
-                    '• 사업자등록번호',
-                    '• 주소',
-                    '• 연락처 (본인인증 휴대폰 자동입력, 수정 가능)',
-                    '【세금계산서 발행】',
-                    '• 담당자 이름',
-                    '• 담당자 연락처',
-                    '• 수신 이메일',
-                    '• 세금계산서 매월 자동발행 체크박스'
+                    '【안내 메시지 (Alert)】',
+                    '• ⚠️ "사업자 회원으로 전환 후에는 개인 회원으로 되돌릴 수 없습니다."',
+                    '• ⚠️ "개인사업자로 전환 시 등록했던 발신번호가 초기화됩니다."',
+                    '【기업 정보 등록 섹션】',
+                    '• 담당자 유형 (라디오: 대표/직원)',
+                    '• 기업명 (필수)',
+                    '• 대표자명 (필수)',
+                    '• 사업자등록증 사본 (파일 업로드, 필수)',
+                    '• 사업자등록번호 (필수, 확인 버튼)',
+                    '• 주소 (필수, 검색 버튼)',
+                    '• 연락처 (필수, 본인인증 번호 자동입력)',
+                    '【세금계산서 발행 섹션】',
+                    '• 담당자 이름 (필수)',
+                    '• 담당자 연락처 (필수)',
+                    '• 수신 이메일 (필수)'
                 ],
-                api: 'POST /api/users/convert-individual-business'
+                api: 'POST /api/users/convert-individual-business',
+                tags: [{ text: '모달', type: 'info' }]
             },
-            // 31. 개인사업자 전환 신청 버튼
+            // 33. 개인사업자 - 담당자 유형 선택
+            {
+                selector: '#convertBusinessModal input[name="indivManagerType"]',
+                title: '33. 담당자 유형',
+                position: { top: '-5px', left: '-10px' },
+                function: '대표/직원 선택',
+                behavior: ['대표: 기본 선택', '직원: 선택 시 추가 확인 없음'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 34. 개인사업자 - 사업자등록증 업로드
+            {
+                selector: '#indivBusinessLicense',
+                title: '34. 사업자등록증 사본',
+                position: { top: '-5px', right: '-10px' },
+                function: '사업자등록증 파일 첨부',
+                behavior: [
+                    '【허용 파일】',
+                    '• PDF, JPG, PNG',
+                    '• 최대 10MB'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 35. 개인사업자 - 사업자등록번호 확인
+            {
+                selector: '#indivBusinessNumber',
+                title: '35. 사업자등록번호',
+                position: { top: '-5px', left: '-10px' },
+                function: '사업자등록번호 입력 및 확인',
+                behavior: [
+                    '【형식】',
+                    '• 123-45-67890 (자동 포맷)',
+                    '【확인 버튼】',
+                    '• 국세청 API 연동 확인'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 36. 개인사업자 전환 신청 버튼
             {
                 selector: '#convertBusinessModal .modal-footer .btn-primary',
-                title: '전환 신청 버튼',
+                title: '36. 전환 신청 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '개인사업자 전환 신청 제출',
                 behavior: [
+                    '【유효성 검증】',
+                    '• 모든 필수 항목 입력 확인',
+                    '• 사업자등록번호 확인 완료 여부',
+                    '• 사업자등록증 첨부 여부',
                     '【Confirm 메시지】',
                     '• "개인사업자 회원으로 전환하시겠습니까? 전환 후에는 되돌릴 수 없습니다."',
                     '【Toast 메시지】',
-                    '• 전환 성공: "개인사업자 회원 전환 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다."'
+                    '• 성공: "개인사업자 회원 전환 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다."'
                 ],
                 api: 'POST /api/users/convert-individual-business',
                 tags: [{ text: 'API', type: 'api' }]
             },
-            // === 법인사업자 전환 모달 ===
-            // 32. 법인사업자 전환 모달
+            // ===== 법인사업자 전환 모달 =====
+            // 37. 법인사업자 전환 모달
             {
                 selector: '#convertCorporateModal',
-                title: '법인사업자 전환 모달',
+                title: '37. 법인사업자 전환 모달',
                 position: { top: '60px', left: '20px' },
                 function: '법인사업자 회원 전환 정보 입력',
                 behavior: [
-                    '【안내 메시지】',
-                    '• "사업자 회원으로 전환 후에는 개인 회원으로 되돌릴 수 없습니다."',
-                    '• "법인사업자로 전환 시 등록했던 발신번호가 초기화됩니다. 신규 발신번호를 등록해주세요."',
-                    '【기업 정보 등록】',
-                    '• 담당자 (대표/직원)',
-                    '• 기업명, 대표자명',
-                    '• 사업자등록증 사본 (파일 첨부)',
-                    '• 사업자등록번호, 주소',
-                    '• 연락처 (본인인증 휴대폰 자동입력, 수정 가능)',
-                    '【세금계산서 발행】',
-                    '• 담당자 이름',
-                    '• 담당자 연락처',
-                    '• 수신 이메일',
-                    '• 세금계산서 매월 자동발행 체크박스'
+                    '【안내 메시지 (Alert)】',
+                    '• ⚠️ "사업자 회원으로 전환 후에는 개인 회원으로 되돌릴 수 없습니다."',
+                    '• ⚠️ "법인사업자로 전환 시 등록했던 발신번호가 초기화됩니다. 신규 발신번호를 등록해주세요."',
+                    '【기업 정보 등록 섹션】',
+                    '• 담당자 유형 (라디오: 대표/직원)',
+                    '• 기업명 (필수)',
+                    '• 대표자명 (필수)',
+                    '• 사업자등록증 사본 (파일 업로드, 필수)',
+                    '• 사업자등록번호 (필수, 확인 버튼)',
+                    '• 주소 (필수, 검색 버튼)',
+                    '• 연락처 (필수, 본인인증 번호 자동입력)',
+                    '【세금계산서 발행 섹션】',
+                    '• 담당자 이름 (필수)',
+                    '• 담당자 연락처 (필수)',
+                    '• 수신 이메일 (필수)',
+                    '【참고】',
+                    '• 발신번호 등록 영역 없음 (전환 후 별도 등록)'
                 ],
-                api: 'POST /api/users/convert-corporate-business'
+                api: 'POST /api/users/convert-corporate-business',
+                tags: [{ text: '모달', type: 'info' }]
             },
-            // 33. 법인사업자 전환 신청 버튼
+            // 38. 법인사업자 - 담당자 유형 선택
+            {
+                selector: '#convertCorporateModal input[name="corpManagerType"]',
+                title: '38. 담당자 유형',
+                position: { top: '-5px', left: '-10px' },
+                function: '대표/직원 선택',
+                behavior: ['대표: 기본 선택', '직원: 선택 시 추가 확인 없음'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 39. 법인사업자 - 사업자등록증 업로드
+            {
+                selector: '#corpBusinessLicense',
+                title: '39. 사업자등록증 사본',
+                position: { top: '-5px', right: '-10px' },
+                function: '사업자등록증 파일 첨부',
+                behavior: [
+                    '【허용 파일】',
+                    '• PDF, JPG, PNG',
+                    '• 최대 10MB'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 40. 법인사업자 - 사업자등록번호 확인
+            {
+                selector: '#corpBusinessNumber',
+                title: '40. 사업자등록번호',
+                position: { top: '-5px', left: '-10px' },
+                function: '사업자등록번호 입력 및 확인',
+                behavior: [
+                    '【형식】',
+                    '• 123-45-67890 (자동 포맷)',
+                    '【확인 버튼】',
+                    '• 국세청 API 연동 확인'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 41. 법인사업자 전환 신청 버튼
             {
                 selector: '#convertCorporateModal .modal-footer .btn-primary',
-                title: '전환 신청 버튼',
+                title: '41. 전환 신청 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '법인사업자 전환 신청 제출',
                 behavior: [
+                    '【유효성 검증】',
+                    '• 모든 필수 항목 입력 확인',
+                    '• 사업자등록번호 확인 완료 여부',
+                    '• 사업자등록증 첨부 여부',
                     '【Confirm 메시지】',
                     '• "법인사업자 회원으로 전환하시겠습니까?\\n\\n⚠️ 전환 후에는 되돌릴 수 없으며, 기존 발신번호가 초기화됩니다."',
                     '【Toast 메시지】',
-                    '• 전환 성공: "법인사업자 회원 전환 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다."'
+                    '• 성공: "법인사업자 회원 전환 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다."'
                 ],
                 api: 'POST /api/users/convert-corporate-business',
                 tags: [{ text: 'API', type: 'api' }]
             },
-            // === 선거회원 전환 모달 ===
-            // 34. 선거회원 전환 모달
+            // ===== 선거회원 전환 모달 =====
+            // 42. 선거회원 전환 모달
             {
                 selector: '#convertElectionModal',
-                title: '선거회원 전환 모달',
+                title: '42. 선거회원 전환 모달',
                 position: { top: '60px', left: '20px' },
                 function: '선거회원 전환 정보 입력',
                 behavior: [
-                    '【안내 메시지】',
-                    '• "선거용 발신번호를 등록해주세요."',
-                    '• "선거회원은 1개의 발신번호만 등록 가능합니다."',
-                    '【후보자 정보】',
-                    '• (예비)후보자 이름',
-                    '• 정당',
-                    '• 선거구',
-                    '【서류 제출】',
+                    '【안내 메시지 (Alert)】',
+                    '• ℹ️ "선거회원 전환 시 선거문자 최저 단가가 적용되며, 선거 전문 담당자가 별도 관리해 드립니다."',
+                    '• ⚠️ "선거용 발신번호를 등록해주세요."',
+                    '• ⚠️ "선거회원은 1개의 발신번호만 등록 가능합니다."',
+                    '【후보자 정보 섹션】',
+                    '• (예비)후보자 이름 (필수)',
+                    '• 정당 (필수)',
+                    '• 선거구 (필수)',
+                    '【서류 제출 섹션】',
                     '• 1. 후보자 신분증 사본 (필수)',
                     '• 2. (예비) 후보자 등록 증명서 사본 (필수)',
                     '• 3. 발신번호 등록 증명 서류 (필수)',
                     '• 4. 선관위 문자메시지 전송 신고서 사본 (선택)',
-                    '• 5. 발송할 문자 메시지 내용 전문 (필수) - 선관위에 신고한 내용과 완전히 동일해야 함',
-                    '【발신번호 등록 - 1개만 등록 가능】',
-                    '• 발신번호, 명의자',
-                    '• 명의자별 필요 서류 안내:',
-                    '  - 본인명의번호: 통신서비스이용증명원',
-                    '  - 선거사무소 유선전화: 통신서비스이용증명원',
-                    '  - 선거사무장 등 담당자 번호: 통신서비스이용증명원, 위임장, 담당자 재직증명서',
-                    '【약관 동의】',
-                    '• [필수] 제 3자 정보제공 및 선거문자 이용약관 동의',
-                    '• 약관 내용:',
-                    '  - 1. 문자 발송 위임',
-                    '  - 2. 발송 내용의 책임',
-                    '  - 3. 자동 동보통신 발송 횟수 제한 (총 8회)',
-                    '  - 4. 전화번호 수집 적법성',
-                    '  - 5. 선관위 자료 제공 동의'
+                    '• 5. 발송할 문자 메시지 내용 전문 (필수)',
+                    '【발신번호 등록 섹션】',
+                    '• 발신번호 (필수, 1개만 등록)',
+                    '• 명의자 선택 (본인/사무소/담당자)',
+                    '【약관 동의 섹션】',
+                    '• [필수] 제3자 정보제공 및 선거문자 이용약관 동의'
                 ],
-                api: 'POST /api/users/convert-election'
+                api: 'POST /api/users/convert-election',
+                tags: [{ text: '모달', type: 'info' }]
             },
-            // 35. 선거회원 전환 신청 버튼
+            // 43. 선거회원 - 후보자 정보
+            {
+                selector: '#electionCandidateName',
+                title: '43. (예비)후보자 이름',
+                position: { top: '-5px', left: '-10px' },
+                function: '후보자 이름 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 44. 선거회원 - 정당
+            {
+                selector: '#electionParty',
+                title: '44. 정당',
+                position: { top: '-5px', left: '-10px' },
+                function: '소속 정당 입력',
+                behavior: ['예: 대한민국당'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 45. 선거회원 - 선거구
+            {
+                selector: '#electionDistrict',
+                title: '45. 선거구',
+                position: { top: '-5px', left: '-10px' },
+                function: '출마 선거구 입력',
+                behavior: ['예: 서울 강남구 갑'],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 46. 선거회원 - 후보자 신분증 사본
+            {
+                selector: '#electionIdCard',
+                title: '46. 후보자 신분증 사본',
+                position: { top: '-5px', right: '-10px' },
+                function: '후보자 신분증 파일 첨부',
+                behavior: [
+                    '【허용 파일】',
+                    '• PDF, JPG, PNG',
+                    '• 최대 10MB'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 47. 선거회원 - 후보자 등록 증명서
+            {
+                selector: '#electionCertificate',
+                title: '47. (예비)후보자 등록 증명서',
+                position: { top: '-5px', right: '-10px' },
+                function: '선관위 발급 증명서 파일 첨부',
+                behavior: [
+                    '【허용 파일】',
+                    '• PDF, JPG, PNG',
+                    '• 최대 10MB'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 48. 선거회원 - 발신번호 등록 증명 서류
+            {
+                selector: '#electionCallerProof',
+                title: '48. 발신번호 등록 증명 서류',
+                position: { top: '-5px', right: '-10px' },
+                function: '통신서비스이용증명원 등 파일 첨부',
+                behavior: [
+                    '【안내】',
+                    '• 명의자에 따라 필요 서류 상이',
+                    '• 본인: 통신서비스이용증명원',
+                    '• 사무소: 통신서비스이용증명원',
+                    '• 담당자: 증명원+위임장+재직증명서'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 49. 선거회원 - 선관위 신고서 (선택)
+            {
+                selector: '#electionNecReport',
+                title: '49. 선관위 문자메시지 전송 신고서',
+                position: { top: '-5px', right: '-10px' },
+                function: '선관위 제출 신고서 사본 첨부',
+                behavior: [
+                    '【선택 사항】',
+                    '• 신고서가 있는 경우 첨부'
+                ],
+                tags: [{ text: '선택', type: 'optional' }]
+            },
+            // 50. 선거회원 - 발송할 문자 메시지 내용
+            {
+                selector: '#electionMessageContent',
+                title: '50. 발송할 문자 메시지 내용',
+                position: { top: '-5px', left: '-10px' },
+                function: '발송 예정 선거문자 내용 입력',
+                behavior: [
+                    '【주의사항】',
+                    '• ⚠️ 선관위에 신고한 내용과 완전히 동일해야 함',
+                    '【입력 형태】',
+                    '• Textarea (5줄)'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 51. 선거회원 - 발신번호 입력
+            {
+                selector: '#electionCallerNumber',
+                title: '51. 발신번호',
+                position: { top: '-5px', left: '-10px' },
+                function: '선거용 발신번호 입력',
+                behavior: [
+                    '【제한】',
+                    '• 1개만 등록 가능',
+                    '【형식】',
+                    '• 010-0000-0000'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 52. 선거회원 - 명의자 선택
+            {
+                selector: '#electionCallerOwnership',
+                title: '52. 발신번호 명의자',
+                position: { top: '-5px', left: '-10px' },
+                function: '발신번호 명의자 유형 선택',
+                behavior: [
+                    '【선택 옵션】',
+                    '• 본인명의번호',
+                    '• 선거사무소 유선전화',
+                    '• 선거사무장 등 담당자 번호',
+                    '【선택 시】',
+                    '• 필요 서류 안내 표시'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 53. 선거회원 - 약관 동의
+            {
+                selector: '#electionTermsAgree',
+                title: '53. 선거문자 이용약관 동의',
+                position: { top: '-5px', left: '-10px' },
+                function: '제3자 정보제공 및 선거문자 이용약관 동의',
+                behavior: [
+                    '【약관 내용 (스크롤 영역)】',
+                    '• 1. 문자 발송 위임',
+                    '• 2. 발송 내용의 책임',
+                    '• 3. 자동 동보통신 발송 횟수 제한 (총 8회)',
+                    '• 4. 전화번호 수집 적법성',
+                    '• 5. 선관위 자료 제공 동의',
+                    '【동의 필수】',
+                    '• 체크하지 않으면 전환 불가'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 54. 선거회원 전환 신청 버튼
             {
                 selector: '#convertElectionModal .modal-footer .btn-primary',
-                title: '전환 신청 버튼',
+                title: '54. 전환 신청 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '선거회원 전환 신청 제출',
                 behavior: [
-                    '【유효성 검사】',
-                    '• 후보자 정보 필수 입력 확인',
-                    '• 필수 서류 첨부 확인 (1,2,3,5번)',
-                    '• 발신번호 및 명의자 입력 확인',
-                    '• 약관 동의 체크 확인',
+                    '【유효성 검증】',
+                    '• 후보자 정보 필수 입력',
+                    '• 필수 서류 첨부 (1,2,3,5번)',
+                    '• 발신번호 및 명의자 입력',
+                    '• 약관 동의 체크',
                     '【Alert 메시지 - 유효성 실패】',
-                    '• 신분증 미첨부: "후보자 신분증 사본을 첨부해주세요."',
-                    '• 증명서 미첨부: "(예비) 후보자 등록 증명서 사본을 첨부해주세요."',
-                    '• 발신번호 서류 미첨부: "발신번호 등록 증명 서류를 첨부해주세요."',
-                    '• 메시지 내용 미입력: "발송할 문자 메시지 내용을 입력해주세요."',
-                    '• 명의자 미선택: "발신번호 명의자를 선택해주세요."',
-                    '• 약관 미동의: "선거문자 이용약관에 동의해주세요."',
+                    '• "후보자 신분증 사본을 첨부해주세요."',
+                    '• "(예비) 후보자 등록 증명서 사본을 첨부해주세요."',
+                    '• "발신번호 등록 증명 서류를 첨부해주세요."',
+                    '• "발송할 문자 메시지 내용을 입력해주세요."',
+                    '• "발신번호 명의자를 선택해주세요."',
+                    '• "선거문자 이용약관에 동의해주세요."',
                     '【Confirm 메시지】',
                     '• "선거회원으로 전환하시겠습니까? 담당자 승인 후 선거문자 최저 단가가 적용됩니다."',
                     '【Toast 메시지】',
-                    '• 전환 성공: "선거회원 전환 신청이 완료되었습니다. 담당자 검토 후 승인됩니다."'
+                    '• 성공: "선거회원 전환 신청이 완료되었습니다. 담당자 검토 후 승인됩니다."'
                 ],
                 api: 'POST /api/users/convert-election',
                 tags: [{ text: 'API', type: 'api' }]
