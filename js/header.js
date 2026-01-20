@@ -1,5 +1,6 @@
 // 공통 헤더 생성 함수
 function createHeader(activeMenu = '') {
+    // GNB 대메뉴 구조: 문자발송 | 선거문자 | 카카오톡 | 주소록 | 발송현황 (5개)
     const menuStructure = {
         'message': {
             label: '문자발송',
@@ -22,7 +23,7 @@ function createHeader(activeMenu = '') {
             ]
         },
         'kakao': {
-            label: '카카오톡 발송',
+            label: '카카오톡',
             url: '#',
             hasDropdown: true,
             items: [
@@ -31,15 +32,6 @@ function createHeader(activeMenu = '') {
                 { label: '카카오톡 발신 프로필', url: 'kakao-profile-manage.html' },
                 { label: '알림톡 템플릿', url: 'template-alimtalk.html' },
                 { label: '브랜드 메시지 템플릿', url: 'template-brandtalk.html' }
-            ]
-        },
-        'send': {
-            label: '발송 관리',
-            url: '#',
-            hasDropdown: true,
-            items: [
-                { label: '발송결과', url: 'send-result.html' },
-                { label: '예약내역', url: 'send-reservation.html' }
             ]
         },
         'addressbook': {
@@ -51,35 +43,13 @@ function createHeader(activeMenu = '') {
                 { label: '수신거부관리', url: 'addressbook-reject.html' }
             ]
         },
-        'payment': {
-            label: '결제 관리',
+        'send': {
+            label: '발송현황',
             url: '#',
             hasDropdown: true,
             items: [
-                { label: '충전하기', url: 'payment-charge.html' },
-                { label: '충전 내역', url: 'payment-history.html' },
-                { label: '세금계산서 발행', url: 'payment-tax.html' }
-            ]
-        },
-        'mypage': {
-            label: '마이페이지',
-            url: '#',
-            hasDropdown: true,
-            items: [
-                { label: '내 정보 수정', url: 'mypage-profile.html' },
-                { label: '비밀번호 변경', url: 'mypage-password.html' },
-                { label: '발신번호 관리', url: 'mypage-caller-number.html' }
-            ]
-        },
-        'support': {
-            label: '고객센터',
-            url: 'support-notice.html',
-            hasDropdown: true,
-            items: [
-                { label: '공지사항', url: 'support-notice.html' },
-                { label: '이벤트', url: 'support-event.html' },
-                { label: 'FAQ', url: 'support-faq.html' },
-                { label: '1:1 문의', url: 'support-inquiry.html' }
+                { label: '발송결과', url: 'send-result.html' },
+                { label: '예약내역', url: 'send-reservation.html' }
             ]
         }
     };
@@ -176,17 +146,17 @@ function createHeader(activeMenu = '') {
             <div class="balance-tooltip-wrapper">
                 <div class="balance-info">
                     <span class="balance-label">잔액</span>
-                    <span class="balance-amount">1,000,000</span>
+                    <span class="balance-amount">1,000,000 P</span>
                 </div>
                 <div class="balance-tooltip-content">
                     <div style="margin-bottom: 8px;">
                         <span style="color: #fbbf24; font-weight: 600;">포인트</span>
-                        <span style="float: right; font-weight: 600;">1,000,000</span>
+                        <span style="float: right; font-weight: 600;">1,000,000 P</span>
                     </div>
                     <div>
                         <div style="margin-bottom: 4px;">
                             <span style="color: #fbbf24; font-weight: 600;">마일리지</span>
-                            <span style="float: right; font-weight: 600;">92.6</span>
+                            <span style="float: right; font-weight: 600;">92.6 P</span>
                         </div>
                         <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; text-align: left;">
                             └ 문자발송 시 사용가능 (환불불가)
@@ -194,8 +164,34 @@ function createHeader(activeMenu = '') {
                     </div>
                 </div>
             </div>
-            <a href="payment-charge.html" class="btn btn-sm btn-primary" style="padding: 6px 12px; font-size: 12px;">충전하기</a>
-            <button class="btn btn-sm btn-outline" onclick="handleLogout()" style="padding: 6px 12px; font-size: 12px;">로그아웃</button>
+            <div class="header-dropdown-wrapper" id="chargeDropdown">
+                <button class="btn btn-sm btn-primary header-dropdown-btn" style="padding: 6px 12px; font-size: 12px;">
+                    충전/관리
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px;">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="header-dropdown-menu">
+                    <a href="payment-charge.html" class="header-dropdown-item">충전하기</a>
+                    <a href="payment-history.html" class="header-dropdown-item">충전내역</a>
+                    <a href="payment-tax.html" class="header-dropdown-item">세금계산서 발행</a>
+                </div>
+            </div>
+            <div class="header-dropdown-wrapper" id="userDropdown">
+                <button class="btn btn-sm btn-outline header-dropdown-btn" style="padding: 6px 12px; font-size: 12px;">
+                    홍길동
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px;">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="header-dropdown-menu">
+                    <a href="mypage-profile.html" class="header-dropdown-item">내 정보 수정</a>
+                    <a href="mypage-password.html" class="header-dropdown-item">비밀번호 변경</a>
+                    <a href="mypage-caller-number.html" class="header-dropdown-item">발신번호 관리</a>
+                    <div class="header-dropdown-divider"></div>
+                    <a href="#" class="header-dropdown-item" onclick="handleLogout(); return false;">로그아웃</a>
+                </div>
+            </div>
         `;
     } else {
         // 로그인 페이지 등
@@ -293,6 +289,62 @@ function initDropdownMenus() {
                 item.classList.remove('open');
             });
         });
+    });
+    
+    // 헤더 드롭다운 (충전/관리, 사용자) 초기화
+    initHeaderDropdowns();
+}
+
+// 헤더 드롭다운 (충전/관리, 사용자) 초기화 함수
+function initHeaderDropdowns() {
+    const headerDropdowns = document.querySelectorAll('.header-dropdown-wrapper');
+    
+    headerDropdowns.forEach(wrapper => {
+        let hoverTimeout;
+        
+        // 마우스 호버 시 드롭다운 열기
+        wrapper.addEventListener('mouseenter', function() {
+            // 다른 헤더 드롭다운 닫기
+            headerDropdowns.forEach(other => {
+                if (other !== wrapper) {
+                    other.classList.remove('open');
+                }
+            });
+            wrapper.classList.add('open');
+        });
+        
+        // 마우스가 떠날 때 드롭다운 닫기
+        wrapper.addEventListener('mouseleave', function() {
+            hoverTimeout = setTimeout(() => {
+                wrapper.classList.remove('open');
+            }, 200);
+        });
+        
+        // 버튼 클릭 시 토글
+        const btn = wrapper.querySelector('.header-dropdown-btn');
+        if (btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                wrapper.classList.toggle('open');
+                
+                // 다른 헤더 드롭다운 닫기
+                headerDropdowns.forEach(other => {
+                    if (other !== wrapper) {
+                        other.classList.remove('open');
+                    }
+                });
+            });
+        }
+    });
+    
+    // 외부 클릭 시 헤더 드롭다운 닫기
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.header-dropdown-wrapper')) {
+            headerDropdowns.forEach(wrapper => {
+                wrapper.classList.remove('open');
+            });
+        }
     });
 }
 
@@ -565,6 +617,63 @@ function createFloatingMenu() {
                 transform: translateX(-50%);
                 border: 6px solid transparent;
                 border-bottom-color: #1e293b;
+            }
+            
+            /* 헤더 드롭다운 스타일 */
+            .header-dropdown-wrapper {
+                position: relative;
+                display: inline-block;
+            }
+            
+            .header-dropdown-btn {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            }
+            
+            .header-dropdown-menu {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                margin-top: 8px;
+                background: white;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                min-width: 160px;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.2s;
+                z-index: 1001;
+                overflow: hidden;
+            }
+            
+            .header-dropdown-wrapper:hover .header-dropdown-menu,
+            .header-dropdown-wrapper.open .header-dropdown-menu {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+            
+            .header-dropdown-item {
+                display: block;
+                padding: 10px 16px;
+                text-decoration: none;
+                color: #1e293b;
+                font-size: 13px;
+                transition: all 0.2s;
+            }
+            
+            .header-dropdown-item:hover {
+                background: #f8fafc;
+                color: #2563eb;
+            }
+            
+            .header-dropdown-divider {
+                height: 1px;
+                background: #e2e8f0;
+                margin: 4px 0;
             }
         </style>
         <script>
