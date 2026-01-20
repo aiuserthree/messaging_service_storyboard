@@ -1058,21 +1058,56 @@ body {
                             </div>
                         </div>
 
-                        <!-- 사업자 회원 전환 (개인 회원만 표시) -->
-                        <div class="form-section" id="businessConvertSection">
-                            <div class="alert alert-info" id="businessConvertAlert">
-                                <strong>사업자 회원으로 전환하시겠습니까?</strong>
-                                <p style="margin-top: 8px; font-size: 12px;">사업자 회원으로 전환하면 세금계산서 발행이 가능합니다.</p>
-                                <button type="button" class="btn btn-primary" style="margin-top: 12px;" onclick="openModal('convertBusinessModal')" id="convertBusinessBtn">사업자 회원으로 전환</button>
-                            </div>
-                        </div>
-
                         <!-- 저장 버튼 -->
                         <div class="flex gap-2 mt-3" id="profileActions">
                             <button type="submit" class="btn btn-primary" id="saveProfileBtn">저장하기</button>
                             <button type="button" class="btn btn-outline" onclick="resetForm()" id="cancelProfileBtn">취소</button>
                         </div>
                     </form>
+            </div>
+
+            <!-- 회원유형 전환 섹션 -->
+            <div class="card" id="memberTypeCard" style="margin-top: 24px;">
+                <div class="form-section" style="margin-bottom: 0;">
+                    <h3 class="form-section-title">회원유형 전환</h3>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
+                        현재 회원유형: <strong style="color: var(--primary-color);">개인회원</strong>
+                    </p>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                        아래 회원유형으로 전환하여 추가 서비스를 이용할 수 있습니다.
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; text-align: center;">
+                            <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">개인사업자 회원</div>
+                            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">세금계산서 발행 가능</div>
+                            <button type="button" class="btn btn-outline btn-sm" id="convertIndivBusinessBtn" onclick="openModal('convertBusinessModal')">전환 신청</button>
+                        </div>
+                        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; text-align: center;">
+                            <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">법인사업자 회원</div>
+                            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">세금계산서 발행 가능</div>
+                            <button type="button" class="btn btn-outline btn-sm" id="convertCorpBusinessBtn" onclick="openModal('convertCorporateModal')">전환 신청</button>
+                        </div>
+                        <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; text-align: center;">
+                            <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">선거회원</div>
+                            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">선거문자 최저 단가 적용</div>
+                            <button type="button" class="btn btn-outline btn-sm" id="convertElectionBtn" onclick="openModal('convertElectionModal')">전환 신청</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 고객센터 안내 -->
+            <div class="alert alert-info" style="margin-top: 24px;">
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <div style="font-size: 13px; line-height: 1.6;">
+                        <strong>메시지 발송 대행업체에 해당하는 회원일 경우</strong><br>
+                        충전 및 정산(세금계산서) 등의 분리를 위해서 위임하는 고객사별로 사업자 계정을 각각 생성하여야 합니다. 계정 생성을 원하시면 고객센터(<strong>1588-0000</strong>)로 문의 부탁 드립니다.
+                    </div>
                 </div>
             </div>
 
@@ -1105,94 +1140,333 @@ body {
         </div>
     </div>
 
-    <!-- 사업자 회원 전환 모달 -->
+    <!-- 개인사업자 회원 전환 모달 -->
     <div class="modal-overlay" id="convertBusinessModal">
-        <div class="modal" style="max-width: 800px;">
+        <div class="modal" style="max-width: 800px; max-height: 90vh;">
             <div class="modal-header">
-                <h3 class="modal-title">사업자 회원으로 전환</h3>
+                <h3 class="modal-title">개인사업자 회원으로 전환</h3>
                 <button class="modal-close" onclick="closeModal('convertBusinessModal')">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: calc(90vh - 140px); overflow-y: auto;">
                 <div class="alert alert-warning">
                     사업자 회원으로 전환 후에는 개인 회원으로 되돌릴 수 없습니다.
                 </div>
-                <form id="convertForm">
+                <div class="alert alert-danger" style="margin-top: 12px;">
+                    <strong>⚠️ 발신번호 초기화 안내</strong>
+                    <p style="margin-top: 8px; font-size: 13px;">개인사업자로 전환 시 <strong>등록했던 발신번호가 초기화</strong>됩니다. 전환 후 발신번호를 다시 등록해주세요.</p>
+                </div>
+                <form id="convertIndividualBusinessForm">
+                    <!-- 기업 정보 등록 -->
                     <div class="form-section">
-                        <h3 class="form-section-title">기업 정보</h3>
-                        <div class="form-group">
-                            <label class="form-label required">기업유형</label>
-                            <div class="flex gap-2">
-                                <label style="display: flex; align-items: center; gap: 8px;">
-                                    <input type="radio" name="businessType" value="individual" checked onchange="updateFormFields()">
-                                    <span>개인사업자</span>
-                                </label>
-                                <label style="display: flex; align-items: center; gap: 8px;">
-                                    <input type="radio" name="businessType" value="corporation" onchange="updateFormFields()">
-                                    <span>법인사업자</span>
-                                </label>
-                            </div>
-                        </div>
+                        <h3 class="form-section-title">기업 정보 등록</h3>
                         <div class="form-group">
                             <label class="form-label required">담당자</label>
                             <div class="flex gap-2">
                                 <label style="display: flex; align-items: center; gap: 8px;">
-                                    <input type="radio" name="managerType" value="representative" checked onchange="updateFormFields()">
-                                    <span>대표자</span>
+                                    <input type="radio" name="indivManagerType" value="representative" checked>
+                                    <span>대표</span>
                                 </label>
                                 <label style="display: flex; align-items: center; gap: 8px;">
-                                    <input type="radio" name="managerType" value="employee" onchange="updateFormFields()">
+                                    <input type="radio" name="indivManagerType" value="employee">
                                     <span>직원</span>
                                 </label>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label required">업체명</label>
-                            <input type="text" class="form-input" required>
+                            <label class="form-label required">기업명</label>
+                            <input type="text" class="form-input" id="indivCompanyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">대표자명</label>
+                            <input type="text" class="form-input" id="indivRepName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">사업자등록증 사본</label>
+                            <input type="file" class="form-input" id="indivBusinessLicense" accept=".pdf,.jpg,.png" required>
+                            <div class="form-help">PDF, JPG, PNG 파일 (최대 10MB)</div>
                         </div>
                         <div class="form-group">
                             <label class="form-label required">사업자등록번호</label>
                             <div class="flex gap-2">
-                                <input type="text" class="form-input" id="businessNumber" placeholder="123-45-67890" required>
-                                <button type="button" class="btn btn-outline" onclick="verifyBusinessNumber()">사업자확인</button>
+                                <input type="text" class="form-input" id="indivBusinessNumber" placeholder="123-45-67890" required>
+                                <button type="button" class="btn btn-outline" onclick="verifyBusinessNumber('indivBusinessNumber')">확인</button>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label required">대표자명</label>
-                            <input type="text" class="form-input" required>
-                        </div>
-                    </div>
-                    <div class="form-section">
-                        <h3 class="form-section-title">사업장 정보</h3>
-                        <div class="form-group">
-                            <label class="form-label required">사업장 주소</label>
-                            <div class="flex gap-2">
-                                <input type="text" class="form-input" readonly style="width: 150px;">
-                                <button type="button" class="btn btn-outline">주소 검색</button>
+                            <label class="form-label required">주소</label>
+                            <div class="flex gap-2" style="margin-bottom: 8px;">
+                                <input type="text" class="form-input" id="indivPostcode" readonly style="width: 120px;" placeholder="우편번호">
+                                <button type="button" class="btn btn-outline" onclick="openAddressSearch('indiv')">주소 검색</button>
                             </div>
+                            <input type="text" class="form-input" id="indivAddress" readonly placeholder="주소" style="margin-bottom: 8px;">
+                            <input type="text" class="form-input" id="indivAddressDetail" placeholder="상세주소">
                         </div>
                         <div class="form-group">
                             <label class="form-label required">연락처</label>
-                            <input type="tel" class="form-input" required>
+                            <input type="tel" class="form-input" id="indivContact" value="010-1234-5678" required>
+                            <div class="form-help">본인인증 시 등록한 번호가 자동 입력됩니다. 수정 가능합니다.</div>
                         </div>
                     </div>
+                    
+                    <!-- 세금계산서 발행 -->
                     <div class="form-section">
-                        <h3 class="form-section-title">필수 서류</h3>
+                        <h3 class="form-section-title">세금계산서 발행</h3>
                         <div class="form-group">
-                            <label class="form-label required">사업자등록증</label>
-                            <input type="file" class="form-input" id="businessLicense" accept=".pdf,.jpg,.png" required>
-                            <div class="form-help">국세청 홈택스에서 발급 가능</div>
+                            <label class="form-label required">담당자 이름</label>
+                            <input type="text" class="form-input" id="indivTaxManagerName" required>
                         </div>
-                        <div class="form-group" id="employmentCertGroup" style="display: none;">
-                            <label class="form-label required">재직증명서</label>
-                            <input type="file" class="form-input" id="employmentCert" accept=".pdf,.jpg,.png">
-                            <div class="form-help">최근 3개월 이내 발급</div>
+                        <div class="form-group">
+                            <label class="form-label required">담당자 연락처</label>
+                            <input type="tel" class="form-input" id="indivTaxManagerContact" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">수신 이메일</label>
+                            <input type="email" class="form-input" id="indivTaxEmail" placeholder="example@company.com" required>
+                            <div class="form-help">세금계산서 발행 시 해당 이메일로 발송됩니다.</div>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="indivAutoTaxInvoice">
+                                <span>세금계산서 매월 자동발행</span>
+                            </label>
+                            <div class="form-help">체크 시 매월 이용 금액에 대해 세금계산서가 자동으로 발행됩니다.</div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('convertBusinessModal')">취소</button>
-                <button class="btn btn-primary" onclick="submitConvert()">제출하기</button>
+                <button class="btn btn-primary" onclick="submitIndividualBusinessConvert()">전환 신청</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 법인사업자 회원 전환 모달 -->
+    <div class="modal-overlay" id="convertCorporateModal">
+        <div class="modal" style="max-width: 800px; max-height: 90vh;">
+            <div class="modal-header">
+                <h3 class="modal-title">법인사업자 회원으로 전환</h3>
+                <button class="modal-close" onclick="closeModal('convertCorporateModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: calc(90vh - 140px); overflow-y: auto;">
+                <div class="alert alert-warning">
+                    사업자 회원으로 전환 후에는 개인 회원으로 되돌릴 수 없습니다.
+                </div>
+                <div class="alert alert-danger" style="margin-top: 12px;">
+                    <strong>⚠️ 발신번호 초기화 안내</strong>
+                    <p style="margin-top: 8px; font-size: 13px;">법인사업자로 전환 시 <strong>등록했던 발신번호가 초기화</strong>됩니다. 신규 발신번호를 등록해주세요.</p>
+                </div>
+                <form id="convertCorporateBusinessForm">
+                    <!-- 기업 정보 등록 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">기업 정보 등록</h3>
+                        <div class="form-group">
+                            <label class="form-label required">담당자</label>
+                            <div class="flex gap-2">
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="radio" name="corpManagerType" value="representative" checked>
+                                    <span>대표</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="radio" name="corpManagerType" value="employee">
+                                    <span>직원</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">기업명</label>
+                            <input type="text" class="form-input" id="corpCompanyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">대표자명</label>
+                            <input type="text" class="form-input" id="corpRepName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">사업자등록증 사본</label>
+                            <input type="file" class="form-input" id="corpBusinessLicense" accept=".pdf,.jpg,.png" required>
+                            <div class="form-help">PDF, JPG, PNG 파일 (최대 10MB)</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">사업자등록번호</label>
+                            <div class="flex gap-2">
+                                <input type="text" class="form-input" id="corpBusinessNumber" placeholder="123-45-67890" required>
+                                <button type="button" class="btn btn-outline" onclick="verifyBusinessNumber('corpBusinessNumber')">확인</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">주소</label>
+                            <div class="flex gap-2" style="margin-bottom: 8px;">
+                                <input type="text" class="form-input" id="corpPostcode" readonly style="width: 120px;" placeholder="우편번호">
+                                <button type="button" class="btn btn-outline" onclick="openAddressSearch('corp')">주소 검색</button>
+                            </div>
+                            <input type="text" class="form-input" id="corpAddress" readonly placeholder="주소" style="margin-bottom: 8px;">
+                            <input type="text" class="form-input" id="corpAddressDetail" placeholder="상세주소">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">연락처</label>
+                            <input type="tel" class="form-input" id="corpContact" value="010-1234-5678" required>
+                            <div class="form-help">본인인증 시 등록한 번호가 자동 입력됩니다. 수정 가능합니다.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 세금계산서 발행 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">세금계산서 발행</h3>
+                        <div class="form-group">
+                            <label class="form-label required">담당자 이름</label>
+                            <input type="text" class="form-input" id="corpTaxManagerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">담당자 연락처</label>
+                            <input type="tel" class="form-input" id="corpTaxManagerContact" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">수신 이메일</label>
+                            <input type="email" class="form-input" id="corpTaxEmail" placeholder="example@company.com" required>
+                            <div class="form-help">세금계산서 발행 시 해당 이메일로 발송됩니다.</div>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="corpAutoTaxInvoice">
+                                <span>세금계산서 매월 자동발행</span>
+                            </label>
+                            <div class="form-help">체크 시 매월 이용 금액에 대해 세금계산서가 자동으로 발행됩니다.</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('convertCorporateModal')">취소</button>
+                <button class="btn btn-primary" onclick="submitCorporateBusinessConvert()">전환 신청</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 선거회원 전환 모달 -->
+    <div class="modal-overlay" id="convertElectionModal">
+        <div class="modal" style="max-width: 800px; max-height: 90vh;">
+            <div class="modal-header">
+                <h3 class="modal-title">선거회원으로 전환</h3>
+                <button class="modal-close" onclick="closeModal('convertElectionModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: calc(90vh - 140px); overflow-y: auto;">
+                <div class="alert alert-info">
+                    <strong>📋 선거회원 안내</strong>
+                    <p style="margin-top: 8px; font-size: 13px;">선거회원 전환 시 선거문자 최저 단가가 적용되며, 선거 전문 담당자가 별도 관리해 드립니다.</p>
+                </div>
+                <div class="alert alert-warning" style="margin-top: 12px;">
+                    <strong>⚠️ 선거용 발신번호를 등록해주세요.</strong>
+                    <p style="margin-top: 8px; font-size: 13px;">선거회원은 <strong>1개의 발신번호</strong>만 등록 가능합니다.</p>
+                </div>
+                <form id="convertElectionForm">
+                    <!-- 후보자 정보 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">후보자 정보</h3>
+                        <div class="form-group">
+                            <label class="form-label required">(예비)후보자 이름</label>
+                            <input type="text" class="form-input" id="electionCandidateName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">정당</label>
+                            <input type="text" class="form-input" id="electionParty" placeholder="예: 대한민국당">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">선거구</label>
+                            <input type="text" class="form-input" id="electionDistrict" placeholder="예: 서울 강남구 갑" required>
+                        </div>
+                    </div>
+                    
+                    <!-- 서류 제출 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">서류 제출</h3>
+                        <div class="form-group">
+                            <label class="form-label required">1. 후보자 신분증 사본</label>
+                            <input type="file" class="form-input" id="electionIdCard" accept=".pdf,.jpg,.png" required>
+                            <div class="form-help">PDF, JPG, PNG 파일 (최대 10MB)</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">2. (예비) 후보자 등록 증명서 사본</label>
+                            <input type="file" class="form-input" id="electionCertificate" accept=".pdf,.jpg,.png" required>
+                            <div class="form-help">선관위에서 발급받은 후보자 등록 증명서</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">3. 발신번호 등록 증명 서류</label>
+                            <input type="file" class="form-input" id="electionCallerProof" accept=".pdf,.jpg,.png" required>
+                            <div class="form-help">통신서비스이용증명원 (본인/선거사무소/담당자 명의에 따라 추가 서류 필요)</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">4. 선관위 문자메시지 전송 신고서 사본 <span style="color: var(--text-secondary); font-weight: 400;">(선택)</span></label>
+                            <input type="file" class="form-input" id="electionNecReport" accept=".pdf,.jpg,.png">
+                            <div class="form-help">선관위에 제출한 문자메시지 전송 신고서가 있는 경우 첨부</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">5. 발송할 문자 메시지 내용 전문</label>
+                            <textarea class="form-input" id="electionMessageContent" rows="5" required placeholder="발송할 선거 문자 메시지 내용을 입력하세요."></textarea>
+                            <div class="form-help" style="color: var(--danger);">⚠️ 선관위에 신고한 내용과 완전히 동일해야 합니다.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 발신번호 등록 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">발신번호 등록 <span style="font-size: 12px; color: var(--text-secondary); font-weight: 400;">(1개만 등록 가능)</span></h3>
+                        <div class="form-group">
+                            <label class="form-label required">발신번호</label>
+                            <input type="tel" class="form-input" id="electionCallerNumber" placeholder="010-0000-0000" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">명의자</label>
+                            <select class="form-select" id="electionCallerOwnership" onchange="updateElectionDocumentRequirements()">
+                                <option value="">선택하세요</option>
+                                <option value="self">본인명의번호</option>
+                                <option value="office">선거사무소 유선전화</option>
+                                <option value="manager">선거사무장 등 담당자 번호</option>
+                            </select>
+                            <div id="electionCallerHelp" class="form-help" style="margin-top: 8px; display: none;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 약관 동의 -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">약관 동의</h3>
+                        <div class="form-group">
+                            <label class="form-label required">[필수] 제 3자 정보제공 및 선거문자 이용약관 동의</label>
+                            <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 12px 0; max-height: 300px; overflow-y: auto; font-size: 13px; line-height: 1.8;">
+                                <p style="margin-bottom: 16px;">
+                                    본인은 선거관리위원회가 관리하는 선거(대통령 선거, 국회의원 선거, 지방의회 의원 및 지방자치단체의 장의 선거, 조합장 선거 등)에서 '톡벨' 선거문자 서비스를 이용하기 위하여 아래의 내용에 동의합니다.
+                                </p>
+                                <p style="font-weight: 600; margin-bottom: 12px;">※ 선거문자 서비스 이용약관 ※</p>
+                                <p style="margin-bottom: 12px;">
+                                    <strong>1. 문자 발송 위임</strong><br>
+                                    본인(후보자)은 '톡벨'(이하 '회사')에게 선거문자 발송 업무를 위임하며, 회사는 후보자의 요청에 따라 문자 메시지 발송을 대행합니다.
+                                </p>
+                                <p style="margin-bottom: 12px;">
+                                    <strong>2. 발송 내용의 책임</strong><br>
+                                    발송되는 문자 메시지 내용의 진실성 및 합법성에 대한 모든 책임은 후보자 본인에게 있습니다.
+                                </p>
+                                <p style="margin-bottom: 12px;">
+                                    <strong>3. 자동 동보통신 발송 횟수 제한</strong><br>
+                                    공직선거법에 따라 자동 동보통신을 이용한 선거운동은 총 8회로 제한됩니다.
+                                </p>
+                                <p style="margin-bottom: 12px;">
+                                    <strong>4. 전화번호 수집 적법성</strong><br>
+                                    본인은 발송에 사용되는 모든 전화번호가 합법적인 경로를 통해 수집되었음을 확인합니다.
+                                </p>
+                                <p>
+                                    <strong>5. 선관위 자료 제공 동의</strong><br>
+                                    회사는 선거관리위원회의 요청이 있는 경우 관련 자료를 제공할 수 있습니다.
+                                </p>
+                            </div>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-top: 12px;">
+                                <input type="checkbox" id="electionTermsAgree" required>
+                                <span>위 약관 내용을 모두 읽었으며, 이에 동의합니다.</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('convertElectionModal')">취소</button>
+                <button class="btn btn-primary" onclick="submitElectionConvert()">전환 신청</button>
             </div>
         </div>
     </div>
@@ -1490,23 +1764,9 @@ document.addEventListener('DOMContentLoaded', function() {
             showToast('주소 검색 기능은 준비 중입니다.', 'info');
         }
 
-        function updateFormFields() {
-            const managerType = document.querySelector('input[name="managerType"]:checked').value;
-            const employmentCertGroup = document.getElementById('employmentCertGroup');
-            const employmentCert = document.getElementById('employmentCert');
-            
-            if (managerType === 'employee') {
-                employmentCertGroup.style.display = 'block';
-                employmentCert.setAttribute('required', 'required');
-            } else {
-                employmentCertGroup.style.display = 'none';
-                employmentCert.removeAttribute('required');
-                employmentCert.value = '';
-            }
-        }
-
-        function verifyBusinessNumber() {
-            const businessNumber = document.getElementById('businessNumber').value;
+        // 사업자등록번호 확인
+        function verifyBusinessNumber(inputId) {
+            const businessNumber = document.getElementById(inputId).value;
             
             if (!businessNumber) {
                 showToast('사업자등록번호를 입력해주세요.', 'warning');
@@ -1529,14 +1789,144 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 1000);
         }
 
-        function submitConvert() {
-            const form = document.getElementById('convertForm');
-            const managerType = document.querySelector('input[name="managerType"]:checked').value;
-            const employmentCert = document.getElementById('employmentCert');
+        // 개인사업자 전환 제출
+        function submitIndividualBusinessConvert() {
+            const form = document.getElementById('convertIndividualBusinessForm');
             
-            // 직원 선택 시 재직증명서 필수 검증
-            if (managerType === 'employee' && !employmentCert.value) {
-                showToast('재직증명서를 업로드해주세요.', 'warning');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            if (confirm('개인사업자 회원으로 전환하시겠습니까? 전환 후에는 되돌릴 수 없습니다.')) {
+                showToast('개인사업자 회원 전환 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다.', 'success');
+                closeModal('convertBusinessModal');
+            }
+        }
+
+        // 법인사업자 명의자에 따른 서류 요구사항 업데이트
+        function updateCorpDocumentRequirements() {
+            const ownership = document.getElementById('corpCallerOwnership').value;
+            const reqDiv = document.getElementById('corpDocumentRequirements');
+            
+            // 모든 서류 입력란 숨기기
+            document.getElementById('corpDoc1Group').style.display = 'none';
+            document.getElementById('corpDoc2Group').style.display = 'none';
+            document.getElementById('corpDoc3Group').style.display = 'none';
+            document.getElementById('corpDoc4Group').style.display = 'none';
+            
+            if (ownership === 'self') {
+                reqDiv.innerHTML = '<strong>본인명의번호:</strong> 통신서비스이용증명원';
+                document.getElementById('corpDoc1Group').style.display = 'block';
+            } else if (ownership === 'company') {
+                reqDiv.innerHTML = '<strong>자사명의번호:</strong> 통신서비스이용증명원';
+                document.getElementById('corpDoc1Group').style.display = 'block';
+            } else if (ownership === 'other') {
+                reqDiv.innerHTML = '<strong>타사명의번호:</strong> 통신서비스이용증명원, 위임사의 사업자등록증, 위임장, 대리인 신분증 사본(뒷번호 마스킹)';
+                document.getElementById('corpDoc1Group').style.display = 'block';
+                document.getElementById('corpDoc2Group').style.display = 'block';
+                document.getElementById('corpDoc3Group').style.display = 'block';
+                document.getElementById('corpDoc4Group').style.display = 'block';
+            } else {
+                reqDiv.innerHTML = '명의자를 선택하면 필요한 서류가 표시됩니다.';
+            }
+        }
+
+        // 법인사업자 전환 제출
+        function submitCorporateBusinessConvert() {
+            const form = document.getElementById('convertCorporateBusinessForm');
+            const ownership = document.getElementById('corpCallerOwnership').value;
+            
+            if (!ownership) {
+                showToast('발신번호 명의자를 선택해주세요.', 'warning');
+                return;
+            }
+            
+            // 필수 서류 확인
+            if (!document.getElementById('corpDoc1').value) {
+                showToast('통신서비스이용증명원을 첨부해주세요.', 'warning');
+                return;
+            }
+            
+            if (ownership === 'other') {
+                if (!document.getElementById('corpDoc2').value) {
+                    showToast('위임사의 사업자등록증을 첨부해주세요.', 'warning');
+                    return;
+                }
+                if (!document.getElementById('corpDoc3').value) {
+                    showToast('위임장을 첨부해주세요.', 'warning');
+                    return;
+                }
+                if (!document.getElementById('corpDoc4').value) {
+                    showToast('대리인 신분증 사본을 첨부해주세요.', 'warning');
+                    return;
+                }
+            }
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            if (confirm('법인사업자 회원으로 전환하시겠습니까?\n\n⚠️ 전환 후에는 되돌릴 수 없으며, 기존 발신번호가 초기화됩니다.')) {
+                showToast('법인사업자 회원 전환 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다.', 'success');
+                closeModal('convertCorporateModal');
+            }
+        }
+
+        // 선거회원 명의자에 따른 서류 요구사항 업데이트
+        function updateElectionDocumentRequirements() {
+            const ownership = document.getElementById('electionCallerOwnership').value;
+            const helpDiv = document.getElementById('electionCallerHelp');
+            
+            if (ownership === 'self') {
+                helpDiv.innerHTML = '<strong>필요 서류:</strong> 통신서비스이용증명원<br><span style="font-size: 12px; color: var(--text-muted);">위 "3. 발신번호 등록 증명 서류"에 해당 서류를 첨부해주세요.</span>';
+                helpDiv.style.display = 'block';
+            } else if (ownership === 'office') {
+                helpDiv.innerHTML = '<strong>필요 서류:</strong> 통신서비스이용증명원<br><span style="font-size: 12px; color: var(--text-muted);">위 "3. 발신번호 등록 증명 서류"에 해당 서류를 첨부해주세요.</span>';
+                helpDiv.style.display = 'block';
+            } else if (ownership === 'manager') {
+                helpDiv.innerHTML = '<strong>필요 서류:</strong> 통신서비스이용증명원, 위임장, 담당자 재직증명서<br><span style="font-size: 12px; color: var(--text-muted);">위 "3. 발신번호 등록 증명 서류"에 해당 서류들을 하나의 파일로 첨부하거나 별도 문의해주세요.</span>';
+                helpDiv.style.display = 'block';
+            } else {
+                helpDiv.style.display = 'none';
+            }
+        }
+
+        // 선거회원 전환 제출
+        function submitElectionConvert() {
+            const form = document.getElementById('convertElectionForm');
+            const ownership = document.getElementById('electionCallerOwnership').value;
+            const termsAgree = document.getElementById('electionTermsAgree').checked;
+            
+            // 필수 서류 확인
+            if (!document.getElementById('electionIdCard').value) {
+                showToast('후보자 신분증 사본을 첨부해주세요.', 'warning');
+                return;
+            }
+            
+            if (!document.getElementById('electionCertificate').value) {
+                showToast('(예비) 후보자 등록 증명서 사본을 첨부해주세요.', 'warning');
+                return;
+            }
+            
+            if (!document.getElementById('electionCallerProof').value) {
+                showToast('발신번호 등록 증명 서류를 첨부해주세요.', 'warning');
+                return;
+            }
+            
+            if (!document.getElementById('electionMessageContent').value.trim()) {
+                showToast('발송할 문자 메시지 내용을 입력해주세요.', 'warning');
+                return;
+            }
+            
+            if (!ownership) {
+                showToast('발신번호 명의자를 선택해주세요.', 'warning');
+                return;
+            }
+            
+            if (!termsAgree) {
+                showToast('선거문자 이용약관에 동의해주세요.', 'warning');
                 return;
             }
             
@@ -1545,8 +1935,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            showToast('사업자 회원 전환 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다.', 'success');
-            closeModal('convertBusinessModal');
+            if (confirm('선거회원으로 전환하시겠습니까? 담당자 승인 후 선거문자 최저 단가가 적용됩니다.')) {
+                showToast('선거회원 전환 신청이 완료되었습니다. 담당자 검토 후 승인됩니다.', 'success');
+                closeModal('convertElectionModal');
+            }
         }
 
         function resetForm() {
@@ -1727,21 +2119,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 position: { top: '-5px', left: '-10px' },
                 function: '가입일 표시 (읽기 전용)'
             },
-            // 19. 사업자 전환 안내
+            // 19. 회원유형 전환 섹션
             {
-                selector: '#businessConvertAlert',
-                title: '사업자 전환 안내',
+                selector: '#memberTypeCard',
+                title: '회원유형 전환 카드',
                 position: { top: '-5px', left: '-10px' },
-                function: '사업자 회원 전환 안내',
-                behavior: ['세금계산서 발행 가능']
+                function: '개인사업자/법인사업자/선거회원 전환 영역',
+                behavior: ['현재 회원유형 표시', '3가지 회원유형 전환 가능']
             },
-            // 20. 사업자 전환 버튼
+            // 20. 개인사업자 전환 버튼
             {
-                selector: '#convertBusinessBtn',
-                title: '사업자 전환 버튼',
+                selector: '#convertIndivBusinessBtn',
+                title: '개인사업자 전환 버튼',
                 position: { top: '-5px', right: '-10px' },
-                function: '사업자 전환 모달 열기',
-                behavior: ['전환 후 되돌릴 수 없음']
+                function: '개인사업자 회원 전환 모달 열기',
+                behavior: ['세금계산서 발행 가능', '전환 후 되돌릴 수 없음']
+            },
+            // 20-1. 법인사업자 전환 버튼
+            {
+                selector: '#convertCorpBusinessBtn',
+                title: '법인사업자 전환 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '법인사업자 회원 전환 모달 열기',
+                behavior: ['세금계산서 발행 가능', '기존 발신번호 초기화', '전환 후 되돌릴 수 없음']
+            },
+            // 20-2. 선거회원 전환 버튼
+            {
+                selector: '#convertElectionBtn',
+                title: '선거회원 전환 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '선거회원 전환 모달 열기',
+                behavior: ['선거문자 최저 단가 적용', '발신번호 1개만 등록 가능']
             },
             // 21. 저장하기 버튼
             {
@@ -1839,156 +2247,151 @@ document.addEventListener('DOMContentLoaded', function() {
                 api: 'POST /api/auth/verify-phone',
                 tags: [{ text: 'API', type: 'api' }]
             },
-            // === 사업자 전환 모달 ===
-            // 30. 사업자 전환 모달
+            // === 개인사업자 전환 모달 ===
+            // 30. 개인사업자 전환 모달
             {
                 selector: '#convertBusinessModal',
-                title: '사업자 전환 모달',
+                title: '개인사업자 전환 모달',
                 position: { top: '60px', left: '20px' },
-                function: '사업자 회원 전환 정보 입력',
-                behavior: ['기업유형 선택', '사업자등록증 업로드', '재직증명서 업로드(직원)'],
-                api: 'POST /api/users/convert-business'
+                function: '개인사업자 회원 전환 정보 입력',
+                behavior: [
+                    '【안내 메시지】',
+                    '• "사업자 회원으로 전환 후에는 개인 회원으로 되돌릴 수 없습니다."',
+                    '• "개인사업자로 전환 시 등록했던 발신번호가 초기화됩니다. 전환 후 발신번호를 다시 등록해주세요."',
+                    '【기업 정보 등록】',
+                    '• 담당자 (대표/직원)',
+                    '• 기업명',
+                    '• 대표자명',
+                    '• 사업자등록증 사본 (파일 첨부)',
+                    '• 사업자등록번호',
+                    '• 주소',
+                    '• 연락처 (본인인증 휴대폰 자동입력, 수정 가능)',
+                    '【세금계산서 발행】',
+                    '• 담당자 이름',
+                    '• 담당자 연락처',
+                    '• 수신 이메일',
+                    '• 세금계산서 매월 자동발행 체크박스'
+                ],
+                api: 'POST /api/users/convert-individual-business'
             },
-            // 31. 사업자 전환 모달 닫기
-            {
-                selector: '#convertBusinessModal .modal-close',
-                title: '모달 닫기',
-                position: { top: '5px', right: '5px' },
-                function: '사업자 전환 취소'
-            },
-            // 32. 전환 안내 메시지
-            {
-                selector: '#convertBusinessModal .alert-warning',
-                title: '경고 안내',
-                position: { top: '5px', left: '10px' },
-                function: '전환 후 되돌릴 수 없음 안내'
-            },
-            // 33. 기업유형 선택
-            {
-                selector: '#convertForm .form-group:nth-child(1)',
-                title: '기업유형 선택',
-                position: { top: '-5px', left: '-10px' },
-                function: '개인사업자/법인사업자 선택',
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 34. 담당자 유형
-            {
-                selector: '#convertForm .form-group:nth-child(2)',
-                title: '담당자 유형',
-                position: { top: '-5px', left: '-10px' },
-                function: '대표자/직원 선택',
-                behavior: ['직원 선택 시 재직증명서 필요'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 35. 업체명 입력
-            {
-                selector: '#convertForm .form-group:nth-child(3) input',
-                title: '업체명',
-                position: { top: '-5px', right: '-10px' },
-                function: '사업체명 입력',
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 36. 사업자등록번호 입력
-            {
-                selector: '#businessNumber',
-                title: '사업자등록번호',
-                position: { top: '-5px', left: '-10px' },
-                function: '사업자등록번호 입력',
-                behavior: ['123-45-67890 형식'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 37. 사업자확인 버튼
-            {
-                selector: '#convertForm button[onclick*="verifyBusinessNumber"]',
-                title: '사업자확인 버튼',
-                position: { top: '-5px', right: '-10px' },
-                function: '국세청 API로 사업자 조회',
-                api: 'POST /api/business/verify'
-            },
-            // 38. 대표자명 입력
-            {
-                selector: '#convertForm .form-group:nth-child(5) input',
-                title: '대표자명',
-                position: { top: '-5px', right: '-10px' },
-                function: '대표자 성함 입력',
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 39. 사업장 주소
-            {
-                selector: '#convertForm .form-section:nth-child(2) .form-group:first-child',
-                title: '사업장 주소',
-                position: { top: '-5px', left: '-10px' },
-                function: '사업장 주소 입력',
-                behavior: ['주소 검색 버튼 클릭 → Daum 주소 API'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 40. 연락처 입력
-            {
-                selector: '#convertForm .form-section:nth-child(2) .form-group:last-child input',
-                title: '연락처',
-                position: { top: '-5px', right: '-10px' },
-                function: '사업장 연락처 입력',
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 41. 사업자등록증 업로드
-            {
-                selector: '#businessLicense',
-                title: '사업자등록증',
-                position: { top: '-5px', left: '-10px' },
-                function: '사업자등록증 파일 업로드',
-                behavior: ['PDF, JPG, PNG 지원', '국세청 홈택스에서 발급'],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 42. 재직증명서 업로드
-            {
-                selector: '#employmentCert',
-                title: '재직증명서',
-                position: { top: '-5px', left: '-10px' },
-                function: '재직증명서 파일 업로드',
-                behavior: ['직원 선택 시에만 필요', '최근 3개월 이내 발급'],
-                tags: [{ text: '조건부 필수', type: 'required' }]
-            },
-            // 43. 사업자 전환 취소 버튼
-            {
-                selector: '#convertBusinessModal .modal-footer .btn-outline',
-                title: '취소 버튼',
-                position: { top: '-5px', left: '-10px' },
-                function: '사업자 전환 취소'
-            },
-            // 44. 사업자 전환 제출 버튼
+            // 31. 개인사업자 전환 신청 버튼
             {
                 selector: '#convertBusinessModal .modal-footer .btn-primary',
-                title: '44. 제출하기 버튼',
+                title: '전환 신청 버튼',
                 position: { top: '-5px', right: '-10px' },
-                description: '버튼 (Button - Primary)',
-                function: '사업자 전환 신청 제출',
+                function: '개인사업자 전환 신청 제출',
+                behavior: [
+                    '【Confirm 메시지】',
+                    '• "개인사업자 회원으로 전환하시겠습니까? 전환 후에는 되돌릴 수 없습니다."',
+                    '【Toast 메시지】',
+                    '• 전환 성공: "개인사업자 회원 전환 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다."'
+                ],
+                api: 'POST /api/users/convert-individual-business',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            // === 법인사업자 전환 모달 ===
+            // 32. 법인사업자 전환 모달
+            {
+                selector: '#convertCorporateModal',
+                title: '법인사업자 전환 모달',
+                position: { top: '60px', left: '20px' },
+                function: '법인사업자 회원 전환 정보 입력',
+                behavior: [
+                    '【안내 메시지】',
+                    '• "사업자 회원으로 전환 후에는 개인 회원으로 되돌릴 수 없습니다."',
+                    '• "법인사업자로 전환 시 등록했던 발신번호가 초기화됩니다. 신규 발신번호를 등록해주세요."',
+                    '【기업 정보 등록】',
+                    '• 담당자 (대표/직원)',
+                    '• 기업명, 대표자명',
+                    '• 사업자등록증 사본 (파일 첨부)',
+                    '• 사업자등록번호, 주소',
+                    '• 연락처 (본인인증 휴대폰 자동입력, 수정 가능)',
+                    '【세금계산서 발행】',
+                    '• 담당자 이름',
+                    '• 담당자 연락처',
+                    '• 수신 이메일',
+                    '• 세금계산서 매월 자동발행 체크박스'
+                ],
+                api: 'POST /api/users/convert-corporate-business'
+            },
+            // 33. 법인사업자 전환 신청 버튼
+            {
+                selector: '#convertCorporateModal .modal-footer .btn-primary',
+                title: '전환 신청 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '법인사업자 전환 신청 제출',
+                behavior: [
+                    '【Confirm 메시지】',
+                    '• "법인사업자 회원으로 전환하시겠습니까?\\n\\n⚠️ 전환 후에는 되돌릴 수 없으며, 기존 발신번호가 초기화됩니다."',
+                    '【Toast 메시지】',
+                    '• 전환 성공: "법인사업자 회원 전환 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다."'
+                ],
+                api: 'POST /api/users/convert-corporate-business',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            // === 선거회원 전환 모달 ===
+            // 34. 선거회원 전환 모달
+            {
+                selector: '#convertElectionModal',
+                title: '선거회원 전환 모달',
+                position: { top: '60px', left: '20px' },
+                function: '선거회원 전환 정보 입력',
+                behavior: [
+                    '【안내 메시지】',
+                    '• "선거용 발신번호를 등록해주세요."',
+                    '• "선거회원은 1개의 발신번호만 등록 가능합니다."',
+                    '【후보자 정보】',
+                    '• (예비)후보자 이름',
+                    '• 정당',
+                    '• 선거구',
+                    '【서류 제출】',
+                    '• 1. 후보자 신분증 사본 (필수)',
+                    '• 2. (예비) 후보자 등록 증명서 사본 (필수)',
+                    '• 3. 발신번호 등록 증명 서류 (필수)',
+                    '• 4. 선관위 문자메시지 전송 신고서 사본 (선택)',
+                    '• 5. 발송할 문자 메시지 내용 전문 (필수) - 선관위에 신고한 내용과 완전히 동일해야 함',
+                    '【발신번호 등록 - 1개만 등록 가능】',
+                    '• 발신번호, 명의자',
+                    '• 명의자별 필요 서류 안내:',
+                    '  - 본인명의번호: 통신서비스이용증명원',
+                    '  - 선거사무소 유선전화: 통신서비스이용증명원',
+                    '  - 선거사무장 등 담당자 번호: 통신서비스이용증명원, 위임장, 담당자 재직증명서',
+                    '【약관 동의】',
+                    '• [필수] 제 3자 정보제공 및 선거문자 이용약관 동의',
+                    '• 약관 내용:',
+                    '  - 1. 문자 발송 위임',
+                    '  - 2. 발송 내용의 책임',
+                    '  - 3. 자동 동보통신 발송 횟수 제한 (총 8회)',
+                    '  - 4. 전화번호 수집 적법성',
+                    '  - 5. 선관위 자료 제공 동의'
+                ],
+                api: 'POST /api/users/convert-election'
+            },
+            // 35. 선거회원 전환 신청 버튼
+            {
+                selector: '#convertElectionModal .modal-footer .btn-primary',
+                title: '전환 신청 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '선거회원 전환 신청 제출',
                 behavior: [
                     '【유효성 검사】',
-                    '• 기업유형 선택 필수',
-                    '• 담당자 유형 선택 필수',
-                    '• 업체명 입력 필수',
-                    '• 사업자등록번호 입력 및 확인 필수',
-                    '• 대표자명 입력 필수',
-                    '• 사업장 주소 입력 필수',
-                    '• 연락처 입력 필수',
-                    '• 사업자등록증 파일 첨부 필수',
-                    '• 재직증명서 첨부 (직원 선택 시 필수)',
+                    '• 후보자 정보 필수 입력 확인',
+                    '• 필수 서류 첨부 확인 (1,2,3,5번)',
+                    '• 발신번호 및 명의자 입력 확인',
+                    '• 약관 동의 체크 확인',
                     '【Alert 메시지 - 유효성 실패】',
-                    '• 기업유형 미선택: "기업유형을 선택해주세요."',
-                    '• 담당자 유형 미선택: "담당자 유형을 선택해주세요."',
-                    '• 업체명 미입력: "업체명을 입력해주세요."',
-                    '• 사업자번호 미입력: "사업자등록번호를 입력해주세요."',
-                    '• 사업자번호 미확인: "사업자등록번호 확인을 완료해주세요."',
-                    '• 사업자번호 불일치: "유효하지 않은 사업자등록번호입니다."',
-                    '• 사업자등록증 미첨부: "사업자등록증을 첨부해주세요."',
-                    '• 재직증명서 미첨부: "재직증명서를 첨부해주세요."',
+                    '• 신분증 미첨부: "후보자 신분증 사본을 첨부해주세요."',
+                    '• 증명서 미첨부: "(예비) 후보자 등록 증명서 사본을 첨부해주세요."',
+                    '• 발신번호 서류 미첨부: "발신번호 등록 증명 서류를 첨부해주세요."',
+                    '• 메시지 내용 미입력: "발송할 문자 메시지 내용을 입력해주세요."',
+                    '• 명의자 미선택: "발신번호 명의자를 선택해주세요."',
+                    '• 약관 미동의: "선거문자 이용약관에 동의해주세요."',
                     '【Confirm 메시지】',
-                    '• "사업자 회원으로 전환하시겠습니까? 전환 후에는 되돌릴 수 없습니다."',
+                    '• "선거회원으로 전환하시겠습니까? 담당자 승인 후 선거문자 최저 단가가 적용됩니다."',
                     '【Toast 메시지】',
-                    '• 전환 성공: "사업자 전환 신청이 완료되었습니다. 검토 후 승인됩니다."',
-                    '• 전환 실패: "사업자 전환 신청에 실패했습니다."'
+                    '• 전환 성공: "선거회원 전환 신청이 완료되었습니다. 담당자 검토 후 승인됩니다."'
                 ],
-                api: 'POST /api/users/convert-business',
+                api: 'POST /api/users/convert-election',
                 tags: [{ text: 'API', type: 'api' }]
             }
         ];

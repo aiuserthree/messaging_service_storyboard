@@ -1057,6 +1057,21 @@ body {
                 </p>
             </div>
 
+            <!-- 고객센터 안내 -->
+            <div class="alert alert-warning" id="agencyNotice" style="margin-top: 16px;">
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <div style="font-size: 13px; line-height: 1.6;">
+                        <strong>메시지 발송 대행업체에 해당하는 회원일 경우</strong><br>
+                        충전 및 정산(세금계산서) 등의 분리를 위해서 위임하는 고객사별로 사업자 계정을 각각 생성하여야 합니다. 계정 생성을 원하시면 고객센터(<strong>1588-0000</strong>)로 문의 부탁 드립니다.
+                    </div>
+                </div>
+            </div>
+
             <!-- 발신번호 목록 -->
             <div class="card" id="callerNumberCard">
                 <div class="flex-between mb-2">
@@ -1087,7 +1102,7 @@ body {
                         </thead>
                         <tbody id="callerNumberTableBody">
                             <tr data-status="approved">
-                                <td>010-1234-5678</td>
+                                <td>010-1234-5678 <span style="color: var(--text-secondary);">(마케팅팀)</span></td>
                                 <td>SKT</td>
                                 <td>마케팅팀</td>
                                 <td><span class="badge badge-success">승인완료</span></td>
@@ -1098,7 +1113,7 @@ body {
                                 </td>
                             </tr>
                             <tr data-status="pending">
-                                <td>02-1234-5678</td>
+                                <td>02-1234-5678 <span style="color: var(--text-secondary);">(고객센터)</span></td>
                                 <td>KT</td>
                                 <td>고객센터</td>
                                 <td><span class="badge badge-warning">승인대기</span></td>
@@ -1109,7 +1124,7 @@ body {
                                 </td>
                             </tr>
                             <tr data-status="rejected">
-                                <td>010-9876-5432</td>
+                                <td>010-9876-5432 <span style="color: var(--text-secondary);">(본인 휴대폰)</span></td>
                                 <td>LG U+</td>
                                 <td>본인 휴대폰</td>
                                 <td><span class="badge badge-danger">반려</span></td>
