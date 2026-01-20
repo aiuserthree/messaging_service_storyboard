@@ -134,8 +134,8 @@ function createHeader(activeMenu = '') {
     
     // 헤더 액션 HTML 생성
     let headerActionsHTML = '';
-    if (isIndexPage && !isLoggedIn) {
-        // 로그인 전 메인 페이지
+    if (isIndexPage) {
+        // index.html에서는 항상 로그인/가입 버튼 표시
         headerActionsHTML = `
             <a href="login.html" class="btn btn-outline">로그인</a>
             <a href="signup.html" class="btn btn-primary">톡벨 가입하기</a>
@@ -202,6 +202,64 @@ function createHeader(activeMenu = '') {
     }
     
     return `
+        <style>
+            /* 헤더 드롭다운 스타일 */
+            .header-dropdown-wrapper {
+                position: relative;
+                display: inline-block;
+            }
+            
+            .header-dropdown-btn {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            }
+            
+            .header-dropdown-menu {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                margin-top: 8px;
+                background: white;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                min-width: 160px;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.2s;
+                z-index: 1001;
+                overflow: hidden;
+            }
+            
+            .header-dropdown-wrapper:hover .header-dropdown-menu,
+            .header-dropdown-wrapper.open .header-dropdown-menu {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+            
+            .header-dropdown-item {
+                display: block;
+                padding: 10px 16px;
+                text-decoration: none;
+                color: #1e293b;
+                font-size: 13px;
+                transition: all 0.2s;
+            }
+            
+            .header-dropdown-item:hover {
+                background: #f8fafc;
+                color: #2563eb;
+            }
+            
+            .header-dropdown-divider {
+                height: 1px;
+                background: #e2e8f0;
+                margin: 4px 0;
+            }
+        </style>
         <header class="header">
             <div class="header-content">
                 <div class="logo">
