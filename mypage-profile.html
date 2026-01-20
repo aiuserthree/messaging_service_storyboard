@@ -1380,16 +1380,6 @@ body {
                             <input type="file" class="form-input" id="electionCallerProof" accept=".pdf,.jpg,.png" required>
                             <div class="form-help">통신서비스이용증명원 (본인/선거사무소/담당자 명의에 따라 추가 서류 필요)</div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">4. 선관위 문자메시지 전송 신고서 사본 <span style="color: var(--text-secondary); font-weight: 400;">(선택)</span></label>
-                            <input type="file" class="form-input" id="electionNecReport" accept=".pdf,.jpg,.png">
-                            <div class="form-help">선관위에 제출한 문자메시지 전송 신고서가 있는 경우 첨부</div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label required">5. 발송할 문자 메시지 내용 전문</label>
-                            <textarea class="form-input" id="electionMessageContent" rows="5" required placeholder="발송할 선거 문자 메시지 내용을 입력하세요."></textarea>
-                            <div class="form-help" style="color: var(--danger);">⚠️ 선관위에 신고한 내용과 완전히 동일해야 합니다.</div>
-                        </div>
                     </div>
                     
                     <!-- 발신번호 등록 -->
@@ -1898,11 +1888,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!document.getElementById('electionCallerProof').value) {
                 showToast('발신번호 등록 증명 서류를 첨부해주세요.', 'warning');
-                return;
-            }
-            
-            if (!document.getElementById('electionMessageContent').value.trim()) {
-                showToast('발송할 문자 메시지 내용을 입력해주세요.', 'warning');
                 return;
             }
             
@@ -2505,8 +2490,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     '• 1. 후보자 신분증 사본 (필수)',
                     '• 2. (예비) 후보자 등록 증명서 사본 (필수)',
                     '• 3. 발신번호 등록 증명 서류 (필수)',
-                    '• 4. 선관위 문자메시지 전송 신고서 사본 (선택)',
-                    '• 5. 발송할 문자 메시지 내용 전문 (필수)',
                     '【발신번호 등록 섹션】',
                     '• 발신번호 (필수, 1개만 등록)',
                     '• 명의자 선택 (본인/사무소/담당자)',
@@ -2583,36 +2566,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 49. 선거회원 - 선관위 신고서 (선택)
-            {
-                selector: '#electionNecReport',
-                title: '49. 선관위 문자메시지 전송 신고서',
-                position: { top: '-5px', right: '-10px' },
-                function: '선관위 제출 신고서 사본 첨부',
-                behavior: [
-                    '【선택 사항】',
-                    '• 신고서가 있는 경우 첨부'
-                ],
-                tags: [{ text: '선택', type: 'optional' }]
-            },
-            // 50. 선거회원 - 발송할 문자 메시지 내용
-            {
-                selector: '#electionMessageContent',
-                title: '50. 발송할 문자 메시지 내용',
-                position: { top: '-5px', left: '-10px' },
-                function: '발송 예정 선거문자 내용 입력',
-                behavior: [
-                    '【주의사항】',
-                    '• ⚠️ 선관위에 신고한 내용과 완전히 동일해야 함',
-                    '【입력 형태】',
-                    '• Textarea (5줄)'
-                ],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 51. 선거회원 - 발신번호 입력
+            // 49. 선거회원 - 발신번호 입력
             {
                 selector: '#electionCallerNumber',
-                title: '51. 발신번호',
+                title: '49. 발신번호',
                 position: { top: '-5px', left: '-10px' },
                 function: '선거용 발신번호 입력',
                 behavior: [
@@ -2623,10 +2580,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 52. 선거회원 - 명의자 선택
+            // 50. 선거회원 - 명의자 선택
             {
                 selector: '#electionCallerOwnership',
-                title: '52. 발신번호 명의자',
+                title: '50. 발신번호 명의자',
                 position: { top: '-5px', left: '-10px' },
                 function: '발신번호 명의자 유형 선택',
                 behavior: [
@@ -2639,10 +2596,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 53. 선거회원 - 약관 동의
+            // 51. 선거회원 - 약관 동의
             {
                 selector: '#electionTermsAgree',
-                title: '53. 선거문자 이용약관 동의',
+                title: '51. 선거문자 이용약관 동의',
                 position: { top: '-5px', left: '-10px' },
                 function: '제3자 정보제공 및 선거문자 이용약관 동의',
                 behavior: [
@@ -2657,23 +2614,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 54. 선거회원 전환 신청 버튼
+            // 52. 선거회원 전환 신청 버튼
             {
                 selector: '#convertElectionModal .modal-footer .btn-primary',
-                title: '54. 전환 신청 버튼',
+                title: '52. 전환 신청 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '선거회원 전환 신청 제출',
                 behavior: [
                     '【유효성 검증】',
                     '• 후보자 정보 필수 입력',
-                    '• 필수 서류 첨부 (1,2,3,5번)',
+                    '• 필수 서류 첨부 (1,2,3번)',
                     '• 발신번호 및 명의자 입력',
                     '• 약관 동의 체크',
                     '【Alert 메시지 - 유효성 실패】',
                     '• "후보자 신분증 사본을 첨부해주세요."',
                     '• "(예비) 후보자 등록 증명서 사본을 첨부해주세요."',
                     '• "발신번호 등록 증명 서류를 첨부해주세요."',
-                    '• "발송할 문자 메시지 내용을 입력해주세요."',
                     '• "발신번호 명의자를 선택해주세요."',
                     '• "선거문자 이용약관에 동의해주세요."',
                     '【Confirm 메시지】',
