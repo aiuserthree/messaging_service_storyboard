@@ -977,7 +977,7 @@ body {
                         <div class="checkbox-group">
                             <input type="checkbox" id="agreeRequired2" class="required-agreement" onchange="updateAllAgreement(); checkRequiredAgreements()">
                             <label for="agreeRequired2" class="required">개인정보 수집 및 이용에 관한 동의 <span style="color: var(--danger-color);">(필수)</span></label>
-                            <a href="#" style="margin-left: 8px; color: var(--primary-color); text-decoration: underline; font-size: 12px;">개인정보처리방침 바로가기</a>
+                            <a href="javascript:void(0)" onclick="openPolicyModal('privacy')" style="margin-left: 8px; color: var(--primary-color); text-decoration: underline; font-size: 12px;">개인정보처리방침 바로가기</a>
                         </div>
                         <div class="terms-section">
                             <div class="terms-content">
@@ -2285,6 +2285,8 @@ body {
             }
         });
     </script>
+    <!-- 푸터 및 정책 모달 -->
+    <script src="js/footer.js"></script>
     <!-- 화면설계 오버레이 -->
     <script src="js/spec-overlay.js"></script>
     <script>
