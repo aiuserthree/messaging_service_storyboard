@@ -1764,7 +1764,7 @@ body {
                 
                 <div id="newGroupSection" class="form-group" style="display: none;">
                     <label class="form-label required">새 그룹명</label>
-                    <input type="text" class="form-input" id="newGroupNameInput" placeholder="그룹명을 입력하세요">
+                    <input type="text" class="form-input" id="newGroupNameInput" placeholder="그룹명을 입력하세요" oninput="limitInputByByte(this, 50)">
                 </div>
                 
                 <div style="margin-top: 16px; padding: 12px; background-color: var(--bg-color); border-radius: var(--radius-md);">
@@ -4540,8 +4540,13 @@ if (document.readyState === 'loading') {
                 behavior: [
                     '【입력 조건】',
                     '• 필수 입력 항목',
-                    '• 최대 40바이트 (한글 20자)',
-                    '• placeholder: "후보자명,기호번호"',
+                    '• 최대 40바이트 제한 (한글 약 13자, 영문 40자)',
+                    '• placeholder: "선거운동정보를 입력하세요 (최대 40바이트)"',
+                    '【바이트 계산】',
+                    '• 한글: 3바이트, 영문/숫자: 1바이트',
+                    '• 실시간 바이트 수 카운트',
+                    '【초과 처리】',
+                    '• 40바이트 초과 시 자동 잘림',
                     '【표시 형식】',
                     '• 메시지 맨 앞에 "(선거운동정보)[입력값]" 형태로 자동 삽입',
                     '• 예: (선거운동정보)홍길동,기호1번',
@@ -4550,19 +4555,25 @@ if (document.readyState === 'loading') {
                     '• 바이트 수 초과 확인',
                     '【Alert 메시지】',
                     '• 미입력 시: "선거운동정보를 입력해주세요."',
-                    '• 바이트 초과: "선거운동정보는 40바이트(한글 20자)를 초과할 수 없습니다."'
+                    '• 바이트 초과: "선거운동정보는 40바이트를 초과할 수 없습니다."'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 18. 선거운동정보 바이트 카운터
             {
                 selector: '#electionInfoByteCounter',
-                title: '선거운동정보 바이트 카운터',
+                title: '18. 선거운동정보 바이트 카운터',
                 position: { top: '-3px', left: '-10px' },
-                function: '선거운동정보 바이트 수 표시',
+                description: '바이트 카운터 (Byte Counter)',
+                function: '선거운동정보 바이트 수 실시간 표시',
                 behavior: [
-                    '한글 2바이트, 영문 1바이트',
-                    '40바이트 초과 시 경고'
+                    '【표시 형식】',
+                    '• "N / 40 바이트" 형식',
+                    '【바이트 계산】',
+                    '• 한글: 3바이트, 영문/숫자: 1바이트',
+                    '【초과 처리】',
+                    '• 40바이트 초과 시 자동 잘림',
+                    '• 초과 시 경고 표시'
                 ]
             },
             // 19. 변수 버튼 그룹
@@ -4596,26 +4607,46 @@ if (document.readyState === 'loading') {
             // 21. 메시지 내용 입력
             {
                 selector: '#messageContent',
-                title: '메시지 내용',
+                title: '21. 메시지 내용',
                 position: { top: '5px', right: '5px' },
+                description: '텍스트 영역 (Textarea)',
                 function: '발송할 메시지 본문 작성',
                 behavior: [
-                    '실시간 바이트 수 카운트',
-                    '공직선거법 금지어 실시간 검사',
-                    '90바이트 초과 시 LMS 자동 전환'
+                    '【입력 조건】',
+                    '• 필수 입력 항목',
+                    '• SMS: 최대 90바이트 (한글 약 30자, 영문 90자)',
+                    '• LMS: 최대 2,000바이트 (한글 약 666자, 영문 2,000자)',
+                    '• MMS: 최대 2,000바이트 (한글 약 666자, 영문 2,000자)',
+                    '【바이트 계산】',
+                    '• 한글: 3바이트, 영문/숫자: 1바이트',
+                    '• 실시간 바이트 수 카운트',
+                    '【자동 전환】',
+                    '• SMS 선택 시 90바이트 초과하면 LMS로 자동 전환',
+                    '【유효성 검사】',
+                    '• 공직선거법 금지어 실시간 검사',
+                    '• 내용 입력 여부 확인',
+                    '• 바이트 수 초과 확인',
+                    '【Alert 메시지】',
+                    '• 미입력 시: "메시지 내용을 입력해주세요."',
+                    '• 바이트 초과: "글자수가 초과되었습니다."'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 22. 바이트 카운터
             {
                 selector: '#byteCounter',
-                title: '바이트 카운터',
+                title: '22. 바이트 카운터',
                 position: { top: '-3px', left: '-10px' },
-                function: '입력된 메시지 바이트 수 표시',
+                description: '텍스트 (Text)',
+                function: '입력된 메시지 바이트 수 실시간 표시',
                 behavior: [
                     '【계산 규칙】',
-                    '• 한글: 2바이트',
+                    '• 한글: 3바이트',
                     '• 영문/숫자/특수문자: 1바이트',
+                    '【표시 형식】',
+                    '• "현재바이트 / 최대바이트 바이트"',
+                    '• SMS: "N / 90 바이트"',
+                    '• LMS/MMS: "N / 2000 바이트"',
                     '【색상 변화】',
                     '• 90% 미만: 기본 색상',
                     '• 90% 이상: 주황색 경고',
@@ -4900,13 +4931,18 @@ if (document.readyState === 'loading') {
                 behavior: [
                     '【테이블 컬럼】',
                     '• 순번: 자동 부여 (1, 2, 3...)',
-                    '• 이름: 텍스트 입력 (선택)',
+                    '• 이름: 텍스트 입력 (선택, 100바이트 제한)',
                     '• 전화번호: 숫자만 입력 (필수)',
                     '【기본 상태】',
                     '• 모달 열림 시 5개 빈 행 제공',
                     '【입력 필드】',
                     '• 각 셀에 input 필드 제공',
-                    '• 전화번호 셀: oninput으로 숫자만 허용'
+                    '• 이름 셀: 100바이트 제한 (한글 약 33자, 영문 100자)',
+                    '• 전화번호 셀: oninput으로 숫자만 허용',
+                    '【바이트 제한】',
+                    '• 이름 입력 시 100바이트 초과 불가',
+                    '• 초과 시 자동 잘림 및 Toast 알림',
+                    '• Toast: "입력 가능한 글자수(100바이트)를 초과했습니다."'
                 ]
             },
             // 수신번호 추가 모달 - 총 N명 카운트
@@ -5196,61 +5232,163 @@ if (document.readyState === 'loading') {
             // 64. 주소록에 추가 모달
             {
                 selector: '#addToAddressBookModal',
-                title: '주소록에 추가 모달',
+                title: '64. 주소록에 추가 모달',
                 position: { top: '60px', left: '20px' },
-                description: '현재 입력된 수신번호를 주소록에 저장하는 모달',
-                function: '수신번호를 주소록 그룹에 저장',
+                description: '모달 팝업 (Modal Popup)',
+                function: '현재 입력된 수신번호를 주소록에 저장',
                 behavior: [
-                    '추가 방식 선택: 기존 그룹에 추가 / 새 그룹 생성',
-                    '기존 그룹 선택 시 드롭다운에서 그룹 선택',
-                    '새 그룹 생성 시 그룹명 입력',
-                    '추가할 데이터 개수 표시'
+                    '【열기 조건】',
+                    '• "주소록에 추가" 버튼 클릭 시 노출',
+                    '• 수신번호 1건 이상 필수',
+                    '【모달 구성】',
+                    '• 추가 방식 선택 (라디오 버튼)',
+                    '• 기존 그룹 선택 또는 새 그룹명 입력',
+                    '• 추가할 데이터 개수 표시',
+                    '• 취소/추가 버튼'
                 ],
                 api: 'POST /api/addressbook',
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 65. 주소록에 추가 모달 닫기 버튼
+            // 65. 모달 닫기 버튼 (X)
             {
                 selector: '#addToAddressBookModal .modal-close',
-                title: '모달 닫기(X)',
+                title: '65. 모달 닫기 (X)',
                 position: { top: '-5px', right: '-10px' },
-                function: '주소록 추가 모달 닫기'
+                description: '버튼 (Button)',
+                function: '주소록 추가 모달 닫기',
+                behavior: ['클릭 시 모달 닫기']
             },
-            // 66. 기존 그룹에 추가 라디오
+            // 66. 추가 방식 선택
+            {
+                selector: '#addressBookAddTypeGroup',
+                title: '66. 추가 방식 선택',
+                position: { top: '10px', left: '10px' },
+                description: '라디오 버튼 그룹 (Radio Group)',
+                function: '기존 그룹/새 그룹 선택',
+                behavior: [
+                    '【라디오 버튼 항목】',
+                    '• 기존 그룹에 추가 (기본 선택)',
+                    '• 새 그룹 생성',
+                    '【동작】',
+                    '• "기존 그룹에 추가" 선택: 그룹 선택 드롭다운 표시',
+                    '• "새 그룹 생성" 선택: 그룹명 입력 필드 표시'
+                ]
+            },
+            // 67. 기존 그룹에 추가 라디오
             {
                 selector: 'input[name="addressBookAddType"][value="existing"]',
-                title: '기존 그룹에 추가',
+                title: '67. 기존 그룹에 추가',
                 position: { top: '-5px', left: '-10px' },
-                function: '기존 주소록 그룹에 추가'
+                description: '라디오 버튼 (Radio Button)',
+                function: '기존 주소록 그룹에 추가 선택',
+                behavior: ['선택 시 기존 그룹 선택 드롭다운 표시']
             },
-            // 67. 새 그룹 생성 라디오
+            // 68. 새 그룹 생성 라디오
             {
                 selector: 'input[name="addressBookAddType"][value="new"]',
-                title: '새 그룹 생성',
+                title: '68. 새 그룹 생성',
                 position: { top: '-5px', left: '-10px' },
-                function: '새로운 그룹 생성 후 추가'
+                description: '라디오 버튼 (Radio Button)',
+                function: '새로운 그룹 생성 후 추가 선택',
+                behavior: ['선택 시 새 그룹명 입력 필드 표시']
             },
-            // 68. 그룹 선택 드롭다운
+            // 69. 그룹 선택 드롭다운
             {
                 selector: '#addressBookGroupSelect',
-                title: '그룹 선택',
+                title: '69. 그룹 선택',
                 position: { top: '-5px', left: '-10px' },
+                description: '콤보박스 (Select/Dropdown)',
                 function: '기존 그룹 목록에서 선택',
+                behavior: [
+                    '【표시 조건】',
+                    '• "기존 그룹에 추가" 선택 시 표시',
+                    '【동작】',
+                    '• 등록된 그룹 목록 표시',
+                    '• 그룹 선택 시 해당 그룹에 추가',
+                    '【유효성 검사】',
+                    '• 미선택 시: "그룹을 선택해주세요" Alert'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 69. 새 그룹명 입력
+            // 70. 새 그룹명 입력
             {
                 selector: '#newGroupNameInput',
-                title: '새 그룹명',
+                title: '70. 새 그룹명 입력',
                 position: { top: '-5px', left: '-10px' },
+                description: '텍스트 입력 필드 (Text Input)',
                 function: '새로 생성할 그룹명 입력',
+                behavior: [
+                    '【표시 조건】',
+                    '• "새 그룹 생성" 선택 시 표시',
+                    '【바이트 제한】',
+                    '• 최대 50바이트까지 입력 가능',
+                    '• 바이트 계산 방식: 한글 3바이트, 영문/숫자/특수문자 1바이트',
+                    '• 한글 기준: 약 16자 (50 ÷ 3 = 16.67)',
+                    '• 영문 기준: 50자',
+                    '• 혼합 입력 시 실제 바이트 수로 계산',
+                    '【입력 제한】',
+                    '• 50바이트 초과 입력 불가',
+                    '• 초과 시 자동으로 50바이트까지만 입력되고 나머지는 잘림',
+                    '• 잘림 발생 시 Toast 알림 표시',
+                    '• Toast 메시지: "입력 가능한 글자수(50바이트)를 초과했습니다."',
+                    '【실시간 처리】',
+                    '• oninput 이벤트로 실시간 바이트 계산 및 제한',
+                    '• limitInputByByte(this, 50) 함수 호출',
+                    '【유효성 검사】',
+                    '• 미입력 시: "그룹명을 입력해주세요" Alert',
+                    '• 빈 문자열(공백만 입력) 시 미입력으로 처리'
+                ],
                 tags: [{ text: '필수', type: 'required' }]
             },
+            // 71. 추가할 데이터 정보
+            {
+                selector: '#addressBookDataInfo',
+                title: '71. 추가할 데이터 정보',
+                position: { top: '10px', right: '10px' },
+                description: '정보 표시 영역 (Info Box)',
+                function: '추가할 데이터 개수 표시',
+                behavior: [
+                    '【표시 내용】',
+                    '• "추가할 데이터: N개" 형식으로 표시',
+                    '• 현재 수신번호 테이블의 유효한 데이터 개수 반영'
+                ]
+            },
+            // 72. 취소 버튼
+            {
+                selector: '#addToAddressBookModal .btn-outline',
+                title: '72. 취소 버튼',
+                position: { top: '-5px', left: '-10px' },
+                description: '버튼 (Button - Outline)',
+                function: '모달 닫기',
+                behavior: ['클릭 시 모달 닫기, 입력 내용 초기화']
+            },
+            // 73. 추가 버튼
+            {
+                selector: '#addToAddressBookModal .btn-primary',
+                title: '73. 추가 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '주소록에 데이터 추가',
+                behavior: [
+                    '【유효성 검증】',
+                    '• 기존 그룹 선택 시: 그룹 미선택 → "그룹을 선택해주세요" Alert',
+                    '• 새 그룹 생성 시: 그룹명 미입력 → "그룹명을 입력해주세요" Alert',
+                    '【추가 처리】',
+                    '• 유효성 검증 통과 시 API 호출',
+                    '• 선택된 수신번호 데이터를 주소록에 저장',
+                    '【추가 결과】',
+                    '• 성공: "주소록에 N건이 추가되었습니다" Toast',
+                    '• 실패: "주소록 추가에 실패했습니다" Toast',
+                    '• 성공 시 모달 자동 닫기'
+                ],
+                api: 'POST /api/addressbook',
+                tags: [{ text: 'API', type: 'api' }]
+            },
             // ===== 테스트 발송 모달 =====
-            // 70. 테스트 발송 모달
+            // 74. 테스트 발송 모달
             {
                 selector: '#testSendModal',
-                title: '테스트 발송 모달',
+                title: '74. 테스트 발송 모달',
                 position: { top: '60px', left: '20px' },
                 description: '실제 발송 전 테스트 번호로 메시지를 확인하는 모달',
                 function: '테스트 번호로 메시지 발송',
@@ -5263,7 +5401,7 @@ if (document.readyState === 'loading') {
                 api: 'POST /api/election/test-send',
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 71. 테스트 발송 모달 닫기 버튼
+            // 75. 테스트 발송 모달 닫기 버튼
             {
                 selector: '#testSendModal .modal-close',
                 title: '모달 닫기(X)',

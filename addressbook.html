@@ -1328,7 +1328,7 @@ body {
                 <form id="addGroupForm">
                     <div class="form-group">
                         <label class="form-label required">그룹명</label>
-                        <input type="text" class="form-input" id="newGroupName" required>
+                        <input type="text" class="form-input" id="newGroupName" required oninput="limitInputByByte(this, 50)">
                     </div>
                 </form>
                 
@@ -1408,7 +1408,7 @@ body {
                 <form id="editGroupNameForm">
                     <div class="form-group">
                         <label class="form-label required">그룹명</label>
-                        <input type="text" class="form-input" id="editGroupNameInput" required>
+                        <input type="text" class="form-input" id="editGroupNameInput" required oninput="limitInputByByte(this, 50)">
                         <input type="hidden" id="editGroupId">
                     </div>
                 </form>
@@ -1860,6 +1860,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentGroupMenu = null;
             }
         });
+
+        // 바이트 길이 계산 함수 (한글 3바이트, 영문/숫자 1바이트)
+        function getByteLength(str) {
+            let byteLength = 0;
+            for (let i = 0; i < str.length; i++) {
+                const charCode = str.charCodeAt(i);
+                if (charCode > 127) {
+                    byteLength += 3; // 한글 등 멀티바이트 문자
+                } else {
+                    byteLength += 1; // 영문, 숫자, 특수문자
+                }
+            }
+            return byteLength;
+        }
+
+        // 바이트 제한 적용 함수
+        function limitInputByByte(input, maxByte = 50) {
+            let value = input.value;
+            let byteLength = getByteLength(value);
+            
+            while (byteLength > maxByte && value.length > 0) {
+                value = value.slice(0, -1);
+                byteLength = getByteLength(value);
+            }
+            
+            if (input.value !== value) {
+                input.value = value;
+                showToast(`입력 가능한 글자수(${maxByte}바이트)를 초과했습니다.`, 'warning');
+            }
+        }
 
         function editGroupName(groupId, currentName) {
             document.getElementById('editGroupId').value = groupId;
@@ -3008,15 +3038,106 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // ===== 주소 추가 모달 =====
             // 27. 주소 추가 모달
-            { selector: '#addAddressModal', title: '27. 주소 추가 모달', position: { top: '20px', left: '20px' }, description: '새 연락처 추가 팝업', function: '연락처 정보 입력 및 저장' },
+            { 
+                selector: '#addAddressModal', 
+                title: '27. 주소 추가 모달', 
+                position: { top: '20px', left: '20px' }, 
+                description: '모달 팝업 (Modal Popup)',
+                function: '새 연락처 추가',
+                behavior: [
+                    '【열기 조건】',
+                    '• "주소 추가" 버튼 클릭 시 노출',
+                    '• "수정" 버튼 클릭 시 수정 모드로 노출',
+                    '【모달 구성】',
+                    '• 이름 입력 필드 (필수)',
+                    '• 전화번호 입력 필드 (필수)',
+                    '• 변수1~3 입력 필드 (선택)',
+                    '• 취소/저장 버튼'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
             // 28. 모달 닫기 버튼 (X)
-            { selector: '#addAddressModal .modal-close', title: '28. 모달 닫기 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: "closeModal('addAddressModal') 호출" },
-            // 29. 취소 버튼
-            { selector: '#addAddressModal .btn-outline', title: '29. 취소 버튼', position: { top: '-5px', left: '-10px' }, description: '추가 취소', function: "closeModal('addAddressModal') 호출" },
-            // 30. 저장 버튼
+            { 
+                selector: '#addAddressModal .modal-close', 
+                title: '28. 모달 닫기 (X)', 
+                position: { top: '-5px', right: '-10px' }, 
+                description: '버튼 (Button)',
+                function: '주소 추가 모달 닫기',
+                behavior: ['클릭 시 모달 닫기']
+            },
+            // 29. 이름 입력 필드
+            { 
+                selector: '#addAddressModal .form-group:first-of-type input', 
+                title: '29. 이름 입력', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '텍스트 입력 필드 (Text Input)',
+                function: '연락처 이름 입력',
+                behavior: [
+                    '【입력 조건】',
+                    '• 필수 입력 항목',
+                    '【유효성 검사】',
+                    '• 미입력 시: "이름을 입력해주세요." Alert'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 30. 전화번호 입력 필드
+            { 
+                selector: '#addAddressModal .form-group:nth-of-type(2) input', 
+                title: '30. 전화번호 입력', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '텍스트 입력 필드 (Text Input)',
+                function: '연락처 전화번호 입력',
+                behavior: [
+                    '【입력 조건】',
+                    '• 필수 입력 항목',
+                    '• 전화번호 형식: 010-1234-5678',
+                    '【유효성 검사】',
+                    '• 미입력 시: "전화번호를 입력해주세요." Alert',
+                    '• 형식 오류: "올바른 전화번호 형식이 아닙니다." Alert',
+                    '• 중복: "이미 등록된 전화번호입니다." Alert'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 31. 변수1 입력 필드
+            { 
+                selector: '#addressVar1', 
+                title: '31. 변수1 입력', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '텍스트 입력 필드 (Text Input)',
+                function: '변수1 데이터 입력',
+                behavior: ['선택 입력 항목']
+            },
+            // 32. 변수2 입력 필드
+            { 
+                selector: '#addressVar2', 
+                title: '32. 변수2 입력', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '텍스트 입력 필드 (Text Input)',
+                function: '변수2 데이터 입력',
+                behavior: ['선택 입력 항목']
+            },
+            // 33. 변수3 입력 필드
+            { 
+                selector: '#addressVar3', 
+                title: '33. 변수3 입력', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '텍스트 입력 필드 (Text Input)',
+                function: '변수3 데이터 입력',
+                behavior: ['선택 입력 항목']
+            },
+            // 34. 취소 버튼
+            { 
+                selector: '#addAddressModal .btn-outline', 
+                title: '34. 취소 버튼', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '버튼 (Button - Outline)',
+                function: '주소 추가 취소',
+                behavior: ["closeModal('addAddressModal') 호출", '입력 내용 초기화']
+            },
+            // 35. 저장 버튼
             {
                 selector: '#addAddressModal .btn-primary',
-                title: '30. 저장 버튼',
+                title: '35. 저장 버튼',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button - Primary)',
                 function: '연락처 저장',
@@ -3042,32 +3163,174 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             
             // ===== 그룹 추가 모달 =====
-            // 30. 그룹 추가 모달
-            { selector: '#addGroupModal', title: '그룹 추가 모달', position: { top: '20px', left: '20px' }, description: '새 그룹 생성 및 주소 등록', function: '그룹명 입력, 주소 대량 등록' },
-            // 31. 그룹명 입력
-            { selector: '#newGroupName', title: '그룹명 입력', position: { top: '-5px', left: '-10px' }, description: '새 그룹 이름', function: '그룹 식별명 지정', tags: [{ text: '필수', type: 'required' }] },
-            // 32. 엑셀업로드 버튼 (그룹 모달)
-            { selector: '#addGroupModal .btn-primary[onclick*="groupExcelFileInput"]', title: '엑셀업로드 버튼', position: { top: '-5px', left: '-10px' }, description: '엑셀 파일 업로드', function: 'groupExcelFileInput 클릭', behavior: ['파일 선택 다이얼로그'] },
-            // 33. 엑셀샘플 다운로드 버튼 (그룹 모달)
-            { selector: '#addGroupModal .btn-outline[onclick*="downloadGroupSampleFile"]', title: '엑셀샘플 다운로드', position: { top: '-5px', left: '-10px' }, description: '샘플 파일 다운로드', function: 'downloadGroupSampleFile() 호출' },
-            // 34. 전체 선택 체크박스 (그룹 모달)
-            { selector: '#selectAllGroupCheckbox', title: '전체 선택', position: { top: '-5px', left: '-10px' }, description: '모든 행 선택', function: 'toggleSelectAllGroup(checked) 호출' },
-            // 35. 행 추가 버튼 (그룹 모달)
-            { selector: '#addGroupModal .btn-sm[onclick*="addGroupRow"]', title: '행 추가 버튼', position: { top: '-5px', left: '-10px' }, description: '입력 행 추가', function: 'addGroupRow() 호출' },
-            // 36. 선택 행 삭제 버튼 (그룹 모달)
-            { selector: '#addGroupModal .btn-sm[onclick*="deleteSelectedGroupRows"]', title: '선택 행 삭제', position: { top: '-5px', left: '-10px' }, description: '선택된 행 삭제', function: 'deleteSelectedGroupRows() 호출' },
-            // 37. 전체삭제 버튼 (그룹 모달)
-            { selector: '#addGroupModal .btn-sm[onclick*="deleteAllGroupRows"]', title: '전체삭제', position: { top: '-5px', left: '-10px' }, description: '모든 행 삭제', function: 'deleteAllGroupRows() 호출' },
-            // 38. 중복번호 삭제 버튼 (그룹 모달)
-            { selector: '#addGroupModal .btn-sm[onclick*="removeDuplicateGroupNumbers"]', title: '중복번호 삭제', position: { top: '-5px', left: '-10px' }, description: '중복 전화번호 제거', function: 'removeDuplicateGroupNumbers() 호출' },
-            // 39. 수신거부번호 삭제 버튼 (그룹 모달)
-            { selector: '#addGroupModal .btn-sm[onclick*="removeRejectGroupNumbers"]', title: '수신거부번호 삭제', position: { top: '-5px', right: '-10px' }, description: '수신거부 번호 제거', function: 'removeRejectGroupNumbers() 호출' },
-            // 40. 취소 버튼 (그룹 모달)
-            { selector: '#addGroupModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '그룹 생성 취소', function: "closeModal('addGroupModal') 호출" },
-            // 41. 저장 버튼 (그룹 모달)
+            // 36. 그룹 추가 모달
+            { 
+                selector: '#addGroupModal', 
+                title: '36. 그룹 추가 모달', 
+                position: { top: '20px', left: '20px' }, 
+                description: '모달 팝업 (Modal Popup)',
+                function: '새 그룹 생성 및 주소 등록',
+                behavior: [
+                    '【열기 조건】',
+                    '• "+ 추가" 버튼 클릭 시 노출',
+                    '【모달 구성】',
+                    '• 그룹명 입력 필드',
+                    '• 주소록 입력 영역 (엑셀 업로드/직접 입력)',
+                    '• 취소/저장 버튼'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 37. 모달 닫기 버튼 (X)
+            { 
+                selector: '#addGroupModal .modal-close', 
+                title: '37. 모달 닫기 (X)', 
+                position: { top: '-5px', right: '-10px' }, 
+                description: '버튼 (Button)',
+                function: '그룹 추가 모달 닫기',
+                behavior: ['클릭 시 모달 닫기']
+            },
+            // 38. 그룹명 입력
+            { 
+                selector: '#newGroupName', 
+                title: '38. 그룹명 입력', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '텍스트 입력 필드 (Text Input)',
+                function: '새 그룹 이름 입력', 
+                behavior: [
+                    '【입력 조건】',
+                    '• 필수 입력 항목',
+                    '【바이트 제한】',
+                    '• 최대 50바이트까지 입력 가능',
+                    '• 바이트 계산 방식: 한글 3바이트, 영문/숫자/특수문자 1바이트',
+                    '• 한글 기준: 약 16자 (50 ÷ 3 = 16.67)',
+                    '• 영문 기준: 50자',
+                    '• 혼합 입력 시 실제 바이트 수로 계산',
+                    '【입력 제한】',
+                    '• 50바이트 초과 입력 불가',
+                    '• 초과 시 자동으로 50바이트까지만 입력되고 나머지는 잘림',
+                    '• 잘림 발생 시 Toast 알림 표시',
+                    '• Toast 메시지: "입력 가능한 글자수(50바이트)를 초과했습니다."',
+                    '【실시간 처리】',
+                    '• oninput 이벤트로 실시간 바이트 계산 및 제한',
+                    '• limitInputByByte(this, 50) 함수 호출',
+                    '【유효성 검사】',
+                    '• 미입력 시: "그룹명을 입력해주세요." Alert',
+                    '• 빈 문자열(공백만 입력) 시 미입력으로 처리',
+                    '• 중복 시: "이미 존재하는 그룹명입니다." Alert'
+                ],
+                tags: [{ text: '필수', type: 'required' }] 
+            },
+            // 39. 주소록 입력 테이블 (그룹 모달)
+            { 
+                selector: '#groupDataTable', 
+                title: '39. 주소록 입력 테이블', 
+                position: { top: '10px', left: '10px' }, 
+                description: '테이블 (Table)',
+                function: '주소록 직접 입력',
+                behavior: [
+                    '【테이블 컬럼】',
+                    '• 체크박스 (다중 선택)',
+                    '• 순번 (자동 부여)',
+                    '• 이름 (편집 가능, 100바이트 제한)',
+                    '• 전화번호 (편집 가능, 필수, 숫자만 입력)',
+                    '• 변수1~3 (편집 가능, 선택, 100바이트 제한)',
+                    '【기본 상태】',
+                    '• 모달 열림 시 5개 빈 행 제공',
+                    '【입력 필드】',
+                    '• 각 셀에 input 필드 제공',
+                    '• 이름/변수1~3: 100바이트 제한',
+                    '• 전화번호: oninput으로 숫자만 허용',
+                    '【바이트 제한】',
+                    '• 이름/변수1~3 입력 시 100바이트 초과 불가',
+                    '• 초과 시 자동 잘림 및 Toast 알림',
+                    '• Toast: "입력 가능한 글자수(100바이트)를 초과했습니다."'
+                ]
+            },
+            // 40. 엑셀업로드 버튼 (그룹 모달)
+            { 
+                selector: '#addGroupModal .btn-primary[onclick*="groupExcelFileInput"]', 
+                title: '40. 엑셀업로드', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '버튼 (Button - Primary)',
+                function: '엑셀 파일 업로드', 
+                behavior: ['파일 선택 다이얼로그 열기', '.xlsx,.xls,.csv 지원']
+            },
+            // 41. 엑셀샘플 다운로드 버튼 (그룹 모달)
+            { 
+                selector: '#addGroupModal .btn-outline[onclick*="downloadGroupSampleFile"]', 
+                title: '41. 엑셀샘플 다운로드', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '버튼 (Button - Outline)',
+                function: '샘플 파일 다운로드', 
+                behavior: ['주소록_샘플파일.xlsx 다운로드']
+            },
+            // 42. 전체 선택 체크박스 (그룹 모달)
+            { 
+                selector: '#selectAllGroupCheckbox', 
+                title: '42. 전체 선택', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '체크박스 (Checkbox)',
+                function: '모든 행 선택/해제', 
+                behavior: ['전체 선택/해제 토글']
+            },
+            // 43. 행 추가 버튼 (그룹 모달)
+            { 
+                selector: '#addGroupModal .btn-sm[onclick*="addGroupRow"]', 
+                title: '43. 행 추가', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '버튼 (Button)',
+                function: '입력 행 추가', 
+                behavior: ['addGroupRow() 호출']
+            },
+            // 44. 선택 행 삭제 버튼 (그룹 모달)
+            { 
+                selector: '#addGroupModal .btn-sm[onclick*="deleteSelectedGroupRows"]', 
+                title: '44. 선택 행 삭제', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '버튼 (Button)',
+                function: '선택된 행 삭제', 
+                behavior: ['deleteSelectedGroupRows() 호출']
+            },
+            // 45. 전체삭제 버튼 (그룹 모달)
+            { 
+                selector: '#addGroupModal .btn-sm[onclick*="deleteAllGroupRows"]', 
+                title: '45. 전체삭제', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '버튼 (Button)',
+                function: '모든 행 삭제', 
+                behavior: ['deleteAllGroupRows() 호출']
+            },
+            // 46. 중복번호 삭제 버튼 (그룹 모달)
+            { 
+                selector: '#addGroupModal .btn-sm[onclick*="removeDuplicateGroupNumbers"]', 
+                title: '46. 중복번호 삭제', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '버튼 (Button)',
+                function: '중복 전화번호 제거', 
+                behavior: ['removeDuplicateGroupNumbers() 호출']
+            },
+            // 47. 수신거부번호 삭제 버튼 (그룹 모달)
+            { 
+                selector: '#addGroupModal .btn-sm[onclick*="removeRejectGroupNumbers"]', 
+                title: '47. 수신거부번호 삭제', 
+                position: { top: '-5px', right: '-10px' }, 
+                description: '버튼 (Button)',
+                function: '수신거부 번호 제거', 
+                behavior: ['removeRejectGroupNumbers() 호출']
+            },
+            // 48. 취소 버튼 (그룹 모달)
+            { 
+                selector: '#addGroupModal .modal-footer .btn-outline', 
+                title: '48. 취소 버튼', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '버튼 (Button - Outline)',
+                function: '그룹 생성 취소', 
+                behavior: ["closeModal('addGroupModal') 호출", '입력 내용 초기화']
+            },
+            // 49. 저장 버튼 (그룹 모달)
             {
                 selector: '#addGroupModal .modal-footer .btn-primary',
-                title: '41. 저장 버튼',
+                title: '49. 저장 버튼',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button - Primary)',
                 function: '그룹 생성 및 연락처 저장',
@@ -3092,24 +3355,127 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             
             // ===== 그룹명 수정 모달 =====
-            // 42. 그룹명 수정 모달
-            { selector: '#editGroupNameModal', title: '그룹명 수정 모달', position: { top: '20px', left: '20px' }, description: '그룹명 변경 팝업', function: '그룹명 수정' },
-            // 43. 취소 버튼 (그룹명 수정)
-            { selector: '#editGroupNameModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '수정 취소', function: "closeModal('editGroupNameModal') 호출" },
-            // 44. 저장 버튼 (그룹명 수정)
-            { selector: '#editGroupNameModal .btn-primary', title: '저장 버튼', position: { top: '-5px', right: '-10px' }, description: '그룹명 저장', function: 'saveGroupName() 호출', api: 'PUT /api/addressbook/groups/{id}' },
+            // 50. 그룹명 수정 모달
+            { 
+                selector: '#editGroupNameModal', 
+                title: '50. 그룹명 수정 모달', 
+                position: { top: '20px', left: '20px' }, 
+                description: '모달 팝업 (Modal Popup)',
+                function: '기존 그룹명 변경',
+                behavior: [
+                    '【열기 조건】',
+                    '• 그룹 메뉴(⋮) → "그룹명 수정" 클릭 시 노출',
+                    '【모달 구성】',
+                    '• 그룹명 입력 필드',
+                    '• 취소/저장 버튼'
+                ]
+            },
+            // 51. 모달 닫기 버튼 (X) - 그룹명 수정
+            { 
+                selector: '#editGroupNameModal .modal-close', 
+                title: '51. 모달 닫기 (X)', 
+                position: { top: '-5px', right: '-10px' }, 
+                description: '버튼 (Button)',
+                function: '그룹명 수정 모달 닫기',
+                behavior: ['클릭 시 모달 닫기']
+            },
+            // 52. 그룹명 입력 (수정)
+            { 
+                selector: '#editGroupNameInput', 
+                title: '52. 그룹명 입력', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '텍스트 입력 필드 (Text Input)',
+                function: '수정할 그룹명 입력',
+                behavior: [
+                    '【입력 조건】',
+                    '• 필수 입력 항목',
+                    '• 기존 그룹명이 기본값으로 표시',
+                    '【글자수 제한】',
+                    '• 50바이트 제한 (한글 약 16자, 영문 50자)',
+                    '• 초과 시 자동 잘림 및 Toast 알림',
+                    '• Toast: "입력 가능한 글자수(50바이트)를 초과했습니다."',
+                    '【유효성 검사】',
+                    '• 미입력 시: "그룹명을 입력해주세요." Toast'
+                ],
+                tags: [{ text: '필수', type: 'required' }] 
+            },
+            // 53. 취소 버튼 (그룹명 수정)
+            { 
+                selector: '#editGroupNameModal .btn-outline', 
+                title: '53. 취소 버튼', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '버튼 (Button - Outline)',
+                function: '수정 취소', 
+                behavior: ['클릭 시 모달 닫기, 입력 내용 초기화']
+            },
+            // 54. 저장 버튼 (그룹명 수정)
+            { 
+                selector: '#editGroupNameModal .btn-primary', 
+                title: '54. 저장 버튼', 
+                position: { top: '-5px', right: '-10px' }, 
+                description: '버튼 (Button - Primary)',
+                function: '그룹명 저장', 
+                behavior: [
+                    '【유효성 검사】',
+                    '• 그룹명 미입력 시: "그룹명을 입력해주세요." Toast',
+                    '【저장 처리】',
+                    '• 유효성 검증 통과 시 API 호출',
+                    '• 그룹명 업데이트',
+                    '【저장 결과】',
+                    '• 성공: "그룹명이 수정되었습니다." Toast',
+                    '• 성공 시 모달 자동 닫기'
+                ],
+                api: 'PUT /api/addressbook/groups/{id}',
+                tags: [{ text: 'API', type: 'api' }] 
+            },
             
             // ===== 그룹 삭제 확인 모달 =====
-            // 45. 그룹 삭제 모달
-            { selector: '#deleteGroupModal', title: '그룹 삭제 모달', position: { top: '20px', left: '20px' }, description: '그룹 삭제 확인', function: '삭제 확인 요청' },
-            // 46. 삭제 확인 체크박스
-            { selector: '#deleteGroupConfirm', title: '삭제 확인 체크', position: { top: '-5px', left: '-10px' }, description: '삭제 확인 동의', function: '체크 시 삭제 버튼 활성화' },
-            // 47. 취소 버튼 (그룹 삭제)
-            { selector: '#deleteGroupModal .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '삭제 취소', function: "closeModal('deleteGroupModal') 호출" },
-            // 48. 삭제 버튼 (그룹 삭제)
+            // 55. 그룹 삭제 모달
+            { 
+                selector: '#deleteGroupModal', 
+                title: '55. 그룹 삭제 모달', 
+                position: { top: '20px', left: '20px' }, 
+                description: '모달 팝업 (Modal Popup)',
+                function: '그룹 삭제 확인',
+                behavior: [
+                    '【열기 조건】',
+                    '• 그룹 메뉴(⋮) → "그룹 삭제" 클릭 시 노출',
+                    '【모달 구성】',
+                    '• 삭제 확인 체크박스',
+                    '• 취소/삭제 버튼'
+                ]
+            },
+            // 56. 모달 닫기 버튼 (X) - 그룹 삭제
+            { 
+                selector: '#deleteGroupModal .modal-close', 
+                title: '56. 모달 닫기 (X)', 
+                position: { top: '-5px', right: '-10px' }, 
+                description: '버튼 (Button)',
+                function: '그룹 삭제 모달 닫기',
+                behavior: ['클릭 시 모달 닫기']
+            },
+            // 57. 삭제 확인 체크박스
+            { 
+                selector: '#deleteGroupConfirm', 
+                title: '57. 삭제 확인 체크', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '체크박스 (Checkbox)',
+                function: '삭제 확인 동의', 
+                behavior: ['체크 시 삭제 버튼 활성화']
+            },
+            // 58. 취소 버튼 (그룹 삭제)
+            { 
+                selector: '#deleteGroupModal .btn-outline', 
+                title: '58. 취소 버튼', 
+                position: { top: '-5px', left: '-10px' }, 
+                description: '버튼 (Button - Outline)',
+                function: '삭제 취소', 
+                behavior: ["closeModal('deleteGroupModal') 호출"]
+            },
+            // 59. 삭제 버튼 (그룹 삭제)
             {
                 selector: '#deleteGroupModal .btn-danger',
-                title: '48. 삭제 버튼',
+                title: '59. 삭제 버튼',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button - Danger)',
                 function: '그룹 삭제 실행',

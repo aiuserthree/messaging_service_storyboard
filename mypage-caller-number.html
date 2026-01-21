@@ -1076,7 +1076,16 @@ body {
             <div class="card" id="callerNumberCard">
                 <div class="flex-between mb-2">
                     <h3 class="card-title">발신번호 목록</h3>
-                    <button class="btn btn-primary" onclick="openRegisterModal()" id="registerCallerBtn">발신번호 등록</button>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <!-- 테스트용 회원 유형 변경 버튼 (개발/테스트용) -->
+                        <div style="display: flex; gap: 4px; align-items: center; padding: 4px 8px; background: var(--bg-color); border-radius: var(--radius-md); font-size: 12px;">
+                            <span style="color: var(--text-secondary); margin-right: 4px;">테스트:</span>
+                            <button class="btn btn-sm btn-outline" onclick="setTestMemberType('personal')" style="padding: 4px 8px; font-size: 11px;">개인회원</button>
+                            <button class="btn btn-sm btn-outline" onclick="setTestMemberType('business')" style="padding: 4px 8px; font-size: 11px;">기업회원</button>
+                            <span id="currentMemberTypeDisplay" style="margin-left: 8px; color: var(--primary-color); font-weight: 600;"></span>
+                        </div>
+                        <button class="btn btn-primary" onclick="openRegisterModal()" id="registerCallerBtn">발신번호 등록</button>
+                    </div>
                 </div>
 
                 <!-- 상태 필터 -->
@@ -1158,62 +1167,25 @@ body {
                 <div class="step-indicator">
                     <div class="step-item active" id="step1">
                         <div class="step-circle">1</div>
-                        <div class="step-label">회원 유형</div>
+                        <div class="step-label">기본 정보</div>
                     </div>
                     <div class="step-item" id="step2">
                         <div class="step-circle">2</div>
-                        <div class="step-label">기본 정보</div>
+                        <div class="step-label">인증 및 서류</div>
                     </div>
                     <div class="step-item" id="step3">
                         <div class="step-circle">3</div>
-                        <div class="step-label">인증 및 서류</div>
+                        <div class="step-label">연락처</div>
                     </div>
                     <div class="step-item" id="step4">
                         <div class="step-circle">4</div>
-                        <div class="step-label">연락처</div>
-                    </div>
-                    <div class="step-item" id="step5">
-                        <div class="step-circle">5</div>
                         <div class="step-label">제출</div>
                     </div>
                 </div>
 
                 <form id="registerForm">
-                    <!-- STEP 1: 회원 유형 -->
+                    <!-- STEP 1: 기본 정보 -->
                     <div id="step1Content" class="step-content">
-                        <h3 style="margin-bottom: 20px;">회원 유형 선택</h3>
-                        <div class="form-group">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                                <div class="card" style="cursor: pointer; border: 2px solid var(--border-color);" onclick="selectMemberType('personal')">
-                                    <h4 style="margin-bottom: 8px;">개인</h4>
-                                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">
-                                        개인 명의 발신번호를 등록합니다
-                                    </p>
-                                    <div style="font-size: 12px; color: var(--text-secondary);">
-                                        <strong>필수 서류:</strong><br>
-                                        • 본인인증<br>
-                                        • 통신서비스 이용증명원 또는 통신사 가입증명서
-                                    </div>
-                                </div>
-                                <div class="card" style="cursor: pointer; border: 2px solid var(--border-color);" onclick="selectMemberType('business')">
-                                    <h4 style="margin-bottom: 8px;">기업</h4>
-                                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">
-                                        기업/사업자 명의 발신번호를 등록합니다
-                                    </p>
-                                    <div style="font-size: 12px; color: var(--text-secondary);">
-                                        <strong>필수 서류:</strong><br>
-                                        • 본인인증<br>
-                                        • 사업자등록증<br>
-                                        • 재직증명서<br>
-                                        • 통신서비스 이용증명원
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- STEP 2: 기본 정보 -->
-                    <div id="step2Content" class="step-content" style="display: none;">
                         <h3 style="margin-bottom: 20px;">기본 정보 입력</h3>
                         <div class="form-group">
                             <label class="form-label required">발신번호 등록</label>
@@ -1232,8 +1204,8 @@ body {
                         </div>
                     </div>
 
-                    <!-- STEP 3: 명의 구분 및 서류 -->
-                    <div id="step3Content" class="step-content" style="display: none;">
+                    <!-- STEP 2: 명의 구분 및 서류 -->
+                    <div id="step2Content" class="step-content" style="display: none;">
                         <h3 style="margin-bottom: 20px;">명의 구분 및 서류 제출</h3>
                         
                         <!-- 명의 구분 선택 -->
@@ -1259,8 +1231,8 @@ body {
                         </div>
                     </div>
 
-                    <!-- STEP 4: 연락처 -->
-                    <div id="step4Content" class="step-content" style="display: none;">
+                    <!-- STEP 3: 연락처 -->
+                    <div id="step3Content" class="step-content" style="display: none;">
                         <h3 style="margin-bottom: 20px;">연락처 정보</h3>
                         <div class="form-group">
                             <label class="form-label required">휴대폰번호</label>
@@ -1274,8 +1246,8 @@ body {
                         </div>
                     </div>
 
-                    <!-- STEP 5: 제출 -->
-                    <div id="step5Content" class="step-content" style="display: none;">
+                    <!-- STEP 4: 제출 -->
+                    <div id="step4Content" class="step-content" style="display: none;">
                         <h3 style="margin-bottom: 20px;">최종 확인</h3>
                         <div class="alert alert-info">
                             모든 정보를 확인하신 후 제출해주세요. 제출 후 수정이 불가능합니다.
@@ -1679,6 +1651,8 @@ document.head.appendChild(style);
 // 드롭다운 메뉴 초기화
 document.addEventListener('DOMContentLoaded', function() {
     initDropdownMenus();
+    // 회원 유형 표시 업데이트
+    updateMemberTypeDisplay();
 });
 
 // initDropdownMenus 함수는 header.js에서 제공됩니다
@@ -1686,12 +1660,43 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     <script>
         let currentStep = 1;
-        let selectedMemberType = '';
+        let selectedMemberType = ''; // 'personal' or 'business'
         let selectedOwnershipType = '';
         let numberType = null; // 'MOBILE' or 'LANDLINE'
         let requiresAuth = false;
         let authCompleted = false;
         let authInfo = null;
+
+        // 현재 회원 유형 확인 함수 (실제로는 API 호출)
+        function getCurrentMemberType() {
+            // 실제로는 API 호출 또는 localStorage에서 가져옴
+            // 예시: localStorage.getItem('memberType') 또는 API 호출
+            // 개인사업자, 법인사업자, 선거회원으로 전환한 경우 'business' 반환
+            // 그 외의 경우 'personal' 반환
+            
+            // 시뮬레이션: localStorage에서 회원 유형 확인
+            const memberType = localStorage.getItem('memberType');
+            if (memberType === 'business' || memberType === 'corporate' || memberType === 'election') {
+                return 'business';
+            }
+            return 'personal'; // 기본값: 개인회원
+        }
+
+        // 테스트용 회원 유형 설정 함수
+        function setTestMemberType(type) {
+            localStorage.setItem('memberType', type);
+            updateMemberTypeDisplay();
+            showToast(`회원 유형이 ${type === 'personal' ? '개인회원' : '기업회원'}으로 설정되었습니다.`, 'success');
+        }
+
+        // 현재 회원 유형 표시 업데이트
+        function updateMemberTypeDisplay() {
+            const display = document.getElementById('currentMemberTypeDisplay');
+            if (display) {
+                const memberType = getCurrentMemberType();
+                display.textContent = memberType === 'personal' ? '개인회원' : '기업회원';
+            }
+        }
 
         function filterStatus(status) {
             // 모든 필터 버튼에서 active 클래스 제거
@@ -1725,16 +1730,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        function selectMemberType(type) {
-            selectedMemberType = type;
-            document.querySelectorAll('#step1Content .card').forEach(card => {
-                card.style.borderColor = 'var(--border-color)';
-            });
-            event.currentTarget.style.borderColor = 'var(--primary-color)';
-            
-            // STEP 2로 이동
-            nextStep();
-        }
+        // selectMemberType 함수 제거 (더 이상 필요 없음)
 
         // 발신번호 유형 자동 인식
         function detectNumberType() {
@@ -2166,11 +2162,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function nextStep() {
             // 현재 단계 검증
-            if (currentStep === 1 && !selectedMemberType) {
-                showToast('회원 유형을 선택해주세요.', 'warning');
-                return;
-            }
-            if (currentStep === 2) {
+            if (currentStep === 1) {
                 const callerNumber = document.getElementById('callerNumberInput').value;
                 if (!callerNumber) {
                     showToast('발신번호를 입력해주세요.', 'warning');
@@ -2181,7 +2173,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
             }
-            if (currentStep === 3) {
+            if (currentStep === 2) {
                 if (!selectedOwnershipType) {
                     showToast('명의 구분을 선택해주세요.', 'warning');
                     return;
@@ -2191,7 +2183,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
             }
-            if (currentStep === 4) {
+            if (currentStep === 3) {
                 const contactPhone = document.getElementById('contactPhoneInput').value;
                 if (!contactPhone) {
                     showToast('연락처를 입력해주세요.', 'warning');
@@ -2199,7 +2191,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            if (currentStep < 5) {
+            if (currentStep < 4) {
                 document.getElementById(`step${currentStep}Content`).style.display = 'none';
                 document.getElementById(`step${currentStep}`).classList.remove('active');
                 document.getElementById(`step${currentStep}`).classList.add('completed');
@@ -2208,12 +2200,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById(`step${currentStep}Content`).style.display = 'block';
                 document.getElementById(`step${currentStep}`).classList.add('active');
                 
-                // STEP 3 진입 시 명의 구분 섹션 업데이트
-                if (currentStep === 3) {
+                // STEP 2 진입 시 명의 구분 섹션 업데이트
+                if (currentStep === 2) {
                     updateOwnershipSection();
                 }
                 
-                if (currentStep === 5) {
+                if (currentStep === 4) {
                     document.getElementById('nextBtn').style.display = 'none';
                     document.getElementById('submitBtn').style.display = 'block';
                     // 최종 확인 정보 업데이트
@@ -2334,7 +2326,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function resetForm() {
             currentStep = 1;
-            selectedMemberType = '';
+            // 현재 회원 유형에 따라 자동 설정
+            selectedMemberType = getCurrentMemberType();
             selectedOwnershipType = '';
             numberType = null;
             requiresAuth = false;
@@ -2342,20 +2335,26 @@ document.addEventListener('DOMContentLoaded', function() {
             authInfo = null;
             
             // STEP 표시 초기화
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 4; i++) {
                 document.getElementById(`step${i}`).classList.remove('active', 'completed');
-                document.getElementById(`step${i}Content`).style.display = 'none';
+                const stepContent = document.getElementById(`step${i}Content`);
+                if (stepContent) {
+                    stepContent.style.display = 'none';
+                }
             }
             document.getElementById('step1').classList.add('active');
             document.getElementById('step1Content').style.display = 'block';
             
             // 버튼 초기화
-            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'block';
             document.getElementById('submitBtn').style.display = 'none';
             
             // 입력값 초기화
             document.getElementById('registerForm').reset();
-            document.getElementById('numberTypeBadge').style.display = 'none';
+            const numberTypeBadge = document.getElementById('numberTypeBadge');
+            if (numberTypeBadge) {
+                numberTypeBadge.style.display = 'none';
+            }
         }
 
         // 발신번호 등록 모달 열기
@@ -2494,30 +2493,26 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // ===== 발신번호 등록 모달 =====
             // 16. 발신번호 등록 모달
-            { selector: '#registerModal', title: '발신번호 등록 모달', position: { top: '60px', left: '20px' }, description: '발신번호 신규 등록 5단계 프로세스', function: '발신번호 등록 절차 진행', behavior: ['회원유형→기본정보→인증/서류→연락처→제출'], api: 'POST /api/caller-numbers' },
+            { selector: '#registerModal', title: '발신번호 등록 모달', position: { top: '60px', left: '20px' }, description: '발신번호 신규 등록 4단계 프로세스', function: '발신번호 등록 절차 진행', behavior: ['기본정보→인증/서류→연락처→제출', '회원 유형은 자동으로 설정됨 (개인회원: personal, 기업회원: business)'], api: 'POST /api/caller-numbers' },
             // 17. 모달 닫기 (X)
             { selector: '#registerModal .modal-close', title: '모달 닫기 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: "closeModal('registerModal') 호출" },
             // 18. 단계 표시기
             { selector: '.step-indicator', title: '단계 표시기', position: { top: '-10px', left: '50%', transform: 'translateX(-50%)' }, description: '등록 진행 단계 표시', function: '현재 진행 단계 시각화', behavior: ['완료 단계: 녹색', '현재 단계: 파란색', '대기 단계: 회색'] },
-            // 19-21. STEP 1
-            { selector: '#step1Content', title: 'STEP 1: 회원 유형', position: { top: '10px', left: '10px' }, description: '회원 유형 선택 단계', function: '개인/기업 유형 선택' },
-            { selector: '#step1Content .card:first-of-type', title: '개인 선택 카드', position: { top: '10px', left: '10px' }, description: '개인 명의 등록', function: "selectMemberType('personal') 호출", behavior: ['클릭 시 개인 유형 선택', '다음 버튼 활성화'] },
-            { selector: '#step1Content .card:last-of-type', title: '기업 선택 카드', position: { top: '10px', right: '10px' }, description: '기업/사업자 명의 등록', function: "selectMemberType('business') 호출", behavior: ['클릭 시 기업 유형 선택', '다음 버튼 활성화'] },
-            // 22-25. STEP 2
-            { selector: '#step2Content', title: 'STEP 2: 기본 정보', position: { top: '10px', left: '10px' }, description: '발신번호 기본 정보 입력', function: '발신번호 및 용도 입력' },
+            // 19-22. STEP 1: 기본 정보
+            { selector: '#step1Content', title: 'STEP 1: 기본 정보', position: { top: '10px', left: '10px' }, description: '발신번호 기본 정보 입력', function: '발신번호 및 용도 입력', behavior: ['회원 유형은 자동으로 설정됨 (개인회원: personal, 기업회원: business)'] },
             { selector: '#callerNumberInput', title: '발신번호 입력', position: { top: '-5px', left: '-10px' }, description: '등록할 발신번호', function: '전화번호 입력', behavior: ['휴대폰 또는 유선번호 형식'], tags: [{ text: '필수', type: 'required' }] },
-            { selector: '#step2Content .btn-outline', title: '확인 버튼', position: { top: '-5px', right: '-10px' }, description: '발신번호 중복 확인', function: 'checkDuplicateNumber() 호출', api: 'GET /api/caller-numbers/check' },
+            { selector: '#step1Content .btn-outline', title: '확인 버튼', position: { top: '-5px', right: '-10px' }, description: '발신번호 중복 확인', function: 'checkDuplicateNumber() 호출', api: 'GET /api/caller-numbers/check' },
             { selector: '#purposeInput', title: '발신번호 용도', position: { top: '-5px', left: '-10px' }, description: '발신번호 사용 용도', function: '용도 입력', behavior: ['예: 마케팅팀, 고객센터'] },
-            // 26-28. STEP 3
-            { selector: '#step3Content', title: 'STEP 3: 인증 및 서류', position: { top: '10px', left: '10px' }, description: '명의 구분 및 서류 제출', function: '본인인증 및 서류 업로드' },
+            // 23-25. STEP 2: 인증 및 서류
+            { selector: '#step2Content', title: 'STEP 2: 인증 및 서류', position: { top: '10px', left: '10px' }, description: '명의 구분 및 서류 제출', function: '본인인증 및 서류 업로드' },
             { selector: '#authButton', title: '휴대폰 본인인증 버튼', position: { top: '-5px', left: '-10px' }, description: '본인인증 수행', function: 'openPhoneAuth() 호출', behavior: ['PASS 등 본인인증 서비스 연동', '인증 완료 시 표시 변경'] },
             { selector: '#documentSection', title: '서류 업로드 영역', position: { top: '10px', left: '10px' }, description: '필수 서류 업로드', function: '서류 파일 업로드', behavior: ['명의 구분에 따라 필요 서류 변경', '5MB 이하 파일만 가능'] },
-            // 29-30. STEP 4
-            { selector: '#step4Content', title: 'STEP 4: 연락처', position: { top: '10px', left: '10px' }, description: '연락처 정보 입력', function: '담당자 연락처 입력' },
+            // 26-27. STEP 3: 연락처
+            { selector: '#step3Content', title: 'STEP 3: 연락처', position: { top: '10px', left: '10px' }, description: '연락처 정보 입력', function: '담당자 연락처 입력' },
             { selector: '#contactPhoneInput', title: '휴대폰번호 입력', position: { top: '-5px', left: '-10px' }, description: '결과 알림 연락처', function: '휴대폰번호 입력', tags: [{ text: '필수', type: 'required' }] },
             { selector: '#contactEmailInput', title: '이메일 입력', position: { top: '-5px', left: '-10px' }, description: '결과 수신 이메일 (선택)', function: '이메일 입력' },
-            // 31. STEP 5
-            { selector: '#step5Content', title: 'STEP 5: 제출', position: { top: '10px', left: '10px' }, description: '최종 확인 및 제출', function: '입력 정보 확인', behavior: ['모든 입력 정보 요약 표시', '제출 후 수정 불가 안내'] },
+            // 28. STEP 4: 제출
+            { selector: '#step4Content', title: 'STEP 4: 제출', position: { top: '10px', left: '10px' }, description: '최종 확인 및 제출', function: '입력 정보 확인', behavior: ['모든 입력 정보 요약 표시', '제출 후 수정 불가 안내'] },
             // 32-34. 모달 하단 버튼
             { selector: '#registerModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '등록 취소', function: "closeModal('registerModal') 호출" },
             { selector: '#nextBtn', title: '다음 버튼', position: { top: '-5px', left: '10px' }, description: '다음 단계로 이동', function: 'nextStep() 호출', behavior: ['현재 단계 유효성 검증 후 진행'] },
@@ -2530,13 +2525,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: '발신번호 등록 신청',
                 behavior: [
                     '【유효성 검사】',
-                    '• 회원 유형 선택 완료',
                     '• 발신번호 입력 및 중복확인 완료',
                     '• 본인인증 완료',
                     '• 필수 서류 업로드 완료',
                     '• 연락처 정보 입력 완료',
                     '【Alert 메시지 - 유효성 실패】',
-                    '• 회원 유형 미선택: "회원 유형을 선택해주세요."',
                     '• 발신번호 미입력: "발신번호를 입력해주세요."',
                     '• 발신번호 미확인: "발신번호 중복확인을 완료해주세요."',
                     '• 발신번호 중복: "이미 등록된 발신번호입니다."',
