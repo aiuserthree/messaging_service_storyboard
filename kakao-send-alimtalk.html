@@ -1364,7 +1364,7 @@ body {
                                     </div>
                                     <div class="cost-row">
                                         <span>단가</span>
-                                        <span id="costUnitPrice">30원</span>
+                                        <span id="costUnitPrice">6.2P</span>
                                     </div>
                                     <div class="cost-row cost-total">
                                         <span>예상 발송 마일리지</span>
@@ -2137,9 +2137,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function updateCost() {
             const count = parseInt(document.getElementById('recipientCount').textContent) || 0;
-            const total = count * 30;
+            const total = count * 6.2;
             document.getElementById('costRecipientCount').textContent = `${count}명`;
-            document.getElementById('costTotal').textContent = `${formatNumber(total)}원`;
+            document.getElementById('costTotal').textContent = `${formatNumber(total)}P`;
         }
 
 
@@ -2263,11 +2263,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 return value && /^010-\d{4}-\d{4}$/.test(value);
             }).length;
             
-            const unitPrice = 30; // 알림톡 단가
+            const unitPrice = 6.2; // 알림톡 단가
             const totalCost = validPhones * unitPrice;
             
             const testCostEl = document.getElementById('testCost');
-            if (testCostEl) testCostEl.textContent = totalCost.toLocaleString() + '원';
+            if (testCostEl) testCostEl.textContent = totalCost.toLocaleString() + 'P';
         }
 
         function confirmTestSend() {

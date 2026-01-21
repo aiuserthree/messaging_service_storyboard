@@ -1535,7 +1535,7 @@ body {
                                     </div>
                                     <div class="cost-row">
                                         <span>단가</span>
-                                        <span id="costUnitPrice">50원</span>
+                                        <span id="costUnitPrice">21.5P</span>
                                     </div>
                                     <div class="cost-row cost-total">
                                         <span>예상 발송 마일리지</span>
@@ -1931,9 +1931,10 @@ document.addEventListener('DOMContentLoaded', function() {
         let selectedRecipientIndices = new Set();
         const DEFAULT_ROWS = 5;
         
-        // 페이지 로드 시 수신번호 테이블 초기화
+        // 페이지 로드 시 수신번호 테이블 초기화 및 단가 설정
         document.addEventListener('DOMContentLoaded', function() {
             renderRecipientTable();
+            updateUnitPrice(); // 초기 단가 설정
         });
         
         // 수신번호 테이블 렌더링
@@ -2463,11 +2464,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 return value && /^010-\d{4}-\d{4}$/.test(value);
             }).length;
             
-            const unitPrice = 50; // 브랜드메시지 단가
+            // targetType에 따라 단가 결정 (I: 친구 21.5P, N/M: 비친구 25.8P)
+            const selectedType = document.querySelector('input[name="targetType"]:checked')?.value || 'I';
+            const unitPrice = (selectedType === 'I') ? 21.5 : 25.8; // 브랜드메시지 단가
             const totalCost = validPhones * unitPrice;
             
             const testCostEl = document.getElementById('testCost');
-            if (testCostEl) testCostEl.textContent = totalCost.toLocaleString() + '원';
+            if (testCostEl) testCostEl.textContent = totalCost.toLocaleString() + 'P';
         }
 
         function confirmTestSend() {
@@ -2713,11 +2716,28 @@ document.addEventListener('DOMContentLoaded', function() {
             openModal('fallbackPreviewModal');
         }
 
+        // 단가 업데이트 함수
+        function updateUnitPrice() {
+            const selectedType = document.querySelector('input[name="targetType"]:checked')?.value || 'I';
+            const unitPrice = (selectedType === 'I') ? 21.5 : 25.8;
+            const costUnitPriceEl = document.getElementById('costUnitPrice');
+            if (costUnitPriceEl) {
+                costUnitPriceEl.textContent = unitPrice + 'P';
+            }
+            // 비용 재계산
+            if (typeof updateTestCost === 'function') {
+                updateTestCost();
+            }
+        }
+
         // 발송 대상 선택 라디오 버튼 스타일 업데이트 및 080 수신거부 번호 표시
         document.querySelectorAll('input[name="targetType"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const selectedType = this.value;
                 const optOutNumberArea = document.getElementById('optOutNumberArea');
+                
+                // 단가 업데이트
+                updateUnitPrice();
                 
                 document.querySelectorAll('input[name="targetType"]').forEach(r => {
                     const label = r.closest('label');
