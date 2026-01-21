@@ -1165,6 +1165,11 @@ body {
 
                 <!-- 주소록 목록 -->
                 <div class="card">
+                    <!-- 선택된 그룹명 표시 -->
+                    <div id="selectedGroupHeader" style="padding: 20px 20px 0 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                        <span style="font-size: 18px; font-weight: 600; color: var(--text-primary);" id="selectedGroupName">VIP 고객</span>
+                        <span style="font-size: 14px; color: var(--text-secondary);" id="selectedGroupCount">(234명)</span>
+                    </div>
                     <div class="addressbook-actions">
                         <div class="search-filter">
                             <input type="text" class="form-input" placeholder="이름 또는 전화번호로 검색" style="width: 300px;">
@@ -1781,19 +1786,27 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.group-item').forEach(item => {
                 item.classList.remove('active');
             });
-            const groupItem = document.querySelector(`[data-group-id="${groupId}"]`);
+            const groupItem = document.querySelector(`.group-item[data-group-id="${groupId}"]`);
             if (groupItem) {
                 groupItem.classList.add('active');
+                
+                // 선택된 그룹명 업데이트
+                const groupName = groupItem.getAttribute('data-group-name');
+                const groupCount = groupItem.querySelector('.group-count')?.textContent || '0';
+                document.getElementById('selectedGroupName').textContent = groupName;
+                document.getElementById('selectedGroupCount').textContent = `(${groupCount}명)`;
             }
             
             // 테이블 목록 필터링
             const tbody = document.querySelector('.table tbody');
+            let visibleCount = 0;
             if (tbody) {
                 const rows = tbody.querySelectorAll('tr');
                 rows.forEach(row => {
                     const rowGroupId = row.getAttribute('data-group-id');
                     if (rowGroupId === groupId) {
                         row.style.display = '';
+                        visibleCount++;
                     } else {
                         row.style.display = 'none';
                     }
