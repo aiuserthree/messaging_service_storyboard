@@ -1781,13 +1781,15 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         const specData = [
             // 1. 탭 메뉴
-            { selector: '#paymentTabs', title: '탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '결제 관련 페이지 이동' },
+            { selector: '#paymentTabs', title: '1. 탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '결제 관련 페이지 이동' },
             // 2. 충전하기 탭
-            { selector: '#paymentTabs .tab-item:nth-child(1)', title: '충전하기 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 충전 페이지' },
+            { selector: '#paymentTabs .tab-item:nth-child(1)', title: '2. 충전하기 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 충전 페이지' },
             // 3. 충전내역 탭
-            { selector: '#paymentTabs .tab-item:nth-child(2)', title: '충전내역 탭', position: { top: '-5px', left: '-10px' }, function: '충전 이력 페이지' },
-            // 4. 세금계산서 탭
-            { selector: '#paymentTabs .tab-item:nth-child(3)', title: '세금계산서 탭', position: { top: '-5px', right: '-10px' }, function: '세금계산서 발행 (현재)' },
+            { selector: '#paymentTabs .tab-item:nth-child(2)', title: '3. 충전내역 탭', position: { top: '-5px', left: '-10px' }, function: '충전 이력 페이지' },
+            // 4. 환불 탭
+            { selector: '#paymentTabs .tab-item:nth-child(3)', title: '4. 환불 탭', position: { top: '-5px', left: '-10px' }, function: '환불 신청 페이지' },
+            // 5. 세금계산서 발행 탭
+            { selector: '#paymentTabs .tab-item:nth-child(4)', title: '5. 세금계산서 발행 탭', position: { top: '-5px', right: '-10px' }, function: '세금계산서 발행 (현재)', behavior: ['개인회원일 때는 표시되지 않음', '기업회원(개인사업자/법인사업자)일 때만 표시', '회원 유형에 따라 동적으로 표시/숨김 처리'] },
             // 5. 안내 메시지
             { selector: '#taxNotice', title: '안내 메시지', position: { top: '10px', left: '10px' }, function: '세금계산서 발행 관련 안내' },
             // 6. 발행 대상 기간 영역

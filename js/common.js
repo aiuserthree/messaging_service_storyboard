@@ -37,11 +37,18 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// 모달 외부 클릭 시 닫기
+// 모달 외부 클릭 시 닫기 (배경 음영 클릭 시)
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('modal-overlay')) {
-        e.target.classList.remove('active');
-        document.body.style.overflow = '';
+        const modalId = e.target.id;
+        if (modalId && typeof closeModal === 'function') {
+            closeModal(modalId);
+        } else {
+            // closeModal 함수가 없는 경우 직접 닫기
+            e.target.classList.remove('active');
+            e.target.style.display = 'none';
+            document.body.style.overflow = '';
+        }
     }
 });
 

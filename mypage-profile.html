@@ -1163,11 +1163,11 @@ body {
                             <label class="form-label required">담당자</label>
                             <div class="flex gap-2">
                                 <label style="display: flex; align-items: center; gap: 8px;">
-                                    <input type="radio" name="indivManagerType" value="representative" checked>
+                                    <input type="radio" name="indivManagerType" value="representative" checked onchange="handleIndivManagerTypeChange()">
                                     <span>대표</span>
                                 </label>
                                 <label style="display: flex; align-items: center; gap: 8px;">
-                                    <input type="radio" name="indivManagerType" value="employee">
+                                    <input type="radio" name="indivManagerType" value="employee" onchange="handleIndivManagerTypeChange()">
                                     <span>직원</span>
                                 </label>
                             </div>
@@ -1175,6 +1175,13 @@ body {
                         <div class="form-group">
                             <label class="form-label required">기업명</label>
                             <input type="text" class="form-input" id="indivCompanyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">사업자등록번호</label>
+                            <div class="flex gap-2">
+                                <input type="text" class="form-input" id="indivBusinessNumber" placeholder="123-45-67890" required>
+                                <button type="button" class="btn btn-outline" onclick="verifyBusinessNumber('indivBusinessNumber')">확인</button>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label required">대표자명</label>
@@ -1185,12 +1192,10 @@ body {
                             <input type="file" class="form-input" id="indivBusinessLicense" accept=".pdf,.jpg,.png" required>
                             <div class="form-help">PDF, JPG, PNG 파일 (최대 10MB)</div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label required">사업자등록번호</label>
-                            <div class="flex gap-2">
-                                <input type="text" class="form-input" id="indivBusinessNumber" placeholder="123-45-67890" required>
-                                <button type="button" class="btn btn-outline" onclick="verifyBusinessNumber('indivBusinessNumber')">확인</button>
-                            </div>
+                        <div class="form-group" id="indivEmploymentCertificateGroup" style="display: none;">
+                            <label class="form-label required">재직증명서 또는 신분증</label>
+                            <input type="file" class="form-input" id="indivEmploymentCertificate" accept=".pdf,.jpg,.png">
+                            <div class="form-help">PDF, JPG, PNG 파일 (최대 10MB)</div>
                         </div>
                         <div class="form-group">
                             <label class="form-label required">주소</label>
@@ -1257,11 +1262,11 @@ body {
                             <label class="form-label required">담당자</label>
                             <div class="flex gap-2">
                                 <label style="display: flex; align-items: center; gap: 8px;">
-                                    <input type="radio" name="corpManagerType" value="representative" checked>
+                                    <input type="radio" name="corpManagerType" value="representative" checked onchange="handleCorpManagerTypeChange()">
                                     <span>대표</span>
                                 </label>
                                 <label style="display: flex; align-items: center; gap: 8px;">
-                                    <input type="radio" name="corpManagerType" value="employee">
+                                    <input type="radio" name="corpManagerType" value="employee" onchange="handleCorpManagerTypeChange()">
                                     <span>직원</span>
                                 </label>
                             </div>
@@ -1269,6 +1274,13 @@ body {
                         <div class="form-group">
                             <label class="form-label required">기업명</label>
                             <input type="text" class="form-input" id="corpCompanyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">사업자등록번호</label>
+                            <div class="flex gap-2">
+                                <input type="text" class="form-input" id="corpBusinessNumber" placeholder="123-45-67890" required>
+                                <button type="button" class="btn btn-outline" onclick="verifyBusinessNumber('corpBusinessNumber')">확인</button>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label required">대표자명</label>
@@ -1279,12 +1291,10 @@ body {
                             <input type="file" class="form-input" id="corpBusinessLicense" accept=".pdf,.jpg,.png" required>
                             <div class="form-help">PDF, JPG, PNG 파일 (최대 10MB)</div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label required">사업자등록번호</label>
-                            <div class="flex gap-2">
-                                <input type="text" class="form-input" id="corpBusinessNumber" placeholder="123-45-67890" required>
-                                <button type="button" class="btn btn-outline" onclick="verifyBusinessNumber('corpBusinessNumber')">확인</button>
-                            </div>
+                        <div class="form-group" id="corpEmploymentCertificateGroup" style="display: none;">
+                            <label class="form-label required">재직증명서 또는 신분증</label>
+                            <input type="file" class="form-input" id="corpEmploymentCertificate" accept=".pdf,.jpg,.png">
+                            <div class="form-help">PDF, JPG, PNG 파일 (최대 10MB)</div>
                         </div>
                         <div class="form-group">
                             <label class="form-label required">주소</label>
@@ -1765,9 +1775,38 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 1000);
         }
 
+        // 개인사업자 담당자 유형 변경 처리
+        function handleIndivManagerTypeChange() {
+            const managerType = document.querySelector('input[name="indivManagerType"]:checked').value;
+            const employmentCertGroup = document.getElementById('indivEmploymentCertificateGroup');
+            const employmentCertInput = document.getElementById('indivEmploymentCertificate');
+            
+            if (managerType === 'employee') {
+                // 직원인 경우 재직증명서 업로드 영역 표시
+                employmentCertGroup.style.display = 'block';
+                employmentCertInput.required = true;
+            } else {
+                // 대표자인 경우 재직증명서 업로드 영역 숨김 및 파일 제거
+                employmentCertGroup.style.display = 'none';
+                employmentCertInput.required = false;
+                employmentCertInput.value = '';
+            }
+        }
+
         // 개인사업자 전환 제출
         function submitIndividualBusinessConvert() {
             const form = document.getElementById('convertIndividualBusinessForm');
+            
+            // 담당자 유형이 직원인 경우 재직증명서 필수 확인
+            const managerType = document.querySelector('input[name="indivManagerType"]:checked').value;
+            if (managerType === 'employee') {
+                const employmentCert = document.getElementById('indivEmploymentCertificate');
+                if (!employmentCert.files || employmentCert.files.length === 0) {
+                    showToast('재직증명서 또는 신분증을 업로드해주세요.', 'error');
+                    employmentCert.focus();
+                    return;
+                }
+            }
             
             if (!form.checkValidity()) {
                 form.reportValidity();
@@ -1808,6 +1847,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        // 법인사업자 담당자 유형 변경 처리
+        function handleCorpManagerTypeChange() {
+            const managerType = document.querySelector('input[name="corpManagerType"]:checked').value;
+            const employmentCertGroup = document.getElementById('corpEmploymentCertificateGroup');
+            const employmentCertInput = document.getElementById('corpEmploymentCertificate');
+            
+            if (managerType === 'employee') {
+                // 직원인 경우 재직증명서 업로드 영역 표시
+                employmentCertGroup.style.display = 'block';
+                employmentCertInput.required = true;
+            } else {
+                // 대표자인 경우 재직증명서 업로드 영역 숨김 및 파일 제거
+                employmentCertGroup.style.display = 'none';
+                employmentCertInput.required = false;
+                employmentCertInput.value = '';
+            }
+        }
+
         // 법인사업자 전환 제출
         function submitCorporateBusinessConvert() {
             const form = document.getElementById('convertCorporateBusinessForm');
@@ -1842,6 +1899,17 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
+            }
+            
+            // 담당자 유형이 직원인 경우 재직증명서 필수 확인
+            const managerType = document.querySelector('input[name="corpManagerType"]:checked').value;
+            if (managerType === 'employee') {
+                const employmentCert = document.getElementById('corpEmploymentCertificate');
+                if (!employmentCert.files || employmentCert.files.length === 0) {
+                    showToast('재직증명서 또는 신분증을 업로드해주세요.', 'error');
+                    employmentCert.focus();
+                    return;
+                }
             }
             
             if (confirm('법인사업자 회원으로 전환하시겠습니까?\n\n⚠️ 전환 후에는 되돌릴 수 없으며, 기존 발신번호가 초기화됩니다.')) {
@@ -2318,9 +2386,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     '【기업 정보 등록 섹션】',
                     '• 담당자 유형 (라디오: 대표/직원)',
                     '• 기업명 (필수)',
+                    '• 사업자등록번호 (필수, 확인 버튼)',
                     '• 대표자명 (필수)',
                     '• 사업자등록증 사본 (파일 업로드, 필수)',
-                    '• 사업자등록번호 (필수, 확인 버튼)',
+                    '• 재직증명서 또는 신분증 (담당자 유형이 직원일 때 필수, 사업자등록증 사본 아래 위치)',
                     '• 주소 (필수, 검색 버튼)',
                     '• 연락처 (필수, 본인인증 번호 자동입력)',
                     '【세금계산서 발행 섹션】',
@@ -2337,20 +2406,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: '33. 담당자 유형',
                 position: { top: '-5px', left: '-10px' },
                 function: '대표/직원 선택',
-                behavior: ['대표: 기본 선택', '직원: 선택 시 추가 확인 없음'],
+                behavior: ['대표: 기본 선택', '직원: 선택 시 재직증명서 업로드 필드 표시 (필수)'],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 34. 개인사업자 - 사업자등록증 업로드
+            // 33-1. 개인사업자 - 재직증명서 업로드
             {
-                selector: '#indivBusinessLicense',
-                title: '34. 사업자등록증 사본',
-                position: { top: '-5px', right: '-10px' },
-                function: '사업자등록증 파일 첨부',
-                behavior: [
-                    '【허용 파일】',
-                    '• PDF, JPG, PNG',
-                    '• 최대 10MB'
-                ],
+                selector: '#indivEmploymentCertificateGroup',
+                title: '33-1. 재직증명서 또는 신분증 업로드',
+                position: { top: '-5px', left: '-10px' },
+                function: '담당자 유형이 직원일 때 표시',
+                behavior: ['담당자 유형이 "직원" 선택 시에만 표시', '사업자등록증 사본 아래에 위치', 'PDF, JPG, PNG 파일 (최대 10MB)', '직원 선택 시 필수 항목'],
+                tags: [{ text: '조건부 필수', type: 'required' }]
+            },
+            // 34. 개인사업자 - 기업명
+            {
+                selector: '#indivCompanyName',
+                title: '34. 기업명',
+                position: { top: '-5px', left: '-10px' },
+                function: '기업명 입력',
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 35. 개인사업자 - 사업자등록번호 확인
@@ -2367,10 +2440,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 36. 개인사업자 전환 신청 버튼
+            // 36. 개인사업자 - 대표자명
+            {
+                selector: '#indivRepName',
+                title: '36. 대표자명',
+                position: { top: '-5px', left: '-10px' },
+                function: '대표자명 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 37. 개인사업자 - 사업자등록증 업로드
+            {
+                selector: '#indivBusinessLicense',
+                title: '37. 사업자등록증 사본',
+                position: { top: '-5px', right: '-10px' },
+                function: '사업자등록증 파일 첨부',
+                behavior: [
+                    '【허용 파일】',
+                    '• PDF, JPG, PNG',
+                    '• 최대 10MB'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 38. 개인사업자 전환 신청 버튼
             {
                 selector: '#convertBusinessModal .modal-footer .btn-primary',
-                title: '36. 전환 신청 버튼',
+                title: '38. 전환 신청 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '개인사업자 전환 신청 제출',
                 behavior: [
@@ -2400,9 +2494,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     '【기업 정보 등록 섹션】',
                     '• 담당자 유형 (라디오: 대표/직원)',
                     '• 기업명 (필수)',
+                    '• 사업자등록번호 (필수, 확인 버튼)',
                     '• 대표자명 (필수)',
                     '• 사업자등록증 사본 (파일 업로드, 필수)',
-                    '• 사업자등록번호 (필수, 확인 버튼)',
+                    '• 재직증명서 또는 신분증 (담당자 유형이 직원일 때 필수, 사업자등록증 사본 아래 위치)',
                     '• 주소 (필수, 검색 버튼)',
                     '• 연락처 (필수, 본인인증 번호 자동입력)',
                     '【세금계산서 발행 섹션】',
@@ -2421,20 +2516,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: '38. 담당자 유형',
                 position: { top: '-5px', left: '-10px' },
                 function: '대표/직원 선택',
-                behavior: ['대표: 기본 선택', '직원: 선택 시 추가 확인 없음'],
+                behavior: ['대표: 기본 선택', '직원: 선택 시 재직증명서 업로드 필드 표시 (필수)'],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 39. 법인사업자 - 사업자등록증 업로드
+            // 38-1. 법인사업자 - 재직증명서 업로드
             {
-                selector: '#corpBusinessLicense',
-                title: '39. 사업자등록증 사본',
-                position: { top: '-5px', right: '-10px' },
-                function: '사업자등록증 파일 첨부',
-                behavior: [
-                    '【허용 파일】',
-                    '• PDF, JPG, PNG',
-                    '• 최대 10MB'
-                ],
+                selector: '#corpEmploymentCertificateGroup',
+                title: '38-1. 재직증명서 또는 신분증 업로드',
+                position: { top: '-5px', left: '-10px' },
+                function: '담당자 유형이 직원일 때 표시',
+                behavior: ['담당자 유형이 "직원" 선택 시에만 표시', '사업자등록증 사본 아래에 위치', 'PDF, JPG, PNG 파일 (최대 10MB)', '직원 선택 시 필수 항목'],
+                tags: [{ text: '조건부 필수', type: 'required' }]
+            },
+            // 39. 법인사업자 - 기업명
+            {
+                selector: '#corpCompanyName',
+                title: '39. 기업명',
+                position: { top: '-5px', left: '-10px' },
+                function: '기업명 입력',
                 tags: [{ text: '필수', type: 'required' }]
             },
             // 40. 법인사업자 - 사업자등록번호 확인
@@ -2451,10 +2550,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 41. 법인사업자 전환 신청 버튼
+            // 41. 법인사업자 - 대표자명
+            {
+                selector: '#corpRepName',
+                title: '41. 대표자명',
+                position: { top: '-5px', left: '-10px' },
+                function: '대표자명 입력',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 42. 법인사업자 - 사업자등록증 업로드
+            {
+                selector: '#corpBusinessLicense',
+                title: '42. 사업자등록증 사본',
+                position: { top: '-5px', right: '-10px' },
+                function: '사업자등록증 파일 첨부',
+                behavior: [
+                    '【허용 파일】',
+                    '• PDF, JPG, PNG',
+                    '• 최대 10MB'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            // 43. 법인사업자 전환 신청 버튼
             {
                 selector: '#convertCorporateModal .modal-footer .btn-primary',
-                title: '41. 전환 신청 버튼',
+                title: '43. 전환 신청 버튼',
                 position: { top: '-5px', right: '-10px' },
                 function: '법인사업자 전환 신청 제출',
                 behavior: [
@@ -2462,6 +2582,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     '• 모든 필수 항목 입력 확인',
                     '• 사업자등록번호 확인 완료 여부',
                     '• 사업자등록증 첨부 여부',
+                    '• 담당자 유형이 직원인 경우 재직증명서 또는 신분증 첨부 여부 확인',
                     '【Confirm 메시지】',
                     '• "법인사업자 회원으로 전환하시겠습니까?\\n\\n⚠️ 전환 후에는 되돌릴 수 없으며, 기존 발신번호가 초기화됩니다."',
                     '【Toast 메시지】',
