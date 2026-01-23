@@ -3898,6 +3898,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function confirmSend() {
+            // 전화번호 최소 9자리 검증
+            const invalidPhones = [];
+            recipientTableData.forEach((row, index) => {
+                if (row.phone && row.phone.trim()) {
+                    // 하이픈 제거 후 숫자만 추출
+                    const phoneDigits = row.phone.replace(/[^0-9]/g, '');
+                    if (phoneDigits.length < 9) {
+                        invalidPhones.push({
+                            index: index + 1,
+                            phone: row.phone
+                        });
+                    }
+                }
+            });
+            
+            if (invalidPhones.length > 0) {
+                showToast('전화번호는 최소 9자리 이상 입력해주세요. 잘못된 번호가 있습니다.', 'warning');
+                return;
+            }
+            
             // SMS 발송 시 변수값 길이 체크
             const messageType = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
             if (messageType === 'SMS') {

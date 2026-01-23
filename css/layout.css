@@ -17,12 +17,15 @@
 
 .header-content {
     max-width: 1400px;
+    width: 100%;
+    min-width: 1024px;
     margin: 0 auto;
     padding: 0 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 64px;
+    box-sizing: border-box;
 }
 
 .logo h1 {
@@ -171,8 +174,10 @@
     flex: 1;
     max-width: 1400px;
     width: 100%;
+    min-width: 1024px;
     margin: 0 auto;
     padding: 32px 24px;
+    box-sizing: border-box;
 }
 
 .page-header {
@@ -295,53 +300,5 @@
     }
 }
 
-/* 반응형 */
-@media (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        height: auto;
-        padding: 16px;
-    }
-
-    .main-nav {
-        flex-wrap: wrap;
-        margin: 16px 0;
-        width: 100%;
-    }
-
-    .nav-dropdown {
-        position: static;
-        margin-top: 4px;
-        width: 100%;
-        box-shadow: none;
-        border: none;
-        border-top: 1px solid var(--border-color);
-        border-radius: 0;
-        opacity: 1;
-        visibility: visible;
-        transform: none;
-        display: none;
-    }
-
-    .nav-item.open .nav-dropdown {
-        display: block;
-    }
-
-    .header-actions {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .main-content {
-        padding: 16px;
-    }
-
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .action-grid {
-        grid-template-columns: 1fr;
-    }
-}
+/* 반응형 - PC 대형 화면 */
 
