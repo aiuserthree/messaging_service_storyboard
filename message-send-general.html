@@ -3906,10 +3906,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 ]
             },
             // ===== 수신번호 영역 =====
-            // 5. 엑셀 업로드 버튼
+            // 5. 전화번호만 입력 버튼
+            {
+                selector: '#phoneOnlyInputBtn',
+                title: '5. 전화번호만 입력',
+                position: { top: '-5px', left: '-10px' },
+                description: '버튼 (Button)',
+                function: '전화번호만 빠르게 입력하는 모달 팝업 열기',
+                behavior: [
+                    '【클릭 동작】',
+                    '• 전화번호만 입력 모달(#phoneOnlyInputModal) 열림',
+                    '【모달 구성】',
+                    '• 텍스트 영역: 여러 전화번호 입력 가능',
+                    '• 엔터(Enter) 키로 줄바꿈하여 여러 번호 입력',
+                    '• 쉼표(,), 공백으로도 구분 가능',
+                    '• 플레이스홀더: "휴대폰번호 입력 후 엔터\n1만 건까지 붙여넣기 가능\n(엔터로 줄바꿈하여 여러 번호 입력)"',
+                    '• "번호추가 +" 버튼: 입력된 번호 파싱 및 검증 후 수신번호 테이블에 추가',
+                    '【입력 제한】',
+                    '• 최대 10,000건까지 입력 가능',
+                    '【검증 및 처리】',
+                    '• 전화번호 형식 검증 (010-XXXX-XXXX 형식)',
+                    '• 중복 번호 자동 제거',
+                    '• 유효한 번호만 수신번호 테이블에 자동 추가',
+                    '• 추가 완료 후 팝업 자동 닫기',
+                    '【Alert 메시지】',
+                    '• 번호 미입력: "전화번호를 입력해주세요."',
+                    '• 유효한 번호 없음: "유효한 전화번호를 찾을 수 없습니다."',
+                    '• 건수 초과: "최대 10,000건까지 입력 가능합니다."'
+                ],
+                tags: [{ text: '신규', type: 'info' }]
+            },
+            // 6. 엑셀 업로드 버튼
             {
                 selector: '#excelUploadBtn',
-                title: '5. 엑셀 업로드',
+                title: '6. 엑셀 업로드',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '엑셀 파일로 수신번호 대량 등록',
@@ -3926,10 +3956,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     '• 건수 초과: "최대 50,000건까지 업로드 가능합니다."'
                 ]
             },
-            // 6. 엑셀샘플 다운로드 버튼
+            // 7. 엑셀샘플 다운로드 버튼
             {
                 selector: '#excelSampleBtn',
-                title: '6. 엑셀샘플 다운로드',
+                title: '7. 엑셀샘플 다운로드',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '업로드용 엑셀 양식 파일 다운로드',
@@ -5105,11 +5135,85 @@ document.addEventListener('DOMContentLoaded', function() {
                 tags: [{ text: 'API', type: 'api' }]
             },
             
+            // ===== 전화번호만 입력 모달 =====
+            // 69. 전화번호만 입력 모달
+            {
+                selector: '#phoneOnlyInputModal',
+                title: '69. 전화번호만 입력 모달',
+                position: { top: '60px', left: '20px' },
+                description: '모달 팝업 (Modal Popup)',
+                function: '전화번호만 빠르게 입력하는 모달 팝업',
+                behavior: [
+                    '【열기 조건】',
+                    '• "전화번호만 입력" 버튼 클릭 시 노출',
+                    '【모달 구성】',
+                    '• 텍스트 영역: 여러 전화번호 입력 가능',
+                    '• 번호추가 버튼',
+                    '【닫기 방법】',
+                    '• 모달 외부 영역 클릭 시 닫기',
+                    '• ESC 키로 닫기',
+                    '• 번호추가 완료 시 자동 닫기'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            // 70. 전화번호 입력 텍스트 영역
+            {
+                selector: '#phoneOnlyInputTextarea',
+                title: '70. 전화번호 입력 영역',
+                position: { top: '20px', left: '20px' },
+                description: '텍스트 영역 (Textarea)',
+                function: '여러 전화번호를 입력하는 텍스트 영역',
+                behavior: [
+                    '【입력 방법】',
+                    '• 엔터(Enter) 키로 줄바꿈하여 여러 번호 입력',
+                    '• 쉼표(,), 공백으로도 구분 가능',
+                    '• 최대 10,000건까지 입력 가능',
+                    '【플레이스홀더】',
+                    '• "휴대폰번호 입력 후 엔터\n1만 건까지 붙여넣기 가능\n(엔터로 줄바꿈하여 여러 번호 입력)"',
+                    '【입력 제한】',
+                    '• 최소 높이: 200px',
+                    '• 세로 스크롤 가능',
+                    '• resize: vertical (세로 크기 조절 가능)'
+                ]
+            },
+            // 71. 번호추가 버튼
+            {
+                selector: '#phoneOnlyInputModal .btn-primary[onclick*="addPhoneNumbers"]',
+                title: '71. 번호추가 버튼',
+                position: { top: '-5px', right: '-10px' },
+                description: '버튼 (Button - Primary)',
+                function: '입력된 전화번호를 파싱하고 검증하여 수신번호 테이블에 추가',
+                behavior: [
+                    '【처리 과정】',
+                    '• 입력된 텍스트를 줄바꿈(\\n), 쉼표(,), 공백으로 분리',
+                    '• 각 번호의 앞뒤 공백 제거',
+                    '• 빈 줄 제거',
+                    '• 전화번호 형식 검증 (010-XXXX-XXXX 또는 010XXXXXXXX)',
+                    '• 하이픈(-) 자동 제거 후 재포맷팅',
+                    '• 중복 번호 자동 제거 (입력 내 중복 + 기존 테이블과 중복)',
+                    '• 유효한 번호만 수신번호 테이블에 추가',
+                    '【추가 결과】',
+                    '• 추가된 번호 개수 표시',
+                    '• 중복 제거된 번호 개수 표시 (있는 경우)',
+                    '• 유효하지 않은 번호 개수 표시 (있는 경우)',
+                    '• 추가 완료 후 팝업 자동 닫기',
+                    '• 수신번호 테이블 자동 업데이트',
+                    '• 수신번호 개수 자동 업데이트',
+                    '【Alert 메시지】',
+                    '• 번호 미입력: "전화번호를 입력해주세요."',
+                    '• 유효한 번호 없음: "유효한 전화번호를 찾을 수 없습니다."',
+                    '• 건수 초과: "최대 10,000건까지 입력 가능합니다."',
+                    '【Toast 메시지】',
+                    '• 성공: "N개의 번호가 추가되었습니다."',
+                    '• 중복 제거: "중복된 번호 N개가 제거되었습니다."'
+                ],
+                tags: [{ text: '신규', type: 'info' }]
+            },
             // ===== 주소록에 추가 모달 =====
-            // 69. 주소록에 추가 모달
+            // 72. 주소록에 추가 모달
             {
                 selector: '#addToAddressBookModal',
-                title: '69. 주소록에 추가 모달',
+                title: '72. 주소록에 추가 모달',
                 position: { top: '60px', left: '20px' },
                 description: '모달 팝업 (Modal Popup)',
                 function: '현재 입력된 수신번호를 주소록에 저장',
@@ -5125,19 +5229,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 70. 모달 닫기 버튼 (X)
+            // 73. 모달 닫기 버튼 (X)
             {
                 selector: '#addToAddressBookModal .modal-close',
-                title: '70. 모달 닫기 (X)',
+                title: '73. 모달 닫기 (X)',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button)',
                 function: '주소록 추가 모달 닫기',
                 behavior: ['클릭 시 모달 닫기']
             },
-            // 71. 추가 방식 선택
+            // 74. 추가 방식 선택
             {
                 selector: '#addressBookAddTypeGroup',
-                title: '71. 추가 방식 선택',
+                title: '74. 추가 방식 선택',
                 position: { top: '10px', left: '10px' },
                 description: '라디오 버튼 그룹 (Radio Group)',
                 function: '기존 그룹/새 그룹 선택',
@@ -5150,28 +5254,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     '• "새 그룹 생성" 선택: 그룹명 입력 필드 표시'
                 ]
             },
-            // 72. 기존 그룹에 추가 라디오
+            // 75. 기존 그룹에 추가 라디오
             {
                 selector: 'input[name="addressBookAddType"][value="existing"]',
-                title: '72. 기존 그룹에 추가',
+                title: '75. 기존 그룹에 추가',
                 position: { top: '-5px', left: '-10px' },
                 description: '라디오 버튼 (Radio Button)',
                 function: '기존 주소록 그룹에 추가 선택',
                 behavior: ['선택 시 기존 그룹 선택 드롭다운 표시']
             },
-            // 73. 새 그룹 생성 라디오
+            // 76. 새 그룹 생성 라디오
             {
                 selector: 'input[name="addressBookAddType"][value="new"]',
-                title: '73. 새 그룹 생성',
+                title: '76. 새 그룹 생성',
                 position: { top: '-5px', left: '-10px' },
                 description: '라디오 버튼 (Radio Button)',
                 function: '새로운 그룹 생성 후 추가 선택',
                 behavior: ['선택 시 새 그룹명 입력 필드 표시']
             },
-            // 74. 그룹 선택 드롭다운
+            // 77. 그룹 선택 드롭다운
             {
                 selector: '#addressBookGroupSelect',
-                title: '74. 그룹 선택',
+                title: '77. 그룹 선택',
                 position: { top: '-5px', right: '-10px' },
                 description: '콤보박스 (Select/Dropdown)',
                 function: '기존 그룹 목록에서 선택',
@@ -5186,10 +5290,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 75. 새 그룹명 입력
+            // 78. 새 그룹명 입력
             {
                 selector: '#newGroupNameInput',
-                title: '75. 새 그룹명 입력',
+                title: '78. 새 그룹명 입력',
                 position: { top: '-5px', right: '-10px' },
                 description: '텍스트 입력 필드 (Text Input)',
                 function: '새로 생성할 그룹 이름 입력',
@@ -5216,10 +5320,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 76. 추가할 데이터 정보
+            // 79. 추가할 데이터 정보
             {
                 selector: '#addressBookDataInfo',
-                title: '76. 추가할 데이터 정보',
+                title: '79. 추가할 데이터 정보',
                 position: { top: '10px', right: '10px' },
                 description: '정보 표시 영역 (Info Box)',
                 function: '추가할 데이터 개수 표시',
@@ -5229,19 +5333,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     '• 현재 수신번호 테이블의 유효한 데이터 개수 반영'
                 ]
             },
-            // 77. 취소 버튼
+            // 80. 취소 버튼
             {
                 selector: '#addToAddressBookModal .btn-outline',
-                title: '77. 취소 버튼',
+                title: '80. 취소 버튼',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button - Outline)',
                 function: '모달 닫기',
                 behavior: ['클릭 시 모달 닫기, 입력 내용 초기화']
             },
-            // 78. 추가 버튼
+            // 81. 추가 버튼
             {
                 selector: '#addToAddressBookModal .btn-primary',
-                title: '78. 추가 버튼',
+                title: '81. 추가 버튼',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button - Primary)',
                 function: '주소록에 데이터 추가',

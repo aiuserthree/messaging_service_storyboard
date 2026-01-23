@@ -83,8 +83,9 @@
                                     <div class="form-section">
                                         <div class="form-section-title">수신번호</div>
                                         <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                                            <button class="mock-btn mock-btn-outline mock-btn-sm">📁 주소록</button>
+                                            <button class="mock-btn mock-btn-primary mock-btn-sm">📱 전화번호만 입력</button>
                                             <button class="mock-btn mock-btn-outline mock-btn-sm">📄 엑셀 업로드</button>
+                                            <button class="mock-btn mock-btn-outline mock-btn-sm">📁 주소록</button>
                                             <button class="mock-btn mock-btn-outline mock-btn-sm">✏️ 직접 입력</button>
                                         </div>
                                         <textarea class="form-textarea" placeholder="수신번호를 입력하세요 (줄바꿈으로 구분)" style="height: 80px;">01012345678
@@ -208,10 +209,15 @@
                         <div class="desc-text">수신번호를 입력하는 영역입니다.</div>
                         <table class="desc-table">
                             <tr><th>방법</th><th>설명</th></tr>
-                            <tr><td>주소록</td><td>저장된 주소록에서 선택</td></tr>
+                            <tr><td>전화번호만 입력</td><td>전화번호만 빠르게 입력하는 모달 팝업<br>엔터로 줄바꿈하여 여러 번호 입력 가능<br>최대 10,000건까지 입력 가능<br>번호추가 버튼 클릭 시 자동 검증 및 테이블 추가</td></tr>
                             <tr><td>엑셀 업로드</td><td>.xlsx, .csv 파일 업로드</td></tr>
+                            <tr><td>주소록</td><td>저장된 주소록에서 선택</td></tr>
                             <tr><td>직접 입력</td><td>줄바꿈으로 구분하여 입력</td></tr>
                         </table>
+                        <div class="desc-note">
+                            <div class="desc-note-title">💡 전화번호만 입력 기능</div>
+                            <div class="desc-note-text">엑셀 업로드 버튼 좌측에 위치한 "전화번호만 입력" 버튼을 클릭하면 모달 팝업이 열립니다. 팝업 내 텍스트 영역에 여러 전화번호를 엔터로 줄바꿈하여 입력할 수 있으며, 쉼표나 공백으로도 구분 가능합니다. "번호추가 +" 버튼을 클릭하면 입력된 번호가 자동으로 검증되고 수신번호 테이블에 추가됩니다.</div>
+                        </div>
                     </div>
                 </div>
 
