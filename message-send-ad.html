@@ -1200,6 +1200,7 @@ body {
                                 <!-- 상단 탭 및 주소록 버튼 영역 -->
                                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
                                     <div style="display: flex; gap: 8px;">
+                                        <button type="button" class="btn btn-primary" id="phoneOnlyInputBtn" onclick="openPhoneOnlyInputModal()">전화번호만 입력</button>
                                         <input type="file" id="recipientExcelFileInput" class="form-input" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleRecipientExcelFileSelect(event)">
                                         <button type="button" class="btn btn-primary" id="excelUploadBtn" onclick="document.getElementById('recipientExcelFileInput').click()">엑셀업로드</button>
                                         <button type="button" class="btn btn-outline" id="excelSampleDownloadBtn" onclick="downloadSampleFile()">엑셀샘플 다운로드</button>
@@ -1447,6 +1448,25 @@ body {
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('templateModal')">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 전화번호만 입력 모달 -->
+    <div class="modal-overlay" id="phoneOnlyInputModal" onclick="if(event.target === this) closeModal('phoneOnlyInputModal')">
+        <div class="modal" style="max-width: 600px; width: 95%;">
+            <div class="modal-body" style="padding: 24px;">
+                <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; background: white;">
+                    <textarea 
+                        id="phoneOnlyInputTextarea" 
+                        placeholder="휴대폰번호 입력 후 엔터&#10;1만 건까지 붙여넣기 가능&#10;(엔터로 줄바꿈하여 여러 번호 입력)" 
+                        style="width: 100%; min-height: 200px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; resize: vertical; line-height: 1.6;"
+                        onkeydown="handlePhoneOnlyInputKeydown(event)"
+                    ></textarea>
+                </div>
+                <div style="margin-top: 16px; text-align: center;">
+                    <button type="button" class="btn btn-primary" style="min-width: 120px; padding: 10px 24px;" onclick="addPhoneNumbers()">번호추가 +</button>
+                </div>
             </div>
         </div>
     </div>
@@ -3245,6 +3265,98 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (!finalRow.variables) finalRow.variables = ['', '', ''];
                     finalRow.variables[varIndex] = value;
                 }
+            }
+        }
+
+        // 전화번호만 입력 모달 열기
+        function openPhoneOnlyInputModal() {
+            const modal = document.getElementById('phoneOnlyInputModal');
+            const textarea = document.getElementById('phoneOnlyInputTextarea');
+            if (modal && textarea) {
+                textarea.value = '';
+                modal.classList.add('active');
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => textarea.focus(), 100);
+            }
+        }
+
+        // 전화번호만 입력 키보드 이벤트 처리 (Enter로 줄바꿈)
+        function handlePhoneOnlyInputKeydown(event) {
+            // Enter 키는 기본 동작(줄바꿈) 허용
+            // textarea의 기본 동작을 그대로 사용
+        }
+
+        // 전화번호 추가 함수
+        function addPhoneNumbers() {
+            const textarea = document.getElementById('phoneOnlyInputTextarea');
+            if (!textarea) return;
+
+            const inputText = textarea.value.trim();
+            if (!inputText) {
+                showToast('전화번호를 입력해주세요.', 'warning');
+                return;
+            }
+
+            // 줄바꿈, 쉼표, 공백으로 분리
+            const phoneNumbers = inputText
+                .split(/[\n,\s]+/)
+                .map(num => num.trim())
+                .filter(num => num.length > 0);
+
+            if (phoneNumbers.length === 0) {
+                showToast('전화번호를 입력해주세요.', 'warning');
+                return;
+            }
+
+            // 전화번호 형식 검증 및 정규화 (010-1234-5678 형식)
+            const phoneRegex = /^01[0-9]-?\d{3,4}-?\d{4}$/;
+            let addedCount = 0;
+            let duplicateCount = 0;
+
+            phoneNumbers.forEach(phone => {
+                // 하이픈 제거 후 다시 포맷팅
+                const cleaned = phone.replace(/[-\s]/g, '');
+                let formatted = phone;
+                
+                if (/^01[0-9]\d{7,8}$/.test(cleaned)) {
+                    // 01012345678 -> 010-1234-5678 형식으로 변환
+                    formatted = cleaned.replace(/^(\d{3})(\d{3,4})(\d{4})$/, '$1-$2-$3');
+                }
+
+                // 중복 체크
+                const existingIndex = recipientTableData.findIndex(r => r.phone === formatted);
+                if (existingIndex === -1) {
+                    // 새 번호 추가
+                    recipientTableData.push({
+                        index: recipientTableData.length,
+                        name: '',
+                        phone: formatted,
+                        variables: ['', '', '']
+                    });
+                    addedCount++;
+                } else {
+                    duplicateCount++;
+                }
+            });
+
+            // 테이블 다시 렌더링
+            renderRecipientTable();
+            updateRecipientCount();
+            updateCost();
+
+            // 모달 닫기
+            closeModal('phoneOnlyInputModal');
+
+            // 결과 메시지
+            if (addedCount > 0) {
+                let message = `${addedCount}개의 전화번호가 추가되었습니다.`;
+                if (duplicateCount > 0) {
+                    message += ` (중복 ${duplicateCount}개 제외)`;
+                }
+                showToast(message, 'success');
+            } else {
+                showToast('추가된 전화번호가 없습니다. (모두 중복)', 'warning');
             }
         }
 
