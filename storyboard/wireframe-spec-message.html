@@ -175,6 +175,7 @@
                                     <div class="mock-recipient-box">
                                         <div class="mock-recipient-header">
                                             <div class="mock-btn-group">
+                                                <button class="mock-btn mock-btn-primary" style="padding: 8px 14px; font-size: 13px;" onclick="goToModal('modal-phone-only-input')">전화번호만 입력</button>
                                                 <button class="mock-btn mock-btn-primary" style="padding: 8px 14px; font-size: 13px;">엑셀업로드</button>
                                                 <button class="mock-btn mock-btn-outline" style="padding: 8px 14px; font-size: 13px;">엑셀샘플</button>
                                             </div>
@@ -352,6 +353,7 @@
                                     <div class="mock-recipient-box">
                                         <div class="mock-recipient-header">
                                             <div class="mock-btn-group">
+                                                <button class="mock-btn mock-btn-primary" style="padding: 8px 14px; font-size: 13px;" onclick="goToModal('modal-phone-only-input')">전화번호만 입력</button>
                                                 <button class="mock-btn mock-btn-primary" style="padding: 8px 14px; font-size: 13px;">엑셀업로드</button>
                                                 <button class="mock-btn mock-btn-outline" style="padding: 8px 14px; font-size: 13px;">엑셀샘플</button>
                                             </div>
@@ -898,6 +900,29 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- 전화번호만 입력 모달 -->
+                        <div class="mock-modal-overlay" id="modal-phone-only-input" style="position: relative; transition: box-shadow 0.3s;">
+                            <span class="spec-marker" data-num="m8" style="top: 10px; left: 10px;">8</span>
+                            <div class="mock-modal" style="max-width: 600px;">
+                                <div class="mock-modal-header">
+                                    <h3 class="mock-modal-title">전화번호만 입력</h3>
+                                    <button class="mock-modal-close">×</button>
+                                </div>
+                                <div class="mock-modal-body">
+                                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; background: white;">
+                                        <textarea 
+                                            class="mock-textarea" 
+                                            placeholder="휴대폰번호 입력 후 엔터&#10;1만 건까지 붙여넣기 가능&#10;(엔터로 줄바꿈하여 여러 번호 입력)"
+                                            style="width: 100%; min-height: 200px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical; line-height: 1.6;"
+                                        ></textarea>
+                                    </div>
+                                    <div style="margin-top: 16px; text-align: center;">
+                                        <button class="mock-btn mock-btn-primary" style="min-width: 120px; padding: 10px 24px;">번호추가 +</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -918,7 +943,7 @@
                     <div class="spec-item" data-num="g2"><div class="spec-item-header"><span class="spec-item-number">2</span><span class="spec-item-title">페이지 타이틀</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>제목</th><td>문자 발송</td></tr><tr><th>설명</th><td>SMS/LMS/MMS 메시지를 발송합니다</td></tr></table></div></div>
                     <div class="spec-item" data-num="g3"><div class="spec-item-header"><span class="spec-item-number">3</span><span class="spec-item-title">서브 탭 메뉴</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>탭 구성</th><td>일반문자 발송, 광고문자 발송, 일반문자 템플릿, 광고문자 템플릿</td></tr><tr><th>동작</th><td>클릭 시 해당 페이지로 이동</td></tr></table></div></div>
                     <div class="spec-item" data-num="g4"><div class="spec-item-header"><span class="spec-item-number">4</span><span class="spec-item-title">발신번호 선택</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>유형</th><td><span class="spec-tag required">필수</span> 셀렉트박스</td></tr><tr><th>데이터</th><td>등록된 발신번호 목록 (API)</td></tr><tr><th>기능</th><td>발신번호 미등록시 알림, "새 발신번호 등록" 버튼</td></tr></table></div></div>
-                    <div class="spec-item" data-num="g5"><div class="spec-item-header"><span class="spec-item-number">5</span><span class="spec-item-title">수신번호 입력</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>구성</th><td>엑셀업로드, 주소록 불러오기, 데이터 테이블</td></tr><tr><th>컬럼</th><td>체크박스, 순번, 이름, 전화번호, 변수1~3</td></tr><tr><th>기능</th><td>행 추가/삭제, 중복번호 삭제, 수신거부 삭제, 주소록에 추가</td></tr><tr><th>제한</th><td>최대 50,000건</td></tr></table></div></div>
+                    <div class="spec-item" data-num="g5"><div class="spec-item-header"><span class="spec-item-number">5</span><span class="spec-item-title">수신번호 입력</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>구성</th><td>전화번호만 입력, 엑셀업로드, 주소록 불러오기, 데이터 테이블</td></tr><tr><th>버튼</th><td>전화번호만 입력 (엑셀업로드 좌측), 엑셀업로드, 엑셀샘플</td></tr><tr><th>컬럼</th><td>체크박스, 순번, 이름, 전화번호, 변수1~3</td></tr><tr><th>기능</th><td>전화번호만 입력 모달, 행 추가/삭제, 중복번호 삭제, 수신거부 삭제, 주소록에 추가</td></tr><tr><th>제한</th><td>최대 50,000건, 전화번호 최소 9자리 (하이픈 제외)</td></tr></table></div></div>
                     <div class="spec-item" data-num="g6"><div class="spec-item-header"><span class="spec-item-number">6</span><span class="spec-item-title">메시지 타입</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>유형</th><td><span class="spec-tag required">필수</span> 라디오버튼</td></tr><tr><th>옵션</th><td>SMS(90byte), LMS(2,000byte), MMS(이미지)</td></tr><tr><th>동작</th><td>LMS/MMS시 제목필드 표시, MMS시 이미지첨부 표시</td></tr></table></div></div>
                     <div class="spec-item" data-num="g7"><div class="spec-item-header"><span class="spec-item-number">7</span><span class="spec-item-title">메시지 내용</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>유형</th><td><span class="spec-tag required">필수</span> 텍스트영역</td></tr><tr><th>변수버튼</th><td>#{이름}, #{전화번호}, #{변수1~3}, 템플릿 선택</td></tr><tr><th>기능</th><td>변수 삽입, 실시간 바이트 계산, 템플릿 선택 모달</td></tr></table></div></div>
                     <div class="spec-item" data-num="g8"><div class="spec-item-header"><span class="spec-item-number">8</span><span class="spec-item-title">발송 시간</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>유형</th><td><span class="spec-tag required">필수</span> 라디오버튼</td></tr><tr><th>옵션</th><td>즉시 발송 / 예약 발송</td></tr><tr><th>예약발송</th><td>날짜/시간 선택 (datetime-local)</td></tr></table></div></div>
@@ -936,7 +961,7 @@
                     <div class="spec-item" data-num="a4"><div class="spec-item-header"><span class="spec-item-number">4</span><span class="spec-item-title">광고문자 필수 안내</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>유형</th><td>경고 배너 (노란색)</td></tr><tr><th>내용</th><td>(광고) 자동추가, 080 필수, 야간발송 제한</td></tr></table></div></div>
                     <div class="spec-item" data-num="a5"><div class="spec-item-header"><span class="spec-item-number">5</span><span class="spec-item-title">발신번호 선택</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>유형</th><td><span class="spec-tag required">필수</span> 셀렉트박스</td></tr><tr><th>데이터</th><td>등록된 발신번호 목록 (API)</td></tr></table></div></div>
                     <div class="spec-item" data-num="a6"><div class="spec-item-header"><span class="spec-item-number">6</span><span class="spec-item-title">080 수신거부 번호</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>유형</th><td><span class="spec-tag required">필수</span> 셀렉트박스</td></tr><tr><th>데이터</th><td>등록된 080 번호 목록</td></tr><tr><th>설명</th><td>광고문자는 080 수신거부 번호 필수</td></tr></table></div></div>
-                    <div class="spec-item" data-num="a7"><div class="spec-item-header"><span class="spec-item-number">7</span><span class="spec-item-title">수신번호 입력</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>구성</th><td>엑셀업로드, 주소록 불러오기, 데이터 테이블</td></tr><tr><th>컬럼</th><td>체크박스, 순번, 이름, 전화번호, 변수</td></tr><tr><th>기능</th><td>행 추가/삭제, 중복번호 삭제, 주소록에 추가</td></tr></table></div></div>
+                    <div class="spec-item" data-num="a7"><div class="spec-item-header"><span class="spec-item-number">7</span><span class="spec-item-title">수신번호 입력</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>구성</th><td>전화번호만 입력, 엑셀업로드, 주소록 불러오기, 데이터 테이블</td></tr><tr><th>버튼</th><td>전화번호만 입력 (엑셀업로드 좌측), 엑셀업로드, 엑셀샘플</td></tr><tr><th>컬럼</th><td>체크박스, 순번, 이름, 전화번호, 변수</td></tr><tr><th>기능</th><td>전화번호만 입력 모달, 행 추가/삭제, 중복번호 삭제, 주소록에 추가</td></tr><tr><th>제한</th><td>전화번호 최소 9자리 (하이픈 제외)</td></tr></table></div></div>
                     <div class="spec-item" data-num="a8"><div class="spec-item-header"><span class="spec-item-number">8</span><span class="spec-item-title">메시지 타입</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>유형</th><td><span class="spec-tag required">필수</span> 라디오버튼</td></tr><tr><th>옵션</th><td>SMS(90byte), LMS(2,000byte), MMS(이미지)</td></tr></table></div></div>
                     <div class="spec-item" data-num="a9"><div class="spec-item-header"><span class="spec-item-number">9</span><span class="spec-item-title">메시지 내용</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>자동추가</th><td>(광고) 문구 + 수신거부 안내</td></tr><tr><th>위치</th><td>메시지 앞에 (광고), 끝에 무료수신거부</td></tr><tr><th>변수</th><td>#{이름}, #{전화번호}, #{변수1} 삽입 가능</td></tr></table></div></div>
                     <div class="spec-item" data-num="a10"><div class="spec-item-header"><span class="spec-item-number">10</span><span class="spec-item-title">발송 시간</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>유형</th><td><span class="spec-tag required">필수</span> 라디오버튼</td></tr><tr><th>옵션</th><td>즉시 발송 / 예약 발송</td></tr><tr><th>제한</th><td>야간(21시~08시) 발송 제한 안내</td></tr></table></div></div>
@@ -982,6 +1007,7 @@
                     <div class="spec-item" data-num="m5"><div class="spec-item-header"><span class="spec-item-number">5</span><span class="spec-item-title">템플릿 등록 모달</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>트리거</th><td>"새 템플릿 등록" 버튼 클릭</td></tr><tr><th>입력</th><td>템플릿명, 메시지타입, 메시지내용</td></tr><tr><th>미리보기</th><td>우측에 실시간 미리보기</td></tr><tr><th>변수</th><td>#{이름}, #{전화번호} 등 변수 삽입 가능</td></tr></table></div></div>
                     <div class="spec-item" data-num="m6"><div class="spec-item-header"><span class="spec-item-number">6</span><span class="spec-item-title">삭제 확인 모달</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>트리거</th><td>"삭제" 버튼 클릭</td></tr><tr><th>경고</th><td>"삭제된 템플릿은 복구 불가" 안내</td></tr><tr><th>버튼</th><td>취소, 삭제 (빨간색)</td></tr></table></div></div>
                     <div class="spec-item" data-num="m7"><div class="spec-item-header"><span class="spec-item-number">7</span><span class="spec-item-title">주소록에 추가 모달</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>트리거</th><td>"주소록에 추가" 버튼 클릭</td></tr><tr><th>옵션</th><td>기존 그룹에 추가 / 새 그룹 생성</td></tr><tr><th>입력</th><td>그룹 선택 또는 새 그룹명 입력</td></tr><tr><th>표시</th><td>추가할 데이터 개수</td></tr></table></div></div>
+                    <div class="spec-item" data-num="m8"><div class="spec-item-header"><span class="spec-item-number">8</span><span class="spec-item-title">전화번호만 입력 모달</span><span class="spec-item-toggle">▼</span></div><div class="spec-item-body"><table class="spec-table"><tr><th>트리거</th><td>"전화번호만 입력" 버튼 클릭 (수신번호 영역)</td></tr><tr><th>입력</th><td>텍스트 영역에 전화번호 입력 (엔터로 줄바꿈)</td></tr><tr><th>형식</th><td>쉼표, 줄바꿈, 공백으로 구분된 전화번호</td></tr><tr><th>검증</th><td>010-XXXX-XXXX 형식, 최소 9자리 (하이픈 제외), 중복 체크</td></tr><tr><th>기능</th><td>"번호추가 +" 버튼 클릭 시 수신번호 테이블에 자동 추가 후 모달 닫기</td></tr><tr><th>제한</th><td>최대 1만 건까지 붙여넣기 가능</td></tr></table></div></div>
                 </div>
             </div>
         </div>
