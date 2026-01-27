@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고객센터 - 톡벨</title>
+    <script src="js/header.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .support-center { max-width: 900px; margin: 0 auto; padding-bottom: 48px; }
+        .page-header { margin-bottom: 28px; }
+        .page-header h2 { font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+        .page-description { color: var(--text-secondary); font-size: 14px; }
+        .quick-actions { display: flex; justify-content: center; gap: 40px; margin-bottom: 40px; flex-wrap: wrap; }
+        .quick-action { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-primary); transition: opacity 0.2s; }
+        .quick-action:hover { opacity: 0.9; color: var(--text-primary); }
+        .quick-action .circle { width: 56px; height: 56px; border-radius: 50%; background: rgba(37, 99, 235, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+        .quick-action .circle svg { width: 28px; height: 28px; color: var(--primary-color); }
+        .quick-action span { font-size: 14px; font-weight: 500; }
+        .support-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .support-block { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .support-block-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color); font-weight: 600; font-size: 15px; color: var(--text-primary); }
+        .support-block-header .expand-btn { color: var(--primary-color); font-size: 18px; margin-left: 8px; cursor: pointer; text-decoration: none; padding: 0 4px; line-height: 1; font-weight: 600; }
+        .support-block-header .expand-btn:hover { color: var(--primary-hover); }
+        .support-block-body { padding: 12px 20px 20px; }
+        .support-block-list { list-style: none; padding: 0; margin: 0; }
+        .support-block-list li { padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+        .support-block-list li:last-child { border-bottom: none; }
+        .support-block-list a { text-decoration: none; color: var(--text-primary); font-size: 14px; display: block; line-height: 1.45; }
+        .support-block-list a:hover { color: var(--primary-color); }
+        .support-block-list .tag { color: var(--text-secondary); margin-right: 6px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>document.write(createHeader(''));</script>
+        <main class="main-content">
+            <div class="support-center">
+                <div class="page-header">
+                    <h2>고객센터</h2>
+                    <p class="page-description">톡벨의 공지사항 및 문의를 확인하실 수 있습니다.</p>
+                </div>
+                <div class="quick-actions">
+                    <a href="support-inquiry.html" class="quick-action" title="문의하기">
+                        <span class="circle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+                        <span>문의하기</span>
+                    </a>
+                    <a href="support-inquiry.html" class="quick-action" title="내 문의내역">
+                        <span class="circle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+                        <span>내 문의내역</span>
+                    </a>
+                </div>
+                <div class="support-grid">
+                    <div class="support-block">
+                        <div class="support-block-header">공지사항 <a href="support-notice.html" class="expand-btn" title="공지사항 더보기">+</a></div>
+                        <div class="support-block-body">
+                            <ul class="support-block-list">
+                                <li><a href="support-notice-detail.html?id=1"><span class="tag">[알림][공지]</span> 카카오 알림톡 템플릿 심사 기준 강화 안내</a></li>
+                                <li><a href="support-notice-detail.html?id=2"><span class="tag">[알림][공지]</span> 카카오 브랜드메시지 요금 정책 변경 안내</a></li>
+                                <li><a href="support-notice-detail.html?id=3"><span class="tag">[알림]</span> 추석 연휴 안내</a></li>
+                                <li><a href="support-notice-detail.html?id=4"><span class="tag">[알림]</span> 선거문자 템플릿 변경 안내</a></li>
+                                <li><a href="support-notice-detail.html?id=5"><span class="tag">[장애][카카오]</span> 알림톡, 친구톡 발송지연 안내 (2025.01.15~20...)</a></li>
+                                <li><a href="support-notice-detail.html?id=6"><span class="tag">[알림]</span> 부동산 투자 메시지 발송 제한 안내</a></li>
+                                <li><a href="support-notice-detail.html?id=7"><span class="tag">[공지]</span> 모바일설문 단가 변경 안내</a></li>
+                                <li><a href="support-notice-detail.html?id=8"><span class="tag">[알림]</span> 11월 세금계산서 발행 안내</a></li>
+                                <li><a href="support-notice-detail.html?id=9"><span class="tag">[공지]</span> 톡벨몰 서비스 종료 안내</a></li>
+                                <li><a href="support-notice-detail.html?id=10"><span class="tag">[공지]</span> RCS 동영상 유형 일부 단말기 재생 불가 안내</a></li>
+                                <li><a href="support-notice-detail.html?id=11"><span class="tag">[알림]</span> 카카오 브랜드메시지 이용요금 변경 예정</a></li>
+                                <li><a href="support-notice-detail.html?id=12"><span class="tag">[알림]</span> 10월 세금계산서 발행 안내</a></li>
+                                <li><a href="support-notice-detail.html?id=13"><span class="tag">[공지]</span> 10/23(목) 시스템 점검 안내</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="support-block">
+                        <div class="support-block-header">자주 묻는 질문 <a href="support-faq.html" class="expand-btn" title="자주 묻는 질문 더보기">+</a></div>
+                        <div class="support-block-body">
+                            <ul class="support-block-list">
+                                <li><a href="support-faq.html#faq1"><span class="tag">[계정관리]</span> [안내] 특수부가통신사업자 등록 관련 공지</a></li>
+                                <li><a href="support-faq.html#faq2"><span class="tag">[문자발송]</span> 070 번호 LMS 발송 유의사항 안내</a></li>
+                                <li><a href="support-faq.html#faq3"><span class="tag">[RCS]</span> RCS 자주 묻는 질문</a></li>
+                                <li><a href="support-faq.html#faq4"><span class="tag">[RCS]</span> RCS 메시지 발송, 이렇게 쉬워요!</a></li>
+                                <li><a href="support-faq.html#faq5"><span class="tag">[RCS]</span> RCS 메시지, 쉽고 빠르게 준비해볼까요?</a></li>
+                                <li><a href="support-faq.html#faq6"><span class="tag">[발신번호등록]</span> 공직계정 발신번호 등록 안내</a></li>
+                                <li><a href="support-faq.html#faq7"><span class="tag">[결제/포인트]</span> 문자 발송 요금은 어떻게 되나요?</a></li>
+                                <li><a href="support-faq.html#faq8"><span class="tag">[결제/포인트]</span> 포인트 충전은 어떻게 하나요?</a></li>
+                                <li><a href="support-faq.html#faq9"><span class="tag">[문자발송]</span> 발신번호 등록 방법을 알려주세요</a></li>
+                                <li><a href="support-faq.html#faq10"><span class="tag">[카카오톡]</span> 알림톡과 문자의 차이점이 무엇인가요?</a></li>
+                                <li><a href="support-faq.html"><span class="tag">[회원/계정]</span> 회원가입은 어떻게 하나요?</a></li>
+                                <li><a href="support-faq.html"><span class="tag">[문자발송]</span> 예약 발송은 어떻게 설정하나요?</a></li>
+                                <li><a href="support-faq.html"><span class="tag">[카카오톡]</span> 카카오톡 발신 프로필은 어떻게 등록하나요?</a></li>
+                                <li><a href="support-faq.html"><span class="tag">[결제/포인트]</span> 세금계산서 발급이 가능한가요?</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initDropdownMenus === 'function') initDropdownMenus();
+        });
+    </script>
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+</body>
+</html>

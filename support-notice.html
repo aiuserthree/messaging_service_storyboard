@@ -250,43 +250,14 @@
         <main class="main-content">
             <div class="page-header">
                 <h2>고객센터</h2>
-                <p class="page-description">톡벨의 공지사항, 이벤트 및 문의를 확인하실 수 있습니다.</p>
+                <p class="page-description">톡벨의 공지사항 및 문의를 확인하실 수 있습니다.</p>
             </div>
 
-            <!-- 탭 메뉴 -->
+            <!-- 서브 메인: 탭에서 선택 시 해당 페이지로 이동 -->
             <div class="support-tabs" id="supportTabs">
                 <a href="support-notice.html" class="support-tab active">공지사항</a>
-                <a href="support-event.html" class="support-tab">이벤트</a>
                 <a href="support-faq.html" class="support-tab">FAQ</a>
                 <a href="support-inquiry.html" class="support-tab">1:1 문의</a>
-            </div>
-
-            <!-- 검색바 -->
-            <div class="search-bar" id="searchBar">
-                <div class="search-input-wrapper">
-                    <input 
-                        type="text" 
-                        class="search-input" 
-                        id="searchInput"
-                        placeholder="검색할 내용을 입력해주세요"
-                    >
-                    <div class="search-buttons">
-                        <button class="search-btn" onclick="handleSearch()" title="검색">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.35-4.35"></path>
-                            </svg>
-                        </button>
-                        <button class="refresh-btn" onclick="handleRefresh()" title="새로고침">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                                <path d="M21 3v5h-5"></path>
-                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                                <path d="M3 21v-5h5"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
             </div>
 
             <!-- 공지사항 테이블 -->
@@ -379,28 +350,10 @@
     </div>
 
     <script>
-        function handleSearch() {
-            const searchTerm = document.getElementById('searchInput').value;
-            console.log('검색:', searchTerm);
-            // 검색 로직 구현
-        }
-
-        function handleRefresh() {
-            document.getElementById('searchInput').value = '';
-            // 새로고침 로직 구현
-        }
-
         function goToPage(page) {
             console.log('페이지 이동:', page);
             // 페이지 이동 로직 구현
         }
-
-        // 엔터키로 검색
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                handleSearch();
-            }
-        });
 
         // 드롭다운 메뉴 초기화
         document.addEventListener('DOMContentLoaded', function() {
@@ -412,20 +365,19 @@
 
     <script src="js/footer.js"></script>
     <script>
+        document.write(createFloatingMenu());
         document.write(createFooter());
     </script>
     <!-- 화면설계 오버레이 -->
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
-            // 1. 탭 메뉴
             {
                 selector: '#supportTabs',
-                title: '탭 메뉴',
+                title: '서브 메인 탭',
                 position: { top: '-5px', left: '-10px' },
-                function: '고객센터 페이지 간 이동'
+                function: '고객센터 탭 간 이동 (공지사항 | FAQ | 1:1 문의)'
             },
-            // 2. 공지사항 탭
             {
                 selector: '#supportTabs .support-tab:nth-child(1)',
                 title: '공지사항 탭',
@@ -433,61 +385,21 @@
                 function: '공지사항 페이지 (현재)',
                 behavior: ['활성 상태 표시']
             },
-            // 3. 이벤트 탭
             {
                 selector: '#supportTabs .support-tab:nth-child(2)',
-                title: '이벤트 탭',
-                position: { top: '-5px', left: '-10px' },
-                function: '이벤트 페이지 이동',
-                behavior: ['클릭 시 support-event.html 이동']
-            },
-            // 4. FAQ 탭
-            {
-                selector: '#supportTabs .support-tab:nth-child(3)',
                 title: 'FAQ 탭',
                 position: { top: '-5px', left: '-10px' },
                 function: 'FAQ 페이지 이동',
                 behavior: ['클릭 시 support-faq.html 이동']
             },
-            // 5. 1:1 문의 탭
             {
-                selector: '#supportTabs .support-tab:nth-child(4)',
+                selector: '#supportTabs .support-tab:nth-child(3)',
                 title: '1:1 문의 탭',
                 position: { top: '-5px', right: '-10px' },
                 function: '1:1 문의 페이지 이동',
                 behavior: ['클릭 시 support-inquiry.html 이동']
             },
-            // 6. 검색바 영역
-            {
-                selector: '#searchBar',
-                title: '검색바',
-                position: { top: '-5px', left: '-10px' },
-                function: '공지사항 검색'
-            },
-            // 7. 검색 입력 필드
-            {
-                selector: '#searchInput',
-                title: '검색 입력',
-                position: { top: '-5px', left: '-10px' },
-                function: '검색어 입력',
-                behavior: ['Enter 키로 검색 실행']
-            },
-            // 8. 검색 버튼
-            {
-                selector: '.search-btn',
-                title: '검색 버튼',
-                position: { top: '-5px', left: '-10px' },
-                function: '검색 실행',
-                api: 'GET /api/notices?search=keyword'
-            },
-            // 9. 새로고침 버튼
-            {
-                selector: '.refresh-btn',
-                title: '새로고침 버튼',
-                position: { top: '-5px', right: '-10px' },
-                function: '검색 초기화 및 목록 새로고침'
-            },
-            // 10. 공지사항 테이블
+            // 공지사항 테이블
             {
                 selector: '#noticeTableContainer',
                 title: '공지사항 테이블',

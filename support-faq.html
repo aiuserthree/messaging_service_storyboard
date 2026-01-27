@@ -379,10 +379,9 @@
                 <p class="page-description">자주 묻는 질문에서 궁금하신 내용을 빠르게 확인하세요.</p>
             </div>
 
-            <!-- 탭 메뉴 -->
+            <!-- 서브 메인: 탭에서 선택 시 해당 페이지로 이동 -->
             <div class="support-tabs" id="supportTabs">
                 <a href="support-notice.html" class="support-tab">공지사항</a>
-                <a href="support-event.html" class="support-tab">이벤트</a>
                 <a href="support-faq.html" class="support-tab active">FAQ</a>
                 <a href="support-inquiry.html" class="support-tab">1:1 문의</a>
             </div>
@@ -799,6 +798,7 @@
 
     <script src="js/footer.js"></script>
     <script>
+        document.write(createFloatingMenu());
         document.write(createFooter());
     </script>
     <!-- 화면설계 오버레이 -->

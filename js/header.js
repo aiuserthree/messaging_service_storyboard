@@ -51,6 +51,11 @@ function createHeader(activeMenu = '') {
                 { label: '발송결과', url: 'send-result.html' },
                 { label: '예약내역', url: 'send-reservation.html' }
             ]
+        },
+        'event': {
+            label: '이벤트',
+            url: 'support-event.html',
+            hasDropdown: false
         }
     };
     
@@ -79,9 +84,10 @@ function createHeader(activeMenu = '') {
         'mypage-password.html': 'mypage',
         'mypage-caller-number.html': 'mypage',
         'support-notice.html': 'support',
-        'support-event.html': 'support',
+        'support-event.html': 'event',
         'support-faq.html': 'support',
-        'support-inquiry.html': 'support'
+        'support-inquiry.html': 'support',
+        'support-center.html': 'support'
     };
     
     // 현재 페이지 URL에서 활성 메뉴 결정
@@ -417,6 +423,14 @@ function createFloatingMenu() {
                 </svg>
             </button>
             <div class="floating-menu-items" id="floatingMenuItems">
+                <a href="support-center.html" class="floating-menu-item" title="고객센터">
+                    <span class="floating-menu-icon-item teal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </span>
+                    <span class="floating-menu-label">고객센터</span>
+                </a>
                 <a href="message-send-general.html" class="floating-menu-item" title="일반문자 발송">
                     <span class="floating-menu-icon-item blue">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -456,22 +470,6 @@ function createFloatingMenu() {
                         </svg>
                     </span>
                     <span class="floating-menu-label">브랜드 메시지 발송</span>
-                </a>
-                <a href="support-event.html" class="floating-menu-item" title="이벤트">
-                    <span class="floating-menu-icon-item pink">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
-                        </svg>
-                    </span>
-                    <span class="floating-menu-label">이벤트</span>
-                </a>
-                <a href="support-inquiry.html" class="floating-menu-item" title="1:1 문의">
-                    <span class="floating-menu-icon-item teal">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
-                        </svg>
-                    </span>
-                    <span class="floating-menu-label">1:1 문의</span>
                 </a>
             </div>
         </div>

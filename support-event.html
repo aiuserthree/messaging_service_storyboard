@@ -24,38 +24,7 @@
             margin-bottom: 24px;
         }
 
-        /* 탭 메뉴 */
-        .support-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .support-tab {
-            padding: 14px 24px;
-            background: none;
-            border: none;
-            border-bottom: 3px solid transparent;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .support-tab:hover {
-            color: var(--text-primary);
-        }
-
-        .support-tab.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        /* 이벤트 탭 (1:1 문의와 동일한 스타일) */
+        /* 이벤트 탭 (진행중/종료) */
         .event-tabs {
             display: flex;
             gap: 0;
@@ -220,24 +189,15 @@
 <body>
     <div class="app-container">
         <script>
-            document.write(createHeader('support'));
+            document.write(createHeader('event'));
         </script>
 
         <main class="main-content">
             <div class="page-header">
-                <h2>고객센터</h2>
+                <h2>이벤트</h2>
                 <p class="page-description">톡벨에서 제공하는 다양한 이벤트를 확인하실 수 있습니다.</p>
             </div>
 
-            <!-- 탭 메뉴 -->
-            <div class="support-tabs" id="supportTabs">
-                <a href="support-notice.html" class="support-tab">공지사항</a>
-                <a href="support-event.html" class="support-tab active">이벤트</a>
-                <a href="support-faq.html" class="support-tab">FAQ</a>
-                <a href="support-inquiry.html" class="support-tab">1:1 문의</a>
-            </div>
-
-            <!-- 이벤트 탭 -->
             <div class="tab-content active" id="eventContent">
                 <div class="event-tabs" id="eventTabs">
                     <button class="event-tab active" onclick="switchEventTab('ongoing')">진행 중 & 진행예정 이벤트</button>
@@ -339,36 +299,16 @@
 
     <script src="js/footer.js"></script>
     <script>
+        document.write(createFloatingMenu());
         document.write(createFooter());
     </script>
     <!-- 화면설계 오버레이 -->
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
-            // 1. 탭 메뉴
-            { selector: '#supportTabs', title: '탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '고객센터 페이지 이동' },
-            // 2. 공지사항 탭
-            { selector: '#supportTabs .support-tab:nth-child(1)', title: '공지사항 탭', position: { top: '-5px', left: '-10px' }, function: '공지사항 페이지' },
-            // 3. 이벤트 탭
-            { selector: '#supportTabs .support-tab:nth-child(2)', title: '이벤트 탭', position: { top: '-5px', left: '-10px' }, function: '이벤트 페이지 (현재)' },
-            // 4. FAQ 탭
-            { selector: '#supportTabs .support-tab:nth-child(3)', title: 'FAQ 탭', position: { top: '-5px', left: '-10px' }, function: 'FAQ 페이지' },
-            // 5. 1:1 문의 탭
-            { selector: '#supportTabs .support-tab:nth-child(4)', title: '1:1 문의 탭', position: { top: '-5px', right: '-10px' }, function: '1:1 문의 페이지' },
-            // 6. 이벤트 탭 메뉴
             { selector: '#eventTabs', title: '이벤트 상태 탭', position: { top: '-5px', left: '-10px' }, function: '진행중/종료 이벤트 전환' },
-            // 7. 진행중 탭
-            { selector: '#eventTabs .tab-item:first-child', title: '진행중 탭', position: { top: '-5px', left: '-10px' }, function: '진행 중 & 진행예정 이벤트' },
-            // 8. 종료 탭
-            { selector: '#eventTabs .tab-item:nth-child(2)', title: '종료 탭', position: { top: '-5px', right: '-10px' }, function: '종료된 이벤트' },
-            // 9. 이벤트 그리드
             { selector: '#eventGrid', title: '이벤트 카드 그리드', position: { top: '10px', left: '10px' }, function: '이벤트 목록 표시', api: 'GET /api/events' },
-            // 10. 이벤트 카드
-            { selector: '#eventGrid .event-card:first-child', title: '이벤트 카드', position: { top: '-5px', left: '-10px' }, function: '개별 이벤트 정보', behavior: ['클릭 시 상세 페이지'] },
-            // 11. 이벤트 이미지
-            { selector: '#eventGrid .event-card:first-child .event-image', title: '이벤트 이미지', position: { top: '5px', left: '5px' }, function: '이벤트 배너 이미지' },
-            // 12. 이벤트 기간
-            { selector: '#eventGrid .event-card:first-child .event-period', title: '이벤트 기간', position: { top: '-5px', left: '-10px' }, function: '이벤트 진행 기간 표시' }
+            { selector: '#eventGrid .event-card:first-child', title: '이벤트 카드', position: { top: '-5px', left: '-10px' }, function: '개별 이벤트 정보', behavior: ['클릭 시 상세 페이지'] }
         ];
         initSpecOverlay(specData);
     </script>

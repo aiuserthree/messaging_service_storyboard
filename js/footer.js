@@ -4,7 +4,7 @@ function createFooter() {
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4 class="footer-title">고객센터</h4>
+                    <h4 class="footer-title"><a href="support-center.html" class="footer-title-link">고객센터</a></h4>
                     <div class="footer-info">
                         <p class="footer-text">전화: 1588-5412</p>
                         <p class="footer-text">이메일: support@tokbell.com</p>
@@ -60,6 +60,13 @@ function createFooter() {
                 font-weight: 600;
                 margin-bottom: 16px;
                 color: var(--surface-color);
+            }
+            .footer-title-link {
+                color: inherit;
+                text-decoration: none;
+            }
+            .footer-title-link:hover {
+                text-decoration: underline;
             }
             .footer-info {
                 display: flex;
