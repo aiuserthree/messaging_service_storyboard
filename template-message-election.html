@@ -1174,8 +1174,8 @@ body {
                         <button class="btn btn-primary" id="addTemplateBtn" onclick="openModal('addTemplateModal')">새 템플릿 등록</button>
                     </div>
                     <div class="flex gap-2">
-                        <button class="btn btn-outline btn-sm" id="batchDeleteBtn">일괄 삭제</button>
-                        <button class="btn btn-outline btn-sm" id="exportBtn">내보내기</button>
+                        <button class="btn btn-outline btn-sm" id="batchDeleteBtn" onclick="batchDelete()" disabled>일괄 삭제</button>
+                        <button class="btn btn-outline btn-sm" id="exportBtn" onclick="exportTemplates()">내보내기</button>
                     </div>
                 </div>
 
@@ -1183,10 +1183,13 @@ body {
                 <div class="template-card" id="templateGrid">
                     <div class="template-item" onclick="viewTemplate(1)">
                         <div class="template-header">
-                            <div>
-                                <div class="template-name">주문 확인</div>
-                                <div style="margin-top: 4px;">
-                                    <span class="badge badge-primary template-type-badge">SMS</span>
+                            <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+                                <input type="checkbox" class="template-checkbox" data-id="1" onclick="event.stopPropagation(); updateBatchDeleteButton();">
+                                <div style="flex: 1;">
+                                    <div class="template-name">주문 확인</div>
+                                    <div style="margin-top: 4px;">
+                                        <span class="badge badge-primary template-type-badge">SMS</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1209,10 +1212,13 @@ body {
 
                     <div class="template-item" onclick="viewTemplate(2)">
                         <div class="template-header">
-                            <div>
-                                <div class="template-name">배송 안내</div>
-                                <div style="margin-top: 4px;">
-                                    <span class="badge badge-primary template-type-badge">LMS</span>
+                            <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+                                <input type="checkbox" class="template-checkbox" data-id="2" onclick="event.stopPropagation(); updateBatchDeleteButton();">
+                                <div style="flex: 1;">
+                                    <div class="template-name">배송 안내</div>
+                                    <div style="margin-top: 4px;">
+                                        <span class="badge badge-primary template-type-badge">LMS</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1235,10 +1241,13 @@ body {
 
                     <div class="template-item" onclick="viewTemplate(3)">
                         <div class="template-header">
-                            <div>
-                                <div class="template-name">이벤트 안내</div>
-                                <div style="margin-top: 4px;">
-                                    <span class="badge badge-primary template-type-badge">MMS</span>
+                            <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+                                <input type="checkbox" class="template-checkbox" data-id="3" onclick="event.stopPropagation(); updateBatchDeleteButton();">
+                                <div style="flex: 1;">
+                                    <div class="template-name">이벤트 안내</div>
+                                    <div style="margin-top: 4px;">
+                                        <span class="badge badge-primary template-type-badge">MMS</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1906,6 +1915,95 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'message-send-election.html';
         }
 
+        // 일괄 삭제 기능
+        function updateBatchDeleteButton() {
+            const batchDeleteBtn = document.getElementById('batchDeleteBtn');
+            const checkedBoxes = document.querySelectorAll('.template-checkbox:checked');
+            if (batchDeleteBtn) {
+                batchDeleteBtn.disabled = checkedBoxes.length === 0;
+            }
+        }
+
+        function batchDelete() {
+            const checkedBoxes = document.querySelectorAll('.template-checkbox:checked');
+            if (checkedBoxes.length === 0) {
+                showToast('삭제할 템플릿을 선택해주세요.', 'warning');
+                return;
+            }
+
+            const selectedIds = Array.from(checkedBoxes).map(cb => cb.getAttribute('data-id'));
+            const count = selectedIds.length;
+
+            if (confirm(`선택한 ${count}개의 템플릿을 삭제하시겠습니까?`)) {
+                // 실제로는 API 호출로 삭제 처리
+                // DELETE /api/election/templates/batch
+                showToast(`${count}개의 템플릿이 삭제되었습니다.`, 'success');
+                
+                // 체크박스 해제 및 버튼 비활성화
+                checkedBoxes.forEach(cb => {
+                    cb.checked = false;
+                });
+                updateBatchDeleteButton();
+            }
+        }
+
+        // 내보내기 기능
+        function exportTemplates() {
+            const templateItems = document.querySelectorAll('.template-item');
+            if (templateItems.length === 0) {
+                showToast('내보낼 템플릿이 없습니다.', 'warning');
+                return;
+            }
+
+            // CSV 헤더
+            const headers = ['템플릿명', '타입', '내용', '등록일', '사용횟수'];
+            const rows = [headers.join(',')];
+
+            // 각 템플릿 데이터 추출
+            templateItems.forEach(item => {
+                const name = item.querySelector('.template-name')?.textContent?.trim() || '';
+                const type = item.querySelector('.template-type-badge')?.textContent?.trim() || '';
+                const content = item.querySelector('.template-content')?.textContent?.trim() || '';
+                const metaInfo = item.querySelectorAll('.template-meta-info span');
+                const regDate = metaInfo[0]?.textContent?.replace('등록일: ', '').trim() || '';
+                const useCount = metaInfo[1]?.textContent?.replace('사용: ', '').replace('회', '').trim() || '0';
+
+                // CSV 형식으로 변환 (쉼표와 줄바꿈 처리)
+                const escapeCSV = (str) => {
+                    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                        return '"' + str.replace(/"/g, '""') + '"';
+                    }
+                    return str;
+                };
+
+                rows.push([
+                    escapeCSV(name),
+                    escapeCSV(type),
+                    escapeCSV(content),
+                    escapeCSV(regDate),
+                    escapeCSV(useCount)
+                ].join(','));
+            });
+
+            // CSV 파일 생성 및 다운로드
+            const csvContent = rows.join('\n');
+            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' }); // BOM 추가로 Excel에서 한글 깨짐 방지
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `선거문자_템플릿_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('템플릿이 내보내졌습니다.', 'success');
+        }
+
+        // 페이지 로드 시 버튼 상태 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBatchDeleteButton();
+        });
 
         // 페이지네이션 생성
         createPagination(1, 5, 'pagination');
