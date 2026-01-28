@@ -1138,18 +1138,18 @@ body {
             <div class="card" style="padding: 16px 24px; margin-bottom: 20px;" id="searchSection">
                 <div class="search-filter-section" id="searchFilterSection">
                     <div style="flex: 1; min-width: 200px;">
-                        <input type="text" class="form-input" placeholder="템플릿명 또는 내용으로 검색">
+                        <input type="text" id="searchInput" class="form-input" placeholder="템플릿명 또는 내용으로 검색" onkeypress="if(event.key==='Enter') searchTemplates()">
                     </div>
                     <div style="width: 150px;">
-                        <select class="form-select">
-                            <option>전체 타입</option>
-                            <option>SMS</option>
-                            <option>LMS</option>
-                            <option>MMS</option>
+                        <select id="typeFilter" class="form-select">
+                            <option value="">전체 타입</option>
+                            <option value="SMS">SMS</option>
+                            <option value="LMS">LMS</option>
+                            <option value="MMS">MMS</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary">검색</button>
-                    <button class="btn btn-outline">초기화</button>
+                    <button class="btn btn-primary" onclick="searchTemplates()">검색</button>
+                    <button class="btn btn-outline" onclick="resetSearch()">초기화</button>
                 </div>
             </div>
 
@@ -1178,6 +1178,16 @@ body {
                         <h3 style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">등록된 템플릿이 없습니다</h3>
                         <p style="font-size: 14px; margin-bottom: 24px;">새 템플릿을 등록하여 시작하세요.</p>
                         <button class="btn btn-primary" onclick="openModal('addTemplateModal')">새 템플릿 등록</button>
+                    </div>
+                    <!-- 검색 결과 없음 메시지 -->
+                    <div id="noSearchResults" style="display: none; text-align: center; padding: 80px 20px; color: var(--text-secondary);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 16px; opacity: 0.5;">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <h3 style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">검색 결과가 없습니다</h3>
+                        <p style="font-size: 14px; margin-bottom: 24px;">다른 검색어로 시도해보세요.</p>
+                        <button class="btn btn-outline" onclick="resetSearch()">검색 초기화</button>
                     </div>
                     <div class="template-item" onclick="toggleTemplateCheckbox(1, event)">
                         <div class="template-header">
@@ -1924,26 +1934,93 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        // 검색 기능
+        function searchTemplates() {
+            const searchInput = document.getElementById('searchInput');
+            const typeFilter = document.getElementById('typeFilter');
+            const searchKeyword = searchInput.value.trim().toLowerCase();
+            const selectedType = typeFilter.value;
+            
+            const templateItems = document.querySelectorAll('.template-item');
+            let visibleCount = 0;
+            
+            templateItems.forEach(item => {
+                const name = item.querySelector('.template-name')?.textContent?.trim().toLowerCase() || '';
+                const content = item.querySelector('.template-content')?.textContent?.trim().toLowerCase() || '';
+                const type = item.querySelector('.template-type-badge')?.textContent?.trim() || '';
+                
+                // 검색어 매칭
+                const matchesKeyword = !searchKeyword || name.includes(searchKeyword) || content.includes(searchKeyword);
+                // 타입 필터 매칭
+                const matchesType = !selectedType || type === selectedType;
+                
+                if (matchesKeyword && matchesType) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // 검색 결과 상태 표시
+            updateSearchResultState(visibleCount);
+            updateBatchDeleteButton();
+        }
+
+        // 검색 초기화
+        function resetSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const typeFilter = document.getElementById('typeFilter');
+            
+            searchInput.value = '';
+            typeFilter.value = '';
+            
+            // 모든 템플릿 표시
+            const templateItems = document.querySelectorAll('.template-item');
+            templateItems.forEach(item => {
+                item.style.display = '';
+            });
+            
+            updateSearchResultState(templateItems.length);
+            updateBatchDeleteButton();
+        }
+
+        // 검색 결과 상태 업데이트
+        function updateSearchResultState(visibleCount) {
+            const templateGrid = document.getElementById('templateGrid');
+            const emptyState = document.getElementById('emptyState');
+            const noSearchResults = document.getElementById('noSearchResults');
+            const searchInput = document.getElementById('searchInput');
+            const typeFilter = document.getElementById('typeFilter');
+            
+            const hasSearchCriteria = searchInput.value.trim() || typeFilter.value;
+            
+            if (visibleCount === 0) {
+                if (hasSearchCriteria) {
+                    // 검색 결과 없음
+                    if (emptyState) emptyState.style.display = 'none';
+                    if (noSearchResults) noSearchResults.style.display = 'block';
+                } else {
+                    // 템플릿이 없음
+                    if (emptyState) emptyState.style.display = 'block';
+                    if (noSearchResults) noSearchResults.style.display = 'none';
+                }
+            } else {
+                if (emptyState) emptyState.style.display = 'none';
+                if (noSearchResults) noSearchResults.style.display = 'none';
+            }
+        }
+
         // 빈 상태 확인 및 표시
         function checkEmptyState() {
             const templateGrid = document.getElementById('templateGrid');
-            const emptyState = document.getElementById('emptyState');
-            const templateItems = templateGrid.querySelectorAll('.template-item');
-            
-            if (templateItems.length === 0) {
-                if (emptyState) {
-                    emptyState.style.display = 'block';
-                }
-            } else {
-                if (emptyState) {
-                    emptyState.style.display = 'none';
-                }
-            }
+            const templateItems = templateGrid.querySelectorAll('.template-item:not([style*="display: none"])');
+            updateSearchResultState(templateItems.length);
         }
 
         // 내보내기 기능
         function exportTemplates() {
-            const templateItems = document.querySelectorAll('.template-item');
+            const templateItems = document.querySelectorAll('.template-item:not([style*="display: none"])');
             if (templateItems.length === 0) {
                 showToast('내보낼 템플릿이 없습니다.', 'warning');
                 return;
