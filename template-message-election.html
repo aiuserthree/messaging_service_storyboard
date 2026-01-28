@@ -1335,8 +1335,8 @@ body {
                                 <input type="text" class="form-input" id="messageTitle" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40" oninput="updateByteCounter()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label required">후보자/정당명</label>
-                                <input type="text" class="form-input" id="candidateNameInput" placeholder="후보자명 또는 정당명을 입력하세요" oninput="updatePreview()" required>
+                                <label class="form-label required">선거운동정보</label>
+                                <input type="text" class="form-input" id="candidateNameInput" placeholder="선거운동정보를 입력하세요" oninput="updatePreview()" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label required">메시지 내용</label>
@@ -1382,7 +1382,7 @@ body {
                                 <div class="preview-phone-body">
                                     <div id="previewTitle" style="font-weight: 600; margin-bottom: 8px; display: none;"></div>
                                     <div id="previewContent" style="white-space: pre-wrap; line-height: 1.6;">
-                                        <span style="color: var(--primary-color); font-weight: 600;">[선거]</span>후보자명/정당명
+                                        <span style="color: var(--primary-color); font-weight: 600;">(선거운동정보)</span>
                                         <div style="margin-top: 8px; color: var(--text-secondary); font-size: 12px;">수신거부 080-</div>
                                     </div>
                                     <div id="previewImages" style="margin-top: 12px;"></div>
@@ -1788,14 +1788,12 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePreview() {
             const content = document.getElementById('templateContent').value;
             const title = document.getElementById('messageTitle')?.value || '';
-            const candidateName = document.getElementById('candidateNameInput').value || '후보자명/정당명';
+            const candidateName = document.getElementById('candidateNameInput').value || '';
             const rejectInput = document.getElementById('rejectNumberInput')?.value || '';
             const rejectNumber = rejectInput ? '080-' + rejectInput : '080-';
             const preview = document.getElementById('previewContent');
-            let previewContent = `<span style="color: var(--primary-color); font-weight: 600;">[선거]</span>${candidateName}\n`;
-            if (title) {
-                previewContent += `<div style="font-weight: 600; margin-bottom: 8px;">${title}</div>`;
-            }
+            const electionInfo = candidateName ? `(선거운동정보)${candidateName}` : '(선거운동정보)';
+            let previewContent = `<span style="color: var(--primary-color); font-weight: 600;">${electionInfo}</span>\n`;
             previewContent += `${content || '메시지 내용을 입력하세요'}<div style="margin-top: 8px; color: var(--text-secondary); font-size: 12px;">수신거부 ${rejectNumber}</div>`;
             preview.innerHTML = previewContent;
             

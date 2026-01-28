@@ -1286,7 +1286,14 @@ body {
                         <!-- 제목 (LMS/MMS만) -->
                         <div class="form-group" id="titleGroup" style="display: none;">
                             <label class="form-label">제목</label>
-                            <input type="text" class="form-input" id="messageTitle" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40">
+                            <input type="text" class="form-input" id="messageTitle" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40" oninput="updatePreview()">
+                        </div>
+
+                        <!-- (광고) 옆 문구 -->
+                        <div class="form-group" style="margin-bottom: 12px;" id="adPrefixGroup">
+                            <label class="form-label required">(광고) 옆 문구</label>
+                            <input type="text" class="form-input" id="adPrefixText" placeholder="(광고) 옆에 표시할 문구를 입력하세요" oninput="updateAdPrefixPreview()" required>
+                            <div class="form-help">(광고) 문구 옆에 추가로 표시할 내용을 입력하세요 (필수사항)</div>
                         </div>
 
                         <!-- 메시지 내용 -->
@@ -1305,11 +1312,6 @@ body {
                                         변수 사용 안내: 이름, 변수1~3은 각 100바이트까지 입력됩니다.<br>변수 길이로 인해 90바이트를 초과하는 SMS 메시지는 LMS로 변경 후 발송하시기 바랍니다.
                                     </span>
                                 </span>
-                            </div>
-                            <div class="form-group" style="margin-bottom: 12px;" id="adPrefixGroup">
-                                <label class="form-label required">(광고) 옆 문구</label>
-                                <input type="text" class="form-input" id="adPrefixText" placeholder="(광고) 옆에 표시할 문구를 입력하세요" oninput="updateAdPrefixPreview()" required>
-                                <div class="form-help">(광고) 문구 옆에 추가로 표시할 내용을 입력하세요 (필수사항)</div>
                             </div>
                             <textarea class="form-textarea" id="messageContent" rows="6" placeholder="메시지 내용을 입력하세요" required oninput="updateByteCounter()"></textarea>
                             <div class="byte-counter" id="byteCounter">0 / 90 바이트</div>
@@ -1398,6 +1400,7 @@ body {
                                 <div id="previewSenderNumber">010-1234-5678</div>
                             </div>
                             <div class="preview-phone-body">
+                                <div id="previewTitle" style="font-weight: 600; margin-bottom: 8px; display: none;"></div>
                                 <div id="previewMessage" style="white-space: pre-wrap; line-height: 1.6;">
                                     <span class="ad-prefix">(광고)</span> 메시지 내용을 입력하세요
                                     <div class="reject-number" style="margin-top: 8px;">무료수신거부 080-</div>
@@ -2303,13 +2306,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const rejectInput = document.getElementById('rejectNumberInput').value;
             const rejectNumber = rejectInput ? '080-' + rejectInput : '080-';
             const preview = document.getElementById('previewMessage');
+            const previewTitle = document.getElementById('previewTitle');
             const adPrefixTextDisplay = adPrefixText ? adPrefixText + ' ' : '';
             let previewContent = `<span class="ad-prefix">(광고)</span> ${adPrefixTextDisplay}\n`;
-            if (title) {
-                previewContent += `<div style="font-weight: 600; margin-bottom: 8px;">${title}</div>`;
-            }
             previewContent += `${content || '메시지 내용을 입력하세요'}<div class="reject-number" style="margin-top: 8px;">무료수신거부 ${rejectNumber}</div>`;
             preview.innerHTML = previewContent;
+            
+            // 제목은 항상 상단에 표시
+            if (previewTitle) {
+                if (title) {
+                    previewTitle.textContent = title;
+                    previewTitle.style.display = 'block';
+                } else {
+                    previewTitle.style.display = 'none';
+                }
+            }
             
             // 이미지 미리보기 업데이트
             updatePreviewImages();

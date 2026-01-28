@@ -1790,9 +1790,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const preview = document.getElementById('previewContent');
             const adPrefixTextDisplay = adPrefixText ? adPrefixText + ' ' : '';
             let previewContent = `<span class="ad-prefix">(광고)</span> ${adPrefixTextDisplay}\n`;
-            if (title) {
-                previewContent += `<div style="font-weight: 600; margin-bottom: 8px;">${title}</div>`;
-            }
             previewContent += `${content || '메시지 내용을 입력하세요'}<div class="reject-number" style="margin-top: 8px;">무료수신거부 ${rejectNumber}</div>`;
             preview.innerHTML = previewContent;
             
