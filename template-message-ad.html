@@ -1183,10 +1183,22 @@ body {
 
                 <!-- 템플릿 카드 그리드 -->
                 <div class="template-card" id="templateGrid">
-                    <div class="template-item" onclick="viewTemplate(1)">
+                    <!-- 빈 상태 메시지 (템플릿이 없을 때 표시) -->
+                    <div id="emptyState" style="display: none; text-align: center; padding: 80px 20px; color: var(--text-secondary);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 16px; opacity: 0.5;">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                        <h3 style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">등록된 템플릿이 없습니다</h3>
+                        <p style="font-size: 14px; margin-bottom: 24px;">새 템플릿을 등록하여 시작하세요.</p>
+                        <button class="btn btn-primary" onclick="openModal('addTemplateModal')">새 템플릿 등록</button>
+                    </div>
+                    <div class="template-item" onclick="toggleTemplateCheckbox(1, event)">
                         <div class="template-header">
                             <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
-                                <input type="checkbox" class="template-checkbox" data-id="1" onclick="event.stopPropagation(); updateBatchDeleteButton();">
+                                <input type="checkbox" class="template-checkbox" data-id="1" onclick="event.stopPropagation(); toggleTemplateCheckbox(1, event);">
                                 <div style="flex: 1;">
                                     <div class="template-name">주문 확인</div>
                                     <div style="margin-top: 4px;">
@@ -1212,10 +1224,10 @@ body {
                         </div>
                     </div>
 
-                    <div class="template-item" onclick="viewTemplate(2)">
+                    <div class="template-item" onclick="toggleTemplateCheckbox(2, event)">
                         <div class="template-header">
                             <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
-                                <input type="checkbox" class="template-checkbox" data-id="2" onclick="event.stopPropagation(); updateBatchDeleteButton();">
+                                <input type="checkbox" class="template-checkbox" data-id="2" onclick="event.stopPropagation(); toggleTemplateCheckbox(2, event);">
                                 <div style="flex: 1;">
                                     <div class="template-name">배송 안내</div>
                                     <div style="margin-top: 4px;">
@@ -1241,10 +1253,10 @@ body {
                         </div>
                     </div>
 
-                    <div class="template-item" onclick="viewTemplate(3)">
+                    <div class="template-item" onclick="toggleTemplateCheckbox(3, event)">
                         <div class="template-header">
                             <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
-                                <input type="checkbox" class="template-checkbox" data-id="3" onclick="event.stopPropagation(); updateBatchDeleteButton();">
+                                <input type="checkbox" class="template-checkbox" data-id="3" onclick="event.stopPropagation(); toggleTemplateCheckbox(3, event);">
                                 <div style="flex: 1;">
                                     <div class="template-name">이벤트 안내</div>
                                     <div style="margin-top: 4px;">
@@ -1893,11 +1905,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function deleteTemplate(id) {
             openModal('deleteModal');
+            // 삭제할 템플릿 ID 저장
+            window.currentDeleteId = id;
         }
 
         function confirmDelete() {
-            showToast('템플릿이 삭제되었습니다.', 'success');
-            closeModal('deleteModal');
+            const id = window.currentDeleteId;
+            if (id) {
+                // 템플릿 카드 제거
+                const templateItem = document.querySelector(`.template-item[onclick*="toggleTemplateCheckbox(${id}"]`);
+                if (templateItem) {
+                    templateItem.remove();
+                }
+                
+                showToast('템플릿이 삭제되었습니다.', 'success');
+                closeModal('deleteModal');
+                
+                // 빈 상태 확인
+                checkEmptyState();
+                updateBatchDeleteButton();
+            }
         }
 
         function saveTemplate() {
@@ -1908,6 +1935,20 @@ document.addEventListener('DOMContentLoaded', function() {
         function useTemplate() {
             closeModal('previewModal');
             window.location.href = 'message-send-ad.html';
+        }
+
+        // 템플릿 체크박스 토글
+        function toggleTemplateCheckbox(id, event) {
+            // 버튼 영역 클릭 시에는 체크박스 토글하지 않음
+            if (event && event.target.closest('.template-actions-buttons')) {
+                return;
+            }
+            
+            const checkbox = document.querySelector(`.template-checkbox[data-id="${id}"]`);
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                updateBatchDeleteButton();
+            }
         }
 
         // 일괄 삭제 기능
@@ -1932,13 +1973,37 @@ document.addEventListener('DOMContentLoaded', function() {
             if (confirm(`선택한 ${count}개의 템플릿을 삭제하시겠습니까?`)) {
                 // 실제로는 API 호출로 삭제 처리
                 // DELETE /api/templates/ad/batch
+                
+                // 선택된 템플릿 카드 제거
+                checkedBoxes.forEach(cb => {
+                    const templateItem = cb.closest('.template-item');
+                    if (templateItem) {
+                        templateItem.remove();
+                    }
+                });
+                
                 showToast(`${count}개의 템플릿이 삭제되었습니다.`, 'success');
                 
-                // 체크박스 해제 및 버튼 비활성화
-                checkedBoxes.forEach(cb => {
-                    cb.checked = false;
-                });
+                // 버튼 비활성화 및 빈 상태 확인
                 updateBatchDeleteButton();
+                checkEmptyState();
+            }
+        }
+
+        // 빈 상태 확인 및 표시
+        function checkEmptyState() {
+            const templateGrid = document.getElementById('templateGrid');
+            const emptyState = document.getElementById('emptyState');
+            const templateItems = templateGrid.querySelectorAll('.template-item');
+            
+            if (templateItems.length === 0) {
+                if (emptyState) {
+                    emptyState.style.display = 'block';
+                }
+            } else {
+                if (emptyState) {
+                    emptyState.style.display = 'none';
+                }
             }
         }
 
@@ -1998,6 +2063,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 페이지 로드 시 버튼 상태 초기화
         document.addEventListener('DOMContentLoaded', function() {
             updateBatchDeleteButton();
+            checkEmptyState();
         });
 
         // 페이지네이션 생성
