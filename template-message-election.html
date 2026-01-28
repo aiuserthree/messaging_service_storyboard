@@ -1357,17 +1357,9 @@ body {
                             <div class="form-group">
                                 <label class="form-label required">080 수신거부 번호</label>
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span style="font-weight: 600;">080-</span>
-                                    <select class="form-select" id="rejectNumberInput" style="flex: 1;" onchange="updatePreview()" required>
-                                        <option value="">번호를 선택하세요</option>
-                                        <option value="123-4567">123-4567</option>
-                                        <option value="234-5678">234-5678</option>
-                                        <option value="345-6789">345-6789</option>
-                                        <option value="456-7890">456-7890</option>
-                                        <option value="567-8901">567-8901</option>
-                                    </select>
+                                    <span style="font-weight: 600; font-size: 15px;">080-123-4567</span>
+                                    <input type="hidden" id="rejectNumberInput" value="123-4567">
                                 </div>
-                                <div class="form-help">수신거부 번호를 선택하세요</div>
                             </div>
                             <div class="form-group" id="imageGroup" style="display: none;">
                                 <label class="form-label">이미지 첨부</label>
@@ -1375,10 +1367,6 @@ body {
                                 <button type="button" class="btn btn-outline" id="addImageBtn" onclick="document.getElementById('imageInput').click()">이미지 추가</button>
                                 <div class="form-help">JPG, PNG, GIF (최대 300KB, 최대 3개)</div>
                                 <div id="imagePreview" class="image-preview"></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">메모</label>
-                                <textarea class="form-textarea" rows="3" placeholder="템플릿 설명이나 용도 메모 (선택사항)" maxlength="200"></textarea>
                             </div>
                         </form>
                     </div>
@@ -1497,8 +1485,14 @@ document.addEventListener('keydown', function(e) {
 // 모달 외부 클릭 시 닫기
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('modal-overlay')) {
-        e.target.classList.remove('active');
-        document.body.style.overflow = '';
+        const modalId = e.target.id;
+        if (modalId && typeof closeModal === 'function') {
+            closeModal(modalId);
+        } else {
+            e.target.classList.remove('active');
+            e.target.style.display = 'none';
+            document.body.style.overflow = '';
+        }
     }
 });
 
