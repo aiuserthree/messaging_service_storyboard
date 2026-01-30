@@ -981,34 +981,34 @@ body {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr data-id="1" data-status="waiting">
                                 <td><input type="checkbox" class="row-checkbox" data-id="1"></td>
                                 <td>2024-11-19 14:30</td>
                                 <td>2024-11-20 09:00</td>
-                                <td style="cursor: pointer;" onclick="viewDetail(1)">이벤트 안내 메시지입니다...</td>
+                                <td style="cursor: pointer;" onclick="viewDetail(1, 'waiting')">이벤트 안내 메시지입니다...</td>
                                 <td><span class="badge badge-primary">SMS</span></td>
                                 <td>1,000건</td>
                                 <td>995건</td>
                                 <td><span class="status-badge status-waiting">예약대기</span></td>
                                 <td>
                                     <div class="flex gap-2">
-                                        <button class="btn btn-sm btn-outline" onclick="viewDetail(1)">상세보기</button>
+                                        <button class="btn btn-sm btn-outline" onclick="viewDetail(1, 'waiting')">상세보기</button>
                                         <button class="btn btn-sm btn-outline" onclick="cancelReservation(1)">취소</button>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr data-id="3" data-status="completed">
                                 <td><input type="checkbox" class="row-checkbox" data-id="3"></td>
                                 <td>2024-11-17 16:45</td>
                                 <td>2024-11-18 10:00</td>
-                                <td style="cursor: pointer;" onclick="viewDetail(3)">배송 안내 메시지</td>
+                                <td style="cursor: pointer;" onclick="viewDetail(3, 'completed')">배송 안내 메시지</td>
                                 <td><span class="badge badge-primary">알림톡</span></td>
                                 <td>2,000건</td>
                                 <td>1,980건</td>
                                 <td><span class="status-badge status-completed">발송완료</span></td>
                                 <td>
                                     <div class="flex gap-2">
-                                        <button class="btn btn-sm btn-outline" onclick="viewDetail(3)">상세보기</button>
+                                        <button class="btn btn-sm btn-outline" onclick="viewDetail(3, 'completed')">상세보기</button>
                                     </div>
                                 </td>
                             </tr>
@@ -1029,60 +1029,90 @@ body {
         </main>
     </div>
 
-    <!-- 상세보기 모달 -->
+    <!-- 상세보기 모달 (예약대기 / 발송완료 공통, 내용은 JS로 전환) -->
     <div class="modal-overlay" id="detailModal">
         <div class="modal" style="max-width: 800px;">
             <div class="modal-header">
-                <h3 class="modal-title">예약 상세보기</h3>
+                <h3 class="modal-title" id="detailModalTitle">예약 상세보기</h3>
                 <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="card">
-                    <h4 style="margin-bottom: 12px;">기본 정보</h4>
-                    <div class="table-container">
-                        <table class="table">
-                            <tr>
-                                <th style="width: 150px;">등록일시</th>
-                                <td>2024-11-19 14:30:00</td>
-                            </tr>
-                            <tr>
-                                <th>발송 예정일시</th>
-                                <td>2024-11-20 09:00:00</td>
-                            </tr>
-                            <tr>
-                                <th>남은 시간</th>
-                                <td><strong>14시간 30분 후 발송 예정</strong></td>
-                            </tr>
-                            <tr>
-                                <th>상태</th>
-                                <td><span class="status-badge status-waiting">예약대기</span></td>
-                            </tr>
-                        </table>
+                <!-- 예약대기용 기본 정보 -->
+                <div id="detailContentWaiting" class="detail-content">
+                    <div class="card">
+                        <h4 style="margin-bottom: 12px;">기본 정보</h4>
+                        <div class="table-container">
+                            <table class="table">
+                                <tr>
+                                    <th style="width: 150px;">등록일시</th>
+                                    <td id="waitRegDate">2024-11-19 14:30:00</td>
+                                </tr>
+                                <tr>
+                                    <th>발송 예정일시</th>
+                                    <td id="waitScheduledDate">2024-11-20 09:00:00</td>
+                                </tr>
+                                <tr>
+                                    <th>남은 시간</th>
+                                    <td><strong id="waitRemaining">14시간 30분 후 발송 예정</strong></td>
+                                </tr>
+                                <tr>
+                                    <th>상태</th>
+                                    <td><span class="status-badge status-waiting">예약대기</span></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
+                <!-- 발송완료용 기본 정보 -->
+                <div id="detailContentCompleted" class="detail-content hidden">
+                    <div class="card">
+                        <h4 style="margin-bottom: 12px;">기본 정보</h4>
+                        <div class="table-container">
+                            <table class="table">
+                                <tr>
+                                    <th style="width: 150px;">등록일시</th>
+                                    <td id="compRegDate">2024-11-17 16:45:00</td>
+                                </tr>
+                                <tr>
+                                    <th>발송 예정일시</th>
+                                    <td id="compScheduledDate">2024-11-18 10:00:00</td>
+                                </tr>
+                                <tr>
+                                    <th>발송 완료일시</th>
+                                    <td id="compCompletedDate">2024-11-18 10:02:35</td>
+                                </tr>
+                                <tr>
+                                    <th>상태</th>
+                                    <td><span class="status-badge status-completed">발송완료</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- 발송 정보 (공통) -->
                 <div class="card" style="margin-top: 16px;">
                     <h4 style="margin-bottom: 12px;">발송 정보</h4>
                     <div class="table-container">
                         <table class="table">
                             <tr>
                                 <th style="width: 150px;">발신번호</th>
-                                <td>010-1234-5678</td>
+                                <td id="detailSender">010-1234-5678</td>
                             </tr>
                             <tr>
                                 <th>메시지 타입</th>
-                                <td>SMS</td>
+                                <td id="detailMsgType">SMS</td>
                             </tr>
                             <tr>
                                 <th>예약 건수</th>
-                                <td>1,000건</td>
+                                <td id="detailTotalCount">1,000건</td>
                             </tr>
                             <tr>
-                                <th>예약 성공</th>
-                                <td>995건</td>
+                                <th id="detailSuccessLabel">예약 성공</th>
+                                <td id="detailSuccessCount">995건</td>
                             </tr>
                             <tr>
                                 <th>메시지 내용</th>
-                                <td>이벤트 안내 메시지입니다. 자세한 내용은 홈페이지를 확인해주세요.</td>
+                                <td id="detailMessage">이벤트 안내 메시지입니다. 자세한 내용은 홈페이지를 확인해주세요.</td>
                             </tr>
                         </table>
                     </div>
@@ -1090,7 +1120,7 @@ body {
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('detailModal')">닫기</button>
-                <button class="btn btn-outline" onclick="cancelReservation(1)">취소하기</button>
+                <button class="btn btn-outline" id="detailCancelBtn" onclick="cancelReservationFromDetail()">취소하기</button>
                 <button class="btn btn-primary" onclick="copyAndSend()">복사하여 새로 보내기</button>
             </div>
         </div>
@@ -1395,8 +1425,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
     <script>
-        function viewDetail(id) {
+        var currentDetailId = null;
+
+        function viewDetail(id, status) {
+            currentDetailId = id;
+            var isWaiting = (status === 'waiting');
+
+            // 예약대기 / 발송완료 블록 전환
+            var waitBlock = document.getElementById('detailContentWaiting');
+            var compBlock = document.getElementById('detailContentCompleted');
+            if (isWaiting) {
+                waitBlock.classList.remove('hidden');
+                compBlock.classList.add('hidden');
+                document.getElementById('detailCancelBtn').style.display = '';
+            } else {
+                waitBlock.classList.add('hidden');
+                compBlock.classList.remove('hidden');
+                document.getElementById('detailCancelBtn').style.display = 'none';
+            }
+
+            // 발송완료일 때 발송 정보 라벨: "예약 성공" → "발송 성공"
+            var successLabel = document.getElementById('detailSuccessLabel');
+            successLabel.textContent = isWaiting ? '예약 성공' : '발송 성공';
+
+            // 샘플 데이터 (실제로는 id로 API 조회)
+            if (isWaiting) {
+                document.getElementById('waitRegDate').textContent = '2024-11-19 14:30:00';
+                document.getElementById('waitScheduledDate').textContent = '2024-11-20 09:00:00';
+                document.getElementById('waitRemaining').textContent = '14시간 30분 후 발송 예정';
+                document.getElementById('detailSender').textContent = '010-1234-5678';
+                document.getElementById('detailMsgType').textContent = 'SMS';
+                document.getElementById('detailTotalCount').textContent = '1,000건';
+                document.getElementById('detailSuccessCount').textContent = '995건';
+                document.getElementById('detailMessage').textContent = '이벤트 안내 메시지입니다. 자세한 내용은 홈페이지를 확인해주세요.';
+            } else {
+                document.getElementById('compRegDate').textContent = '2024-11-17 16:45:00';
+                document.getElementById('compScheduledDate').textContent = '2024-11-18 10:00:00';
+                document.getElementById('compCompletedDate').textContent = '2024-11-18 10:02:35';
+                document.getElementById('detailSender').textContent = '010-1234-5678';
+                document.getElementById('detailMsgType').textContent = '알림톡';
+                document.getElementById('detailTotalCount').textContent = '2,000건';
+                document.getElementById('detailSuccessCount').textContent = '1,980건';
+                document.getElementById('detailMessage').textContent = '배송 안내 메시지입니다. 주문하신 상품이 발송되었습니다.';
+            }
+
             openModal('detailModal');
+        }
+
+        function cancelReservationFromDetail() {
+            if (currentDetailId != null) {
+                closeModal('detailModal');
+                cancelReservation(currentDetailId);
+            }
         }
 
         function editReservation(id) {
