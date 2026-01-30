@@ -1012,6 +1012,21 @@ body {
                                     </div>
                                 </td>
                             </tr>
+                            <tr data-id="2" data-status="cancelled">
+                                <td><input type="checkbox" class="row-checkbox" data-id="2"></td>
+                                <td>2024-11-16 11:20</td>
+                                <td>2024-11-17 08:00</td>
+                                <td style="cursor: pointer;" onclick="viewDetail(2, 'cancelled')">정기 점검 안내</td>
+                                <td><span class="badge badge-primary">LMS</span></td>
+                                <td>500건</td>
+                                <td>0건</td>
+                                <td><span class="status-badge status-cancelled">취소</span></td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <button class="btn btn-sm btn-outline" onclick="viewDetail(2, 'cancelled')">상세보기</button>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -1089,6 +1104,32 @@ body {
                         </div>
                     </div>
                 </div>
+                <!-- 취소용 기본 정보 -->
+                <div id="detailContentCancelled" class="detail-content hidden">
+                    <div class="card">
+                        <h4 style="margin-bottom: 12px;">기본 정보</h4>
+                        <div class="table-container">
+                            <table class="table">
+                                <tr>
+                                    <th style="width: 150px;">등록일시</th>
+                                    <td id="cancelRegDate">2024-11-16 11:00:00</td>
+                                </tr>
+                                <tr>
+                                    <th>발송 예정일시</th>
+                                    <td id="cancelScheduledDate">2024-11-17 09:00:00</td>
+                                </tr>
+                                <tr>
+                                    <th>취소일시</th>
+                                    <td id="cancelCancelledDate">2024-11-16 15:30:00</td>
+                                </tr>
+                                <tr>
+                                    <th>상태</th>
+                                    <td><span class="status-badge status-cancelled">취소</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <!-- 발송 정보 (공통) -->
                 <div class="card" style="margin-top: 16px;">
                     <h4 style="margin-bottom: 12px;">발송 정보</h4>
@@ -1121,7 +1162,7 @@ body {
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('detailModal')">닫기</button>
                 <button class="btn btn-outline" id="detailCancelBtn" onclick="cancelReservationFromDetail()">취소하기</button>
-                <button class="btn btn-primary" onclick="copyAndSend()">복사하여 새로 보내기</button>
+                <button class="btn btn-primary" id="detailCopySendBtn" onclick="copyAndSend()">복사하여 새로 보내기</button>
             </div>
         </div>
     </div>
@@ -1430,23 +1471,33 @@ document.addEventListener('DOMContentLoaded', function() {
         function viewDetail(id, status) {
             currentDetailId = id;
             var isWaiting = (status === 'waiting');
+            var isCompleted = (status === 'completed');
+            var isCancelled = (status === 'cancelled');
 
-            // 예약대기 / 발송완료 블록 전환
+            // 예약대기 / 발송완료 / 취소 블록 전환
             var waitBlock = document.getElementById('detailContentWaiting');
             var compBlock = document.getElementById('detailContentCompleted');
+            var cancelBlock = document.getElementById('detailContentCancelled');
+            waitBlock.classList.add('hidden');
+            compBlock.classList.add('hidden');
+            cancelBlock.classList.add('hidden');
             if (isWaiting) {
                 waitBlock.classList.remove('hidden');
-                compBlock.classList.add('hidden');
                 document.getElementById('detailCancelBtn').style.display = '';
-            } else {
-                waitBlock.classList.add('hidden');
+            } else if (isCompleted) {
                 compBlock.classList.remove('hidden');
+                document.getElementById('detailCancelBtn').style.display = 'none';
+            } else if (isCancelled) {
+                cancelBlock.classList.remove('hidden');
                 document.getElementById('detailCancelBtn').style.display = 'none';
             }
 
-            // 발송완료일 때 발송 정보 라벨: "예약 성공" → "발송 성공"
+            // 복사하여 새로 보내기: 발송완료일 때만 숨김 (예약대기·취소 시 표시)
+            document.getElementById('detailCopySendBtn').style.display = isCompleted ? 'none' : '';
+
+            // 발송 정보 라벨: 예약대기/취소→예약 성공, 발송완료→발송 성공
             var successLabel = document.getElementById('detailSuccessLabel');
-            successLabel.textContent = isWaiting ? '예약 성공' : '발송 성공';
+            successLabel.textContent = isCompleted ? '발송 성공' : '예약 성공';
 
             // 샘플 데이터 (실제로는 id로 API 조회)
             if (isWaiting) {
@@ -1458,7 +1509,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('detailTotalCount').textContent = '1,000건';
                 document.getElementById('detailSuccessCount').textContent = '995건';
                 document.getElementById('detailMessage').textContent = '이벤트 안내 메시지입니다. 자세한 내용은 홈페이지를 확인해주세요.';
-            } else {
+            } else if (isCompleted) {
                 document.getElementById('compRegDate').textContent = '2024-11-17 16:45:00';
                 document.getElementById('compScheduledDate').textContent = '2024-11-18 10:00:00';
                 document.getElementById('compCompletedDate').textContent = '2024-11-18 10:02:35';
@@ -1467,6 +1518,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('detailTotalCount').textContent = '2,000건';
                 document.getElementById('detailSuccessCount').textContent = '1,980건';
                 document.getElementById('detailMessage').textContent = '배송 안내 메시지입니다. 주문하신 상품이 발송되었습니다.';
+            } else if (isCancelled) {
+                document.getElementById('cancelRegDate').textContent = '2024-11-16 11:00:00';
+                document.getElementById('cancelScheduledDate').textContent = '2024-11-17 09:00:00';
+                document.getElementById('cancelCancelledDate').textContent = '2024-11-16 15:30:00';
+                document.getElementById('detailSender').textContent = '010-1234-5678';
+                document.getElementById('detailMsgType').textContent = 'LMS';
+                document.getElementById('detailTotalCount').textContent = '500건';
+                document.getElementById('detailSuccessCount').textContent = '0건';
+                document.getElementById('detailMessage').textContent = '정기 점검 안내입니다. 11/17 09:00~12:00 점검이 진행됩니다.';
             }
 
             openModal('detailModal');
