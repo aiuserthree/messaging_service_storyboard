@@ -270,6 +270,123 @@ body {
     font-size: 16px;
 }
 
+/* 대시보드 요약 (회원유형·등급·잔액·발송가능건수) */
+.dashboard-summary {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.dashboard-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.4fr 2fr;
+    gap: 0;
+    align-items: center;
+    min-height: 56px;
+}
+.dashboard-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 24px;
+    border-left: 1px solid #e2e8f0;
+}
+.dashboard-summary-item:first-child {
+    padding-left: 0;
+    border-left: none;
+}
+.dashboard-summary-label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+.dashboard-summary-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    letter-spacing: -0.02em;
+    line-height: 1.4;
+}
+.dashboard-summary-balance-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+}
+.dashboard-summary-balance-row span.unit {
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+    margin-left: 2px;
+}
+#dashboardBalance {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.dashboard-summary-send-counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+.dashboard-summary-send-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #ffffff;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #475569;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.dashboard-summary-send-badge span:last-child {
+    font-weight: 700;
+    color: #2563eb;
+}
+@media (max-width: 1024px) {
+    .dashboard-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .dashboard-summary-item {
+        padding-left: 0;
+        border-left: none;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        border-top: 1px solid #e2e8f0;
+    }
+    .dashboard-summary-item:nth-child(1),
+    .dashboard-summary-item:nth-child(2) {
+        border-top: none;
+    }
+    .dashboard-summary-item:nth-child(odd) {
+        padding-right: 20px;
+    }
+}
+@media (max-width: 600px) {
+    .dashboard-summary {
+        padding: 20px 20px;
+    }
+    .dashboard-summary-grid {
+        grid-template-columns: 1fr;
+    }
+    .dashboard-summary-item {
+        border-top: 1px solid #e2e8f0;
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+    .dashboard-summary-item:first-child {
+        padding-top: 0;
+        border-top: none;
+    }
+}
+
 /* 그리드 레이아웃 */
 .dashboard-grid {
     display: grid;
@@ -1836,6 +1953,37 @@ body {
                 </div>
             </div>
 
+            <!-- 대시보드 요약: 회원유형·등급·잔액·발송가능건수 -->
+            <div class="dashboard-summary" id="dashboardSummary">
+                <div class="dashboard-summary-grid">
+                    <div class="dashboard-summary-item">
+                        <span class="dashboard-summary-label">회원유형</span>
+                        <span class="dashboard-summary-value" id="dashboardMemberType">개인회원</span>
+                    </div>
+                    <div class="dashboard-summary-item">
+                        <span class="dashboard-summary-label">회원등급</span>
+                        <span class="dashboard-summary-value" id="dashboardMemberGrade">일반</span>
+                    </div>
+                    <div class="dashboard-summary-item">
+                        <span class="dashboard-summary-label">잔액</span>
+                        <div id="dashboardBalance">
+                            <div class="dashboard-summary-balance-row"><span id="dashboardPoints">1,000,000</span><span class="unit">포인트</span></div>
+                            <div class="dashboard-summary-balance-row"><span id="dashboardMileage">0</span><span class="unit">마일리지</span></div>
+                        </div>
+                    </div>
+                    <div class="dashboard-summary-item">
+                        <span class="dashboard-summary-label">발송 가능 건수</span>
+                        <div class="dashboard-summary-send-counts" id="dashboardSendCounts">
+                            <span class="dashboard-summary-send-badge">SMS <span id="sendCountSms">0</span></span>
+                            <span class="dashboard-summary-send-badge">LMS <span id="sendCountLms">0</span></span>
+                            <span class="dashboard-summary-send-badge">MMS <span id="sendCountMms">0</span></span>
+                            <span class="dashboard-summary-send-badge">알림톡 <span id="sendCountAlimtalk">0</span></span>
+                            <span class="dashboard-summary-send-badge">브랜드메시지 <span id="sendCountBrandtalk">0</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 최근 30일 발송 성공률 카드 -->
             <div class="success-rate-card" id="successRateCard">
                 <div class="card-header-info">
@@ -2265,6 +2413,14 @@ body {
                     e.preventDefault();
                     window.location.href = 'main.html';
                 });
+            }
+
+            // 대시보드 요약: 회원유형 (localStorage와 동기화, 내정보수정 테스트 버튼과 동일)
+            var memberTypeEl = document.getElementById('dashboardMemberType');
+            if (memberTypeEl) {
+                var memberType = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
+                var typeText = { personal: '개인회원', business: '기업회원', election: '선거회원' }[memberType] || '개인회원';
+                memberTypeEl.textContent = typeText;
             }
 
             // 드롭다운 메뉴 초기화
