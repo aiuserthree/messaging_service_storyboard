@@ -1195,18 +1195,19 @@ body {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">마케팅 수신여부</label>
+                        <label class="form-label required">알림성 메시지 수신채널 <span style="color: var(--text-secondary); font-weight: 400;">(둘 중 하나 필수 선택)</span></label>
                         <div class="marketing-consent-group">
                             <div class="marketing-consent-item">
-                                <input type="checkbox" id="individualMarketingSMS">
+                                <input type="checkbox" id="individualMarketingSMS" name="individualNotifyChannel" onchange="var e=document.getElementById('individualNotifyChannelError');if(e)e.textContent='';">
                                 <label for="individualMarketingSMS">SMS</label>
                             </div>
                             <div class="marketing-consent-item">
-                                <input type="checkbox" id="individualMarketingEmail">
+                                <input type="checkbox" id="individualMarketingEmail" name="individualNotifyChannel" onchange="var e=document.getElementById('individualNotifyChannelError');if(e)e.textContent='';">
                                 <label for="individualMarketingEmail">E-mail</label>
                             </div>
                         </div>
-                        <div class="form-help">* 공지사항은 수신여부와 관계없이 전송됩니다.</div>
+                        <div class="form-help">* 공지사항은 수신채널 선택 여부와 관계없이 전송됩니다.</div>
+                        <div class="form-error" id="individualNotifyChannelError"></div>
                     </div>
 
                     <div class="button-group">
@@ -1360,18 +1361,19 @@ body {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">마케팅 수신여부</label>
+                        <label class="form-label required">알림성 메시지 수신채널 <span style="color: var(--text-secondary); font-weight: 400;">(둘 중 하나 필수 선택)</span></label>
                         <div class="marketing-consent-group">
                             <div class="marketing-consent-item">
-                                <input type="checkbox" id="businessMarketingSMS">
+                                <input type="checkbox" id="businessMarketingSMS" name="businessNotifyChannel" onchange="var e=document.getElementById('businessNotifyChannelError');if(e)e.textContent='';">
                                 <label for="businessMarketingSMS">SMS</label>
                             </div>
                             <div class="marketing-consent-item">
-                                <input type="checkbox" id="businessMarketingEmail">
+                                <input type="checkbox" id="businessMarketingEmail" name="businessNotifyChannel" onchange="var e=document.getElementById('businessNotifyChannelError');if(e)e.textContent='';">
                                 <label for="businessMarketingEmail">E-mail</label>
                             </div>
                         </div>
-                        <div class="form-help">* 공지사항은 수신여부와 관계없이 전송됩니다.</div>
+                        <div class="form-help">* 공지사항은 수신채널 선택 여부와 관계없이 전송됩니다.</div>
+                        <div class="form-error" id="businessNotifyChannelError"></div>
                     </div>
 
                     <div class="button-group">
@@ -1708,6 +1710,16 @@ body {
             if (step === 4) {
                 // 모든 회원은 개인회원으로 가입 (마이페이지에서 전환 가능)
                 document.getElementById('step4-individual').classList.add('active');
+                // 2단계 본인인증된 번호를 3단계(정보입력) 연락처에 기본값으로 설정
+                const contactInput = document.getElementById('individualContact');
+                if (contactInput && verifiedPhoneNumber) {
+                    contactInput.value = verifiedPhoneNumber;
+                }
+                // 발신번호 등록 안내 문구에 본인인증 번호 표시
+                const verifiedDisplay = document.getElementById('verifiedPhoneDisplay');
+                const businessVerifiedDisplay = document.getElementById('businessVerifiedPhoneDisplay');
+                if (verifiedDisplay) verifiedDisplay.textContent = verifiedPhoneNumber || '-';
+                if (businessVerifiedDisplay) businessVerifiedDisplay.textContent = verifiedPhoneNumber || '-';
             } else {
                 document.getElementById(`step${step}`).classList.add('active');
             }
@@ -2163,9 +2175,18 @@ body {
                     return;
                 }
                 
+                // 알림성 메시지 수신채널: 둘 중 하나 필수 선택
+                const individualSMS = document.getElementById('individualMarketingSMS').checked;
+                const individualEmail = document.getElementById('individualMarketingEmail').checked;
+                const individualNotifyErr = document.getElementById('individualNotifyChannelError');
+                if (!individualSMS && !individualEmail) {
+                    if (individualNotifyErr) individualNotifyErr.textContent = 'SMS 또는 E-mail 중 하나 이상을 선택해주세요.';
+                    return;
+                }
+                if (individualNotifyErr) individualNotifyErr.textContent = '';
+                
                 // 실제로는 서버에 회원가입 요청
-                alert('회원가입이 완료되었습니다.');
-                window.location.href = 'index.html';
+                window.location.href = 'signup-complete.html';
             } else if (type === 'business') {
                 // 기업 회원가입 검증
                 const userId = document.getElementById('businessUserId').value;
@@ -2207,9 +2228,18 @@ body {
                     }
                 }
                 
+                // 알림성 메시지 수신채널: 둘 중 하나 필수 선택
+                const businessSMS = document.getElementById('businessMarketingSMS').checked;
+                const businessEmail = document.getElementById('businessMarketingEmail').checked;
+                const businessNotifyErr = document.getElementById('businessNotifyChannelError');
+                if (!businessSMS && !businessEmail) {
+                    if (businessNotifyErr) businessNotifyErr.textContent = 'SMS 또는 E-mail 중 하나 이상을 선택해주세요.';
+                    return;
+                }
+                if (businessNotifyErr) businessNotifyErr.textContent = '';
+                
                 // 실제로는 서버에 회원가입 요청
-                alert('회원가입이 완료되었습니다.');
-                window.location.href = 'index.html';
+                window.location.href = 'signup-complete.html';
             } else if (type === 'election') {
                 // 선거 회원가입 검증
                 const userId = document.getElementById('electionUserId').value;
@@ -2265,8 +2295,7 @@ body {
                 }
                 
                 // 실제로는 서버에 회원가입 요청
-                alert('선거회원 가입 신청이 완료되었습니다.\n담당자 승인 후 서비스 이용이 가능합니다.');
-                window.location.href = 'index.html';
+                window.location.href = 'signup-complete.html?type=election';
             }
         }
 

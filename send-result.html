@@ -1013,6 +1013,15 @@ body {
             opacity: 0.7;
         }
         
+        /* 메시지 내용 요약(말줄임) */
+        .msg-content-summary {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
+        
         /* 상세 리스트 확장 영역 */
         .detail-list-row {
             display: none;
@@ -1150,12 +1159,12 @@ body {
                         <label class="form-label">메시지 타입</label>
                         <select class="form-select" id="messageTypeFilter">
                             <option>전체</option>
-                            <option>SMS</option>
-                            <option>LMS</option>
-                            <option>MMS</option>
+                            <option>일반문자(SMS)</option>
+                            <option>광고문자(LMS)</option>
+                            <option>광고문자(MMS)</option>
+                            <option>선거문자(LMS)</option>
                             <option>알림톡</option>
                             <option>브랜드 메시지</option>
-                            <option>선거문자</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -1219,9 +1228,8 @@ body {
                                 <th>발송일시</th>
                                 <th>발신번호</th>
                                 <th>메시지 타입</th>
-                                <th>수신번호 수</th>
-                                <th>성공</th>
-                                <th>실패</th>
+                                <th>수신번호 수(성공/실패)</th>
+                                <th>메시지 내용</th>
                                 <th>상태</th>
                                 <th>사용 포인트</th>
                                 <th>관리</th>
@@ -1231,10 +1239,9 @@ body {
                             <tr data-row-id="1">
                                 <td>2024-01-15 14:30</td>
                                 <td>010-1234-5678</td>
-                                <td><span class="badge badge-primary">SMS</span></td>
-                                <td>100명</td>
-                                <td><span class="count-link" style="color: var(--success-color);" onclick="toggleDetailList(1, 'success')">98건</span></td>
-                                <td><span class="count-link" style="color: var(--danger-color);" onclick="toggleDetailList(1, 'failed')">2건</span></td>
+                                <td><span class="badge badge-primary">일반문자(SMS)</span></td>
+                                <td>100명(<span class="count-link" style="color: var(--success-color);" onclick="toggleDetailList(1, 'success')">98</span>/<span class="count-link" style="color: var(--danger-color);" onclick="toggleDetailList(1, 'failed')">2</span>)</td>
+                                <td><span class="msg-content-summary" title="이벤트 안내입니다. 자세한 내용은 홈페이지를 확인해 주세요.">이벤트 안내입니다. 자세한 내용은 홈페이지를 확인해 주세요.</span></td>
                                 <td><span class="status-badge status-success">완료</span></td>
                                 <td>2,000</td>
                                 <td>
@@ -1243,7 +1250,7 @@ body {
                                 </td>
                             </tr>
                             <tr class="detail-list-row" id="detail-list-1-success" data-type="success">
-                                <td colspan="9">
+                                <td colspan="8">
                                     <div class="detail-list-container">
                                         <div class="detail-list-header">
                                             <div class="detail-list-title">성공 내역 (98건)</div>
@@ -1271,7 +1278,7 @@ body {
                                 </td>
                             </tr>
                             <tr class="detail-list-row" id="detail-list-1-failed" data-type="failed">
-                                <td colspan="9">
+                                <td colspan="8">
                                     <div class="detail-list-container">
                                         <div class="detail-list-header">
                                             <div class="detail-list-title">실패 내역 (2건)</div>
@@ -1317,9 +1324,8 @@ body {
                                 <td>2024-01-15 13:20</td>
                                 <td>010-1234-5678</td>
                                 <td><span class="badge badge-primary">알림톡</span></td>
-                                <td>50명</td>
-                                <td><span class="count-link" style="color: var(--success-color);" onclick="toggleDetailList(2, 'success')">50건</span></td>
-                                <td><span style="color: var(--danger-color);">0건</span></td>
+                                <td>50명(<span class="count-link" style="color: var(--success-color);" onclick="toggleDetailList(2, 'success')">50</span>/<span style="color: var(--danger-color);">0</span>)</td>
+                                <td><span class="msg-content-summary" title="주문이 완료되었습니다. 배송 조회는 마이페이지에서 확인하세요.">주문이 완료되었습니다. 배송 조회는 마이페이지에서 확인하세요.</span></td>
                                 <td><span class="status-badge status-success">완료</span></td>
                                 <td>1,500</td>
                                 <td>
@@ -1328,7 +1334,7 @@ body {
                                 </td>
                             </tr>
                             <tr class="detail-list-row" id="detail-list-2-success" data-type="success">
-                                <td colspan="9">
+                                <td colspan="8">
                                     <div class="detail-list-container">
                                         <div class="detail-list-header">
                                             <div class="detail-list-title">성공 내역 (50건)</div>
@@ -1358,27 +1364,18 @@ body {
                             <tr data-row-id="5" data-message-type="선거문자">
                                 <td>2024-01-15 15:00</td>
                                 <td>010-1234-5678</td>
-                                <td><span class="badge badge-warning">선거문자</span></td>
-                                <td>500명</td>
-                                <td><span class="count-link" style="color: var(--success-color);" onclick="toggleDetailList(5, 'success')">495건</span></td>
-                                <td><span class="count-link" style="color: var(--danger-color);" onclick="toggleDetailList(5, 'failed')">5건</span></td>
+                                <td><span class="badge badge-primary">선거문자(LMS)</span></td>
+                                <td>500명(<span class="count-link" style="color: var(--success-color);" onclick="toggleDetailList(5, 'success')">495</span>/<span class="count-link" style="color: var(--danger-color);" onclick="toggleDetailList(5, 'failed')">5</span>)</td>
+                                <td><span class="msg-content-summary" title="(선거운동정보) OO후보 선거운동 안내 메시지입니다.">(선거운동정보) OO후보 선거운동 안내 메시지입니다.</span></td>
                                 <td><span class="status-badge status-success">완료</span></td>
                                 <td>10,000</td>
                                 <td>
-                                    <div style="display: inline-flex; align-items: center; gap: 8px;">
-                                        <span class="tooltip-wrapper">
-                                            <button class="btn btn-sm btn-primary" onclick="downloadResultReport(5)">결과리포트</button>
-                                            <div class="tooltip-content">
-                                                자동 동보통신 발송에 대한 결과 리포트입니다.
-                                            </div>
-                                        </span>
-                                        <button class="btn btn-sm btn-outline" onclick="viewDetail(5)">상세보기</button>
-                                        <button class="btn btn-sm btn-outline" onclick="resend(5)">재발송</button>
-                                    </div>
+                                    <button class="btn btn-sm btn-outline" onclick="viewDetail(5)">상세보기</button>
+                                    <button class="btn btn-sm btn-outline" onclick="resend(5)">재발송</button>
                                 </td>
                             </tr>
                             <tr class="detail-list-row" id="detail-list-5-success" data-type="success">
-                                <td colspan="9">
+                                <td colspan="8">
                                     <div class="detail-list-container">
                                         <div class="detail-list-header">
                                             <div class="detail-list-title">성공 내역 (495건)</div>
@@ -1406,7 +1403,7 @@ body {
                                 </td>
                             </tr>
                             <tr class="detail-list-row" id="detail-list-5-failed" data-type="failed">
-                                <td colspan="9">
+                                <td colspan="8">
                                     <div class="detail-list-container">
                                         <div class="detail-list-header">
                                             <div class="detail-list-title">실패 내역 (5건)</div>
@@ -1469,21 +1466,21 @@ body {
                                     </div>
                                 </td>
                             </tr>
-                            <tr data-row-id="3">
+                            <tr data-row-id="3" data-message-type="LMS">
                                 <td>2024-01-15 12:10</td>
                                 <td>02-1234-5678</td>
-                                <td><span class="badge badge-primary">LMS</span></td>
-                                <td>200명</td>
-                                <td><span class="count-link" style="color: var(--success-color);" onclick="toggleDetailList(3, 'success')">195건</span></td>
-                                <td><span class="count-link" style="color: var(--danger-color);" onclick="toggleDetailList(3, 'failed')">5건</span></td>
+                                <td><span class="badge badge-primary">광고문자(LMS)</span></td>
+                                <td>200명(<span class="count-link" style="color: var(--success-color);" onclick="toggleDetailList(3, 'success')">195</span>/<span class="count-link" style="color: var(--danger-color);" onclick="toggleDetailList(3, 'failed')">5</span>)</td>
+                                <td><span class="msg-content-summary" title="[광고] 신규 가입 이벤트 참여만 해도 5,000원 적립금을 드립니다.">[광고] 신규 가입 이벤트 참여만 해도 5,000원 적립금을 드립니다.</span></td>
                                 <td><span class="status-badge status-sending">전송중</span></td>
                                 <td>10,000</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline" onclick="viewDetail(3)">상세보기</button>
+                                    <button class="btn btn-sm btn-outline" onclick="resend(3)">재발송</button>
                                 </td>
                             </tr>
                             <tr class="detail-list-row" id="detail-list-3-success" data-type="success">
-                                <td colspan="9">
+                                <td colspan="8">
                                     <div class="detail-list-container">
                                         <div class="detail-list-header">
                                             <div class="detail-list-title">성공 내역 (195건)</div>
@@ -1511,7 +1508,7 @@ body {
                                 </td>
                             </tr>
                             <tr class="detail-list-row" id="detail-list-3-failed" data-type="failed">
-                                <td colspan="9">
+                                <td colspan="8">
                                     <div class="detail-list-container">
                                         <div class="detail-list-header">
                                             <div class="detail-list-title">실패 내역 (5건)</div>
@@ -1578,9 +1575,8 @@ body {
                                 <td>2024-01-15 11:00</td>
                                 <td>010-1234-5678</td>
                                 <td><span class="badge badge-primary">브랜드 메시지</span></td>
-                                <td>30명</td>
-                                <td><span class="count-link" style="color: var(--success-color);" onclick="toggleDetailList(4, 'success')">28건</span></td>
-                                <td><span class="count-link" style="color: var(--danger-color);" onclick="toggleDetailList(4, 'failed')">2건</span></td>
+                                <td>30명(<span class="count-link" style="color: var(--success-color);" onclick="toggleDetailList(4, 'success')">28</span>/<span class="count-link" style="color: var(--danger-color);" onclick="toggleDetailList(4, 'failed')">2</span>)</td>
+                                <td><span class="msg-content-summary" title="브랜드 공지: 2월 정기 점검 일정 안내드립니다.">브랜드 공지: 2월 정기 점검 일정 안내드립니다.</span></td>
                                 <td><span class="status-badge status-success">완료</span></td>
                                 <td>900</td>
                                 <td>
@@ -1589,7 +1585,7 @@ body {
                                 </td>
                             </tr>
                             <tr class="detail-list-row" id="detail-list-4-success" data-type="success">
-                                <td colspan="9">
+                                <td colspan="8">
                                     <div class="detail-list-container">
                                         <div class="detail-list-header">
                                             <div class="detail-list-title">성공 내역 (28건)</div>
@@ -1617,7 +1613,7 @@ body {
                                 </td>
                             </tr>
                             <tr class="detail-list-row" id="detail-list-4-failed" data-type="failed">
-                                <td colspan="9">
+                                <td colspan="8">
                                     <div class="detail-list-container">
                                         <div class="detail-list-header">
                                             <div class="detail-list-title">실패 내역 (2건)</div>
@@ -2311,13 +2307,6 @@ document.addEventListener('DOMContentLoaded', function() {
         createPagination(1, 10, 'pagination');
         createPagination(1, 5, 'pagination-reservation');
 
-        // 결과리포트 출력 함수
-        function downloadResultReport(rowId) {
-            // 선거문자 발송 결과 리포트 다운로드
-            showToast('결과 리포트 다운로드가 시작되었습니다.', 'success');
-            // 실제로는 API 호출하여 리포트 생성 및 다운로드
-        }
-
         // 검색 결과 함수
         function searchResults() {
             // 실제로는 서버에서 데이터를 가져와야 하지만, 여기서는 예시 데이터를 사용
@@ -2388,7 +2377,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#startDate', title: '시작일', position: { top: '-5px', left: '-10px' }, description: '조회 기간 시작일', function: '날짜 선택 (date picker)', behavior: ['기본값: 현재월 1일'] },
             { selector: '#endDate', title: '종료일', position: { top: '-5px', left: '-10px' }, description: '조회 기간 종료일', function: '날짜 선택 (date picker)', behavior: ['기본값: 현재월 말일'] },
             { selector: '#callerNumberFilter', title: '발신번호 필터', position: { top: '-5px', left: '-10px' }, description: '등록된 발신번호별 필터링', function: '발신번호 선택', behavior: ['전체/등록된 발신번호 목록'] },
-            { selector: '#messageTypeFilter', title: '메시지 타입', position: { top: '-5px', left: '-10px' }, description: '메시지 타입별 필터링', function: '타입 선택', behavior: ['전체/SMS/LMS/MMS/알림톡/브랜드메시지/선거문자'] },
+            { selector: '#messageTypeFilter', title: '메시지 타입', position: { top: '-5px', left: '-10px' }, description: '메시지 타입별 필터링', function: '타입 선택', behavior: ['전체/일반문자(SMS)/광고문자(LMS)/광고문자(MMS)/선거문자(LMS)/알림톡/브랜드메시지'] },
             { selector: '#statusFilter', title: '상태 필터', position: { top: '-5px', left: '-10px' }, description: '발송 상태별 필터링', function: '상태 선택', behavior: ['전체/성공/실패/대기중/전송중'] },
             { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '수신번호 검색 입력', function: '수신번호로 검색' },
             { selector: '#filterSection .btn-primary', title: '조회 버튼', position: { top: '-5px', left: '-10px' }, description: '검색 실행 버튼', function: '필터 조건으로 발송결과 검색', api: 'GET /api/messages/results?startDate={startDate}&endDate={endDate}&callerNumber={callerNumber}&messageType={messageType}&status={status}&search={search}', behavior: ['필수: 발신번호 선택', '클릭 시 통계 및 목록 갱신'] },
@@ -2423,7 +2412,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 api: 'GET /api/messages/results/export'
             },
             // 23-28. 발송결과 테이블
-            { selector: '.table', title: '발송결과 테이블', position: { top: '10px', left: '10px' }, description: '발송 결과 목록', function: '발송 내역 표시', behavior: ['발송일시, 발신번호, 메시지타입, 수신번호수, 성공, 실패, 상태, 사용포인트, 관리'] },
+            { selector: '.table', title: '발송결과 테이블', position: { top: '10px', left: '10px' }, description: '발송 결과 목록', function: '발송 내역 표시', behavior: ['발송일시, 발신번호, 메시지타입(세분화), 수신번호수(성공/실패), 메시지내용(말줄임), 상태, 사용포인트, 관리'] },
+            { selector: '.msg-content-summary', title: '메시지 내용', position: { top: '-5px', left: '-10px' }, description: '메시지 내용 요약(말줄임)', function: '목록 내 요약형 노출', behavior: ['말줄임 처리', 'title로 전체 내용 툴팁'] },
             { selector: 'tr[data-row-id] .btn-sm[onclick*="viewDetail"]', title: '상세보기 버튼', position: { top: '-5px', left: '-10px' }, description: '발송 상세 내역 조회', function: 'viewDetail(id) 호출', behavior: ['클릭 시 상세보기 모달 열기'] },
             // 재발송 버튼
             {
@@ -2450,8 +2440,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 api: 'POST /api/messages/resend/{id}'
             },
-            { selector: '.count-link[onclick*="success"]', title: '성공 건수 링크', position: { top: '-5px', left: '-10px' }, description: '성공 내역 펼치기', function: 'toggleDetailList(id, "success") 호출', behavior: ['클릭 시 성공 내역 목록 토글'] },
-            { selector: '.count-link[onclick*="failed"]', title: '실패 건수 링크', position: { top: '-5px', left: '-10px' }, description: '실패 내역 펼치기', function: 'toggleDetailList(id, "failed") 호출', behavior: ['클릭 시 실패 내역 목록 토글'] },
+            { selector: '.count-link[onclick*="success"]', title: '수신번호 수(성공) 링크', position: { top: '-5px', left: '-10px' }, description: '성공 내역 아코디언 펼치기', function: 'toggleDetailList(id, "success") 호출', behavior: ['클릭 시 성공 내역 목록 토글'] },
+            { selector: '.count-link[onclick*="failed"]', title: '수신번호 수(실패) 링크', position: { top: '-5px', left: '-10px' }, description: '실패 내역 아코디언 펼치기', function: 'toggleDetailList(id, "failed") 호출', behavior: ['클릭 시 실패 내역 목록 토글'] },
             // 29-33. 성공 내역 펼침 영역
             { selector: '.detail-list-row[data-type="success"]', title: '성공 내역 영역', position: { top: '10px', left: '10px' }, description: '성공한 수신번호 목록', function: '성공 내역 상세 표시', behavior: ['페이지당 10건 표시', '페이징 처리'] },
             { selector: '.detail-list-row[data-type="success"] .btn-outline', title: '성공 내역 닫기 버튼', position: { top: '-5px', right: '-10px' }, description: '성공 내역 목록 닫기', function: 'toggleDetailList(id, "success") 호출', behavior: ['클릭 시 목록 접기'] },
@@ -2484,9 +2474,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 api: 'POST /api/messages/resend'
             },
             { selector: '.detail-list-row[data-type="failed"] .detail-list-actions .btn-outline:last-child', title: '실패 내역 닫기 버튼', position: { top: '-5px', right: '-10px' }, description: '실패 내역 목록 닫기', function: 'toggleDetailList(id, "failed") 호출' },
-            // 40. 결과리포트 버튼 (선거문자)
-            { selector: '.tooltip-wrapper .btn-primary[onclick*="downloadResultReport"]', title: '결과리포트 버튼', position: { top: '-5px', left: '-10px' }, description: '선거문자 결과 리포트 다운로드', function: 'downloadResultReport(id) 호출', api: 'GET /api/messages/election/{id}/report', behavior: ['선거문자에만 표시', '자동 동보통신 발송 결과 리포트'] },
-            // 41. 페이지네이션
+            // 40. 페이지네이션
             { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, description: '결과 목록 페이지 이동', function: '페이지 전환', behavior: ['10건 단위 페이징'] },
             
             // === 상세보기 모달 ===

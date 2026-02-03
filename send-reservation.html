@@ -949,9 +949,10 @@ body {
                     <div style="min-width: 150px;">
                         <select class="form-select">
                             <option>전체 타입</option>
-                            <option>SMS</option>
-                            <option>LMS</option>
-                            <option>MMS</option>
+                            <option>일반문자(SMS)</option>
+                            <option>광고문자(LMS)</option>
+                            <option>광고문자(MMS)</option>
+                            <option>선거문자(LMS)</option>
                             <option>알림톡</option>
                             <option>브랜드 메시지</option>
                         </select>
@@ -1621,7 +1622,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '.search-filter-section', title: '조회 조건', position: { top: '10px', left: '-15px' }, description: '예약내역 검색 조건 영역', function: '조회 조건 입력' },
             { selector: '.date-range-group .form-input:first-child', title: '시작일', position: { top: '-5px', left: '-10px' }, description: '조회 기간 시작일', function: '날짜 선택 (date picker)', behavior: ['기본값: 현재월 1일'] },
             { selector: '.date-range-group .form-input:last-child', title: '종료일', position: { top: '-5px', left: '-10px' }, description: '조회 기간 종료일', function: '날짜 선택 (date picker)', behavior: ['기본값: 현재월 말일'] },
-            { selector: '.search-filter-section .form-select', title: '메시지 타입', position: { top: '-5px', left: '-10px' }, description: '메시지 타입별 필터링', function: '타입 선택', behavior: ['전체 타입/SMS/LMS/MMS/알림톡/브랜드 메시지'] },
+            { selector: '.search-filter-section .form-select', title: '메시지 타입', position: { top: '-5px', left: '-10px' }, description: '메시지 타입별 필터링', function: '타입 선택', behavior: ['전체 타입/일반문자(SMS)/광고문자(LMS)/광고문자(MMS)/선거문자(LMS)/알림톡/브랜드 메시지'] },
             { selector: '.search-filter-section .form-input[type="text"]', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '제목 또는 내용 검색', function: '키워드 검색' },
             { selector: '.search-filter-section .btn-primary', title: '조회 버튼', position: { top: '-5px', right: '-10px' }, description: '검색 실행', function: '필터 조건으로 예약내역 검색', api: 'GET /api/reservations?startDate={startDate}&endDate={endDate}&type={type}&search={search}', behavior: ['클릭 시 목록 갱신'] },
             // 12-18. 예약내역 테이블

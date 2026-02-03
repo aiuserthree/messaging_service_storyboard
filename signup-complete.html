@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가입 완료 - Tokbell</title>
+    <script src="js/header.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #10b981;
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --radius-md: 8px;
+            --radius-2xl: 20px;
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; line-height: 1.6; color: var(--text-primary); background: var(--bg-color); }
+        .app-container { min-height: 100vh; display: flex; flex-direction: column; }
+        .main-content { flex: 1; max-width: 480px; width: 100%; margin: 0 auto; padding: 48px 24px; display: flex; align-items: center; justify-content: center; }
+        .complete-card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-2xl); padding: 40px; box-shadow: var(--shadow-card); text-align: center; width: 100%; }
+        .complete-icon { width: 64px; height: 64px; margin: 0 auto 24px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .complete-icon svg { width: 32px; height: 32px; color: var(--success-color); }
+        .complete-card h2 { font-size: 22px; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+        .complete-card p { font-size: 15px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 28px; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; font-size: 15px; font-weight: 500; border: none; border-radius: var(--radius-md); cursor: pointer; text-decoration: none; }
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-primary:hover { opacity: 0.9; }
+        /* GNB/헤더 */
+        :root { --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05); }
+        .header { background: var(--surface-color); border-bottom: 1px solid var(--border-color); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo h1 { font-size: 28px; font-weight: 700; color: var(--primary-color); margin: 0; }
+        .logo a { text-decoration: none; color: inherit; display: block; }
+        .main-nav { display: flex; gap: 4px; flex: 1; justify-content: center; }
+        .nav-item { padding: 8px 16px; text-decoration: none; color: var(--text-secondary); font-weight: 500; border-radius: var(--radius-md); display: flex; align-items: center; }
+        .nav-item:hover { background: var(--bg-color); color: var(--text-primary); }
+        .nav-item.active { background: rgba(37,99,235,0.1); color: var(--primary-color); }
+        .nav-item.has-dropdown { position: relative; }
+        .nav-item.has-dropdown .nav-link::after { content: '▼'; font-size: 10px; margin-left: 4px; }
+        .nav-item.has-dropdown.open .nav-link::after { transform: rotate(180deg); }
+        .nav-item.has-dropdown .nav-link { text-decoration: none; color: inherit; display: flex; align-items: center; cursor: pointer; }
+        .nav-dropdown { position: absolute; top: 100%; left: 0; margin-top: 8px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); min-width: 180px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s; z-index: 1000; padding: 8px 0; }
+        .nav-item.open .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-dropdown-item { display: block; padding: 10px 20px; text-decoration: none; color: var(--text-primary); font-size: 14px; }
+        .nav-dropdown-item:hover { background: var(--bg-color); color: var(--primary-color); }
+        .header-actions { display: flex; align-items: center; gap: 16px; }
+        .balance-info { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--bg-color); border-radius: var(--radius-md); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>document.write(createHeader());</script>
+        <main class="main-content">
+            <div class="complete-card">
+                <div class="complete-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+                <h2 id="completeTitle">회원가입이 완료되었습니다</h2>
+                <p id="completeMessage">가입해 주셔서 감사합니다.<br>아래 버튼을 눌러 로그인해 주세요.</p>
+                <a href="login.html" class="btn btn-primary">로그인 하러가기</a>
+            </div>
+        </main>
+    </div>
+    <script src="js/footer.js"></script>
+    <script>document.write(createFooter());</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initDropdownMenus === 'function') initDropdownMenus();
+            if (typeof initHeaderDropdowns === 'function') initHeaderDropdowns();
+        });
+    </script>
+    <script>
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('type') === 'election') {
+                var title = document.getElementById('completeTitle');
+                var msg = document.getElementById('completeMessage');
+                if (title) title.textContent = '선거회원 가입 신청이 완료되었습니다';
+                if (msg) msg.textContent = '담당자 승인 후 서비스 이용이 가능합니다. 로그인하여 승인 상태를 확인해 주세요.';
+            }
+        })();
+    </script>
+</body>
+</html>

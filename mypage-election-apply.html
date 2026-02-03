@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>선거회원 전환 신청 - 메시징 서비스</title>
+    <script src="js/header.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-color: #2563eb; --primary-hover: #1d4ed8; --secondary-color: #64748b;
+            --success-color: #10b981; --danger-color: #ef4444; --warning-color: #f59e0b;
+            --bg-color: #f8fafc; --surface-color: #ffffff; --border-color: #e2e8f0;
+            --text-primary: #1e293b; --text-secondary: #64748b; --radius-md: 8px; --radius-2xl: 20px;
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; line-height: 1.6; color: var(--text-primary); background: var(--bg-color); }
+        .app-container { min-height: 100vh; display: flex; flex-direction: column; }
+        .main-content { flex: 1; max-width: 800px; width: 100%; margin: 0 auto; padding: 32px 24px; }
+        .page-header { margin-bottom: 24px; }
+        .page-header h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .page-description { color: var(--text-secondary); font-size: 14px; }
+        .card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-2xl); padding: 28px; box-shadow: var(--shadow-card); margin-bottom: 24px; }
+        .form-section-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border-color); }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-label.required::after { content: ' *'; color: var(--danger-color); }
+        .form-input { width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--surface-color); }
+        .form-help { margin-top: 4px; font-size: 12px; color: var(--text-secondary); }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; font-size: 14px; font-weight: 500; border: none; border-radius: var(--radius-md); cursor: pointer; text-decoration: none; }
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .alert { padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; }
+        .alert-info { background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.2); color: var(--primary-color); }
+        .alert-warning { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); color: var(--warning-color); }
+        .mb-2 { margin-bottom: 16px; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        /* GNB/헤더 */
+        :root { --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05); }
+        .header { background: var(--surface-color); border-bottom: 1px solid var(--border-color); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo h1 { font-size: 28px; font-weight: 700; color: var(--primary-color); margin: 0; }
+        .logo a { text-decoration: none; color: inherit; display: block; }
+        .main-nav { display: flex; gap: 4px; flex: 1; justify-content: center; }
+        .nav-item { padding: 8px 16px; text-decoration: none; color: var(--text-secondary); font-weight: 500; border-radius: var(--radius-md); display: flex; align-items: center; }
+        .nav-item:hover { background: var(--bg-color); color: var(--text-primary); }
+        .nav-item.active { background: rgba(37,99,235,0.1); color: var(--primary-color); }
+        .nav-item.has-dropdown { position: relative; }
+        .nav-item.has-dropdown .nav-link::after { content: '▼'; font-size: 10px; margin-left: 4px; }
+        .nav-item.has-dropdown.open .nav-link::after { transform: rotate(180deg); }
+        .nav-item.has-dropdown .nav-link { text-decoration: none; color: inherit; display: flex; align-items: center; cursor: pointer; }
+        .nav-dropdown { position: absolute; top: 100%; left: 0; margin-top: 8px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); min-width: 180px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s; z-index: 1000; padding: 8px 0; }
+        .nav-item.open .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-dropdown-item { display: block; padding: 10px 20px; text-decoration: none; color: var(--text-primary); font-size: 14px; }
+        .nav-dropdown-item:hover { background: var(--bg-color); color: var(--primary-color); }
+        .header-actions { display: flex; align-items: center; gap: 16px; }
+        .balance-info { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--bg-color); border-radius: var(--radius-md); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>document.write(createHeader());</script>
+        <main class="main-content">
+            <div class="page-header">
+                <h2>선거회원 전환 신청</h2>
+                <p class="page-description">선거문자 발송을 위해 선거회원 전환 신청을 진행합니다. 담당자 승인 후 이용 가능합니다.</p>
+            </div>
+            <div class="alert alert-warning">
+                <strong>선거용 발신번호를 등록해주세요.</strong>
+                <p style="margin-top: 8px; font-size: 13px;">선거회원은 <strong>1개의 발신번호</strong>만 등록 가능합니다.</p>
+            </div>
+            <form id="electionApplyForm">
+                <div class="card">
+                    <h3 class="form-section-title">후보자 정보</h3>
+                    <div class="form-group">
+                        <label class="form-label required">(예비)후보자 이름</label>
+                        <input type="text" class="form-input" id="electionCandidateName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">정당</label>
+                        <input type="text" class="form-input" id="electionParty" placeholder="예: 대한민국당" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">선거구</label>
+                        <input type="text" class="form-input" id="electionDistrict" placeholder="예: 서울 강남구 갑" required>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="form-section-title">서류 제출</h3>
+                    <div class="form-group">
+                        <label class="form-label required">후보자 신분증 사본</label>
+                        <input type="file" class="form-input" accept=".pdf,.jpg,.png" required>
+                        <div class="form-help">PDF, JPG, PNG (최대 10MB)</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">(예비) 후보자 등록 증명서 사본</label>
+                        <input type="file" class="form-input" accept=".pdf,.jpg,.png" required>
+                        <div class="form-help">선관위에서 발급받은 후보자 등록 증명서</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">발신번호 등록 증명 서류</label>
+                        <input type="file" class="form-input" accept=".pdf,.jpg,.png" required>
+                        <div class="form-help">통신서비스이용증명원 등</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="form-section-title">발신번호 등록 (1개만 등록 가능)</h3>
+                    <div class="form-group">
+                        <label class="form-label required">발신번호</label>
+                        <input type="tel" class="form-input" id="electionCallerNumber" placeholder="010-0000-0000" required>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="form-section-title">약관 동의</h3>
+                    <div class="form-group">
+                        <label class="form-label required">[필수] 제 3자 정보제공 및 선거문자 이용약관 동의</label>
+                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+                            본인은 선거관리위원회가 관리하는 선거(대통령 선거, 국회의원 선거, 지방의회 의원 및 지방자치단체의 장의 선거, 조합장 선거 등)에서 '톡벨' 선거문자 서비스를 이용하기 위하여 아래의 내용에 동의합니다.
+                        </p>
+                        <div style="background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; max-height: 280px; overflow-y: auto; font-size: 13px; line-height: 1.8;">
+                            <p style="margin-bottom: 12px;"><strong style="color: var(--warning-color);">※ 선거문자 서비스 이용약관 ※</strong></p>
+                            <p style="margin-bottom: 12px;"><strong>1. 문자 발송 위임</strong></p>
+                            <p style="margin-bottom: 12px;">본인(후보자)은 '톡벨'(이하 '회사')에게 선거문자 발송 업무를 위임하며, 회사는 후보자의 요청에 따라 문자 메시지 발송을 대행합니다.</p>
+                            <p style="margin-bottom: 12px;"><strong>2. 발송 내용의 책임</strong></p>
+                            <p style="margin-bottom: 12px;">발송되는 문자 메시지 내용의 진실성 및 합법성에 대한 모든 책임은 후보자 본인에게 있습니다. 회사는 메시지 내용으로 인해 발생하는 법적 분쟁이나 손해에 대해 책임지지 않습니다.</p>
+                            <p style="margin-bottom: 12px;"><strong>3. 자동 동보통신 발송 횟수 제한</strong></p>
+                            <p style="margin-bottom: 12px;">공직선거법에 따라 자동 동보통신을 이용한 선거운동은 <strong style="color: var(--danger-color);">총 8회</strong>로 제한됩니다. 본인은 이 발송 횟수 제한을 초과하지 않도록 관리할 책임이 있음을 확인합니다.</p>
+                            <p style="margin-bottom: 12px;"><strong>4. 전화번호 수집 적법성</strong></p>
+                            <p style="margin-bottom: 12px;">본인은 발송에 사용되는 모든 전화번호가 합법적인 경로를 통해 수집되었으며, 자동 생성 프로그램을 일체 사용하지 않았음을 확인합니다. 이를 위반하여 발생하는 모든 법적 책임은 본인에게 있습니다.</p>
+                            <p style="margin-bottom: 12px;"><strong>5. 선관위 자료 제공 동의</strong></p>
+                            <p style="margin-bottom: 12px;">회사는 선거관리위원회의 요청이 있는 경우 정치자금법, 공직선거법 등 관련법령에 따라 관련 자료를 선거관리위원회에 제공할 수 있으며, 본인은 이에 대하여 민형사상의 일체의 이의를 제기하지 않겠습니다.</p>
+                            <p style="margin-bottom: 12px;"><strong>6. 제공 목적</strong></p>
+                            <p style="margin-bottom: 12px;">선거관리위원회가 공직선거법, 정치자금법 등 관련 법령에 따라 선거 관련 자료를 요청하는 경우, 해당 목적에 한하여 정보를 제공합니다.</p>
+                            <p style="margin-bottom: 12px;"><strong>7. 제공 항목</strong></p>
+                            <p style="margin-bottom: 8px;">- 후보자명, 소속/기관, 지역 등 선거회원 가입 시 입력한 정보</p>
+                            <p style="margin-bottom: 8px;">- 선거문자 발송 내역 (발송일시, 수신번호, 발송 내용 등)</p>
+                            <p style="margin-bottom: 8px;">- 발송 건수 및 비용 관련 정보</p>
+                            <p style="margin-bottom: 12px;">- 기타 선거관리위원회가 법령에 따라 요청하는 관련 자료</p>
+                            <p style="margin-bottom: 12px;"><strong>8. 법적 근거</strong></p>
+                            <p style="margin-bottom: 8px;">- 공직선거법 제82조의2 (선거운동을 위한 전화·문자메시지 전송의 제한)</p>
+                            <p style="margin-bottom: 8px;">- 정치자금법 제49조 (정치자금의 수수·기부 등에 관한 자료의 제출)</p>
+                            <p style="margin-bottom: 0;">- 개인정보 보호법 제17조 (개인정보의 제공)</p>
+                        </div>
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-top: 12px;">
+                            <input type="checkbox" id="electionTermsAgree" required>
+                            <span>위 약관 내용을 읽었으며, 이에 동의합니다.</span>
+                        </label>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <a href="mypage-profile.html" class="btn btn-outline">취소</a>
+                    <button type="button" class="btn btn-primary" onclick="submitElectionApply()">전환 신청</button>
+                </div>
+            </form>
+        </main>
+    </div>
+    <script src="js/footer.js"></script>
+    <script>document.write(createFloatingMenu()); document.write(createFooter());</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initDropdownMenus === 'function') initDropdownMenus();
+            if (typeof initHeaderDropdowns === 'function') initHeaderDropdowns();
+        });
+    </script>
+    <script>
+        function submitElectionApply() {
+            if (typeof showToast === 'function') {
+                showToast('선거회원 전환 신청이 완료되었습니다. 담당자 검토 후 승인됩니다.', 'success');
+            } else {
+                alert('선거회원 전환 신청이 완료되었습니다.');
+            }
+            setTimeout(function() { window.location.href = 'mypage-profile.html'; }, 1500);
+        }
+    </script>
+</body>
+</html>

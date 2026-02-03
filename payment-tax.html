@@ -904,13 +904,12 @@ body {
                 <p class="page-description">충전 내역에 대한 세금계산서를 신청하고 조회합니다</p>
             </div>
 
-            <!-- 탭 메뉴 -->
+            <!-- 탭 메뉴 (세금계산서 발행은 메뉴에서 삭제됨, 기업정보·세금자동발행은 내정보수정으로 이동) -->
             <div class="tabs" id="paymentTabs">
                 <div class="tab-list">
                     <button class="tab-item" onclick="window.location.href='payment-charge.html'">충전하기</button>
                     <button class="tab-item" onclick="window.location.href='payment-history.html'">충전 내역</button>
                     <button class="tab-item" onclick="window.location.href='payment-refund.html'">환불</button>
-                    <button class="tab-item active" onclick="window.location.href='payment-tax.html'">세금계산서 발행</button>
                 </div>
             </div>
 
@@ -1055,33 +1054,7 @@ body {
                 <div id="pagination" style="margin-top: 24px;"></div>
             </div>
 
-            <!-- 기업 정보 -->
-            <div class="card" style="margin-top: 24px;">
-                <h3 class="card-title" style="margin-bottom: 24px;">기업 정보</h3>
-                <div class="table-container">
-                    <table class="table">
-                        <tr>
-                            <th style="width: 150px;">회사명(상호)</th>
-                            <td>주식회사 예시</td>
-                        </tr>
-                        <tr>
-                            <th>사업자등록번호</th>
-                            <td>123-45-67890</td>
-                        </tr>
-                        <tr>
-                            <th>대표자명</th>
-                            <td>홍길동</td>
-                        </tr>
-                        <tr>
-                            <th>사업장 주소</th>
-                            <td>서울시 강남구 테헤란로 123</td>
-                        </tr>
-                    </table>
-                </div>
-                <div style="margin-top: 16px;">
-                    <a href="mypage-profile.html" class="btn btn-outline">기업정보 수정</a>
-                </div>
-            </div>
+            <!-- 기업 정보는 내정보수정(기업회원)으로 이동 -->
 
             <!-- 계산서 수신 정보 -->
             <div class="card" style="margin-top: 24px;">

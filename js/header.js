@@ -83,6 +83,10 @@ function createHeader(activeMenu = '') {
         'mypage-profile.html': 'mypage',
         'mypage-password.html': 'mypage',
         'mypage-caller-number.html': 'mypage',
+        'mypage-convert-business.html': 'mypage',
+        'mypage-convert-corporate.html': 'mypage',
+        'mypage-election-apply.html': 'mypage',
+        'signup-complete.html': '',
         'support-notice.html': 'support',
         'support-event.html': 'event',
         'support-faq.html': 'support',
@@ -180,7 +184,6 @@ function createHeader(activeMenu = '') {
                 <div class="header-dropdown-menu">
                     <a href="payment-charge.html" class="header-dropdown-item">충전하기</a>
                     <a href="payment-history.html" class="header-dropdown-item">충전내역</a>
-                    <a href="payment-tax.html" class="header-dropdown-item">세금계산서 발행</a>
                 </div>
             </div>
             <div class="header-dropdown-wrapper" id="userDropdown">
