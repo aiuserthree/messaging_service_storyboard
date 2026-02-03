@@ -2,33 +2,37 @@
 function createFooter() {
     return `
         <footer class="footer">
+            <div class="footer-top-row">
+                <a href="support-notice.html" class="footer-top-link">공지사항</a>
+                <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('terms')">이용약관</a>
+                <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('privacy')">개인정보처리방침</a>
+                <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('spam')">스팸방지정책</a>
+                <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('company')">회사소개</a>
+            </div>
             <div class="footer-content">
-                <div class="footer-section">
-                    <h4 class="footer-title"><a href="support-center.html" class="footer-title-link">고객센터</a></h4>
-                    <div class="footer-info">
-                        <p class="footer-text">전화: 1588-5412</p>
-                        <p class="footer-text">이메일: support@tokbell.com</p>
-                        <p class="footer-text">운영시간: 평일 09:00 ~ 18:00</p>
-                    </div>
-                </div>
-                <div class="footer-section">
+                <div class="footer-section footer-company">
                     <h4 class="footer-title">회사정보</h4>
+                    <div class="footer-logo-wrap">
+                        <img src="img/logo/logo.png" alt="ibank" class="footer-logo" />
+                    </div>
                     <div class="footer-info">
                         <p class="footer-text">상호 : (주)아이뱅크</p>
                         <p class="footer-text">대표자: 정용관</p>
                         <p class="footer-text">사업자등록번호: 116-81-68774</p>
                         <p class="footer-text">통신판매업신고번호: 제2025-서울강서-0365호</p>
-                        <p class="footer-text">주소: 서울 강서구 마곡동 779번지 보타닉게이트 10층</p>
+                        <p class="footer-text">특수부가통신사업등록번호: 제 3-01-25-0037 호</p>
+                        <p class="footer-text">사업장 주소: 서울 강서구 마곡동 779번지 보타닉게이트 10층</p>
+                        <p class="footer-text">호스팅제공사: iwinv</p>
                     </div>
                 </div>
-                <div class="footer-section">
-                    <div class="footer-links">
-                        <a href="javascript:void(0)" class="footer-link" onclick="event.preventDefault(); openPolicyModal('company')">회사소개</a>
-                        <a href="javascript:void(0)" class="footer-link" onclick="event.preventDefault(); openPolicyModal('service')">서비스 소개</a>
-                        <a href="javascript:void(0)" class="footer-link" onclick="event.preventDefault(); openPolicyModal('terms')">이용약관</a>
-                        <a href="javascript:void(0)" class="footer-link" onclick="event.preventDefault(); openPolicyModal('privacy')">개인정보처리방침</a>
-                        <a href="javascript:void(0)" class="footer-link" onclick="event.preventDefault(); openPolicyModal('spam')">스팸방지정책</a>
-                        <a href="javascript:void(0)" class="footer-link" onclick="event.preventDefault(); openPolicyModal('refund')">환불정책</a>
+                <div class="footer-section footer-contact">
+                    <h4 class="footer-title">고객지원</h4>
+                    <div class="footer-info">
+                        <p class="footer-text"><a href="support-faq.html" class="footer-inline-link">FAQ</a> · <a href="support-inquiry.html" class="footer-inline-link">1:1문의</a> · <span>실시간채팅(카카오상담톡)</span></p>
+                        <p class="footer-text">전화번호: 02-6951-0035</p>
+                        <p class="footer-text">상담시간: 평일 10시~17시 / 점심 11시30분~13시</p>
+                        <p class="footer-text">대표이메일: <a href="mailto:tokbell@ibank.co.kr" class="footer-inline-link">tokbell@ibank.co.kr</a></p>
+                        <p class="footer-text">기업견적문의 담당이메일: <a href="mailto:msg@ibank.co.kr" class="footer-inline-link">msg@ibank.co.kr</a></p>
                     </div>
                 </div>
             </div>
@@ -40,15 +44,35 @@ function createFooter() {
             .footer {
                 background-color: var(--text-primary);
                 color: var(--surface-color);
-                padding: 48px 24px 24px;
+                padding: 40px 24px 24px;
                 margin-top: 64px;
+            }
+            .footer-top-row {
+                max-width: 1400px;
+                margin: 0 auto 32px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px 24px;
+                padding-bottom: 24px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            }
+            .footer-top-link {
+                font-size: 14px;
+                font-weight: 500;
+                color: rgba(255, 255, 255, 0.9);
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .footer-top-link:hover {
+                color: var(--surface-color);
+                text-decoration: underline;
             }
             .footer-content {
                 max-width: 1400px;
                 margin: 0 auto;
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 32px;
+                grid-template-columns: 1fr 1fr;
+                gap: 48px;
                 margin-bottom: 32px;
             }
             .footer-section {
@@ -56,17 +80,10 @@ function createFooter() {
                 flex-direction: column;
             }
             .footer-title {
-                font-size: 16px;
+                font-size: 15px;
                 font-weight: 600;
-                margin-bottom: 16px;
+                margin-bottom: 14px;
                 color: var(--surface-color);
-            }
-            .footer-title-link {
-                color: inherit;
-                text-decoration: none;
-            }
-            .footer-title-link:hover {
-                text-decoration: underline;
             }
             .footer-info {
                 display: flex;
@@ -79,20 +96,25 @@ function createFooter() {
                 line-height: 1.6;
                 margin: 0;
             }
-            .footer-links {
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-            }
-            .footer-link {
-                font-size: 13px;
-                color: rgba(255, 255, 255, 0.8);
+            .footer-inline-link {
+                color: rgba(255, 255, 255, 0.9);
                 text-decoration: none;
-                transition: color 0.2s;
             }
-            .footer-link:hover {
+            .footer-inline-link:hover {
                 color: var(--surface-color);
                 text-decoration: underline;
+            }
+            .footer-logo-wrap {
+                margin-top: 0;
+                margin-bottom: 16px;
+            }
+            .footer-logo {
+                height: 28px;
+                width: auto;
+                max-width: 80px;
+                display: block;
+                object-fit: contain;
+                opacity: 0.95;
             }
             .footer-bottom {
                 max-width: 1400px;
@@ -108,11 +130,18 @@ function createFooter() {
             }
             @media (max-width: 768px) {
                 .footer {
-                    padding: 32px 16px 16px;
+                    padding: 28px 16px 20px;
+                }
+                .footer-top-row {
+                    margin-bottom: 24px;
+                    padding-bottom: 20px;
                 }
                 .footer-content {
                     grid-template-columns: 1fr;
-                    gap: 24px;
+                    gap: 28px;
+                }
+                .footer-contact {
+                    order: -1;
                 }
             }
         </style>
@@ -212,16 +241,24 @@ function openPolicyModal(type) {
                         <td style="padding: 12px 0;">제2025-서울강서-0365호</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 12px 0; font-weight: 600;">주소</td>
+                        <td style="padding: 12px 0; font-weight: 600;">특수부가통신사업등록번호</td>
+                        <td style="padding: 12px 0;">제 3-01-25-0037 호</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 12px 0; font-weight: 600;">사업장 주소</td>
                         <td style="padding: 12px 0;">서울 강서구 마곡동 779번지 보타닉게이트 10층</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 12px 0; font-weight: 600;">대표전화</td>
-                        <td style="padding: 12px 0;">1588-5412</td>
+                        <td style="padding: 12px 0; font-weight: 600;">호스팅제공사</td>
+                        <td style="padding: 12px 0;">iwinv</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 12px 0; font-weight: 600;">이메일</td>
-                        <td style="padding: 12px 0;">support@tokbell.com</td>
+                        <td style="padding: 12px 0; font-weight: 600;">대표전화</td>
+                        <td style="padding: 12px 0;">02-6951-0035</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 12px 0; font-weight: 600;">대표이메일</td>
+                        <td style="padding: 12px 0;">tokbell@ibank.co.kr</td>
                     </tr>
                 </table>
                 
