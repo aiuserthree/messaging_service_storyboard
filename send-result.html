@@ -2367,7 +2367,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const specData = [
             // === 메인 페이지 ===
             // 1. 페이지 헤더
-            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '발송결과 조회 페이지 제목 및 설명', function: '페이지 제목과 설명 표시' },
+            { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '발송결과 조회 페이지 제목 및 설명', function: '페이지 제목과 설명 표시', behavior: ['메시지 타입 세분화(일반문자(SMS), 광고문자(LMS/MMS), 선거문자(LMS) 등)', '수신번호수(성공/실패) 통합·아코디언 유지', '메시지 내용 목록 내 요약(말줄임) 노출', '결과리포트 버튼 없음 (삭제됨)'] },
             // 2-4. 탭 메뉴
             { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '발송관리 메뉴 탭 영역', function: '발송결과/예약내역 탭 전환' },
             { selector: '#tabMenu .tab-item:first-child', title: '발송결과 탭', position: { top: '-5px', left: '-10px' }, description: '발송결과 조회 탭 (현재)', function: '클릭 시 발송결과 페이지로 이동', behavior: ['현재 페이지 활성화 표시'] },

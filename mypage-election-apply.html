@@ -172,5 +172,23 @@
             setTimeout(function() { window.location.href = 'mypage-profile.html'; }, 1500);
         }
     </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            { selector: '.page-header h2', title: '페이지 제목', position: { top: '-5px', left: '-10px' }, description: '선거회원 전환 신청', function: '페이지 목적 표시' },
+            { selector: '.alert.alert-warning', title: '선거용 발신번호 안내', position: { top: '5px', left: '10px' }, description: '선거회원은 1개 발신번호만 등록 가능', function: '안내 문구' },
+            { selector: '#electionApplyForm', title: '선거회원 전환 신청 폼', position: { top: '10px', left: '10px' }, description: '후보자 정보, 서류, 발신번호, 약관 동의', function: '전체 신청 데이터 입력', behavior: ['후보자 정보 → 서류 제출 → 발신번호 등록 → 약관 동의'] },
+            { selector: '#electionCandidateName', title: '(예비)후보자 이름', position: { top: '-5px', left: '-10px' }, function: '후보자 이름 입력', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#electionParty', title: '정당', position: { top: '-5px', left: '-10px' }, function: '정당명 입력', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#electionDistrict', title: '선거구', position: { top: '-5px', left: '-10px' }, function: '선거구 입력 (예: 서울 강남구 갑)', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '.card:nth-of-type(2)', title: '서류 제출 카드', position: { top: '10px', left: '10px' }, description: '후보자 신분증, 후보자 등록 증명서, 발신번호 등록 증명 서류', function: '필수 서류 업로드', behavior: ['PDF/JPG/PNG 최대 10MB'] },
+            { selector: '#electionCallerNumber', title: '발신번호 (1개만 등록 가능)', position: { top: '-5px', left: '-10px' }, function: '선거용 발신번호 입력', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#electionTermsAgree', title: '제3자 정보제공 및 선거문자 이용약관 동의', position: { top: '-5px', left: '-10px' }, description: '선거문자 이용약관 전문 표시, 체크 필수', function: '약관 동의 (필수)', behavior: ['약관 내용 읽고 동의 체크', '미체크 시 전환 신청 불가'], tags: [{ text: '필수', type: 'required' }] },
+            { selector: '.card:nth-of-type(4) .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: 'mypage-profile.html 이동' },
+            { selector: 'button[onclick="submitElectionApply()"]', title: '전환 신청 버튼', position: { top: '-5px', right: '-10px' }, function: 'submitElectionApply()', behavior: ['Toast/Alert 완료 메시지', 'mypage-profile.html로 이동'], api: 'POST 선거회원 전환 신청' }
+        ];
+        initSpecOverlay(specData);
+    </script>
 </body>
 </html>

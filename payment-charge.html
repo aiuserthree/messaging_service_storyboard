@@ -1843,7 +1843,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 selector: '#paymentTabs',
                 title: '탭 메뉴',
                 position: { top: '-5px', left: '-10px' },
-                function: '결제 관련 페이지 이동'
+                function: '결제 관련 페이지 이동',
+                behavior: ['충전하기 / 충전 내역 / 환불 (세금계산서 발행 메뉴 없음 — 기업정보·세금계산서 자동발행은 내정보수정에서)']
             },
             // 2. 충전하기 탭
             {
@@ -1859,12 +1860,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 position: { top: '-5px', left: '-10px' },
                 function: '충전 이력 조회'
             },
-            // 4. 세금계산서 탭
+            // 4. 환불 탭
             {
                 selector: '#paymentTabs .tab-item:nth-child(3)',
-                title: '세금계산서 탭',
+                title: '환불 탭',
                 position: { top: '-5px', right: '-10px' },
-                function: '세금계산서 발행'
+                function: '환불 신청 페이지(payment-refund.html)로 이동'
             },
             // 5. 현재 보유 포인트
             {

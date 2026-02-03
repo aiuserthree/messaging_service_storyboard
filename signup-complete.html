@@ -85,5 +85,16 @@
             }
         })();
     </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            { selector: '.complete-card', title: '가입 완료 카드', position: { top: '10px', left: '50%' }, description: '가입 완료 메시지 및 로그인 버튼', function: '가입 결과 안내', behavior: ['일반 가입: "회원가입이 완료되었습니다"', '선거회원(?type=election): "선거회원 가입 신청이 완료되었습니다"'] },
+            { selector: '#completeTitle', title: '완료 제목', position: { top: '-5px', left: '-10px' }, description: '회원가입이 완료되었습니다 / 선거회원 가입 신청이 완료되었습니다', function: '완료 유형별 제목 표시' },
+            { selector: '#completeMessage', title: '완료 메시지', position: { top: '-5px', left: '-10px' }, description: '가입해 주셔서 감사합니다. 아래 버튼을 눌러 로그인해 주세요.', function: '안내 문구 (줄바꿈 포함)' },
+            { selector: 'a[href="login.html"]', title: '로그인 하러가기 버튼', position: { top: '-5px', right: '-10px' }, description: '로그인 페이지로 이동', function: 'login.html 이동', behavior: ['클릭 시 로그인 페이지로 이동'] }
+        ];
+        initSpecOverlay(specData);
+    </script>
 </body>
 </html>

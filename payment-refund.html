@@ -845,7 +845,7 @@
                 title: '탭 메뉴',
                 position: { top: '-5px', left: '-10px' },
                 function: '결제관리 하위 페이지 네비게이션',
-                behavior: ['충전하기', '충전내역', '환불', '세금계산서 발행 4개 탭 구성']
+                behavior: ['충전하기 / 충전 내역 / 환불 3개 탭 (세금계산서 발행 메뉴 없음 — 기업정보·세금계산서 자동발행은 내정보수정에서)']
             },
             // 2. 충전하기 탭
             {
@@ -870,14 +870,6 @@
                 position: { top: '-5px', left: '-10px' },
                 function: '환불 신청 페이지 (현재 페이지)',
                 behavior: ['활성 상태 스타일 적용']
-            },
-            // 5. 세금계산서 탭
-            {
-                selector: '#paymentTabs .tab-item:nth-child(4)',
-                title: '세금계산서 탭',
-                position: { top: '-5px', right: '-10px' },
-                function: '세금계산서 발행 페이지로 이동',
-                behavior: ['클릭 시 payment-tax.html 이동']
             },
             // ===== 잔액 요약 카드 영역 =====
             // 6. 잔액 요약 카드 영역

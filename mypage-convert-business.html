@@ -329,5 +329,32 @@
             setTimeout(function() { window.location.href = 'mypage-profile.html'; }, 1500);
         }
     </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            { selector: '.main-content a.btn-outline', title: '내 정보 수정으로 돌아가기', position: { top: '-5px', left: '-10px' }, description: '내 정보 수정 페이지로 이동', function: 'mypage-profile.html 이동' },
+            { selector: '.page-header h2', title: '페이지 제목', position: { top: '-5px', left: '-10px' }, description: '개인사업자 회원 전환', function: '페이지 목적 표시', behavior: ['기업 정보 등록 + 발신번호 등록까지 포함 (기존 발신번호 등록 프로세스에서 기업회원일 경우 프로세스 그대로 적용)'] },
+            { selector: '.alert.alert-warning', title: '전환 불가 안내', position: { top: '5px', left: '10px' }, description: '사업자 전환 후 되돌리기 불가', function: '주의 안내' },
+            { selector: '.alert.alert-danger', title: '발신번호 초기화 안내', position: { top: '5px', left: '10px' }, description: '전환 시 기존 발신번호 초기화', function: '안내 문구' },
+            { selector: '#businessInfoCard', title: '1. 기업 정보 등록 카드', position: { top: '10px', left: '10px' }, description: '기업명, 사업자등록번호, 대표자명, 사업자등록증', function: '기업 정보 입력', behavior: ['기업명/사업자등록번호/대표자명 필수', '사업자등록번호 확인 버튼', '다음: 발신번호 등록 클릭 시 발신번호 단계로 이동'] },
+            { selector: '#companyName', title: '기업명 입력', position: { top: '-5px', left: '-10px' }, function: '기업명 입력', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#businessNumber', title: '사업자등록번호 입력', position: { top: '-5px', left: '-10px' }, function: '사업자등록번호 입력 및 확인', behavior: ['확인 버튼으로 유효성 검증'], tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#repName', title: '대표자명 입력', position: { top: '-5px', left: '-10px' }, function: '대표자명 입력', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#businessLicense', title: '사업자등록증 사본', position: { top: '-5px', left: '-10px' }, function: '파일 업로드 (PDF/JPG/PNG)', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#businessInfoCard .btn-primary', title: '다음: 발신번호 등록 버튼', position: { top: '-5px', right: '-10px' }, function: 'goToCallerStep1() 호출', behavior: ['기업명/사업자번호/대표자명 유효성 검증', '통과 시 발신번호 등록 카드 표시'] },
+            { selector: '#callerSectionCard', title: '2. 발신번호 등록 카드', position: { top: '10px', left: '10px' }, description: '기업회원 발신번호 등록 4단계', function: '발신번호 등록 (기업회원 프로세스 동일)', behavior: ['Step1 기본정보 → Step2 인증/서류 → Step3 연락처 → Step4 제출', '본인(자사) 명의+휴대폰 시 본인인증 필수'] },
+            { selector: '.step-indicator', title: '발신번호 등록 단계 표시', position: { top: '-10px', left: '50%' }, function: '1~4단계 진행 표시' },
+            { selector: '#callerNumberInput', title: '발신번호 입력', position: { top: '-5px', left: '-10px' }, function: '발신번호 입력 및 중복확인', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#purposeInput', title: '발신번호 용도', position: { top: '-5px', left: '-10px' }, function: '용도 입력 (예: 마케팅팀)' },
+            { selector: '#authSection', title: '본인인증 섹션', position: { top: '5px', left: '10px' }, description: '휴대폰+본인(자사) 명의 시 표시', function: '휴대폰 본인인증', behavior: ['본인(자사) 명의 및 휴대폰 번호일 때만 노출', '인증 완료 후 다음 단계 가능'] },
+            { selector: '#documentSection', title: '서류 제출 섹션', position: { top: '5px', left: '10px' }, function: '명의 구분별 필수 서류 업로드', behavior: ['본인(자사)+휴대폰: 서류 불필요', '본인(자사)+유선: 통신서비스 이용증명원', '타인/타사: 위임장 등 추가 서류'] },
+            { selector: '#contactPhoneInput', title: '연락처(휴대폰)', position: { top: '-5px', left: '-10px' }, function: '승인/반려 결과 수신 연락처', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#contactEmailInput', title: '결과 수신 이메일', position: { top: '-5px', left: '-10px' }, function: '선택 입력' },
+            { selector: '#reviewCompanyName', title: '최종 확인 영역', position: { top: '5px', left: '10px' }, description: '기업명/사업자번호/발신번호 등 요약', function: '제출 전 확인' },
+            { selector: 'button[onclick="submitConvertAndCaller()"]', title: '전환 신청 및 발신번호 등록', position: { top: '-5px', right: '-10px' }, function: 'submitConvertAndCaller()', behavior: ['Toast/Alert 완료 메시지', 'mypage-profile.html로 이동'], api: 'POST 전환+발신번호 등록' }
+        ];
+        initSpecOverlay(specData);
+    </script>
 </body>
 </html>

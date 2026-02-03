@@ -2007,13 +2007,13 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         const specData = [
             // 1. 탭 메뉴
-            { selector: '#paymentTabs', title: '탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '결제 관련 페이지 이동' },
+            { selector: '#paymentTabs', title: '탭 메뉴', position: { top: '-5px', left: '-10px' }, function: '결제 관련 페이지 이동', behavior: ['충전하기 / 충전 내역 / 환불 (세금계산서 발행 메뉴 없음)'] },
             // 2. 충전하기 탭
-            { selector: '#paymentTabs .tab-item:nth-child(1)', title: '충전하기 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 충전 페이지' },
+            { selector: '#paymentTabs .tab-item:nth-child(1)', title: '충전하기 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 충전 페이지(payment-charge.html)' },
             // 3. 충전내역 탭
             { selector: '#paymentTabs .tab-item:nth-child(2)', title: '충전내역 탭', position: { top: '-5px', left: '-10px' }, function: '충전 이력 페이지 (현재)' },
-            // 4. 세금계산서 탭
-            { selector: '#paymentTabs .tab-item:nth-child(3)', title: '세금계산서 탭', position: { top: '-5px', right: '-10px' }, function: '세금계산서 발행' },
+            // 4. 환불 탭
+            { selector: '#paymentTabs .tab-item:nth-child(3)', title: '환불 탭', position: { top: '-5px', right: '-10px' }, function: '환불 신청 페이지(payment-refund.html)' },
             // 5. 기간 단축 버튼 영역
             { selector: '#periodButtons', title: '기간 단축 버튼', position: { top: '-5px', left: '-10px' }, function: '빠른 기간 설정' },
             // 6. 1주일 버튼
