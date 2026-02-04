@@ -35,7 +35,7 @@ function createFooter() {
                         <p class="footer-text">기업견적문의 담당이메일: <a href="mailto:msg@ibank.co.kr" class="footer-inline-link">msg@ibank.co.kr</a></p>
                     </div>
                     <div class="footer-cert-logos">
-                        <img src="img/logo/vntr_mark_signature02%201.png" alt="벤처확인기업" class="footer-cert-logo" />
+                        <img src="img/logo/vntr_mark_signature02%201-Photoroom.png" alt="벤처확인기업" class="footer-cert-logo" />
                         <img src="img/logo/기술혁신형중소기업_국문로고%201.png" alt="기술혁신형중소기업" class="footer-cert-logo" />
                     </div>
                 </div>
@@ -138,9 +138,9 @@ function createFooter() {
                 flex-wrap: wrap;
             }
             .footer-cert-logo {
-                height: 24px;
+                height: 30px;
                 width: auto;
-                max-width: 100px;
+                max-width: 120px;
                 object-fit: contain;
                 opacity: 0.9;
             }
