@@ -572,7 +572,13 @@ body {
             
             // 로그인 성공 처리 (아이디, 비밀번호 검증 없이 바로 로그인)
             localStorage.setItem('isLoggedIn', 'true');
-            window.location.href = 'main.html';
+            var redirect = (function() {
+                var p = new URLSearchParams(window.location.search);
+                var r = p.get('redirect');
+                if (r && /^[a-zA-Z0-9_\-\.]+\.html(\#.*)?$/.test(r)) return r;
+                return 'main.html';
+            })();
+            window.location.href = redirect;
         }
 
         // 아이디 저장 기능
