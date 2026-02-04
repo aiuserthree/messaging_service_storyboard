@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - 메시징 서비스</title>
+    <script src="js/header.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <style>
+        /* 대시보드 요약 (회원유형·등급·잔액·발송가능건수) - main과 동일 */
+        .dashboard-summary {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .dashboard-summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.4fr 2fr;
+            gap: 0;
+            align-items: center;
+            min-height: 56px;
+        }
+        .dashboard-summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-left: 24px;
+            border-left: 1px solid #e2e8f0;
+        }
+        .dashboard-summary-item:first-child { padding-left: 0; border-left: none; }
+        .dashboard-summary-label { font-size: 12px; color: #64748b; font-weight: 500; }
+        .dashboard-summary-value { font-size: 16px; font-weight: 600; color: #1e293b; }
+        .dashboard-summary-balance-row { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: #1e293b; }
+        .dashboard-summary-balance-row span.unit { font-size: 13px; font-weight: 500; color: #64748b; margin-left: 2px; }
+        #dashboardBalance { display: flex; flex-direction: column; gap: 6px; }
+        .dashboard-summary-send-counts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .dashboard-summary-send-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px; background: #fff; border-radius: 10px; font-size: 13px; color: #475569;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+        .dashboard-summary-send-badge span:last-child { font-weight: 700; color: #2563eb; }
+        @media (max-width: 1024px) {
+            .dashboard-summary-grid { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-summary-item { padding-left: 0; border-left: none; padding-top: 16px; padding-bottom: 16px; border-top: 1px solid #e2e8f0; }
+            .dashboard-summary-item:nth-child(1), .dashboard-summary-item:nth-child(2) { border-top: none; }
+            .dashboard-summary-item:nth-child(odd) { padding-right: 20px; }
+        }
+        @media (max-width: 600px) {
+            .dashboard-summary { padding: 20px; }
+            .dashboard-summary-grid { grid-template-columns: 1fr; }
+            .dashboard-summary-item { border-top: 1px solid #e2e8f0; padding-top: 16px; padding-bottom: 16px; }
+            .dashboard-summary-item:first-child { padding-top: 0; border-top: none; }
+        }
+
+        /* 마이페이지 LNB + 콘텐츠 레이아웃 */
+        .mypage-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+        .mypage-lnb {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 12px 0;
+            position: sticky;
+            top: 88px;
+        }
+        .mypage-lnb-item {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .mypage-lnb-item:hover {
+            background: var(--bg-color);
+            color: var(--primary-color);
+        }
+        .mypage-lnb-item.active {
+            background: rgba(37, 99, 235, 0.08);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+        .mypage-content-panel {
+            display: none;
+        }
+        .mypage-content-panel.active {
+            display: block;
+        }
+        .mypage-panel-intro {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .mypage-panel-actions {
+            margin-top: 24px;
+        }
+
+        /* 이용내역: history tabs & table (payment-refund와 동일) */
+        .history-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+        .history-tab {
+            padding: 8px 16px; border: 1px solid var(--border-color); background: var(--surface-color);
+            border-radius: var(--radius-md); cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s;
+        }
+        .history-tab:hover { border-color: var(--primary-color); }
+        .history-tab.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .history-content { display: none; }
+        .history-content.active { display: block; }
+        .pagination {
+            display: flex; justify-content: center; align-items: center; gap: 4px;
+            margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);
+        }
+        .pagination-btn {
+            min-width: 36px; height: 36px; padding: 0 12px; border: 1px solid var(--border-color);
+            background: var(--surface-color); border-radius: var(--radius-md); cursor: pointer;
+            font-size: 14px; font-weight: 500; color: var(--text-primary); transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pagination-btn:hover:not(:disabled) { border-color: var(--primary-color); color: var(--primary-color); }
+        .pagination-btn.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pagination-ellipsis { padding: 0 8px; color: var(--text-muted); }
+        .pagination-info { font-size: 13px; color: var(--text-secondary); margin-left: 16px; }
+        .status-badge { padding: 4px 8px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; }
+        .status-charge { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+        .status-mileage { background: rgba(37, 99, 235, 0.1); color: var(--primary-color); }
+        .status-use { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+        .status-refund { background: rgba(100, 116, 139, 0.1); color: var(--secondary-color); }
+        .amount-plus { color: var(--success-color); font-weight: 600; }
+        .amount-minus { color: var(--danger-color); font-weight: 600; }
+
+        @media (max-width: 900px) {
+            .mypage-layout { grid-template-columns: 1fr; }
+            .mypage-lnb { position: static; display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; }
+            .mypage-lnb-item { border-left: none; border-bottom: 3px solid transparent; }
+            .mypage-lnb-item.active { border-left: none; border-bottom-color: var(--primary-color); }
+        }
+        /* 내정보/비밀번호/발신번호 패널 공통 */
+        .form-section { margin-bottom: 32px; }
+        .form-section-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border-color); }
+        /* 입력+버튼 행: 버튼 오른쪽 한 줄 공통 정렬 */
+        .form-input-with-btn { display: grid; grid-template-columns: 1fr 100px; gap: 8px; align-items: center; }
+        .form-input-with-btn .form-input { min-width: 0; }
+        .form-input-with-btn .btn { justify-self: end; white-space: nowrap; }
+        .phone-verify { display: grid; grid-template-columns: 1fr 100px; gap: 8px; align-items: flex-start; }
+        .phone-verify .form-input { min-width: 0; }
+        .phone-verify .btn { justify-self: end; white-space: nowrap; }
+        .verify-status { display: flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--success-color); font-size: 12px; grid-column: 1 / -1; }
+        .flex { display: flex; }
+        .gap-2 { gap: 16px; }
+        .mt-3 { margin-top: 24px; }
+        .mb-2 { margin-bottom: 16px; }
+        .status-filter { display: flex; gap: 8px; margin-bottom: 20px; }
+        .status-filter-btn { padding: 8px 16px; border: 1px solid var(--border-color); background: var(--surface-color); border-radius: var(--radius-md); cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .status-filter-btn:hover { border-color: var(--primary-color); }
+        .status-filter-btn.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .badge { display: inline-flex; align-items: center; padding: 4px 8px; font-size: 12px; font-weight: 500; border-radius: var(--radius-sm); }
+        .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+        .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning-color); }
+        .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .form-row-2 .form-group { margin-bottom: 0; }
+        .email-with-btn { display: grid; grid-template-columns: 1fr 100px; gap: 8px; align-items: center; }
+        .email-with-btn .form-input { min-width: 0; }
+        .email-with-btn .btn { justify-self: end; white-space: nowrap; }
+        @media (max-width: 640px) { .form-row-2 { grid-template-columns: 1fr; margin-bottom: 20px; } .form-row-2 .form-group { margin-bottom: 20px; } .form-row-2 .form-group:last-child { margin-bottom: 0; } }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>document.write(createHeader());</script>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h2>마이페이지</h2>
+                <p class="page-description">회원정보를 확인하고 내 정보, 비밀번호, 발신번호, 이용내역을 관리합니다</p>
+            </div>
+
+            <!-- 회원정보 (대시보드와 동일) -->
+            <div class="dashboard-summary" id="dashboardSummary">
+                <div class="dashboard-summary-grid">
+                    <div class="dashboard-summary-item">
+                        <span class="dashboard-summary-label">회원유형</span>
+                        <span class="dashboard-summary-value" id="dashboardMemberType">개인회원</span>
+                    </div>
+                    <div class="dashboard-summary-item">
+                        <span class="dashboard-summary-label">회원등급</span>
+                        <span class="dashboard-summary-value" id="dashboardMemberGrade">일반</span>
+                    </div>
+                    <div class="dashboard-summary-item">
+                        <span class="dashboard-summary-label">잔액</span>
+                        <div id="dashboardBalance">
+                            <div class="dashboard-summary-balance-row"><span id="dashboardPoints">1,000,000</span><span class="unit">포인트</span></div>
+                            <div class="dashboard-summary-balance-row"><span id="dashboardMileage">0</span><span class="unit">마일리지</span></div>
+                        </div>
+                    </div>
+                    <div class="dashboard-summary-item">
+                        <span class="dashboard-summary-label">발송 가능 건수</span>
+                        <div class="dashboard-summary-send-counts" id="dashboardSendCounts">
+                            <span class="dashboard-summary-send-badge">SMS <span id="sendCountSms">0</span></span>
+                            <span class="dashboard-summary-send-badge">LMS <span id="sendCountLms">0</span></span>
+                            <span class="dashboard-summary-send-badge">MMS <span id="sendCountMms">0</span></span>
+                            <span class="dashboard-summary-send-badge">알림톡 <span id="sendCountAlimtalk">0</span></span>
+                            <span class="dashboard-summary-send-badge">브랜드메시지 <span id="sendCountBrandtalk">0</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LNB + 콘텐츠 -->
+            <div class="mypage-layout">
+                <nav class="mypage-lnb">
+                    <button type="button" class="mypage-lnb-item active" data-panel="profile" onclick="switchMypagePanel('profile')">내정보수정</button>
+                    <button type="button" class="mypage-lnb-item" data-panel="password" onclick="switchMypagePanel('password')">비밀번호변경</button>
+                    <button type="button" class="mypage-lnb-item" data-panel="caller" onclick="switchMypagePanel('caller')">발신번호관리</button>
+                    <button type="button" class="mypage-lnb-item" data-panel="history" onclick="switchMypagePanel('history')">이용내역</button>
+                </nav>
+
+                <div class="mypage-content">
+                    <!-- 내정보수정 (폼 바로 표시) -->
+                    <div class="mypage-content-panel active" id="panel-profile">
+                        <div class="card" id="profileCard">
+                            <form id="profileForm">
+                                <div class="form-section" id="basicInfoSection">
+                                    <h3 class="form-section-title">기본 정보</h3>
+                                    <div class="form-group">
+                                        <label class="form-label">아이디</label>
+                                        <input type="text" class="form-input" value="user@example.com" disabled style="background: var(--bg-color);">
+                                    </div>
+                                    <div class="form-row-2">
+                                        <div class="form-group">
+                                            <label class="form-label required">이름</label>
+                                            <input type="text" class="form-input" id="profileUserName" value="홍길동" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">생년월일</label>
+                                            <input type="date" class="form-input">
+                                        </div>
+                                    </div>
+                                    <div class="form-row-2">
+                                        <div class="form-group">
+                                            <label class="form-label required">휴대폰번호</label>
+                                            <div class="phone-verify">
+                                                <input type="tel" class="form-input" value="010-1234-5678" required>
+                                                <button type="button" class="btn btn-outline" onclick="openModal('phoneVerifyModal')">인증</button>
+                                            </div>
+                                            <div class="verify-status" id="phoneVerifyStatus" style="display: none;"><span>✓</span><span>인증 완료</span></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">이메일 주소</label>
+                                            <div class="flex gap-2 email-with-btn">
+                                                <input type="email" class="form-input" value="user@example.com" required>
+                                                <button type="button" class="btn btn-outline" onclick="checkEmail()">중복 확인</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-section" id="addressSection">
+                                    <h3 class="form-section-title">주소 정보</h3>
+                                    <div class="form-group">
+                                        <label class="form-label">우편번호</label>
+                                        <div class="form-input-with-btn">
+                                            <input type="text" class="form-input" value="12345" readonly>
+                                            <button type="button" class="btn btn-outline" onclick="openAddressSearch()">주소 검색</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">주소</label>
+                                        <input type="text" class="form-input" value="서울특별시 강남구 테헤란로 123" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">상세주소</label>
+                                        <input type="text" class="form-input" placeholder="상세주소를 입력하세요">
+                                    </div>
+                                </div>
+                                <div class="form-section" id="joinDateSection">
+                                    <div class="form-group">
+                                        <label class="form-label">회원가입일</label>
+                                        <input type="text" class="form-input" value="2024-01-01" disabled style="background: var(--bg-color);">
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mt-3" id="profileActions">
+                                    <button type="submit" class="btn btn-primary" id="saveProfileBtn">저장하기</button>
+                                    <button type="button" class="btn btn-outline" onclick="resetForm()" id="cancelProfileBtn">취소</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div style="margin-top: 16px; display: flex; gap: 8px; align-items: center; padding: 8px 12px; background: var(--bg-color); border-radius: var(--radius-md); font-size: 13px;">
+                            <span style="color: var(--text-secondary);">테스트:</span>
+                            <button type="button" class="btn btn-sm btn-outline" onclick="setTestMemberType('personal')" style="padding: 4px 10px; font-size: 12px;">개인회원</button>
+                            <button type="button" class="btn btn-sm btn-outline" onclick="setTestMemberType('business')" style="padding: 4px 10px; font-size: 12px;">기업회원</button>
+                            <span id="currentMemberTypeDisplay" style="margin-left: 8px; color: var(--primary-color); font-weight: 600;"></span>
+                        </div>
+                        <div class="card" id="businessInfoCard" style="margin-top: 24px; display: none;">
+                            <h3 class="card-title" style="margin-bottom: 24px;">기업 정보</h3>
+                            <div class="table-container">
+                                <table class="table">
+                                    <tr><th style="width: 150px;">회사명(상호)</th><td>주식회사 예시</td></tr>
+                                    <tr><th>사업자등록번호</th><td>123-45-67890</td></tr>
+                                    <tr><th>대표자명</th><td>홍길동</td></tr>
+                                    <tr><th>사업장 주소</th><td>서울시 강남구 테헤란로 123</td></tr>
+                                </table>
+                            </div>
+                            <div style="margin-top: 16px;">
+                                <button type="button" class="btn btn-primary" onclick="openModal('taxAutoApplyModal')">세금계산서 자동발행 신청</button>
+                            </div>
+                        </div>
+                        <div class="card" id="memberTypeCard" style="margin-top: 24px;">
+                            <div class="form-section" style="margin-bottom: 0;">
+                                <h3 class="form-section-title">회원유형 전환</h3>
+                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">현재 회원유형: <strong style="color: var(--primary-color);" id="currentMemberTypeText">개인회원</strong></p>
+                                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">아래 회원유형으로 전환하여 추가 서비스를 이용할 수 있습니다.</p>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                                    <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; text-align: center;">
+                                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">개인사업자 회원</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">세금계산서 발행 가능</div>
+                                        <a href="mypage-convert-business.html" class="btn btn-outline btn-sm">전환 신청</a>
+                                    </div>
+                                    <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; text-align: center;">
+                                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">법인사업자 회원</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">세금계산서 발행 가능</div>
+                                        <a href="mypage-convert-corporate.html" class="btn btn-outline btn-sm">전환 신청</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info" style="margin-top: 24px;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                <div style="font-size: 13px; line-height: 1.6;"><strong>메시지 발송 대행업체에 해당하는 회원일 경우</strong><br>충전 및 정산(세금계산서) 등의 분리를 위해서 위임하는 고객사별로 사업자 계정을 각각 생성하여야 합니다. 계정 생성을 원하시면 고객센터(<strong>1588-0000</strong>)로 문의 부탁 드립니다.</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+                            <a href="javascript:void(0)" onclick="openWithdrawalModal()" style="font-size: 14px; color: var(--text-secondary); text-decoration: underline;">회원 해지</a>
+                        </p>
+                    </div>
+
+                    <!-- 비밀번호변경 (폼 바로 표시) -->
+                    <div class="mypage-content-panel" id="panel-password">
+                        <div class="card" id="passwordCard">
+                            <form id="passwordForm">
+                                <div class="form-group" id="currentPasswordGroup">
+                                    <label class="form-label required">현재 비밀번호</label>
+                                    <input type="password" class="form-input" required id="currentPassword">
+                                </div>
+                                <div class="form-group" id="newPasswordGroup">
+                                    <label class="form-label required">새 비밀번호</label>
+                                    <input type="password" class="form-input" required id="newPassword">
+                                    <div class="form-help">8~16자 이내, 영문 대소문자, 숫자, 특수문자 중 3가지 이상 조합</div>
+                                </div>
+                                <div class="form-group" id="confirmPasswordGroup">
+                                    <label class="form-label required">새 비밀번호 확인</label>
+                                    <input type="password" class="form-input" required id="confirmPassword">
+                                </div>
+                                <div class="flex gap-2 mt-3" id="passwordActions">
+                                    <button type="submit" class="btn btn-primary" id="changePasswordBtn">변경하기</button>
+                                    <button type="button" class="btn btn-outline" onclick="resetPasswordForm()" id="cancelBtn">취소</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 발신번호관리 (목록 바로 표시) -->
+                    <div class="mypage-content-panel" id="panel-caller">
+                        <div class="alert alert-info" id="callerNumberNotice">
+                            <strong>발신번호 사전등록제 안내</strong>
+                            <p style="margin-top: 8px; font-size: 12px;">정보통신망법에 따라 발신번호 사전 등록이 의무화되었습니다. 발신번호 등록 후 영업일 기준 1~3일 이내 승인 처리됩니다.</p>
+                        </div>
+                        <div class="alert alert-warning" id="agencyNotice" style="margin-top: 16px;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                <div style="font-size: 13px; line-height: 1.6;"><strong>메시지 발송 대행업체에 해당하는 회원일 경우</strong><br>충전 및 정산(세금계산서) 등의 분리를 위해서 위임하는 고객사별로 사업자 계정을 각각 생성하여야 합니다. 계정 생성을 원하시면 고객센터(<strong>1588-0000</strong>)로 문의 부탁 드립니다.</div>
+                            </div>
+                        </div>
+                        <div class="card" id="callerNumberCard">
+                            <div class="flex-between mb-2">
+                                <h3 class="card-title">발신번호 목록</h3>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <a href="mypage-caller-number.html" class="btn btn-primary" id="registerCallerBtn">발신번호 등록</a>
+                                </div>
+                            </div>
+                            <div class="status-filter" id="statusFilter">
+                                <button type="button" class="status-filter-btn active" data-filter="all" onclick="filterCallerStatus('all')">전체</button>
+                                <button type="button" class="status-filter-btn" data-filter="pending" onclick="filterCallerStatus('pending')">승인대기</button>
+                                <button type="button" class="status-filter-btn" data-filter="approved" onclick="filterCallerStatus('approved')">승인완료</button>
+                                <button type="button" class="status-filter-btn" data-filter="rejected" onclick="filterCallerStatus('rejected')">반려</button>
+                            </div>
+                            <div class="table-container" id="callerNumberTableContainer">
+                                <table class="table" id="callerNumberTable">
+                                    <thead>
+                                        <tr>
+                                            <th>발신번호</th>
+                                            <th>통신사</th>
+                                            <th>용도</th>
+                                            <th>상태</th>
+                                            <th>등록일</th>
+                                            <th>승인일</th>
+                                            <th>관리</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="callerNumberTableBody">
+                                        <tr data-status="approved">
+                                            <td>010-1234-5678 <span style="color: var(--text-secondary);">(마케팅팀)</span></td>
+                                            <td>SKT</td>
+                                            <td>마케팅팀</td>
+                                            <td><span class="badge badge-success">승인완료</span></td>
+                                            <td>2024-01-10</td>
+                                            <td>2024-01-12</td>
+                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="deleteCallerNumberMypage(1)">삭제</button></td>
+                                        </tr>
+                                        <tr data-status="pending">
+                                            <td>02-1234-5678 <span style="color: var(--text-secondary);">(고객센터)</span></td>
+                                            <td>KT</td>
+                                            <td>고객센터</td>
+                                            <td><span class="badge badge-warning">승인대기</span></td>
+                                            <td>2024-01-15</td>
+                                            <td>-</td>
+                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="viewCallerDetailMypage(2)">상세보기</button></td>
+                                        </tr>
+                                        <tr data-status="rejected">
+                                            <td>010-9876-5432 <span style="color: var(--text-secondary);">(본인 휴대폰)</span></td>
+                                            <td>LG U+</td>
+                                            <td>본인 휴대폰</td>
+                                            <td><span class="badge badge-danger">반려</span></td>
+                                            <td>2024-01-08</td>
+                                            <td>-</td>
+                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="viewRejectionReasonMypage(3)">반려사유</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 이용내역 (포인트/마일리지 내역 - 결제관리 환불 탭과 동일) -->
+                    <div class="mypage-content-panel" id="panel-history">
+                        <div class="card" id="historyCard">
+                            <div class="card-header">
+                                <h3 class="card-title">포인트/마일리지 내역</h3>
+                            </div>
+                            <div class="history-tabs" id="historyTabs">
+                                <button type="button" class="history-tab active" onclick="switchHistoryTab('all')">전체</button>
+                                <button type="button" class="history-tab" onclick="switchHistoryTab('charge')">포인트 충전</button>
+                                <button type="button" class="history-tab" onclick="switchHistoryTab('mileage')">마일리지 적립</button>
+                                <button type="button" class="history-tab" onclick="switchHistoryTab('use')">사용 내역</button>
+                            </div>
+                            <div class="history-content active" id="historyAll">
+                                <div class="table-container">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>날짜</th>
+                                                <th>구분</th>
+                                                <th>내용</th>
+                                                <th>금액</th>
+                                                <th>잔액</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="historyAllBody"></tbody>
+                                    </table>
+                                </div>
+                                <div class="pagination" id="paginationAll"></div>
+                            </div>
+                            <div class="history-content" id="historyCharge">
+                                <div class="table-container">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>날짜</th>
+                                                <th>결제수단</th>
+                                                <th>금액</th>
+                                                <th>잔액</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="historyChargeBody"></tbody>
+                                    </table>
+                                </div>
+                                <div class="pagination" id="paginationCharge"></div>
+                            </div>
+                            <div class="history-content" id="historyMileage">
+                                <div class="table-container">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>날짜</th>
+                                                <th>적립 사유</th>
+                                                <th>금액</th>
+                                                <th>잔액</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="historyMileageBody"></tbody>
+                                    </table>
+                                </div>
+                                <div class="pagination" id="paginationMileage"></div>
+                            </div>
+                            <div class="history-content" id="historyUse">
+                                <div class="table-container">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>날짜</th>
+                                                <th>서비스</th>
+                                                <th>발송 건수</th>
+                                                <th>금액</th>
+                                                <th>잔액</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="historyUseBody"></tbody>
+                                    </table>
+                                </div>
+                                <div class="pagination" id="paginationUse"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 휴대폰 인증 모달 -->
+    <div class="modal-overlay" id="phoneVerifyModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">휴대폰 인증</h3>
+                <button class="modal-close" onclick="closeModal('phoneVerifyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">휴대폰번호</label>
+                    <input type="tel" class="form-input" value="010-XXXX-1234" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">인증번호</label>
+                    <input type="text" class="form-input" placeholder="6자리 인증번호를 입력하세요" maxlength="6">
+                    <div class="form-help">인증번호가 발송되었습니다. (유효시간: 3분)</div>
+                    <button type="button" class="btn btn-sm btn-outline mt-1">재전송</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('phoneVerifyModal')">취소</button>
+                <button class="btn btn-primary" onclick="verifyPhoneMypage()">확인</button>
+            </div>
+        </div>
+    </div>
+    <!-- 세금계산서 자동발행 신청 모달 -->
+    <div class="modal-overlay" id="taxAutoApplyModal" style="display: none;">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">세금계산서 자동발행 신청</h3>
+                <button class="modal-close" onclick="closeModal('taxAutoApplyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">세금계산서 담당자 정보를 입력 후 신청해 주세요.</p>
+                <div class="form-group">
+                    <label class="form-label required">담당자 이름</label>
+                    <input type="text" class="form-input" id="taxManagerName" value="홍길동" placeholder="담당자 이름">
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">담당자 연락처</label>
+                    <input type="text" class="form-input" id="taxManagerPhone" value="010-1234-5678" placeholder="010-0000-0000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">수신 이메일</label>
+                    <input type="email" class="form-input" id="taxManagerEmail" value="example@company.com" placeholder="세금계산서 수신 이메일">
+                    <div class="form-help">세금계산서가 발행되면 이메일로 자동 발송됩니다</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('taxAutoApplyModal')">취소</button>
+                <button class="btn btn-primary" onclick="submitTaxAutoApplyMypage()">신청</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 회원 해지 1단계: 안내 + 포인트/마일리지 + 다음 -->
+    <div class="modal-overlay" id="withdrawalConfirmModal" style="display: none;">
+        <div class="modal" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">회원 해지</h3>
+                <button class="modal-close" onclick="closeModal('withdrawalConfirmModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary);" id="withdrawalConfirmGreeting">홍길동님, 잠시만요 !</p>
+                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6;">해지하시면 고객님의 소중한 정보와 혜택이 모두 소멸됩니다.</p>
+                <div style="background: var(--bg-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-size: 14px; color: var(--text-secondary);">보유 포인트</span>
+                        <span style="font-size: 15px; font-weight: 600;" id="withdrawalConfirmPoints">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 14px; color: var(--text-secondary);">보유 마일리지</span>
+                        <span style="font-size: 15px; font-weight: 600;" id="withdrawalConfirmMileage">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('withdrawalConfirmModal')">취소</button>
+                <button class="btn btn-primary" onclick="nextToWithdrawalAuth()">다음</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 회원 해지 2단계: 본인 명의 휴대폰 인증 -->
+    <div class="modal-overlay" id="withdrawalAuthModal" style="display: none;">
+        <div class="modal" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">본인 명의 휴대폰 인증</h3>
+                <button class="modal-close" onclick="closeModal('withdrawalAuthModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">회원 해지를 위해 본인 명의 휴대폰 인증이 필요합니다.</p>
+                <div class="form-group">
+                    <label class="form-label required">휴대폰번호</label>
+                    <input type="tel" id="withdrawalAuthPhone" class="form-input" placeholder="010-1234-5678" value="010-1234-5678">
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">인증번호</label>
+                    <input type="text" id="withdrawalAuthCode" class="form-input" placeholder="6자리 인증번호 입력" maxlength="6">
+                    <div class="form-help">인증번호가 발송되었습니다. (유효시간: 3분)</div>
+                    <button type="button" class="btn btn-sm btn-outline mt-1" onclick="resendWithdrawalAuthCode()">재전송</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeWithdrawalAuth()">취소</button>
+                <button class="btn btn-primary" onclick="submitWithdrawalAuth()">인증하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        // 모달 (마이페이지 내 패널용)
+        function openModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) { modal.style.display = 'flex'; modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        }
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) { modal.classList.remove('active'); modal.style.display = 'none'; document.body.style.overflow = ''; }
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                var m = document.querySelector('.modal-overlay.active');
+                if (m && m.id) closeModal(m.id);
+            }
+        });
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) { e.target.style.display = 'none'; document.body.style.overflow = ''; }
+        });
+        // 내정보수정: 회원유형 테스트·표시
+        function setTestMemberType(type) {
+            try { localStorage.setItem('memberType', type); } catch (e) {}
+            updateMemberTypeDisplay();
+            if (typeof showToast === 'function') showToast('회원 유형이 ' + (type === 'business' ? '기업회원' : '개인회원') + '으로 설정되었습니다.', 'success');
+        }
+        function updateMemberTypeDisplay() {
+            var type = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
+            var typeText = type === 'business' ? '기업회원' : '개인회원';
+            var display = document.getElementById('currentMemberTypeDisplay');
+            var textEl = document.getElementById('currentMemberTypeText');
+            var dashboardMemberTypeEl = document.getElementById('dashboardMemberType');
+            var businessCard = document.getElementById('businessInfoCard');
+            var memberTypeCard = document.getElementById('memberTypeCard');
+            if (display) display.textContent = typeText;
+            if (textEl) textEl.textContent = typeText;
+            if (dashboardMemberTypeEl) dashboardMemberTypeEl.textContent = typeText;
+            if (businessCard) businessCard.style.display = type === 'business' ? 'block' : 'none';
+            if (memberTypeCard) memberTypeCard.style.display = type === 'business' ? 'none' : 'block';
+        }
+        function checkEmail() { if (typeof showToast === 'function') showToast('사용 가능한 이메일입니다.', 'success'); }
+        function openAddressSearch() { if (typeof showToast === 'function') showToast('주소 검색 창을 엽니다.', 'info'); }
+        function resetForm() { if (confirm('변경사항을 취소하시겠습니까?')) document.getElementById('profileForm').reset(); }
+        function verifyPhoneMypage() { document.getElementById('phoneVerifyStatus').style.display = 'flex'; closeModal('phoneVerifyModal'); if (typeof showToast === 'function') showToast('인증이 완료되었습니다.', 'success'); }
+        function submitTaxAutoApplyMypage() { closeModal('taxAutoApplyModal'); if (typeof showToast === 'function') showToast('세금계산서 자동발행 신청이 접수되었습니다.', 'success'); }
+        document.getElementById('profileForm').addEventListener('submit', function(e) { e.preventDefault(); if (typeof showToast === 'function') showToast('저장되었습니다.', 'success'); });
+        // 회원 해지
+        function openWithdrawalModal() {
+            var nameEl = document.getElementById('profileUserName');
+            var name = (nameEl && nameEl.value) ? nameEl.value.trim() : '고객';
+            document.getElementById('withdrawalConfirmGreeting').textContent = name + '님, 잠시만요 !';
+            var pointsEl = document.getElementById('dashboardPoints');
+            var mileageEl = document.getElementById('dashboardMileage');
+            document.getElementById('withdrawalConfirmPoints').textContent = (pointsEl ? pointsEl.textContent : '0') + ' P';
+            document.getElementById('withdrawalConfirmMileage').textContent = (mileageEl ? mileageEl.textContent : '0') + ' M';
+            openModal('withdrawalConfirmModal');
+        }
+        function nextToWithdrawalAuth() {
+            closeModal('withdrawalConfirmModal');
+            openModal('withdrawalAuthModal');
+        }
+        function closeWithdrawalAuth() {
+            closeModal('withdrawalAuthModal');
+        }
+        function resendWithdrawalAuthCode() {
+            if (typeof showToast === 'function') showToast('인증번호가 재전송되었습니다.', 'info');
+        }
+        function submitWithdrawalAuth() {
+            var code = document.getElementById('withdrawalAuthCode');
+            if (!code || !code.value.trim()) {
+                if (typeof showToast === 'function') showToast('인증번호를 입력해 주세요.', 'info');
+                return;
+            }
+            closeModal('withdrawalAuthModal');
+            if (typeof showToast === 'function') showToast('인증이 완료되었습니다. 회원 해지가 처리됩니다.', 'success');
+        }
+        // 비밀번호변경
+        function showToast(message, type) {
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position:fixed;top:20px;right:20px;padding:16px 24px;background:var(--surface-color);border:1px solid var(--border-color);border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.15);z-index:2000;font-size:14px;';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(function() { toast.remove(); }, 3000);
+        }
+        function resetPasswordForm() { if (confirm('변경사항을 취소하시겠습니까?')) document.getElementById('passwordForm').reset(); }
+        document.getElementById('passwordForm').addEventListener('submit', function(e) { e.preventDefault(); showToast('비밀번호가 변경되었습니다.', 'success'); });
+        // 발신번호관리 (목록 필터·버튼)
+        function filterCallerStatus(status) {
+            document.querySelectorAll('#statusFilter .status-filter-btn').forEach(function(btn) {
+                btn.classList.toggle('active', btn.getAttribute('data-filter') === status);
+            });
+            document.querySelectorAll('#callerNumberTableBody tr').forEach(function(tr) {
+                var s = tr.getAttribute('data-status');
+                tr.style.display = (status === 'all' || s === status) ? '' : 'none';
+            });
+        }
+        function deleteCallerNumberMypage(id) { if (confirm('해당 발신번호를 삭제하시겠습니까?')) { var tr = event.target.closest('tr'); if (tr) tr.remove(); showToast('삭제되었습니다.', 'success'); } }
+        function viewCallerDetailMypage(id) { showToast('상세보기는 발신번호관리 페이지에서 확인할 수 있습니다.', 'info'); }
+        function viewRejectionReasonMypage(id) { alert('반려 사유: 제출 서류가 불명확합니다. 고객센터(1588-0000)로 문의해 주세요.'); }
+
+        // LNB 패널 전환
+        function switchMypagePanel(panelId) {
+            document.querySelectorAll('.mypage-lnb-item').forEach(function(el) {
+                el.classList.toggle('active', el.getAttribute('data-panel') === panelId);
+            });
+            document.querySelectorAll('.mypage-content-panel').forEach(function(el) {
+                el.classList.toggle('active', el.id === 'panel-' + panelId);
+            });
+            if (panelId === 'history') {
+                renderTable('all');
+            }
+        }
+
+        // 대시보드 요약: 회원유형 (localStorage와 동기화)
+        (function syncDashboardSummary() {
+            var memberTypeEl = document.getElementById('dashboardMemberType');
+            if (memberTypeEl) {
+                var memberType = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
+                var typeText = { personal: '개인회원', business: '기업회원', election: '선거회원' }[memberType] || '개인회원';
+                memberTypeEl.textContent = typeText;
+            }
+        })();
+
+        // 이용내역: payment-refund와 동일 데이터·렌더링
+        var ITEMS_PER_PAGE = 20;
+        var currentPages = { all: 1, charge: 1, mileage: 1, use: 1 };
+        var allHistoryData = [
+            { date: '2024-11-19 14:30', type: 'charge', typeLabel: '충전', content: '포인트 충전 (신용카드)', amount: '+100,000', balance: '1,000,000' },
+            { date: '2024-11-18 16:20', type: 'use', typeLabel: '사용', content: 'SMS 발송 (500건)', amount: '-10,000', balance: '900,000' },
+            { date: '2024-11-18 10:15', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+12.6', balance: '92.6' },
+            { date: '2024-11-17 15:00', type: 'use', typeLabel: '사용', content: 'LMS 발송 (300건)', amount: '-15,000', balance: '910,000' },
+            { date: '2024-11-17 14:30', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+15.0', balance: '80.0' },
+            { date: '2024-11-16 11:00', type: 'use', typeLabel: '사용', content: 'SMS 발송 (800건)', amount: '-16,000', balance: '925,000' },
+            { date: '2024-11-16 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+16.0', balance: '65.0' },
+            { date: '2024-11-15 09:15', type: 'charge', typeLabel: '충전', content: '포인트 충전 (실시간계좌이체)', amount: '+200,000', balance: '941,000' },
+            { date: '2024-11-14 11:30', type: 'use', typeLabel: '사용', content: '알림톡 발송 (1,000건)', amount: '-30,000', balance: '741,000' },
+            { date: '2024-11-14 11:30', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+30.0', balance: '49.0' },
+            { date: '2024-11-13 16:00', type: 'use', typeLabel: '사용', content: 'SMS 발송 (200건)', amount: '-4,000', balance: '771,000' },
+            { date: '2024-11-13 15:00', type: 'use', typeLabel: '사용', content: 'LMS 발송 (150건)', amount: '-7,500', balance: '775,000' },
+            { date: '2024-11-12 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+4.0', balance: '19.0' },
+            { date: '2024-11-12 09:00', type: 'use', typeLabel: '사용', content: 'MMS 발송 (50건)', amount: '-5,000', balance: '782,500' },
+            { date: '2024-11-11 14:30', type: 'use', typeLabel: '사용', content: 'SMS 발송 (250건)', amount: '-5,000', balance: '787,500' },
+            { date: '2024-11-11 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+5.0', balance: '15.0' },
+            { date: '2024-11-10 16:45', type: 'charge', typeLabel: '충전', content: '포인트 충전 (가상계좌)', amount: '+300,000', balance: '792,500' },
+            { date: '2024-11-10 11:00', type: 'use', typeLabel: '사용', content: '알림톡 발송 (300건)', amount: '-9,000', balance: '492,500' },
+            { date: '2024-11-09 14:20', type: 'use', typeLabel: '사용', content: 'MMS 발송 (100건)', amount: '-10,000', balance: '501,500' },
+            { date: '2024-11-09 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+10.0', balance: '10.0' },
+        ];
+        var chargeHistoryData = allHistoryData.filter(function(item) { return item.type === 'charge'; });
+        var mileageHistoryData = allHistoryData.filter(function(item) { return item.type === 'mileage'; });
+        var useHistoryData = allHistoryData.filter(function(item) { return item.type === 'use' || item.type === 'refund'; });
+
+        function renderTable(tabType) {
+            var data, tbody, pagination;
+            switch(tabType) {
+                case 'all': data = allHistoryData; tbody = document.getElementById('historyAllBody'); pagination = document.getElementById('paginationAll'); break;
+                case 'charge': data = chargeHistoryData; tbody = document.getElementById('historyChargeBody'); pagination = document.getElementById('paginationCharge'); break;
+                case 'mileage': data = mileageHistoryData; tbody = document.getElementById('historyMileageBody'); pagination = document.getElementById('paginationMileage'); break;
+                case 'use': data = useHistoryData; tbody = document.getElementById('historyUseBody'); pagination = document.getElementById('paginationUse'); break;
+            }
+            var currentPage = currentPages[tabType];
+            var totalPages = Math.ceil(data.length / ITEMS_PER_PAGE) || 1;
+            var startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            var endIndex = startIndex + ITEMS_PER_PAGE;
+            var pageData = data.slice(startIndex, endIndex);
+
+            var html = '';
+            pageData.forEach(function(item) {
+                var amountClass = item.amount.indexOf('+') === 0 ? 'amount-plus' : 'amount-minus';
+                if (tabType === 'all') {
+                    html += '<tr><td>' + item.date + '</td><td><span class="status-badge status-' + item.type + '">' + item.typeLabel + '</span></td><td>' + item.content + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
+                } else if (tabType === 'charge') {
+                    var method = item.content.replace('포인트 충전 (', '').replace(')', '');
+                    html += '<tr><td>' + item.date + '</td><td>' + method + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
+                } else if (tabType === 'mileage') {
+                    html += '<tr><td>' + item.date + '</td><td>' + item.content + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
+                } else if (tabType === 'use') {
+                    var serviceParts = item.content.split(' (');
+                    var service = serviceParts[0];
+                    var count = serviceParts[1] ? serviceParts[1].replace(')', '') : '-';
+                    html += '<tr><td>' + item.date + '</td><td>' + service + '</td><td>' + count + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
+                }
+            });
+            tbody.innerHTML = html;
+
+            if (pagination) renderPagination(tabType, currentPage, totalPages, data.length, pagination);
+        }
+
+        function renderPagination(tabType, currentPage, totalPages, totalItems, container) {
+            if (totalPages <= 1) { container.innerHTML = ''; return; }
+            var html = '';
+            html += '<button class="pagination-btn" ' + (currentPage === 1 ? 'disabled' : '') + ' onclick="goToHistoryPage(\'' + tabType + '\', ' + (currentPage - 1) + ')">&lsaquo;</button>';
+            var startPage = Math.max(1, currentPage - 2);
+            var endPage = Math.min(totalPages, currentPage + 2);
+            for (var i = startPage; i <= endPage; i++) {
+                html += '<button class="pagination-btn' + (i === currentPage ? ' active' : '') + '" onclick="goToHistoryPage(\'' + tabType + '\', ' + i + ')">' + i + '</button>';
+            }
+            html += '<button class="pagination-btn" ' + (currentPage === totalPages ? 'disabled' : '') + ' onclick="goToHistoryPage(\'' + tabType + '\', ' + (currentPage + 1) + ')">&rsaquo;</button>';
+            html += '<span class="pagination-info">' + (((currentPage - 1) * ITEMS_PER_PAGE + 1)) + '-' + Math.min(currentPage * ITEMS_PER_PAGE, totalItems) + ' / 총 ' + totalItems + '건</span>';
+            container.innerHTML = html;
+        }
+
+        function goToHistoryPage(tabType, page) {
+            currentPages[tabType] = page;
+            renderTable(tabType);
+        }
+
+        function switchHistoryTab(tab) {
+            document.querySelectorAll('.history-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.history-content').forEach(function(c) { c.classList.remove('active'); });
+            var tabs = document.querySelectorAll('.history-tab');
+            if (tab === 'all') { tabs[0].classList.add('active'); document.getElementById('historyAll').classList.add('active'); }
+            else if (tab === 'charge') { tabs[1].classList.add('active'); document.getElementById('historyCharge').classList.add('active'); }
+            else if (tab === 'mileage') { tabs[2].classList.add('active'); document.getElementById('historyMileage').classList.add('active'); }
+            else if (tab === 'use') { tabs[3].classList.add('active'); document.getElementById('historyUse').classList.add('active'); }
+            renderTable(tab);
+        }
+
+        function applyMypagePanelFromHash() {
+            var hash = (location.hash || '').replace(/^#/, '');
+            if (hash && ['profile', 'password', 'caller', 'history'].indexOf(hash) !== -1) {
+                switchMypagePanel(hash);
+            } else {
+                // 해시 없거나 잘못된 해시면 내정보수정(profile) 표시
+                switchMypagePanel('profile');
+            }
+        }
+        window.switchMypagePanel = switchMypagePanel;
+        window.applyMypagePanelFromHash = applyMypagePanelFromHash;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initDropdownMenus === 'function') initDropdownMenus();
+            updateMemberTypeDisplay();
+            applyMypagePanelFromHash();
+        });
+        window.addEventListener('hashchange', applyMypagePanelFromHash);
+    </script>
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+</body>
+</html>

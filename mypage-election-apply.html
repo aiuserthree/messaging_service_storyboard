@@ -65,10 +65,6 @@
                 <h2>선거회원 전환 신청</h2>
                 <p class="page-description">선거문자 발송을 위해 선거회원 전환 신청을 진행합니다. 담당자 승인 후 이용 가능합니다.</p>
             </div>
-            <div class="alert alert-warning">
-                <strong>선거용 발신번호를 등록해주세요.</strong>
-                <p style="margin-top: 8px; font-size: 13px;">선거회원은 <strong>1개의 발신번호</strong>만 등록 가능합니다.</p>
-            </div>
             <form id="electionApplyForm">
                 <div class="card">
                     <h3 class="form-section-title">후보자 정보</h3>
@@ -84,6 +80,9 @@
                         <label class="form-label required">선거구</label>
                         <input type="text" class="form-input" id="electionDistrict" placeholder="예: 서울 강남구 갑" required>
                     </div>
+                    <div class="alert alert-warning" style="margin-top: 8px; margin-bottom: 0;">
+                        <strong>선거관리위원회에 신고한 정보와 일치하여야 합니다.</strong>
+                    </div>
                 </div>
                 <div class="card">
                     <h3 class="form-section-title">서류 제출</h3>
@@ -97,17 +96,21 @@
                         <input type="file" class="form-input" accept=".pdf,.jpg,.png" required>
                         <div class="form-help">선관위에서 발급받은 후보자 등록 증명서</div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label required">발신번호 등록 증명 서류</label>
-                        <input type="file" class="form-input" accept=".pdf,.jpg,.png" required>
-                        <div class="form-help">통신서비스이용증명원 등</div>
-                    </div>
+                </div>
+                <div class="alert alert-warning">
+                    <strong>선거용 발신번호를 등록해주세요.</strong>
+                    <p style="margin-top: 8px; font-size: 13px;">선거회원은 <strong>1개의 발신번호</strong>만 등록 가능합니다.</p>
                 </div>
                 <div class="card">
                     <h3 class="form-section-title">발신번호 등록 (1개만 등록 가능)</h3>
                     <div class="form-group">
                         <label class="form-label required">발신번호</label>
                         <input type="tel" class="form-input" id="electionCallerNumber" placeholder="010-0000-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">발신번호 등록 증명 서류</label>
+                        <input type="file" class="form-input" accept=".pdf,.jpg,.png" required>
+                        <div class="form-help">통신서비스이용증명원 등</div>
                     </div>
                 </div>
                 <div class="card">

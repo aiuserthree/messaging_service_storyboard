@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>환불신청 - 톡벨</title>
+    <script src="js/header.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <style>
+        .refund-apply-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); }
+        .refund-apply-tab { padding: 14px 24px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-size: 15px; font-weight: 600; color: var(--text-secondary); transition: all 0.2s; }
+        .refund-apply-tab:hover { color: var(--text-primary); }
+        .refund-apply-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .refund-apply-panel { display: none; }
+        .refund-apply-panel.active { display: block; }
+        .balance-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+        .balance-card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 20px; text-align: center; }
+        .balance-card.highlight { background: rgba(37, 99, 235, 0.08); border-color: var(--primary-color); }
+        .balance-card-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+        .balance-card-value { font-size: 22px; font-weight: 700; color: var(--text-primary); }
+        .calc-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color); }
+        .calc-row.total { border-bottom: none; font-weight: 600; margin-top: 8px; }
+        .file-upload-wrap { border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 24px; text-align: center; background: var(--bg-color); }
+        .file-upload-wrap input[type="file"] { display: none; }
+        .file-upload-wrap label { cursor: pointer; color: var(--primary-color); font-weight: 500; }
+        .terms-box { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin: 12px 0; max-height: 120px; overflow-y: auto; font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+        .agree-row { display: flex; align-items: flex-start; gap: 10px; margin: 16px 0; }
+        .agree-row input[type="checkbox"] { margin-top: 4px; }
+        @media (max-width: 768px) { .balance-summary { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>document.write(createHeader('payment'));</script>
+        <main class="main-content">
+            <div class="page-header">
+                <h2>환불신청</h2>
+                <p class="page-description">포인트 환불을 신청하고 환불 신청 내역을 확인합니다</p>
+            </div>
+
+            <div class="refund-apply-tabs">
+                <button type="button" class="refund-apply-tab active" data-tab="apply" onclick="switchRefundTab('apply')">환불신청</button>
+                <button type="button" class="refund-apply-tab" data-tab="history" onclick="switchRefundTab('history')">환불신청내역</button>
+            </div>
+
+            <!-- 환불신청 탭 -->
+            <div class="refund-apply-panel active" id="panel-apply">
+                <div class="balance-summary" id="refundBalanceSummary" data-remaining-points="1000000">
+                    <div class="balance-card highlight">
+                        <div class="balance-card-label">잔여 포인트</div>
+                        <div class="balance-card-value" id="refundRemainingPoints">1,000,000 P</div>
+                    </div>
+                    <div class="balance-card">
+                        <div class="balance-card-label">환불 금액 (수수료 10% 차감 후)</div>
+                        <div class="balance-card-value" id="refundableAmount">900,000 P</div>
+                        <div class="balance-card-label" style="font-size: 12px; margin-top: 4px;">잔여 포인트 전액 환불</div>
+                    </div>
+                    <div class="balance-card">
+                        <div class="balance-card-label">마일리지</div>
+                        <div class="balance-card-value" id="refundMileage">92.6</div>
+                        <div class="balance-card-label" style="font-size: 12px; margin-top: 4px;">환불 불가</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title" style="margin-bottom: 20px;">환불 신청</h3>
+                    <p class="form-help" style="margin-bottom: 20px;">잔여 포인트 전액이 환불됩니다. 수수료 10% 차감 후 금액이 계좌로 입금됩니다.</p>
+                    <div class="calc-row"><span>환불 대상 (잔여 포인트 전액)</span><span id="refundTargetDisplay">1,000,000 P</span></div>
+                    <div class="calc-row"><span>환불 수수료 (10%)</span><span id="refundFeeDisplay">-100,000 P</span></div>
+                    <div class="calc-row total"><span>실제 환불 금액</span><span id="refundFinalDisplay">900,000 P</span></div>
+
+                    <div class="form-group" style="margin-top: 24px;">
+                        <label class="form-label required">환불 받을 계좌 정보</label>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <select class="form-select" id="refundBank">
+                                <option value="">은행 선택</option>
+                                <option value="kb">KB국민은행</option>
+                                <option value="shinhan">신한은행</option>
+                                <option value="woori">우리은행</option>
+                                <option value="hana">하나은행</option>
+                                <option value="nh">NH농협은행</option>
+                                <option value="kakao">카카오뱅크</option>
+                                <option value="kbank">케이뱅크</option>
+                                <option value="toss">토스뱅크</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <input type="text" class="form-input" id="refundAccountNumber" placeholder="계좌번호 ('-' 없이 숫자만)">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-input" id="refundAccountHolder" placeholder="예금주명">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required">통장사본</label>
+                        <div class="file-upload-wrap">
+                            <input type="file" id="refundBankCopy" accept="image/*,.pdf" onchange="handleBankCopy(this)">
+                            <label for="refundBankCopy" id="refundBankCopyLabel">파일 선택 (이미지 또는 PDF)</label>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">환불 받을 계좌의 통장사본을 업로드해 주세요</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">환불 사유 (선택)</label>
+                        <textarea class="form-textarea" id="refundReasonText" placeholder="환불 사유를 입력해 주세요" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required">개인정보수집·이용 동의</label>
+                        <div class="terms-box">
+                            환불 신청 및 처리와 관련하여 아래와 같이 개인정보를 수집·이용합니다.<br>
+                            • 수집 항목: 성명, 연락처, 계좌정보(은행명, 계좌번호, 예금주)<br>
+                            • 수집·이용 목적: 환불 신청 접수 및 환불금 지급<br>
+                            • 보유·이용 기간: 환불 처리 완료 후 5년 (전자상거래 등에서의 소비자 보호에 관한 법률)<br>
+                            • 동의 거부 시: 환불 신청이 불가할 수 있습니다.
+                        </div>
+                        <div class="agree-row">
+                            <input type="checkbox" id="refundPrivacyAgree" name="refundPrivacyAgree">
+                            <label for="refundPrivacyAgree">개인정보 수집·이용에 동의합니다</label>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-danger btn-lg" style="width: 100%;" onclick="submitRefundApply()">환불 신청하기</button>
+                </div>
+            </div>
+
+            <!-- 환불신청내역 탭 -->
+            <div class="refund-apply-panel" id="panel-history">
+                <div class="card">
+                    <h3 class="card-title" style="margin-bottom: 20px;">환불 신청 내역</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>신청일</th>
+                                    <th>환불금액</th>
+                                    <th>상태</th>
+                                    <th>처리일</th>
+                                    <th>비고</th>
+                                </tr>
+                            </thead>
+                            <tbody id="refundHistoryBody">
+                                <tr>
+                                    <td>2024-11-20 14:30</td>
+                                    <td>90,000 P</td>
+                                    <td><span class="badge badge-success">환불완료</span></td>
+                                    <td>2024-11-22</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>2024-11-15 10:00</td>
+                                    <td>50,000 P</td>
+                                    <td><span class="badge badge-warning">처리중</span></td>
+                                    <td>-</td>
+                                    <td>영업일 기준 7일 이내</td>
+                                </tr>
+                                <tr>
+                                    <td>2024-11-01 09:00</td>
+                                    <td>200,000 P</td>
+                                    <td><span class="badge badge-danger">반려</span></td>
+                                    <td>2024-11-02</td>
+                                    <td>계좌정보 불일치</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/common.js"></script>
+    <script>
+        function switchRefundTab(tabId) {
+            document.querySelectorAll('.refund-apply-tab').forEach(function(t) { t.classList.toggle('active', t.getAttribute('data-tab') === tabId); });
+            document.querySelectorAll('.refund-apply-panel').forEach(function(p) { p.classList.toggle('active', p.id === 'panel-' + tabId); });
+        }
+        function updateRefundCalc() {
+            var el = document.getElementById('refundBalanceSummary');
+            var remaining = el ? parseInt(el.getAttribute('data-remaining-points'), 10) || 0 : 0;
+            if (remaining < 0) remaining = 0;
+            var fee = Math.floor(remaining * 0.1);
+            var finalAmount = remaining - fee;
+            document.getElementById('refundTargetDisplay').textContent = (remaining).toLocaleString() + ' P';
+            document.getElementById('refundFeeDisplay').textContent = '-' + (fee).toLocaleString() + ' P';
+            document.getElementById('refundFinalDisplay').textContent = (finalAmount).toLocaleString() + ' P';
+            document.getElementById('refundRemainingPoints').textContent = (remaining).toLocaleString() + ' P';
+            document.getElementById('refundableAmount').textContent = (finalAmount).toLocaleString() + ' P';
+        }
+        function handleBankCopy(input) {
+            var label = document.getElementById('refundBankCopyLabel');
+            if (input.files && input.files.length) label.textContent = input.files[0].name;
+            else label.textContent = '파일 선택 (이미지 또는 PDF)';
+        }
+        function submitRefundApply() {
+            var el = document.getElementById('refundBalanceSummary');
+            var remaining = el ? parseInt(el.getAttribute('data-remaining-points'), 10) || 0 : 0;
+            var bank = document.getElementById('refundBank').value;
+            var account = document.getElementById('refundAccountNumber').value;
+            var holder = document.getElementById('refundAccountHolder').value;
+            var file = document.getElementById('refundBankCopy').files.length;
+            var agree = document.getElementById('refundPrivacyAgree').checked;
+            if (remaining <= 0) { alert('환불할 잔여 포인트가 없습니다.'); return; }
+            if (!bank) { alert('은행을 선택해 주세요.'); return; }
+            if (!account || !holder) { alert('계좌번호와 예금주를 입력해 주세요.'); return; }
+            if (!file) { alert('통장사본을 업로드해 주세요.'); return; }
+            if (!agree) { alert('개인정보 수집·이용에 동의해 주세요.'); return; }
+            if (!confirm('환불을 신청하시겠습니까?\n영업일 기준 7일 이내에 처리됩니다.')) return;
+            var fee = Math.floor(remaining * 0.1);
+            var finalAmount = remaining - fee;
+            window.location.href = 'payment-refund-complete.html?target=' + remaining + '&amount=' + finalAmount;
+        }
+        function applyRefundTabFromHash() {
+            var hash = (window.location.hash || '').replace('#', '');
+            if (hash === 'history') switchRefundTab('history');
+            else switchRefundTab('apply');
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            initDropdownMenus();
+            updateRefundCalc();
+            applyRefundTabFromHash();
+        });
+        window.addEventListener('hashchange', applyRefundTabFromHash);
+    </script>
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+</body>
+</html>

@@ -3,6 +3,7 @@ function createFooter() {
     return `
         <footer class="footer">
             <div class="footer-top-row">
+                <a href="support-center.html" class="footer-top-link">고객센터</a>
                 <a href="support-notice.html" class="footer-top-link">공지사항</a>
                 <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('terms')">이용약관</a>
                 <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('privacy')">개인정보처리방침</a>

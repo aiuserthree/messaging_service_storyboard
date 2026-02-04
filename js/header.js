@@ -80,6 +80,7 @@ function createHeader(activeMenu = '') {
         'payment-deposit-distribution.html': 'payment',
         'payment-history.html': 'payment',
         'payment-tax.html': 'payment',
+        'mypage.html': 'mypage',
         'mypage-profile.html': 'mypage',
         'mypage-password.html': 'mypage',
         'mypage-caller-number.html': 'mypage',
@@ -187,16 +188,17 @@ function createHeader(activeMenu = '') {
                 </div>
             </div>
             <div class="header-dropdown-wrapper" id="userDropdown">
-                <button class="btn btn-sm btn-outline header-dropdown-btn" style="padding: 6px 12px; font-size: 12px;">
-                    홍길동
+                <a href="mypage.html" class="btn btn-sm btn-outline header-dropdown-btn" style="padding: 6px 12px; font-size: 12px; text-decoration: none; color: inherit;">
+                    마이페이지
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px;">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
-                </button>
+                </a>
                 <div class="header-dropdown-menu">
-                    <a href="mypage-profile.html" class="header-dropdown-item">내 정보 수정</a>
-                    <a href="mypage-password.html" class="header-dropdown-item">비밀번호 변경</a>
-                    <a href="mypage-caller-number.html" class="header-dropdown-item">발신번호 관리</a>
+                    <a href="mypage.html#profile" class="header-dropdown-item" data-mypage-panel="profile">내 정보 수정</a>
+                    <a href="mypage.html#password" class="header-dropdown-item" data-mypage-panel="password">비밀번호 변경</a>
+                    <a href="mypage.html#caller" class="header-dropdown-item" data-mypage-panel="caller">발신번호 관리</a>
+                    <a href="mypage.html#history" class="header-dropdown-item" data-mypage-panel="history">이용내역</a>
                     <div class="header-dropdown-divider"></div>
                     <a href="#" class="header-dropdown-item" onclick="handleLogout(); return false;">로그아웃</a>
                 </div>
@@ -247,6 +249,10 @@ function createHeader(activeMenu = '') {
                 opacity: 1;
                 visibility: visible;
                 transform: translateY(0);
+            }
+            .header-dropdown-wrapper.force-close .header-dropdown-menu {
+                opacity: 0;
+                visibility: hidden;
             }
             
             .header-dropdown-item {
@@ -387,9 +393,9 @@ function initHeaderDropdowns() {
             }, 200);
         });
         
-        // 버튼 클릭 시 토글
+        // 버튼 클릭 시 토글 (링크인 경우 마이페이지 등으로 이동하므로 토글하지 않음)
         const btn = wrapper.querySelector('.header-dropdown-btn');
-        if (btn) {
+        if (btn && btn.tagName !== 'A') {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -413,6 +419,34 @@ function initHeaderDropdowns() {
             });
         }
     });
+
+    // 프로필 드롭다운: 마이페이지 메뉴 클릭 시 패널 전환 후 드롭다운 닫기 (force-close로 호버 중에도 닫힘)
+    document.addEventListener('click', function(e) {
+        var link = e.target.closest('.header-dropdown-item[data-mypage-panel]');
+        if (!link) return;
+        var panel = link.getAttribute('data-mypage-panel');
+        var currentPage = (window.location.pathname || '').split('/').pop() || '';
+        if (currentPage === 'mypage.html' && panel && typeof window.switchMypagePanel === 'function') {
+            e.preventDefault();
+            window.location.hash = panel;
+            window.switchMypagePanel(panel);
+        }
+        var userDropdown = document.getElementById('userDropdown');
+        if (userDropdown) {
+            userDropdown.classList.remove('open');
+            userDropdown.classList.add('force-close');
+        }
+    });
+
+    // 호버 시 force-close 제거 (다음 호버에서 메뉴 다시 열리도록)
+    headerDropdowns.forEach(wrapper => {
+        wrapper.addEventListener('mouseenter', function() {
+            wrapper.classList.remove('force-close');
+        });
+        wrapper.addEventListener('mouseleave', function() {
+            wrapper.classList.remove('force-close');
+        });
+    });
 }
 
 // 플로팅 메뉴 생성 함수
@@ -433,6 +467,14 @@ function createFloatingMenu() {
                         </svg>
                     </span>
                     <span class="floating-menu-label">고객센터</span>
+                </a>
+                <a href="support-event.html" class="floating-menu-item" title="이벤트">
+                    <span class="floating-menu-icon-item pink">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/>
+                        </svg>
+                    </span>
+                    <span class="floating-menu-label">이벤트</span>
                 </a>
                 <a href="message-send-general.html" class="floating-menu-item" title="일반문자 발송">
                     <span class="floating-menu-icon-item blue">
@@ -713,6 +755,10 @@ function createFloatingMenu() {
                 opacity: 1;
                 visibility: visible;
                 transform: translateY(0);
+            }
+            .header-dropdown-wrapper.force-close .header-dropdown-menu {
+                opacity: 0;
+                visibility: hidden;
             }
             
             .header-dropdown-item {

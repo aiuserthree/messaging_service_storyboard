@@ -542,12 +542,24 @@
             handleReset();
         }
 
-        // 드롭다운 메뉴 초기화
+        // URL 해시에 따라 탭 표시: #history → 1:1 문의내역, #form 또는 없음 → 1:1 문의하기
+        function applyInquiryTabFromHash() {
+            var hash = (window.location.hash || '#form').replace('#', '');
+            if (hash === 'history') {
+                switchInquiryTab('history');
+            } else {
+                switchInquiryTab('form');
+            }
+        }
+
+        // 드롭다운 메뉴 초기화 및 해시 반영
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof initDropdownMenus === 'function') {
                 initDropdownMenus();
             }
+            applyInquiryTabFromHash();
         });
+        window.addEventListener('hashchange', applyInquiryTabFromHash);
     </script>
 
     <script src="js/footer.js"></script>
