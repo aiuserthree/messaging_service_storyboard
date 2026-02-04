@@ -1289,13 +1289,6 @@ body {
                             <input type="text" class="form-input" id="messageTitle" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40" oninput="updatePreview()">
                         </div>
 
-                        <!-- (광고) 옆 문구 -->
-                        <div class="form-group" style="margin-bottom: 12px;" id="adPrefixGroup">
-                            <label class="form-label required">(광고) 옆 문구</label>
-                            <input type="text" class="form-input" id="adPrefixText" placeholder="(광고) 옆에 표시할 문구를 입력하세요" oninput="updateAdPrefixPreview()" required>
-                            <div class="form-help">(광고) 문구 옆에 추가로 표시할 내용을 입력하세요 (필수사항)</div>
-                        </div>
-
                         <!-- 메시지 내용 -->
                         <div class="form-group" id="messageContentGroup">
                             <label class="form-label required">메시지 내용</label>
@@ -2216,10 +2209,6 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePreview();
         }
 
-        function updateAdPrefixPreview() {
-            updatePreview();
-        }
-
         function processRecipients(value) {
             const numbers = value.split(/[,\n]/).map(n => n.trim()).filter(n => n);
             const uniqueNumbers = [...new Set(numbers)];
@@ -2264,14 +2253,13 @@ document.addEventListener('DOMContentLoaded', function() {
         function updateByteCounter() {
             const content = document.getElementById('messageContent').value;
             const title = document.getElementById('messageTitle').value;
-            const adPrefixText = document.getElementById('adPrefixText').value;
             const rejectInput = document.getElementById('rejectNumberInput').value;
             const rejectText = rejectInput ? '무료수신거부 080-' + rejectInput : '무료수신거부 080-';
-            const adPrefix = '(광고)';
-            const fullText = adPrefix + (adPrefixText ? ' ' + adPrefixText : '') + ' ' + content + ' ' + rejectText;
+            const adPrefix = '(광고) ';
+            const fullText = adPrefix + content + ' ' + rejectText;
             let totalBytes = calculateByteLength(fullText);
             if (title) {
-                totalBytes += calculateByteLength(title);
+                totalBytes += calculateByteLength(adPrefix + title);
             }
             
             const type = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
@@ -2302,20 +2290,17 @@ document.addEventListener('DOMContentLoaded', function() {
         function updatePreview() {
             const content = document.getElementById('messageContent').value;
             const title = document.getElementById('messageTitle').value;
-            const adPrefixText = document.getElementById('adPrefixText').value;
             const rejectInput = document.getElementById('rejectNumberInput').value;
             const rejectNumber = rejectInput ? '080-' + rejectInput : '080-';
             const preview = document.getElementById('previewMessage');
             const previewTitle = document.getElementById('previewTitle');
-            const adPrefixTextDisplay = adPrefixText ? adPrefixText + ' ' : '';
-            let previewContent = `<span class="ad-prefix">(광고)</span> ${adPrefixTextDisplay}\n`;
-            previewContent += `${content || '메시지 내용을 입력하세요'}<div class="reject-number" style="margin-top: 8px;">무료수신거부 ${rejectNumber}</div>`;
+            // 우측 미리보기에서만 (광고) 디폴트로 제목·메시지 앞에 표시
+            let previewContent = `<span class="ad-prefix">(광고)</span> ${content || '메시지 내용을 입력하세요'}<div class="reject-number" style="margin-top: 8px;">무료수신거부 ${rejectNumber}</div>`;
             preview.innerHTML = previewContent;
             
-            // 제목은 항상 상단에 표시
             if (previewTitle) {
                 if (title) {
-                    previewTitle.textContent = title;
+                    previewTitle.textContent = '(광고) ' + title;
                     previewTitle.style.display = 'block';
                 } else {
                     previewTitle.style.display = 'none';
@@ -3778,23 +3763,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const titleInput = document.getElementById('messageTitle');
             if ((messageType === 'LMS' || messageType === 'MMS') && titleInput && titleInput.value) {
                 document.getElementById('testPreviewTitle').style.display = 'block';
-                document.getElementById('testPreviewTitleText').textContent = titleInput.value;
+                document.getElementById('testPreviewTitleText').textContent = '(광고) ' + titleInput.value;
             } else {
                 document.getElementById('testPreviewTitle').style.display = 'none';
             }
             
-            // 내용 (광고 문구 포함)
-            const adPrefixText = document.getElementById('adPrefixText').value || '';
+            // 내용 (우측 미리보기에서만 (광고) 디폴트 표시)
             const content = document.getElementById('messageContent').value || '메시지 내용을 입력하세요';
             const rejectInput = document.getElementById('rejectNumberInput').value || '';
             const rejectNumber = rejectInput ? '080-' + rejectInput : '080-';
-            
-            let previewContent = '';
-            if (adPrefixText) {
-                previewContent = `(광고) ${adPrefixText}\n${content}`;
-            } else {
-                previewContent = `(광고) ${content}`;
-            }
+            let previewContent = `(광고) ${content}`;
             
             // 변수 치환 예시
             previewContent = previewContent.replace(/#{이름}/g, '홍길동');
@@ -4390,28 +4368,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     '  - "변수 길이로 인해 90바이트를 초과하는 SMS 메시지는 LMS로 변경 후 발송하시기 바랍니다."'
                 ]
             },
-            // 15. (광고) 옆 문구 입력
-            {
-                selector: '#adPrefixGroup',
-                title: '15. (광고) 옆 문구 입력',
-                position: { top: '-10px', left: '-15px' },
-                description: '텍스트 입력 필드 (Text Input)',
-                function: '(광고) 표기 옆에 발신자 정보 표시',
-                behavior: [
-                    '【입력 조건】',
-                    '• 필수 입력 항목',
-                    '• 최대 20자',
-                    '• placeholder: "업체명/서비스명"',
-                    '【표시 형식】',
-                    '• 메시지 시작: "(광고)[입력값]"',
-                    '【유효성 검사】',
-                    '• 입력 여부 확인',
-                    '【Alert 메시지】',
-                    '• 미입력 시: "(광고) 옆에 표시될 문구를 입력해주세요."',
-                    '• 길이 초과: "광고 문구는 20자를 초과할 수 없습니다."'
-                ],
-                tags: [{ text: '필수', type: 'required' }]
-            },
             // 19. 메시지 내용 입력
             {
                 selector: '#messageContent',
@@ -4596,12 +4552,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     '② 080 수신거부 번호 선택 확인',
                     '③ 수신번호 1건 이상 입력 확인',
                     '④ 수신번호 형식 유효성 확인',
-                    '⑤ (광고) 옆 문구 입력 확인',
-                    '⑥ 메시지 내용 입력 확인',
-                    '⑦ 바이트 수 초과 확인',
-                    '⑧ 예약 발송 시 시간 선택 확인',
-                    '⑨ 발송 가능 시간 확인 (평일 08:00~21:00)',
-                    '⑩ 잔액 부족 확인',
+                    '⑤ 메시지 내용 입력 확인',
+                    '⑥ 바이트 수 초과 확인',
+                    '⑦ 예약 발송 시 시간 선택 확인',
+                    '⑧ 발송 가능 시간 확인 (평일 08:00~21:00)',
+                    '⑨ 잔액 부족 확인',
                     '【수신거부번호 포함 시 - Confirm 팝업】',
                     '• 수신번호에 수신거부번호가 포함된 경우 Confirm 팝업 표시',
                     '• 메시지: "수신거부번호가 포함되어 있습니다. 제외하고 발송하시겠습니까?"',
@@ -4612,7 +4567,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     '• 080 미선택: "080 수신거부 번호를 선택해주세요."',
                     '• 수신번호 미입력: "수신번호를 입력해주세요."',
                     '• 수신번호 형식 오류: "올바르지 않은 전화번호가 포함되어 있습니다."',
-                    '• 광고문구 미입력: "(광고) 옆에 표시될 문구를 입력해주세요."',
                     '• 메시지 미입력: "메시지 내용을 입력해주세요."',
                     '• 바이트 초과: "메시지가 최대 바이트를 초과했습니다."',
                     '• 제목 바이트 초과: "제목이 40바이트를 초과했습니다."',
@@ -4647,7 +4601,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: '실제 발송 전 메시지 내용 및 형식 확인',
                 behavior: [
                     '휴대폰 목업 형태로 표시',
-                    '(광고) 문구, 메시지 내용, 수신거부 안내 표시',
+                    '(광고)는 우측 미리보기에서만 제목(LMS/MMS)·메시지 내용 앞에 디폴트 표시',
+                    '메시지 내용, 수신거부 안내 표시',
                     '입력값 변경 시 실시간 업데이트'
                 ],
                 tags: [{ text: '정보', type: 'optional' }]
