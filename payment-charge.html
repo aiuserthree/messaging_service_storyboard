@@ -938,71 +938,75 @@ body {
         }
         .amount-buttons {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
         }
         .amount-btn {
-            padding: 20px;
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-xl);
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
             background: var(--surface-color);
             cursor: pointer;
             text-align: center;
             transition: all 0.2s;
-            box-shadow: var(--shadow-card);
         }
         .amount-btn:hover {
             border-color: var(--primary-color);
-            transform: translateY(-2px);
+            background: rgba(37, 99, 235, 0.04);
         }
         .amount-btn.selected {
             border-color: var(--primary-color);
-            background: rgba(37, 99, 235, 0.1);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            background: rgba(37, 99, 235, 0.08);
         }
         .amount-btn-value {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 600;
             color: var(--text-primary);
         }
         .amount-btn-label {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
-            margin-top: 4px;
+            margin-top: 2px;
         }
         .payment-methods {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
         }
         .payment-method {
-            padding: 20px;
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-xl);
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
             cursor: pointer;
             text-align: center;
             transition: all 0.2s;
-            box-shadow: var(--shadow-card);
         }
         .payment-method:hover {
             border-color: var(--primary-color);
-            transform: translateY(-2px);
+            background: rgba(37, 99, 235, 0.04);
         }
         .payment-method.selected {
             border-color: var(--primary-color);
-            background: rgba(37, 99, 235, 0.1);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            background: rgba(37, 99, 235, 0.08);
         }
         .payment-icon {
-            width: 48px;
-            height: 48px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px auto;
+            margin: 0 auto 8px auto;
+        }
+        .payment-method .payment-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+        .payment-method > div:last-child {
+            font-size: 13px;
+            font-weight: 600;
         }
         .price-info {
             background: linear-gradient(135deg, #f8f9fb 0%, #f1f4f9 100%);
@@ -1131,7 +1135,7 @@ body {
 
                         <!-- 충전 포인트 선택 (신용카드 선택 시에만 노출, 5만~200만 P) -->
                         <div class="form-group" id="chargePointGroup" style="display: none;">
-                            <label class="form-label required">결제 포인트 금액</label>
+                            <label class="form-label required">충전 포인트 금액</label>
                             <div class="amount-buttons" id="amountButtons">
                                 <div class="amount-btn" onclick="selectAmount(50000)">
                                     <div class="amount-btn-value">5만</div>
