@@ -1182,11 +1182,10 @@ body {
                             <option>전송중</option>
                         </select>
                     </div>
-                    <div class="filter-group">
-                        <label class="form-label">검색</label>
-                        <input type="text" class="form-input" placeholder="수신번호 검색" id="searchInput">
-                    </div>
-                    <div style="margin-left: auto; display: flex; align-items: flex-end; gap: 8px;">
+                </div>
+                <div class="filter-row" style="margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+                    <input type="text" class="form-input" placeholder="수신번호 또는 메시지 내용 검색" id="searchInput" style="flex: 1; min-width: 0;" onkeydown="if(event.key==='Enter'){ event.preventDefault(); searchResults(); }">
+                    <div style="display: flex; gap: 8px; flex-shrink: 0;">
                         <button class="btn btn-primary" onclick="searchResults()">조회</button>
                         <button class="btn btn-outline" onclick="resetSearch()">초기화</button>
                     </div>
@@ -2304,14 +2303,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const callerNumber = document.getElementById('callerNumberFilter').value;
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
+            const searchTerm = (document.getElementById('searchInput').value || '').trim().replace(/\s+/g, ' ');
             
-            // 발신번호가 선택되지 않았으면 통계를 표시하지 않음
-            if (!callerNumber) {
-                alert('발신번호를 선택해주세요.');
-                return;
-            }
-            
-            // 예시 통계 데이터 (실제로는 서버에서 가져와야 함)
+            // 예시 통계 데이터 (발신번호 전체 선택 시에도 검색/목록 필터는 동작)
             const stats = {
                 send: '1,234건',
                 success: '1,200건',
@@ -2326,6 +2320,52 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('statFailed').textContent = stats.failed;
             document.getElementById('statSuccessRate').textContent = stats.successRate;
             document.getElementById('statCost').textContent = stats.cost;
+            
+            // 수신번호 또는 메시지 내용으로 목록 필터링
+            filterResultRows(searchTerm);
+        }
+        
+        // 검색어로 발송 내역 테이블 행 필터링 (발신번호, 수신번호, 메시지 내용)
+        function filterResultRows(searchTerm) {
+            var search = (searchTerm || '').toLowerCase();
+            var mainRows = document.querySelectorAll('#send-result .table-container .table tbody tr[data-row-id]');
+            mainRows.forEach(function(mainRow) {
+                var rowId = mainRow.getAttribute('data-row-id');
+                var cells = mainRow.querySelectorAll('td');
+                var callerNumber = (cells[1] ? (cells[1].textContent || '').trim() : '').toLowerCase();
+                var msgCell = mainRow.querySelector('.msg-content-summary');
+                var messageText = (msgCell ? (msgCell.getAttribute('title') || msgCell.textContent || '') : '').toLowerCase();
+                var recipientNumbers = [];
+                var detailSuccess = document.getElementById('detail-list-' + rowId + '-success');
+                var detailFailed = document.getElementById('detail-list-' + rowId + '-failed');
+                [detailSuccess, detailFailed].forEach(function(detailRow) {
+                    if (!detailRow) return;
+                    var tables = detailRow.querySelectorAll('.detail-list-table');
+                    tables.forEach(function(tbl) {
+                        var headerCells = tbl.querySelectorAll('thead th');
+                        var phoneColIndex = -1;
+                        for (var i = 0; i < headerCells.length; i++) {
+                            if ((headerCells[i].textContent || '').indexOf('수신번호') !== -1) {
+                                phoneColIndex = i;
+                                break;
+                            }
+                        }
+                        if (phoneColIndex === -1) return;
+                        var rows = tbl.querySelectorAll('tbody tr');
+                        rows.forEach(function(tr) {
+                            var tds = tr.querySelectorAll('td');
+                            if (tds[phoneColIndex]) recipientNumbers.push((tds[phoneColIndex].textContent || '').trim());
+                        });
+                    });
+                });
+                var match = !search ||
+                    callerNumber.indexOf(search) !== -1 ||
+                    messageText.indexOf(search) !== -1 ||
+                    recipientNumbers.some(function(phone) { return phone.toLowerCase().indexOf(search) !== -1; });
+                mainRow.style.display = match ? '' : 'none';
+                if (detailSuccess) detailSuccess.style.display = match ? '' : 'none';
+                if (detailFailed) detailFailed.style.display = match ? '' : 'none';
+            });
         }
         
         // 검색 초기화 함수
@@ -2344,6 +2384,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('statFailed').textContent = '-';
             document.getElementById('statSuccessRate').textContent = '-';
             document.getElementById('statCost').textContent = '-';
+            
+            // 목록 필터 해제 (모든 행 다시 표시)
+            filterResultRows('');
         }
     </script>
     <script src="js/footer.js"></script>
@@ -2370,7 +2413,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#callerNumberFilter', title: '발신번호 필터', position: { top: '-5px', left: '-10px' }, description: '등록된 발신번호별 필터링', function: '발신번호 선택', behavior: ['전체/등록된 발신번호 목록'] },
             { selector: '#messageTypeFilter', title: '메시지 타입', position: { top: '-5px', left: '-10px' }, description: '메시지 타입별 필터링', function: '타입 선택', behavior: ['전체/일반문자(SMS)/광고문자(LMS)/광고문자(MMS)/선거문자(LMS)/알림톡/브랜드메시지'] },
             { selector: '#statusFilter', title: '상태 필터', position: { top: '-5px', left: '-10px' }, description: '발송 상태별 필터링', function: '상태 선택', behavior: ['전체/성공/실패/대기중/전송중'] },
-            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '수신번호 검색 입력', function: '수신번호로 검색' },
+            { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '수신번호 또는 메시지 내용 검색', function: '수신번호·메시지 내용으로 검색' },
             { selector: '#filterSection .btn-primary', title: '조회 버튼', position: { top: '-5px', left: '-10px' }, description: '검색 실행 버튼', function: '필터 조건으로 발송결과 검색', api: 'GET /api/messages/results?startDate={startDate}&endDate={endDate}&callerNumber={callerNumber}&messageType={messageType}&status={status}&search={search}', behavior: ['필수: 발신번호 선택', '클릭 시 통계 및 목록 갱신'] },
             { selector: '#filterSection .btn-outline', title: '초기화 버튼', position: { top: '-5px', right: '-10px' }, description: '필터 조건 초기화', function: '모든 필터 조건을 기본값으로 초기화', behavior: ['통계 값도 초기화'] },
             // 16-20. 통계 요약
