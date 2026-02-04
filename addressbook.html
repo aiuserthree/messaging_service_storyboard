@@ -349,6 +349,12 @@ body {
 .table tbody tr:hover {
     background-color: var(--bg-color);
 }
+.address-row {
+    cursor: pointer;
+}
+.address-row .actions-cell {
+    cursor: default;
+}
 
 /* 알림 */
 .alert {
@@ -1036,7 +1042,7 @@ body {
         }
         .addressbook-actions {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             margin-bottom: 20px;
         }
@@ -1186,23 +1192,26 @@ body {
 
                 <!-- 주소록 목록 -->
                 <div class="card">
-                    <!-- 선택된 그룹명 표시 -->
-                    <div id="selectedGroupHeader" style="padding: 20px 20px 0 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
-                        <span style="font-size: 18px; font-weight: 600; color: var(--text-primary);" id="selectedGroupName">VIP 고객</span>
-                        <span style="font-size: 14px; color: var(--text-secondary);" id="selectedGroupCount">(234명)</span>
-                    </div>
-                    <div class="addressbook-actions">
-                        <div class="search-filter">
-                            <input type="text" class="form-input" placeholder="이름 또는 전화번호로 검색" style="width: 300px;">
-                            <select class="form-select" style="width: 150px;">
+                    <!-- 선택된 그룹명 + 검색 영역 (한 줄: 그룹명 좌측, 검색 우측) -->
+                    <div id="selectedGroupHeader" style="padding: 20px 20px 16px 20px; margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 1px solid var(--border-color);">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 18px; font-weight: 600; color: var(--text-primary);" id="selectedGroupName">VIP 고객</span>
+                            <span style="font-size: 14px; color: var(--text-secondary);" id="selectedGroupCount">(234명)</span>
+                        </div>
+                        <div class="search-filter" style="display: flex; align-items: center; gap: 8px;">
+                            <input type="text" class="form-input" placeholder="이름 또는 전화번호로 검색" style="width: 240px;">
+                            <select class="form-select" style="width: 120px;">
                                 <option>전체</option>
                                 <option>정상</option>
                                 <option>수신거부</option>
                             </select>
                             <button class="btn btn-outline">검색</button>
                         </div>
-                        <div class="table-actions">
+                    </div>
+                    <div class="addressbook-actions">
+                        <div class="table-actions" style="margin-top: 16px;">
                             <button class="btn btn-primary" onclick="openAddAddressModal()">주소 추가</button>
+                            <button class="btn btn-outline" onclick="openMoveGroupModal()">그룹이동</button>
                             <input type="file" id="addressBookMainExcelFileInput" class="form-input" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleAddressBookExcelFileSelect(event)">
                             <button class="btn btn-outline" onclick="document.getElementById('addressBookMainExcelFileInput').click()">엑셀 업로드</button>
                             <button class="btn btn-outline" onclick="downloadSampleFile()">엑셀 샘플파일</button>
@@ -1214,7 +1223,7 @@ body {
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" onchange="toggleAll(this)"></th>
+                                    <th><input type="checkbox" onchange="toggleAll(this)" title="전체 선택"></th>
                                     <th>이름</th>
                                     <th>전화번호</th>
                                     <th>변수1</th>
@@ -1226,8 +1235,8 @@ body {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr data-group-id="group1">
-                                    <td><input type="checkbox"></td>
+                                <tr data-group-id="group1" class="address-row" onclick="handleAddressRowClick(event, this)">
+                                    <td><input type="checkbox" class="address-row-cb"></td>
                                     <td>홍길동</td>
                                     <td>010-1234-5678</td>
                                     <td>홍길동</td>
@@ -1235,13 +1244,13 @@ body {
                                     <td>VIP</td>
                                     <td>2024-01-15</td>
                                     <td><span class="badge badge-success">정상</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="editAddress(1)">수정</button>
-                                        <button class="btn btn-sm btn-outline" onclick="deleteAddress(1)">삭제</button>
+                                    <td class="actions-cell">
+                                        <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); editAddress(1)">수정</button>
+                                        <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); deleteAddress(1)">삭제</button>
                                     </td>
                                 </tr>
-                                <tr data-group-id="group2">
-                                    <td><input type="checkbox"></td>
+                                <tr data-group-id="group2" class="address-row" onclick="handleAddressRowClick(event, this)">
+                                    <td><input type="checkbox" class="address-row-cb"></td>
                                     <td>김철수</td>
                                     <td>010-9876-5432</td>
                                     <td>김철수</td>
@@ -1249,13 +1258,13 @@ body {
                                     <td>일반</td>
                                     <td>2024-01-14</td>
                                     <td><span class="badge badge-success">정상</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="editAddress(2)">수정</button>
-                                        <button class="btn btn-sm btn-outline" onclick="deleteAddress(2)">삭제</button>
+                                    <td class="actions-cell">
+                                        <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); editAddress(2)">수정</button>
+                                        <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); deleteAddress(2)">삭제</button>
                                     </td>
                                 </tr>
-                                <tr data-group-id="group3">
-                                    <td><input type="checkbox"></td>
+                                <tr data-group-id="group3" class="address-row" onclick="handleAddressRowClick(event, this)">
+                                    <td><input type="checkbox" class="address-row-cb"></td>
                                     <td>이영희</td>
                                     <td>010-5555-7777</td>
                                     <td>이영희</td>
@@ -1263,9 +1272,9 @@ body {
                                     <td>신규</td>
                                     <td>2024-01-13</td>
                                     <td><span class="badge badge-danger">수신거부</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline" onclick="editAddress(3)">수정</button>
-                                        <button class="btn btn-sm btn-outline" onclick="deleteAddress(3)">삭제</button>
+                                    <td class="actions-cell">
+                                        <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); editAddress(3)">수정</button>
+                                        <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); deleteAddress(3)">삭제</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -1287,6 +1296,25 @@ body {
                 <button class="modal-close" onclick="closeModal('addAddressModal')">&times;</button>
             </div>
             <div class="modal-body">
+                <div class="form-group address-group-choice">
+                    <span class="form-label">추가할 그룹</span>
+                    <div class="radio-group" style="display: flex; gap: 24px; margin-bottom: 12px;">
+                        <label class="radio-label"><input type="radio" name="addressGroupType" value="existing" checked onchange="toggleAddressGroupChoice()"> 기존 그룹에 추가</label>
+                        <label class="radio-label"><input type="radio" name="addressGroupType" value="new" onchange="toggleAddressGroupChoice()"> 새 그룹에 추가</label>
+                    </div>
+                    <div id="addressExistingGroupWrap" class="address-group-select-wrap">
+                        <select class="form-select" id="addressExistingGroupSelect" style="max-width: 320px;">
+                            <option value="current">현재 그룹</option>
+                            <option value="group1">VIP 고객</option>
+                            <option value="group2">일반 고객</option>
+                            <option value="group3">신규 고객</option>
+                            <option value="group4">2024년 상반기 신규가입 프로모션 대상자</option>
+                        </select>
+                    </div>
+                    <div id="addressNewGroupWrap" class="address-group-select-wrap" style="display: none;">
+                        <input type="text" class="form-input" id="addressNewGroupName" placeholder="새 그룹명 입력" style="max-width: 320px;">
+                    </div>
+                </div>
                 <form id="addAddressForm">
                     <div class="form-group">
                         <label class="form-label required">이름</label>
@@ -1313,6 +1341,29 @@ body {
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('addAddressModal')">취소</button>
                 <button class="btn btn-primary" onclick="saveAddress()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 그룹이동 모달 -->
+    <div class="modal-overlay" id="moveGroupModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">그룹 이동</h3>
+                <button class="modal-close" onclick="closeModal('moveGroupModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="form-help" style="margin-bottom: 16px;">선택한 항목을 이동할 그룹을 선택하세요.</p>
+                <div class="form-group">
+                    <label class="form-label">이동할 그룹</label>
+                    <select class="form-select" id="moveGroupTargetSelect" style="max-width: 100%;">
+                        <!-- 옵션은 openMoveGroupModal()에서 동적 생성 -->
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('moveGroupModal')">취소</button>
+                <button class="btn btn-primary" onclick="confirmMoveGroup()">이동</button>
             </div>
         </div>
     </div>
@@ -1978,28 +2029,78 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function toggleAll(checkbox) {
-            document.querySelectorAll('tbody input[type="checkbox"]').forEach(cb => {
+            document.querySelectorAll('tbody .address-row-cb').forEach(cb => {
                 cb.checked = checkbox.checked;
             });
         }
 
+        function toggleAddressGroupChoice() {
+            var type = document.querySelector('input[name="addressGroupType"]:checked').value;
+            document.getElementById('addressExistingGroupWrap').style.display = type === 'existing' ? 'block' : 'none';
+            document.getElementById('addressNewGroupWrap').style.display = type === 'new' ? 'block' : 'none';
+        }
+
         function openAddAddressModal() {
             const modalTitle = document.getElementById('addAddressModalTitle');
-            if (modalTitle) {
-                modalTitle.textContent = '주소 추가';
-            }
+            if (modalTitle) modalTitle.textContent = '주소 추가';
             const form = document.getElementById('addAddressForm');
             if (form) form.reset();
+            document.querySelector('input[name="addressGroupType"][value="existing"]').checked = true;
+            toggleAddressGroupChoice();
+            var sel = document.getElementById('addressExistingGroupSelect');
+            if (sel) sel.value = 'current';
             openModal('addAddressModal');
         }
 
         function editAddress(id) {
             const modalTitle = document.getElementById('addAddressModalTitle');
-            if (modalTitle) {
-                modalTitle.textContent = '주소 수정';
-            }
+            if (modalTitle) modalTitle.textContent = '주소 수정';
+            document.querySelector('input[name="addressGroupType"][value="existing"]').checked = true;
+            toggleAddressGroupChoice();
+            var currentGroupId = document.querySelector('.group-item.active') ? document.querySelector('.group-item.active').getAttribute('data-group-id') : 'group1';
+            var sel = document.getElementById('addressExistingGroupSelect');
+            if (sel) sel.value = currentGroupId || 'current';
             openModal('addAddressModal');
-            // 주소 정보 로드
+        }
+
+        function handleAddressRowClick(ev, row) {
+            if (ev.target.closest('.actions-cell')) return;
+            var cb = row.querySelector('.address-row-cb');
+            if (cb) cb.checked = !cb.checked;
+        }
+
+        function openMoveGroupModal() {
+            var checked = document.querySelectorAll('tbody .address-row-cb:checked');
+            if (!checked.length) {
+                showToast('이동할 항목을 선택해 주세요.', 'warning');
+                return;
+            }
+            var currentGroupId = document.querySelector('.group-item.active') ? document.querySelector('.group-item.active').getAttribute('data-group-id') : '';
+            var sel = document.getElementById('moveGroupTargetSelect');
+            if (sel) {
+                sel.innerHTML = '';
+                document.querySelectorAll('.group-item').forEach(function(item) {
+                    var id = item.getAttribute('data-group-id');
+                    var name = item.getAttribute('data-group-name');
+                    if (id && id !== currentGroupId) {
+                        var opt = document.createElement('option');
+                        opt.value = id;
+                        opt.textContent = name;
+                        sel.appendChild(opt);
+                    }
+                });
+                if (sel.options.length === 0) { showToast('이동할 다른 그룹이 없습니다.', 'warning'); return; }
+            }
+            openModal('moveGroupModal');
+        }
+
+        function confirmMoveGroup() {
+            var targetId = document.getElementById('moveGroupTargetSelect').value;
+            var count = document.querySelectorAll('tbody .address-row-cb:checked').length;
+            showToast('선택한 ' + count + '건을 해당 그룹으로 이동했습니다.', 'success');
+            document.querySelectorAll('tbody .address-row-cb:checked').forEach(function(cb) { cb.checked = false; });
+            document.querySelector('thead input[type="checkbox"]').checked = false;
+            closeModal('moveGroupModal');
         }
 
         function deleteAddress(id) {
