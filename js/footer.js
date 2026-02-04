@@ -34,6 +34,10 @@ function createFooter() {
                         <p class="footer-text">대표이메일: <a href="mailto:tokbell@ibank.co.kr" class="footer-inline-link">tokbell@ibank.co.kr</a></p>
                         <p class="footer-text">기업견적문의 담당이메일: <a href="mailto:msg@ibank.co.kr" class="footer-inline-link">msg@ibank.co.kr</a></p>
                     </div>
+                    <div class="footer-cert-logos">
+                        <img src="img/logo/vntr_mark_signature02%201.png" alt="벤처확인기업" class="footer-cert-logo" />
+                        <img src="img/logo/기술혁신형중소기업_국문로고%201.png" alt="기술혁신형중소기업" class="footer-cert-logo" />
+                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -70,15 +74,17 @@ function createFooter() {
             .footer-content {
                 max-width: 1400px;
                 margin: 0 auto;
+                margin-bottom: 32px;
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 48px;
-                margin-bottom: 32px;
             }
             .footer-section {
                 display: flex;
                 flex-direction: column;
             }
+            .footer-company { grid-column: 1; }
+            .footer-contact { grid-column: 2; }
             .footer-title {
                 font-size: 15px;
                 font-weight: 600;
@@ -123,6 +129,21 @@ function createFooter() {
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
                 text-align: center;
             }
+            .footer-cert-logos {
+                margin-top: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            .footer-cert-logo {
+                height: 24px;
+                width: auto;
+                max-width: 100px;
+                object-fit: contain;
+                opacity: 0.9;
+            }
             .footer-copyright {
                 font-size: 12px;
                 color: rgba(255, 255, 255, 0.6);
@@ -140,9 +161,8 @@ function createFooter() {
                     grid-template-columns: 1fr;
                     gap: 28px;
                 }
-                .footer-contact {
-                    order: -1;
-                }
+                .footer-company { grid-column: auto; }
+                .footer-contact { grid-column: auto; }
             }
         </style>
     `;

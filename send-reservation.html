@@ -350,6 +350,11 @@ body {
     background-color: var(--bg-color);
 }
 
+.title-content-cell:hover {
+    opacity: 0.85;
+    text-decoration: underline !important;
+}
+
 /* 알림 */
 .alert {
     padding: 16px;
@@ -361,6 +366,10 @@ body {
     background-color: rgba(37, 99, 235, 0.1);
     border: 1px solid rgba(37, 99, 235, 0.2);
     color: var(--primary-color);
+}
+
+.text-danger {
+    color: var(--danger-color);
 }
 
 .alert-warning {
@@ -910,15 +919,15 @@ body {
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
             <div class="page-header" id="pageHeader">
-                <h2>발송 관리</h2>
+                <h2>발송현황</h2>
                 <p class="page-description">예약한 메시지 발송 내역을 조회하고 관리합니다</p>
             </div>
 
             <!-- 탭 메뉴 -->
             <div class="tabs" id="tabMenu">
                 <div class="tab-list">
-                    <button class="tab-item" data-tab="send-result" onclick="window.location.href='send-result.html'">발송결과</button>
                     <button class="tab-item active" data-tab="send-reservation" onclick="switchTab('send-reservation', 'send-management-tabs')">예약내역</button>
+                    <button class="tab-item" data-tab="send-result" onclick="window.location.href='send-result.html'">발송결과</button>
                 </div>
             </div>
 
@@ -978,7 +987,6 @@ body {
                                 <th>예약 건수</th>
                                 <th>예약 성공</th>
                                 <th>상태</th>
-                                <th>관리</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -986,47 +994,31 @@ body {
                                 <td><input type="checkbox" class="row-checkbox" data-id="1"></td>
                                 <td>2024-11-19 14:30</td>
                                 <td>2024-11-20 09:00</td>
-                                <td style="cursor: pointer;" onclick="viewDetail(1, 'waiting')">이벤트 안내 메시지입니다...</td>
+                                <td class="title-content-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="viewDetail(1, 'waiting')" title="클릭 시 상세보기">이벤트 안내 메시지입니다...</td>
                                 <td><span class="badge badge-primary">SMS</span></td>
                                 <td>1,000건</td>
                                 <td>995건</td>
                                 <td><span class="status-badge status-waiting">예약대기</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn btn-sm btn-outline" onclick="viewDetail(1, 'waiting')">상세보기</button>
-                                        <button class="btn btn-sm btn-outline" onclick="cancelReservation(1)">취소</button>
-                                    </div>
-                                </td>
                             </tr>
                             <tr data-id="3" data-status="completed">
                                 <td><input type="checkbox" class="row-checkbox" data-id="3"></td>
                                 <td>2024-11-17 16:45</td>
                                 <td>2024-11-18 10:00</td>
-                                <td style="cursor: pointer;" onclick="viewDetail(3, 'completed')">배송 안내 메시지</td>
+                                <td class="title-content-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="viewDetail(3, 'completed')" title="클릭 시 상세보기">배송 안내 메시지</td>
                                 <td><span class="badge badge-primary">알림톡</span></td>
                                 <td>2,000건</td>
                                 <td>1,980건</td>
                                 <td><span class="status-badge status-completed">발송완료</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn btn-sm btn-outline" onclick="viewDetail(3, 'completed')">상세보기</button>
-                                    </div>
-                                </td>
                             </tr>
                             <tr data-id="2" data-status="cancelled">
                                 <td><input type="checkbox" class="row-checkbox" data-id="2"></td>
                                 <td>2024-11-16 11:20</td>
                                 <td>2024-11-17 08:00</td>
-                                <td style="cursor: pointer;" onclick="viewDetail(2, 'cancelled')">정기 점검 안내</td>
+                                <td class="title-content-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="viewDetail(2, 'cancelled')" title="클릭 시 상세보기">정기 점검 안내</td>
                                 <td><span class="badge badge-primary">LMS</span></td>
                                 <td>500건</td>
                                 <td>0건</td>
                                 <td><span class="status-badge status-cancelled">취소</span></td>
-                                <td>
-                                    <div class="flex gap-2">
-                                        <button class="btn btn-sm btn-outline" onclick="viewDetail(2, 'cancelled')">상세보기</button>
-                                    </div>
-                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -1065,7 +1057,11 @@ body {
                                 </tr>
                                 <tr>
                                     <th>발송 예정일시</th>
-                                    <td id="waitScheduledDate">2024-11-20 09:00:00</td>
+                                    <td>
+                                        <input type="datetime-local" id="waitScheduledDateInput" class="form-input" style="max-width: 220px;">
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="saveScheduledDate()" style="margin-left: 8px;">저장</button>
+                                        <span id="waitScheduledDateError" class="text-danger" style="display: none; font-size: 12px; margin-left: 8px;"></span>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>남은 시간</th>
@@ -1469,6 +1465,56 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         var currentDetailId = null;
 
+        // datetime-local용 포맷: YYYY-MM-DDTHH:mm
+        function formatDateTimeLocal(d) {
+            var y = d.getFullYear();
+            var m = String(d.getMonth() + 1).padStart(2, '0');
+            var day = String(d.getDate()).padStart(2, '0');
+            var h = String(d.getHours()).padStart(2, '0');
+            var min = String(d.getMinutes()).padStart(2, '0');
+            return y + '-' + m + '-' + day + 'T' + h + ':' + min;
+        }
+
+        // "2024-11-20 09:00:00" 형태를 datetime-local value "2024-11-20T09:00"로 변환
+        function parseDateTimeForInput(str) {
+            if (!str) return '';
+            var parts = str.replace(/-/g, '/').split(/[\sT]/);
+            if (parts.length >= 2) {
+                var d = new Date(parts[0] + ' ' + parts[1]);
+                if (!isNaN(d.getTime())) return formatDateTimeLocal(d);
+            }
+            return str.replace(' ', 'T').substring(0, 16);
+        }
+
+        function saveScheduledDate() {
+            var inputEl = document.getElementById('waitScheduledDateInput');
+            var errEl = document.getElementById('waitScheduledDateError');
+            if (!inputEl || !errEl) return;
+            var value = inputEl.value.trim();
+            if (!value) {
+                errEl.textContent = '발송예정일시를 선택해주세요.';
+                errEl.style.display = 'inline';
+                return;
+            }
+            var selected = new Date(value);
+            var minVal = inputEl.min;
+            var minDate = minVal ? new Date(minVal) : new Date(Date.now() + 10 * 60 * 1000);
+            if (selected.getTime() < minDate.getTime()) {
+                errEl.textContent = '현재 시간 기준 10분 이후로 설정해주세요.';
+                errEl.style.display = 'inline';
+                return;
+            }
+            errEl.style.display = 'none';
+            errEl.textContent = '';
+            // 남은 시간 문구 갱신 (간단히)
+            var diff = selected.getTime() - Date.now();
+            var hours = Math.floor(diff / (60 * 60 * 1000));
+            var mins = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+            document.getElementById('waitRemaining').textContent = (hours > 0 ? hours + '시간 ' : '') + mins + '분 후 발송 예정';
+            if (typeof showToast === 'function') showToast('발송예정일시가 변경되었습니다.', 'success');
+            else alert('발송예정일시가 변경되었습니다.');
+        }
+
         function viewDetail(id, status) {
             currentDetailId = id;
             var isWaiting = (status === 'waiting');
@@ -1503,8 +1549,19 @@ document.addEventListener('DOMContentLoaded', function() {
             // 샘플 데이터 (실제로는 id로 API 조회)
             if (isWaiting) {
                 document.getElementById('waitRegDate').textContent = '2024-11-19 14:30:00';
-                document.getElementById('waitScheduledDate').textContent = '2024-11-20 09:00:00';
+                // 발송예정일시: 수정 가능 (현재 시간 기준 10분 후부터 설정 가능)
+                var scheduledStr = '2024-11-20 09:00:00';
+                var scheduledDate = parseDateTimeForInput(scheduledStr);
+                var inputEl = document.getElementById('waitScheduledDateInput');
+                if (inputEl) {
+                    inputEl.value = scheduledDate;
+                    var minDate = new Date(Date.now() + 10 * 60 * 1000);
+                    inputEl.min = formatDateTimeLocal(minDate);
+                    inputEl.dataset.original = scheduledDate;
+                }
                 document.getElementById('waitRemaining').textContent = '14시간 30분 후 발송 예정';
+                document.getElementById('waitScheduledDateError').style.display = 'none';
+                document.getElementById('waitScheduledDateError').textContent = '';
                 document.getElementById('detailSender').textContent = '010-1234-5678';
                 document.getElementById('detailMsgType').textContent = 'SMS';
                 document.getElementById('detailTotalCount').textContent = '1,000건';
@@ -1613,9 +1670,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // 1. 페이지 헤더
             { selector: '#pageHeader', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, description: '예약내역 페이지 제목 및 설명', function: '페이지 제목과 설명 표시' },
             // 2-4. 탭 메뉴
-            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '발송관리 메뉴 탭 영역', function: '발송결과/예약내역 탭 전환' },
-            { selector: '#tabMenu .tab-item:first-child', title: '발송결과 탭', position: { top: '-5px', left: '-10px' }, description: '발송결과 조회 탭', function: '클릭 시 send-result.html로 이동' },
-            { selector: '#tabMenu .tab-item:nth-child(2)', title: '예약내역 탭', position: { top: '-5px', right: '-10px' }, description: '예약내역 조회 탭 (현재)', function: '현재 페이지 활성화', behavior: ['현재 페이지 활성화 표시'] },
+            { selector: '#tabMenu', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '발송현황 메뉴 탭 영역', function: '예약내역/발송결과 탭 전환' },
+            { selector: '#tabMenu .tab-item:first-child', title: '예약내역 탭', position: { top: '-5px', left: '-10px' }, description: '예약내역 조회 탭 (현재)', function: '현재 페이지 활성화', behavior: ['현재 페이지 활성화 표시'] },
+            { selector: '#tabMenu .tab-item:nth-child(2)', title: '발송결과 탭', position: { top: '-5px', right: '-10px' }, description: '발송결과 조회 탭', function: '클릭 시 send-result.html로 이동' },
             // 5. 안내 메시지
             { selector: '.alert-info', title: '안내 메시지', position: { top: '10px', left: '-15px' }, description: '예약 관련 안내사항', function: '예약 관련 주요 안내 표시', behavior: ['최근 90일 조회 가능', '예약시간 10분 전까지 수정/취소 가능'] },
             // 6-11. 조회 조건 영역
@@ -1626,10 +1683,10 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '.search-filter-section .form-input[type="text"]', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '제목 또는 내용 검색', function: '키워드 검색' },
             { selector: '.search-filter-section .btn-primary', title: '조회 버튼', position: { top: '-5px', right: '-10px' }, description: '검색 실행', function: '필터 조건으로 예약내역 검색', api: 'GET /api/reservations?startDate={startDate}&endDate={endDate}&type={type}&search={search}', behavior: ['클릭 시 목록 갱신'] },
             // 12-18. 예약내역 테이블
-            { selector: '.card .table', title: '예약내역 테이블', position: { top: '10px', left: '10px' }, description: '예약 목록 표시', function: '예약 내역 표시', behavior: ['등록일, 발송예정일, 제목/내용, 메시지타입, 예약건수, 예약성공, 상태, 관리'] },
+            { selector: '.card .table', title: '예약내역 테이블', position: { top: '10px', left: '10px' }, description: '예약 목록 표시', function: '예약 내역 표시', behavior: ['등록일, 발송예정일, 제목/내용(클릭 시 상세 팝업), 메시지타입, 예약건수, 예약성공, 상태'] },
             { selector: '#selectAll', title: '전체 선택 체크박스', position: { top: '-5px', left: '-10px' }, description: '전체 행 선택/해제', function: '모든 예약 항목 체크박스 토글' },
             { selector: '.row-checkbox', title: '개별 선택 체크박스', position: { top: '-5px', left: '-10px' }, description: '개별 행 선택', function: '개별 예약 항목 선택' },
-            { selector: 'tbody td[onclick*="viewDetail"]', title: '제목/내용 셀', position: { top: '-5px', left: '-10px' }, description: '클릭 시 상세보기', function: 'viewDetail(id) 호출', behavior: ['커서 pointer로 표시'] },
+            { selector: '.title-content-cell', title: '제목/내용 셀', position: { top: '-5px', left: '-10px' }, description: '클릭 시 예약 상세 팝업', function: 'viewDetail(id, status) 호출 → 상세보기 모달 열림', behavior: ['커서 pointer, 링크 스타일 표시', '클릭 시 해당 예약 상세보기 모달 표시'] },
             { selector: 'tbody .btn-sm[onclick*="viewDetail"]', title: '상세보기 버튼', position: { top: '-5px', left: '-10px' }, description: '예약 상세 내역 조회', function: 'viewDetail(id) 호출', behavior: ['클릭 시 상세보기 모달 열기'] },
             // 취소 버튼
             {
@@ -1656,7 +1713,9 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#detailModal', title: '예약 상세 모달', position: { top: '10px', left: '10px' }, description: '예약 상세 정보 조회 모달', function: '예약 상세 정보 표시' },
             { selector: '#detailModal .modal-header', title: '모달 헤더', position: { top: '-5px', left: '-10px' }, description: '모달 제목 영역', function: '예약 상세보기 제목 표시' },
             { selector: '#detailModal .modal-close', title: '모달 닫기 버튼 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: 'closeModal("detailModal") 호출' },
-            { selector: '#detailModal .card:first-of-type', title: '기본 정보 카드', position: { top: '5px', left: '5px' }, description: '예약 기본 정보', function: '등록일시, 발송예정일시, 남은시간, 상태 표시' },
+            { selector: '#detailModal .card:first-of-type', title: '기본 정보 카드', position: { top: '5px', left: '5px' }, description: '예약 기본 정보', function: '등록일시, 발송예정일시(예약대기 시 수정 가능), 남은시간, 상태 표시', behavior: ['예약대기: 발송예정일시 datetime-local 입력·저장 버튼', '최소값: 현재 시간 기준 10분 후'] },
+            { selector: '#waitScheduledDateInput', title: '발송예정일시 입력', position: { top: '-5px', left: '-10px' }, description: '예약대기 시에만 표시', function: '발송예정일시 수정 (현재+10분 이후만 선택 가능)', behavior: ['min=현재+10분', '저장 시 유효성 검사 후 반영'] },
+            { selector: 'button[onclick="saveScheduledDate()"]', title: '발송예정일시 저장', position: { top: '-5px', left: '-10px' }, description: '변경된 발송예정일시 저장', function: 'saveScheduledDate() 호출', behavior: ['10분 이내 선택 시 에러 메시지', '저장 성공 시 토스트 및 남은시간 갱신'] },
             { selector: '#detailModal .card:nth-of-type(2)', title: '발송 정보 카드', position: { top: '5px', left: '5px' }, description: '발송 상세 정보', function: '발신번호, 메시지타입, 예약건수, 메시지내용 표시' },
             { selector: '#detailModal .modal-footer .btn-outline:first-child', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, description: '모달 닫기', function: 'closeModal("detailModal") 호출' },
             { selector: '#detailModal .modal-footer .btn-outline:nth-child(2)', title: '취소하기 버튼', position: { top: '-5px', left: '-10px' }, description: '예약 취소', function: 'cancelReservation(id) 호출', behavior: ['클릭 시 취소 확인 모달 열기'] },

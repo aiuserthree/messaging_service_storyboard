@@ -48,8 +48,8 @@ function createHeader(activeMenu = '') {
             url: '#',
             hasDropdown: true,
             items: [
-                { label: '발송결과', url: 'send-result.html' },
-                { label: '예약내역', url: 'send-reservation.html' }
+                { label: '예약내역', url: 'send-reservation.html' },
+                { label: '발송결과', url: 'send-result.html' }
             ]
         },
         'event': {
