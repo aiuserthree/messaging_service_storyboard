@@ -367,168 +367,249 @@ function openPolicyModal(type) {
         `,
         'terms': `
             <div style="line-height: 1.8; color: var(--text-primary);">
-                <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--primary-color);">제1장 총칙</h4>
-                
-                <p style="margin-bottom: 12px;"><strong>제1조 (목적)</strong></p>
-                <p style="margin-bottom: 24px; padding-left: 16px;">
-                    본 약관은 톡벨(이하 "회사")이 제공하는 인터넷 문자 발송 및 카카오톡 비즈메시지 서비스(이하 "서비스")의 이용과 관련하여 회사와 회원의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
-                </p>
-                
-                <p style="margin-bottom: 12px;"><strong>제2조 (용어의 정의)</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;">본 약관에서 사용하는 용어의 정의는 다음과 같습니다.</p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;"><strong>회원</strong>: 회사와 서비스 이용계약을 체결하고 아이디(ID)를 부여받은 자로서, 개인 회원, 사업자 회원, 선거 회원을 포함합니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>개인 회원</strong>: 만 19세 이상의 대한민국 거주민으로 본인 인증을 완료한 개인입니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>사업자 회원</strong>: 사업자등록증을 소유하고 기업 인증을 완료한 회원으로, '대표 계정'과 그 하위의 '담당자 계정'으로 구분됩니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>선거 회원</strong>: 공직선거법에 따라 선거 운동을 목적으로 가입하여 서비스를 이용하는 후보자 및 예비후보자 등을 말합니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>포인트</strong>: 서비스를 이용하기 위해 회원이 유상으로 결제하여 충전한 선불 전자 지급 수단을 말합니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>마일리지</strong>: 회사가 프로모션, 충전 보너스 등의 목적으로 회원에게 무상으로 지급하는 적립금을 말합니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>발신번호</strong>: 메시지를 발송할 때 수신인에게 표시되는 보내는 사람의 전화번호를 말합니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>스팸 메시지</strong>: 정보통신망법 등 관련 법령을 위반하여 수신자의 동의 없이 전송되는 영리 목적의 광고성 정보를 말합니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제3조 (약관의 게시와 개정)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">회사는 본 약관의 내용을 회원이 쉽게 알 수 있도록 서비스 초기 화면에 게시합니다.</li>
-                    <li style="margin-bottom: 6px;">회사는 운영정책 변경 및 법령 개정에 따라 약관을 개정할 수 있으며, 개정 시 적용일자 7일 전(중대한 변경은 30일 전)부터 공지사항 등을 통해 회원에게 고지합니다.</li>
-                </ul>
-                
-                <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제2장 이용계약 체결</h4>
-                
-                <p style="margin-bottom: 12px;"><strong>제4조 (이용계약의 성립)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">이용계약은 회원이 되고자 하는 자(이하 "가입신청자")가 약관의 내용에 동의하고, 회사가 정한 가입 양식에 따라 회원가입을 신청하면 회사가 이를 승낙함으로써 체결됩니다.</li>
-                    <li style="margin-bottom: 6px;">가입신청자는 반드시 본인(개인) 또는 본인(법인)의 실명으로 신청하여야 하며, 실명 인증 절차를 거쳐야 합니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제5조 (가입신청의 승낙과 제한)</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;">회사는 다음 각 호에 해당하는 신청에 대하여는 승낙을 하지 않거나 사후에 이용계약을 해지할 수 있습니다.</p>
-                <ul style="padding-left: 32px; margin-bottom: 16px;">
-                    <li style="margin-bottom: 6px;">실명이 아니거나 타인의 명의를 이용한 경우</li>
-                    <li style="margin-bottom: 6px;">가입 신청 시 허위 정보를 기재하거나, 회사가 제시하는 증빙 서류를 제출하지 않은 경우</li>
-                    <li style="margin-bottom: 6px;">부정한 용도(스팸 발송, 보이스피싱, 범죄 악용 등)로 서비스를 이용하고자 하는 경우</li>
-                    <li style="margin-bottom: 6px;">만 19세 미만인 경우</li>
-                    <li style="margin-bottom: 6px;">외국인 또는 법인 명의의 휴대폰을 사용하는 개인 회원인 경우</li>
-                </ul>
-                <p style="margin-bottom: 24px; padding-left: 16px;">사업자 회원의 경우, 대표 계정 승인 후 하위 담당자 계정을 생성할 수 있으며, 모든 담당자 계정의 이용 행위에 대한 책임은 대표 계정에게 귀속됩니다.</p>
-                
-                <p style="margin-bottom: 12px;"><strong>제6조 (선거 회원의 특칙)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">선거 회원은 공직선거법에 따른 예비후보자 및 후보자 등록을 마친 자에 한해 가입(전환)이 가능합니다.</li>
-                    <li style="margin-bottom: 6px;">선거 회원은 선거관리위원회에 신고된 발신번호 1개만 등록하여 사용할 수 있습니다.</li>
-                    <li style="margin-bottom: 6px;">선거 회원은 선거 기간 종료 후 개인 회원으로 자동 전환되며, 선거 관련 데이터는 관련 법령 및 운영정책에 따라 처리됩니다.</li>
-                </ul>
-                
-                <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제3장 서비스의 이용</h4>
-                
-                <p style="margin-bottom: 12px;"><strong>제7조 (발신번호의 등록 및 관리)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">회원은 전기통신사업법에 따라 본인(또는 소속 법인) 명의의 발신번호를 사전에 등록하여야 하며, 등록되지 않은 번호로는 메시지를 발송할 수 없습니다.</li>
-                    <li style="margin-bottom: 6px;">발신번호 등록 시 최근 3개월 이내 발급된 증빙 서류(통신서비스이용증명원 등)를 제출하여야 합니다.</li>
-                    <li style="margin-bottom: 6px;">타인의 명의를 도용한 발신번호 등록이 확인될 경우, 회사는 즉시 해당 번호의 등록을 취소하고 서비스 이용을 정지할 수 있습니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제8조 (메시지의 발송 및 제한)</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;">회원은 정보통신망법 및 공직선거법 등 관련 법령을 준수하여 메시지를 발송해야 합니다.</p>
-                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>광고성 메시지 발송 시 의무 사항:</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 16px;">
-                    <li style="margin-bottom: 6px;">메시지 시작 부분에 (광고) 문구 표기</li>
-                    <li style="margin-bottom: 6px;">메시지 하단에 무료수신거부 번호(080) 표기</li>
-                    <li style="margin-bottom: 6px;">야간(오후 9시 ~ 익일 오전 8시) 발송 제한 (단, 별도 동의를 받은 경우 제외)</li>
-                </ul>
-                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>발송 한도:</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">개인 회원: 1일 500건 (전기통신사업법에 따름)</li>
-                    <li style="margin-bottom: 6px;">사업자 회원: 1회 최대 1,000,000건</li>
-                    <li style="margin-bottom: 6px;">선거 회원: 발송량 제한 없음 (단, 자동 동보통신은 총 8회로 제한)</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제9조 (카카오톡 비즈메시지)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">알림톡 및 브랜드 메시지 발송을 위해서는 카카오톡 채널(비즈니스 인증) 및 발신 프로필 등록이 선행되어야 합니다.</li>
-                    <li style="margin-bottom: 6px;">알림톡 템플릿은 카카오의 사전 승인을 받아야 하며, 승인된 내용과 다르게 변조하여 발송할 수 없습니다.</li>
-                    <li style="margin-bottom: 6px;">알림톡은 정보성 메시지에 한하며, 광고성 내용이 포함될 경우 발송이 반려되거나 브랜드 메시지로 발송해야 합니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제10조 (스팸 메시지 및 수신거부 관리)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">회사는 방송통신위원회 및 한국인터넷진흥원(KISA)의 스팸방지 가이드라인을 준수합니다.</li>
-                    <li style="margin-bottom: 6px;">회원이 스팸 메시지(불법 도박, 성인물, 대출 광고 등)를 발송한 사실이 확인되거나 신고가 접수될 경우, 회사는 즉시 이용 정지 및 계약 해지 조치를 취할 수 있습니다.</li>
-                    <li style="margin-bottom: 6px;">회원은 수신자가 수신거부(080 등)를 요청한 경우 해당 번호로 메시지를 발송해서는 안 되며, 이를 위반하여 발생하는 모든 책임은 회원에게 있습니다.</li>
-                </ul>
-                
-                <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제4장 요금 및 포인트 정책</h4>
-                
-                <p style="margin-bottom: 12px;"><strong>제11조 (포인트 충전 및 유효기간)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">서비스 이용 요금은 선불 충전(포인트) 방식을 원칙으로 합니다.</li>
-                    <li style="margin-bottom: 6px;">포인트의 최소 충전 금액은 10,000원이며, 100원당 100포인트로 적립됩니다.</li>
-                    <li style="margin-bottom: 6px;">유상으로 충전한 포인트의 유효기간은 최종 충전일로부터 5년이며, 기간 경과 시 소멸됩니다.</li>
-                    <li style="margin-bottom: 6px;">회사는 소멸 30일 전부터 회원에게 통지합니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제12조 (마일리지)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">마일리지는 회사가 무상으로 지급하는 포인트로, 환불 대상이 아니며 유상 포인트보다 우선 차감됩니다.</li>
-                    <li style="margin-bottom: 6px;">마일리지의 유효기간은 지급일로부터 5년이며(단, 프로모션별 별도 유효기간이 있을 수 있음), 기간 만료 시 자동 소멸됩니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제13조 (환불 및 정산)</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;">회원은 충전된 잔액에 대해 환불을 요청할 수 있으며, 환불 기준은 다음과 같습니다.</p>
-                <ul style="padding-left: 32px; margin-bottom: 16px;">
-                    <li style="margin-bottom: 6px;">환불 가능 최소 잔액: 10,000원 이상 (1만 원 미만은 환불 불가)</li>
-                    <li style="margin-bottom: 6px;">전액 환불: 충전 후 7일 이내 사용 내역이 없는 경우</li>
-                    <li style="margin-bottom: 6px;">부분 환불: 충전 후 7일이 경과하였거나 사용 내역이 있는 경우, 잔여 포인트의 10%를 위약금(환불 수수료)으로 공제한 후 잔액을 환급</li>
-                </ul>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">메시지 발송이 예약되어 있거나 진행 중인 경우 환불 신청이 제한될 수 있습니다.</li>
-                    <li style="margin-bottom: 6px;">선거 회원의 경우, 선거 기간 종료 후 남은 잔액에 대해 수수료 없이 100% 환불합니다.</li>
-                    <li style="margin-bottom: 6px;">환불 금액은 환불 신청일로부터 영업일 기준 7일 이내에 지급합니다.</li>
-                </ul>
-                
-                <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제5장 계약 해지 및 이용 제한</h4>
-                
-                <p style="margin-bottom: 12px;"><strong>제14조 (회원 탈퇴 및 자격 상실)</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;">회원은 언제든지 탈퇴를 요청할 수 있습니다. 단, 다음의 경우 탈퇴가 제한될 수 있습니다.</p>
-                <ul style="padding-left: 32px; margin-bottom: 16px;">
-                    <li style="margin-bottom: 6px;">발송 중이거나 예약된 메시지가 있는 경우</li>
-                    <li style="margin-bottom: 6px;">환불 가능한 잔액(1만 원 이상)이 남아있으나 환불 신청을 하지 않은 경우</li>
-                </ul>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">회원이 잔액에 대한 권리를 포기하고 즉시 탈퇴를 원하는 경우, 잔액 소멸 동의 후 탈퇴가 가능합니다.</li>
-                    <li style="margin-bottom: 6px;">사업자 회원의 대표 계정이 탈퇴할 경우, 소속된 모든 담당자 계정은 자동 탈퇴 처리됩니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제15조 (휴면 계정)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">최종 로그인 일로부터 1년 이상 서비스를 이용하지 않은 회원은 휴면 회원으로 전환됩니다.</li>
-                    <li style="margin-bottom: 6px;">휴면 회원의 개인정보는 별도로 분리 보관되며, 휴면 전환 시점으로부터 5년 경과 시 파기될 수 있습니다.</li>
-                    <li style="margin-bottom: 6px;">회사는 휴면 전환 30일 전 회원에게 안내합니다.</li>
-                </ul>
-                
-                <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제6장 기타</h4>
-                
-                <p style="margin-bottom: 12px;"><strong>제16조 (개인정보보호 및 보안)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">회사는 회원의 개인정보를 보호하기 위해 노력하며, 개인정보처리방침을 수립하고 준수합니다.</li>
-                    <li style="margin-bottom: 6px;">회사는 Google Analytics 등 분석 도구 사용 시 개인식별정보를 암호화하거나 비식별화하여 처리합니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제17조 (손해배상 및 면책)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">회사는 천재지변, 기간통신사업자의 회선 장애 등 불가항력으로 인해 서비스를 제공할 수 없는 경우 이에 대한 책임을 지지 않습니다.</li>
-                    <li style="margin-bottom: 6px;">메시지 전송의 실패, 지연, 내용 변질 등이 회원의 귀책사유(오입력, 수신거부 등)로 인한 경우 회사는 책임을 지지 않습니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제18조 (분쟁의 해결)</strong></p>
-                <p style="margin-bottom: 24px; padding-left: 16px;">
-                    본 약관과 관련하여 회사와 회원 간에 분쟁이 발생할 경우, 회사의 본사 소재지를 관할하는 법원을 전속 관할 법원으로 합니다.
-                </p>
-                
-                <p style="margin-top: 24px; padding: 16px; background-color: var(--bg-color, #f8fafc); border-radius: 8px;">
-                    <strong>부칙</strong><br>
-                    본 약관은 202X년 X월 X일부터 시행합니다.
-                </p>
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--primary-color);">제1장 총칙</h4>
+            <p style="margin-bottom: 12px;"><strong>제1조(목적)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">이 약관은 주식회사 아이뱅크(이하 ‘회사’라 합니다)가 운영하는 톡벨(TalkBell) 서비스의 이용과 관련하여 회사와 이용자의 권리∙의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제2조(정의)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 이 약관에서 사용하는 용어의 정의는 다음과 같습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">“이메일(아이디/ID)”이라 함은 회원의 식별과 서비스 이용을 위하여 회원이 입력하고 회사가 승인한 이메일 주소를 말합니다.</li>
+            <li style="margin-bottom: 6px;">“비밀번호”라 함은 회원이 이용하는 이메일과 일치되는 회원임을 확인하고 비밀보호를 위해 회원 자신이 정한 문자 또는 숫자의 조합을 말합니다.</li>
+            <li style="margin-bottom: 6px;">“서비스”라 함은 이용자가 전송하고자 하는 내용ㆍ정보 등을 문자메시지(SMS), 장문메시지(LMS), 멀티미디어메시지(MMS)의 형태로 변환하여 전송하거나 카카오톡을 통한 알림톡 또는 브랜드 메시지의 형태로 변환하여 전송하고 알림톡 또는 브랜드 메시지 전송 실패 시 대체발송 옵션 설정에 따라 문자메시지, 멀티미디어메시지 등의 형태로 변환하여 전송하는 서비스 및 회사가 추가 개발하거나 다른 회사와의 제휴계약 등을 통해 이용자에게 제공할 일체의 서비스를 의미합니다.</li>
+            <li style="margin-bottom: 6px;">“이용자(회원)”라 함은 회사와 서비스 이용계약을 체결한 자를 말하며, 다음 각 목으로 구분됩니다.</li>
+            <li style="margin-bottom: 6px;">가)	개인 회원: 개인 자격으로 서비스를 이용하고자 하는 만 19세 이상의 대한민국 국적 거주민으로, 본인 명의 휴대폰 인증을 완료한 자</li>
+            <li style="margin-bottom: 6px;">나)	사업자 회원: 유효한 사업자등록증을 보유하고 기업 명의로 서비스를 이용하는 자</li>
+            <li style="margin-bottom: 6px;">다)	선거 회원: 선거 문자 서비스를 이용하기 위해 개인 회원에서 전환된 자로서, 공직선거법에 따른 예비 후보자, 후보자 및 선거사무소 당직자 등</li>
+            <li style="margin-bottom: 6px;">“이용계약”이라 함은 서비스를 제공받기 위하여 회사와 회원 간에 체결하는 계약을 말합니다.</li>
+            <li style="margin-bottom: 6px;">“이용제한”이라 함은 회사가 정한 일정한 요건에 따라 회원의 서비스 이용을 제한하는 것을 말합니다.</li>
+            <li style="margin-bottom: 6px;">“휴면계정”이라 함은 12개월 이상 계속해서 로그인을 포함한 서비스 이용이 없는 아이디(ID)를 말합니다.</li>
+            <li style="margin-bottom: 6px;">“카카오톡”이라 함은 주식회사 카카오(이하 ”카카오”)가 운영하는 모바일 메신저 기반의 실시간 커뮤니케이션 서비스 알림톡, 친구톡 또는 해당 서비스를 제공하는 어플리케이션을 말합니다.</li>
+            <li style="margin-bottom: 6px;">“알림톡”이라 함은 주문, 예약, 결제, 배송 정보 등 정보통신망 이용촉진 및 정보보호 등에 관한 법률(이하 “정보통신망법”) 및 한국인터넷진흥원 지침 상 광고성 정보의 예외로 분류되는 정보 중 일부를 카카오톡 채널 추가 여부와 상관 없이 발송 가능한 메시지를 말합니다.</li>
+            <li style="margin-bottom: 6px;">“브랜드 메시지”라 함은 광고성 정보 수신에 사전 동의하거나 ‘발신자’의 카카오톡 채널과 채널 친구 추가된 카카오톡 이용자에게만 발송 가능한 메시지를 말합니다.</li>
+            <li style="margin-bottom: 6px;">“발신프로필”이라 함은 카카오톡 비즈메시지, 브랜드 메시지를 발송하고 “수신자”가 카카오톡 비즈메시지, 브랜드 메시지 발신처를 확인하기 위하여 사용하는 “발신자” 식별정보를 말합니다.</li>
+            <li style="margin-bottom: 6px;">“스팸”이라 함은 정보통신망법을 위반하여 수신자가 원하지 않는데도 불구하고 일방적으로 전송 또는 게시되는 영리목적의 광고성 정보를 의미합니다.</li>
+            <li style="margin-bottom: 6px;">“스미싱”이라 함은 메시지 내용 중 인터넷 주소를 클릭하면 악성코드가 설치되어 수신자가 모르는 사이에 금전적 피해 또는 개인·금융정보 탈취 피해를 야기하는 메시지를 말합니다.</li>
+            <li style="margin-bottom: 6px;">“포인트”라 함은 이용자가 회사의 서비스를 이용하는데 있어 사용할 수 있는 회사가 인정한 선불 충전 결제 수단을 말합니다.</li>
+            <li style="margin-bottom: 6px;">“마일리지”라 함은 회사가 프로모션 등을 통해 무상으로 지급한 적립금을 말합니다.</li>
+            <li style="margin-bottom: 6px;">“블랙리스트(불법 전화번호 목록)”라 함은 발신번호 거짓표시, 보이스피싱, 불법스팸 등에 이용되어 전기통신역무 제공이 중지된 전화번호 목록을 말합니다.</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 이 약관에서 사용하는 용어 중 제1항에서 정하지 않은 것은 관계 법령 또는 상관례에 따릅니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제3조(약관의 게시와 개정)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 본 약관의 내용을 이용자가 쉽게 알 수 있도록 서비스 초기 화면에 게시합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 “약관의 규제에 관한 법률”, ”정보통신망법”, “전기통신사업법”, “전자상거래 등에서의 소비자보호에 관한 법률” 등 관련법을 위배하지 않는 범위에서 본 약관을 개정할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사가 약관을 개정할 경우에는 시행일자 및 개정사유를 명시하여 기존 약관과 함께 그 시행일자 7일 전(중대한 변경은 30일 전)부터 시행일자 전일까지 공지합니다. 이용자에게 불리한 약관의 개정의 경우에는 이용자가 등록한 이메일로 전송하는 방법 등으로 이용자에게 통지합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 회사가 전항에 따라 이용자에게 개정약관을 공지 또는 통지하면서 이용자에게 약관시행일까지 의사표시를 하지 않으면 승인한 것으로 본다는 뜻을 명확하게 공지 또는 통지하였음에도 이용자가 명시적으로 거부의 의사표시를 하지 아니한 경우 이용자가 개정약관에 동의한 것으로 봅니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 이용자는 개정된 약관에 대해 동의하지 않을 권리가 있습니다. 이용자가 개정약관의 적용에 동의하지 않는 경우 이용계약을 해지할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑥ 이용자는 약관의 변경에 대하여 주의의무를 다하여야 하며 변경된 약관으로 인한 회원의 피해는 회사가 책임지지 않습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제4조 (약관 이외의 준칙)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">이 약관에서 정하지 아니한 사항과 이 약관의 해석에 관하여는 국내 관계법령 또는 상관례에 따릅니다.</p>
+            
+            <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제2장 이용자의 이용계약 및 관리</h4>
+            <p style="margin-bottom: 12px;"><strong>제5조(이용계약의 성립)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 이용계약은 회원이 되고자 하는 자(이하 “가입신청자”)가 이용신청 및 약관에 대한 동의와 회사의 이용승낙으로 성립하며, 회사는 가입신청자의 이용 신청을 승낙을 한 때부터 서비스를 개시합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 가입신청자는 서비스 이용을 위해 회사에 이메일 주소를 제공하여야 하며, 회사는 해당 이메일 주소를 아이디(ID)로 사용합니다. 가입신청자는 본인 소유의 실제 수신 가능한 이메일 주소를 사용하여야 하며, 이를 위반하여 발생하는 불이익에 대한 책임은 가입신청자에게 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사는 다음 각 호에 해당하는 신청에 대하여는 승낙을 하지 않거나 사후에 해지할 수 있습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">가입신청자가 이 약관에 의하여 이전에 이용자 자격을 상실한 적이 있는 경우, 단 회사의 이용자 재가입 승낙을 얻을 경우에는 예외로 함</li>
+            <li style="margin-bottom: 6px;">실명이 아니거나 타인의 명의를 이용한 경우</li>
+            <li style="margin-bottom: 6px;">허위의 정보를 기재하거나, 회사가 제시하는 내용을 기재하지 않은 경우</li>
+            <li style="margin-bottom: 6px;">필수 제출 서류(3개월 이내 발급한 사업자등록증, 재직증명서 등)를 누락하거나 허위로 기재한 경우</li>
+            <li style="margin-bottom: 6px;">만 19세 미만의 가입자인 경우 또는 외국인/법인 명의 휴대폰을 사용하는 개인 회원인 경우</li>
+            <li style="margin-bottom: 6px;">이용자가 서비스의 정상적인 제공을 저해하거나 다른 이용자의 서비스 이용에 지장을 줄 것으로 예상되는 경우</li>
+            <li style="margin-bottom: 6px;">기타 회사가 관련법령 등을 기준으로 하여 명백하게 사회질서 및 미풍양속에 반할 우려가 있음을 인정하는 경우</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 제1항에 따른 신청에 있어 회사는 이용자의 종류에 따라 전문기관을 통한 실명확인 및 본인인증을 요청할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 회사는 서비스 관련 설비의 여유가 없거나 기술상 또는 업무상 문제가 있는 경우에는 승낙을 유보할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑥ 회원은 이용계약 체결 시 실명, 실제 정보를 입력하여야 하며, 이를 위반한 회원은 법적인 보호를 받을 수 없고, 서비스 이용에 제한을 받을 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑦ 이용계약의 성립 시기는 회사가 가입완료를 신청절차 상에서 표기한 시점으로 합니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제6조(개인정보수집)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 적법하고 공정한 수단에 의하여 이용계약의 성립 및 이행에 필요한 최소한의 개인정보를 수집합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 개인정보의 수집 시 관련법규에 따라 개인정보 처리방침에 그 수집범위 및 목적을 사전고지 합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사는 개인정보처리방침에서 규정하고 있는 수집항목 및 이용목적 외에 불법스팸 발송 등으로 서비스 계약을 해지한 고객의 서비스 이용신청에 대한 승낙을 유보하기 위하여 성명, 업체명, 사업자등록번호, 전화번호, 해지사유 등의 정보를 수집 및 보관할 수 있습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제7조(개인정보의 보호 및 관리)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 관련 법령이 정하는 바에 따라 이용자의 개인정보를 보호하기 위해 노력합니다. 이용자의 개인정보의 보호 및 사용에 대해서는 관련 법령 및 회사가 별도로 고지하는 개인정보 처리방침이 적용됩니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 회원이 안전하게 서비스를 이용할 수 있도록 보안시스템을 갖추어야 하며 개인정보 처리방침을 공시하고 준수합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사는 이용자의 귀책사유로 인하여 노출된 이용자의 계정정보를 포함한 타인의 모든 개인정보, 비밀정보에 대해서 일체의 책임을 지지 않습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제8조 (이용자 정보의 변경 및 관리 의무)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 이용자는 개인정보설정 화면을 통하여 본인의 정보를 열람 및 수정할 수 있습니다. 다만, 법인 이용자는 홈페이지 기재된 회사의 전화 및 이메일로 법인정보의 수정을 요청하여야 합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 이용자는 서비스 이용신청 시 기재한 사항이나 중요 정보(기업명, 대표자명 등)가 변경되었을 경우 즉시 수정하거나 증빙서류를 제출하여야 하며, 변경하지 않음으로써 발생한 불이익에 대하여 회사는 책임을 지지 않습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 아이디와 비밀번호에 대한 관리 책임은 회원에게 있으며, 이를 제3자가 이용하도록 하여서는 안 됩니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 회원은 이메일 주소(아이디)를 원칙적으로 변경할 수 없습니다. 부득이한 사유로 변경하고자 하는 경우에는 이용계약을 해지하고 재가입하여야 합니다. 단, 회사가 인정하는 특별한 사유가 있는 경우 고객센터를 통해 예외적으로 변경을 신청할 수 있습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제9조 (이용자에 대한 통지)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사가 이용자에 대한 통지를 하는 경우 이 약관에 별도 규정이 없는 한 이용자가 제공한 이메일, (휴대)전화번호, 알림톡 등으로 통지할 수 있습니다. 단, 회원이 이메일 또는 휴대전화번호의 부재, 변경, 오류 등 또는 정보를 허위로 제출하거나 변경된 정보를 회사에 알리지 않은 경우 회사는 회원이 제출한 정보로 통지를 발송한 때에 회원에게 도달된 것으로 봅니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 전체 또는 불특정 다수 이용자에 대한 통지의 경우 7일 이상 서비스 공지사항에 게시함으로써 제1항의 통지에 갈음할 수 있습니다.</p>
+            
+            <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제3장 계약당사자의 권리 및 의무</h4>
+            <p style="margin-bottom: 12px;"><strong>제10조(회사의 의무)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 관련법과 본 약관이 금지하거나 미풍양속에 반하는 행위를 하지 않으며, 계속적이고 안정적으로 서비스를 제공하기 위하여 노력합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 서비스 제공을 위한 시스템에 장애가 발생하거나 고장 발생 시에는 이를 최대한 신속히 수리 또는 복구합니다. 다만, 천재지변 등 불가항력의 경우에는 서비스를 일시 중단할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사는 이용자의 서비스 제공 목적에 맞는 서비스 이용여부를 확인하기 위하여 상시적으로 모니터링을 실시합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 회사는 스팸메시지 또는 스미싱(이하 “불법스팸”)으로부터 이용자를 보호하기 위하여 스팸차단(필터링) 부가 서비스를 통해 해당 문자메시지가 수신되지 않도록 차단할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 회사는 불법스팸 전송자 적발, 차단 등을 위해 차단된 문자의 내용, 불법스팸 발송 사업자 정보 등을 한국인터넷진흥원에 제공할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑥ 회사는 전기통신사업법 제84조의2 및 “고시”에 따라 발신번호 사전등록서비스를 제공 및 운영합니다. 이용자가 발신번호를 변작하거나 블랙리스트에 포함된 번호를 사용하는 경우 해당 메시지의 전송을 차단합니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제11조(이용자의 의무)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 이용자는 회사가 제공하는 서비스를 이용함에 있어 다음 각 호에 해당하는 행위를 하여서는 안됩니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">이용신청이나 변경 시 타인의 정보 또는 허위내용을 등록하는 행위</li>
+            <li style="margin-bottom: 6px;">다른 이용자의 이메일 및 비밀번호를 도용하는 행위</li>
+            <li style="margin-bottom: 6px;">회사의 승인 없이 영리 목적으로 서비스를 재판매하거나 임대하는 행위</li>
+            <li style="margin-bottom: 6px;">회사 및 타인의 명예를 손상시키거나 업무를 방해하는 행위</li>
+            <li style="margin-bottom: 6px;">불법스팸을 전송하거나 이로 인하여 타인의 재산상에 손해를 발생시키는 행위</li>
+            <li style="margin-bottom: 6px;">서비스를 사용하여 사기 또는 국가기관 사칭을 목적으로 한 내용의 메시지를 발송하는 행위</li>
+            <li style="margin-bottom: 6px;">타인의 발신번호를 도용하여 부정하게 사용하는 행위</li>
+            <li style="margin-bottom: 6px;">광고성 정보를 전송하면서 정보성 메시지로 유형을 속여 발송하거나, 시스템상 강제로 적용되는 의무 표기 사항((광고), 080 수신거부 등)을 기술적 조치나 편법을 통해 임의로 삭제·변경·우회하는 행위</li>
+            <li style="margin-bottom: 6px;">서비스의 안정적인 운영에 지장을 주거나 줄 우려가 있는 일체의 행위</li>
+            <li style="margin-bottom: 6px;">제3자에게 임의로 서비스를 임대하는 행위</li>
+            <li style="margin-bottom: 6px;">정보통신망법 제44조의 7(불법정보의 유통금지 등) 규정에 따라 불법스팸, 사기, 협박, 음란성, 범죄를 목적으로 하거나 교사 또는 방조하는 내용의 정보, 발신번호조작 등으로 인지되는 메시지를 발송하는 행위</li>
+            <li style="margin-bottom: 6px;">기타 불법적이거나 부당한 행위</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 이용자는 이용자의 정보통신설비가 서비스 이메일 도용, 해킹, 바이러스 침입 등으로 불법스팸 발송에 오남용 되지 않도록 보안조치를 취하여야 합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 이용자는 정보통신망법에 따라 메시지 전송을 위하여 수신자의 사전 수신동의를 직접 얻어야 하며, 수신거부 요청에 대해서는 즉각적으로 처리해야 합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 이용자는 전기통신사업법 등 관련 법령에 따라 발신번호 사전등록을 완료하고 등록된 번호로만 메시지를 발송해야 합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 이용자가 회사에 제공한 수신자 정보(휴대전화번호 등)는 적법한 절차에 따라 수집된 것이어야 하며, 이와 관련하여 발생하는 개인정보보호법 위반 등의 법적 책임은 전적으로 이용자에게 있습니다.</p>
+            
+            <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제4장 이용자의 권리에 관한 조치</h4>
+            <p style="margin-bottom: 8px; padding-left: 16px;">제12 조 (동의의 철회)</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">회사는 이용자가 서비스 화면에서 자신의 개인정보에 대한 수집, 이용 또는 제공에 대한 동의를 철회할 수 있도록 필요한 조치를 취해야 합니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제13조(이용자의 불만사항 접수 및 처리절차)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 불만사항은 일반전화, 이메일, 1:1 문의 등을 통해 접수합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 접수된 사항을 신속하게 처리하며, 처리가 곤란한 경우 그 사유와 일정을 통보합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 고객센터의 운영 시간 및 상담 채널(전화, 1:1 문의 등)은 홈페이지 내 공지사항 또는 고객센터</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">안내 페이지에 따릅니다. 운영 시간 외 접수된 문의는 익영업일에 순차적으로 처리됩니다.</p>
+            
+            
+            <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제5장 서비스의 이용</h4>
+            <p style="margin-bottom: 12px;"><strong>제14조 (서비스의 제공 및 변경)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 회원에게 문자(SMS, LMS, MMS), 카카오 알림톡, 카카오 브랜드 메시지 등 메시지 발송 및 부가 서비스를 제공합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 서비스는 연중무휴, 1일 24시간 제공을 원칙으로 합니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제15조 (서비스의 변경 및 중단)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 서비스 품질 향상 및 운영 상 필요에 따라 서비스의 전부 또는 일부를 변경, 추가, 중단할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 정기 점검, 긴급 점검, 시스템 교체 등 부득이한 사유가 있는 경우 서비스의 전부 또는 일부를 중단할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사는 무료로 제공되는 서비스의 일부 또는 전부를 회사의 정책 및 운영의 필요상 수정, 중단, 변경할 수 있으며 이에 대하여 관련법에 특별한 규정이 없는 한 이용자에게 별도의 보상을 하지 않습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제16조 (서비스 이용의 제한 및 정지)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 이용자가 다음 중 하나에 해당하는 경우 서비스의 이용을 제한하거나 정지할 수 있습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">방송통신위원회ㆍ한국인터넷진흥원 등 관계기관이 불법스팸 전송 사실을 확인하여 이용정지를 요청하는 경우</li>
+            <li style="margin-bottom: 6px;">수신자의 스팸 신고가 급증하거나 스팸 발송이 확인된 경우</li>
+            <li style="margin-bottom: 6px;">이용자가 발송하는 메시지로 인하여 회사의 서비스 제공에 장애를 야기하거나 야기할 우려가 있는 경우</li>
+            <li style="margin-bottom: 6px;">이용자에게 제공하는 서비스가 스팸메시지ㆍ불법스팸메시지 발송에 이용되고 있는 경우</li>
+            <li style="margin-bottom: 6px;">과학기술정보통신부장관 또는 한국인터넷진흥원 등 관련 기관이 발신번호 변작 등을 확인하여 이용정지를 요청하는 경우</li>
+            <li style="margin-bottom: 6px;">회사 서비스의 안정적 운영을 방해할 목적으로 다량의 정보를 발송하거나 정보통신설비의 오동작 또는 시스템 보유 정보 파괴를 유발시키거나 유포하는 경우</li>
+            <li style="margin-bottom: 6px;">이용자가 발신번호를 변작하는 등 거짓으로 표시한 경우</li>
+            <li style="margin-bottom: 6px;">기타 관련 법령 또는 이 약관에서 금지하는 행위를 하거나 회사가 정한 이용조건에 위배되는 행위를 한 경우</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 이용제한 및 정지를 하고자 하는 경우에는 그 사유, 일시 및 기간을 정하여 회원에게 통지합니다. 단, 긴급한 경우 사전 통지 없이 제한할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 스팸 발송, 명의 도용 등으로 영구 정지된 경우, 보유한 포인트 및 마일리지는 소멸되며 환불되지 않습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제16조의2 (휴면 회원의 관리)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 이용자의 정보가 부당한 목적으로 사용되는 것을 방지하고 보다 원활한 서비스 제공을 위하여 12개월 이상 계속해서 로그인을 포함한 서비스 이용이 없는 계정을 휴면 회원으로 분류하고 서비스 이용을 정지할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">②회사는 휴면 전환 예정일 30일 전 및 7일 전에 회원에게 통지하며, 휴면 회원의 계정 정보는 전환일로부터 최대 5년 동안 별도 분리하여 보관합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 휴면 회원이 보유한 포인트 및 마일리지의 소멸 예정일 30일 전, 7일 전, 1일 전에 만료 안내를 통지합니다. (마케팅 수신 동의 여부와 무관하게 발송)</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 휴면 회원은 로그인을 통해 휴면 상태를 해제할 수 있습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제17조 (계약해지)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 이용자는 언제든지 탈퇴를 요청할 수 있습니다. 단, 다음의 경우 탈퇴 처리가 지연될 수 있습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">예약 발송이 남아있는 경우</li>
+            <li style="margin-bottom: 6px;">환불 가능한 잔액에 대한 환불 신청을 하지 않은 경우</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사는 이용자가 타인의 명의 도용, 스팸 전송, 발신번호 변작 등 중대한 약관 위반 행위를 한 경우 이용자의 동의 없이 이용계약을 해지할 수 있습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">회사는 주민등록법을 위반한 명의도용 및 결제도용, 저작권법을 위반한 불법프로그램의 제공 및 운영방해, 정보통신망법을 위반한 스팸메시지 및 불법통신, 해킹, 악성프로그램의 배포, 접속권한 초과행위, 한국인터넷진흥원이 규정한 변작 등과 같이 관련법을 위반한 경우에는 즉시 사전 통보 없이 영구 이용정지를 할 수 있습니다.</li>
+            <li style="margin-bottom: 6px;">서비스의 영구 이용정지 시에는 서비스 내의 포인트, 예치금, 혜택 및 권리 등도 모두 즉시 소멸되며 회사는 이에 대해 별도로 보상하지 않습니다.</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 해지 즉시 이용자의 모든 데이터는 소멸됩니다(단, 관련 법령에 따라 보관해야 하는 정보 제외).</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 제1항 제2호에도 불구하고, 회원이 소액 잔액에 대한 권리를 포기하고 즉시 탈퇴를 희망하는 경우 잔액 소멸에 동의한 후 탈퇴할 수 있습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제18조 (문자 발송량 제한)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 스팸 방지 및 시스템 안정을 위해 다음과 같이 발송량을 제한합니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">개인 회원: 1일 500건 (단, 회사가 인정하는 적법한 증빙서류 제출 시 예외 허용)</li>
+            <li style="margin-bottom: 6px;">사업자 회원: 1회 최대 1,000,000건</li>
+            <li style="margin-bottom: 6px;">선거 회원: 발송량 제한 없음 (단, 자동 동보통신 횟수 8회 제한 등 공직선거법 준수)</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 전항의 기준에도 불구하고 불법스팸 전송이 의심되거나 시스템 부하가 우려되는 경우 발송을 제한할 수 있습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제19조 (각종 자료의 저장기간)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 서비스 제공 중 발생한 데이터에 대해 다음 기간 동안 보관 후 파기합니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">통신비밀보호법에 따른 로그인 기록: 3개월</li>
+            <li style="margin-bottom: 6px;">전자상거래법에 따른 대금 결제 및 공급 기록: 5년</li>
+            <li style="margin-bottom: 6px;">스팸 발송 등으로 차단된 메시지 전송 로그: 1년</li>
+            <li style="margin-bottom: 6px;">탈퇴 회원의 개인식별정보(재가입 방지용): 탈퇴일로부터 12개월</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회원은 자료의 보관 기간이 경과하기 전에 발송 내역 등을 직접 백업해야 하며, 보관 기간 경과 후 데이터 삭제에 대해 회사는 책임지지 않습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제20조 (게시물의 저작권)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 서비스에 대한 저작권 및 지적재산권은 회사에 귀속됩니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회원이 서비스 페이지에 게시하거나 등록한 자료의 지적재산권은 회원에게 귀속됩니다. 단, 회사는 서비스 홈페이지의 게재권을 가지며 회사의 서비스 내에 한하여 회원의 게시물을 활용할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회원은 서비스를 이용하여 얻은 정보를 가공, 판매하는 행위 등 게재된 자료를 상업적으로 이용할 수 없으며 이를 위반하여 발생하는 제반 문제에 대한 책임은 회원에게 있습니다.</p>
+            
+            <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제6장 요금 및 환불</h4>
+            <p style="margin-bottom: 12px;"><strong>제21조 (요금 계산 및 결제)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사가 제공하는 유료서비스 이용과 관련하여 회원이 납부하여야 할 요금은 이용료 안내에 게재한 바에 따릅니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 서비스 이용 요금은 선불 충전(포인트) 차감 방식을 원칙으로 합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 메시지 발송 실패 시 차감된 포인트는 자동으로 복구(재적립)되는 것을 원칙으로 합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">단, 다음 각 호의 경우에는 발송이 실패 처리되더라도 포인트가 복구되지 않습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">스팸성 문구 포함, KISA(한국인터넷진흥원)의 요청 등으로 인해 통신사가 강제로 발송을 차단한 경우</li>
+            <li style="margin-bottom: 6px;">발송 결과가 ‘성공(Success)’인 경우 (수신자가 단말기 자체 기능으로 수신을 차단하여 확인하지 못한 경우 포함)</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 이용자는 이용자의 관리 소홀 및 부주의로 인해 이용요금이 발생될 경우, 이에 대한 이용요금을 자신의 비용으로 모두 부담해야 합니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제22조 (포인트의 유효기간)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 유료 충전한 포인트의 유효기간은 마지막 충전일로부터 1년입니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 무상으로 지급된 마일리지의 유효기간은 지급일로부터 1년입니다. 단, 마케팅 이벤트 등을 통해 지급된 한시적 마일리지의 경우 별도로 공지된 유효기간을 따릅니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 유효기간이 경과한 포인트와 마일리지는 자동으로 소멸되며, 복구되지 않습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 회사는 포인트 및 마일리지의 소멸 예정일 30일 전, 7일 전, 1일 전에 회원에게 등록된 연락처(휴대전화 또는 이메일)로 소멸 내역을 통지합니다. 이는 마케팅 수신 동의 여부와 관계없이 발송될 수 있습니다. 다만, 제9조 [회원에 대한 통지]에 따라 회원이 이메일 또는 휴대전화번호의 부재, 변경, 오류 등 또는 정보를 허위로 제출하거나 변경된 정보를 회사에 알리지 않은 경우 회사는 회원이 제출한 정보로 통지를 발송한 때에 회원에게 도달된 것으로 봅니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제23조 (요금 등의 환불)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회원은 잔여 포인트가 10,000포인트 이상이고 예약된 발송 건이 없는 경우에 한해 환불을 신청할 수 있습니다. 1만 포인트 미만 소액 잔여분의 환불 요청은 반려될 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">환불 규정은 다음과 같습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">최소 환불 가능 금액: 잔여 포인트가 10,000포인트 이상 시 신청 가능합니다.</li>
+            <li style="margin-bottom: 6px;">환불 수수료:</li>
+            <li style="margin-bottom: 6px;">전액 결제 취소: 충전 후 7일 이내이며, 포인트 및 마일리지를 전혀 사용하지 않은 경우</li>
+            <li style="margin-bottom: 6px;">환불: 충전 후 7일이 경과하였거나, 포인트를 일부라도 사용한 경우 잔여금액의 10%를 환불수수료로 공제 후 환불</li>
+            <li style="margin-bottom: 6px;">마일리지 사용 시 : 충전 후 7일 이내라 하더라도, 충전 시 지급된 무료 마일리지를 사용한 경우에는 해당 결제 건을 서비스를 이용한 것으로 간주하여 잔여 포인트의 10%를 환불수수료로 공제 후 환불</li>
+            <li style="margin-bottom: 6px;">선거 회원 특례: 선거 기간 종료 후 남은 잔액은 수수료 없이 100% 전액 환불합니다.</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 무료 지급된 마일리지는 환불 대상이 아니며 소멸됩니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 환불은 신청일로부터 영업일 기준 7일 이내에 등록된 계좌로 지급합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 회원이 관계 법령이나 약관을 위반하여 부당하게 요금을 면탈한 경우, 회사는 면탈한 금액의 2배에 해당하는 금액을 청구할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 환불은 이용자가 충전 시 사용한 결제 수단으로 지급(결제 취소 등)하는 것을 원칙으로 합니다. 단, 현금 환불이 필요한 경우 다음 각 호의 기준을 따릅니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">개인 회원: 가입된 회원 본인 명의의 계좌로만 환불 가능</li>
+            <li style="margin-bottom: 6px;">사업자(법인) 회원: 가입된 사업자(법인) 명의의 계좌로만 환불 가능 (대표자 개인 명의 등 타 명의 불가)</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑥ 제5항에도 불구하고 휴업, 폐업, 명의 변경 등으로 인하여 원 결제 수단 또는 등록된 계좌로의 환불이 불가능한 경우, 회원은 고객센터를 통해 정보 변경을 요청해야 합니다. 이때 회사는 회원에게 폐업사실증명원, 인감증명서 등 증빙 서류 제출을 요구할 수 있으며, 서류 확인 후 환불을 진행합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑦ 환불은 신청일(서류 제출이 필요한 경우 서류 접수 완료일)로부터 영업일 기준 7일 이내에 지급합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑧ 다음과 같은 경우 포인트는 환불되지 않습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">포인트 유효기간이 만료된 경우</li>
+            <li style="margin-bottom: 6px;">제16조 (서비스 이용의 제한 및 정지)에 의한 영구 이용정지의 경우</li>
+            <li style="margin-bottom: 6px;">회원이 서비스 자진 탈퇴 시 잔여 포인트 환불을 포기한 경우</li>
+            </ul>
+            
+            <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제7장 손해배상 등</h4>
+            <p style="margin-bottom: 12px;"><strong>제24조 (손해배상)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사의 귀책사유로 인해 서비스를 이용하지 못한 경우, 회사는 회원이 입은 손해를 배상합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 손해배상은 회원이 서비스를 이용하지 못한 시간에 해당하는 이용 요금의 3배를 한도로 합니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제25조 (면책)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 다음 각 호의 경우로 서비스를 제공할 수 없는 경우, 이로 인하여 이용자에게 발생한 손해에 대해서는 책임을 부담하지 않습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">천재지변, 기간통신사업자(통신사, 카카오)의 장애 등 불가항력의 상태가 있는 경우</li>
+            <li style="margin-bottom: 6px;">서비스의 효율적인 제공을 위한 시스템 개선, 장비 증설 등 계획된 서비스 중지 일정을 사전에 공지한 경우</li>
+            <li style="margin-bottom: 6px;">회사의 고의 또는 과실이 없는 사유로 인한 경우</li>
+            <li style="margin-bottom: 6px;">이용자의 귀책사유(수신번호 오입력, 단말기 문제 등)로 서비스 이용에 장애가 있는 경우</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 제16조에 따라 이용자의 서비스 이용을 정지하거나 제한 또는 거절하는 경우, 이로 인하여 발생할 수 있는 이용자의 손해 등에 대해서는 책임을 부담하지 않습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사는 무료로 제공하는 서비스(마일리지 발송 등) 이용과 관련하여 발생한 손해에 대해서는 책임을 지지 않습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 회사는 이용자가 게시 또는 전송한 자료의 내용에 대해서는 책임을 면합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 회사는 이용자 상호간 또는 이용자와 제3자 상호간에 서비스를 매개로 하여 물품거래 등을 한 경우에는 책임을 면합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑥ 회사는 선거 회원의 선거 비용 보전을 위해 발송 결과 리포트, 세금계산서, 080 수신거부 내역, 입금 확인증 등 회사가 제공하는 표준 양식의 증빙 서류를 제공합니다. 이용자가 특정 양식을 별도로 요구하거나, 선거관리위원회 제출 과정에서 발생한 서류 누락, 기한 경과, 보전 거부 등에 대해서는 책임을 지지 않습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제25조 (분쟁조정 및 관할법원)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 본 약관은 대한민국법령에 의하여 규정되고 이행됩니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 서비스 이용과 관련하여 발생한 분쟁에 대해 소송이 제기될 경우, 회사의 본사 소재지를 관할하는 법원을 전속 관할 법원으로 합니다.</p>
+            
+            
+            
+            
+            <p style="margin-bottom: 8px; padding-left: 16px;">부칙</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">본 약관은 2026년 XX월 XX일부터 시행합니다.</p>
             </div>
         `,
         'privacy': `
