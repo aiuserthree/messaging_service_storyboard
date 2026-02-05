@@ -118,7 +118,8 @@
         }
 
         /* 이용내역: history tabs & table (payment-refund와 동일) */
-        .history-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+        .history-tabs { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .history-tabs-right { margin-left: auto; }
         .history-tab {
             padding: 8px 16px; border: 1px solid var(--border-color); background: var(--surface-color);
             border-radius: var(--radius-md); cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s;
@@ -127,6 +128,31 @@
         .history-tab.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         .history-content { display: none; }
         .history-content.active { display: block; }
+        .mileage-expiry-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        .mileage-expiry-row:last-child { border-bottom: none; }
+        .mileage-expiry-month { font-weight: 600; min-width: 80px; }
+        .mileage-expiry-amount { color: var(--primary-color); font-weight: 600; }
+        .mileage-expiry-date { color: var(--text-secondary); font-size: 13px; }
+        .mileage-expiry-empty { color: var(--text-secondary); text-align: center; padding: 24px 0; }
+        .mileage-expiry-3m-desc { margin-bottom: 8px; color: var(--text-primary); font-size: 14px; }
+        .mileage-expiry-3m-note { margin-bottom: 16px; font-size: 13px; color: var(--danger-color); }
+        .mileage-expiry-3m-note .asterisk { color: var(--danger-color); }
+        .mileage-expiry-3m-item { border-bottom: 1px solid var(--border-color); }
+        .mileage-expiry-3m-item:last-child { border-bottom: none; }
+        .mileage-expiry-3m-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; cursor: pointer; }
+        .mileage-expiry-3m-head-left { display: flex; flex-direction: column; gap: 2px; }
+        .mileage-expiry-3m-head-right { display: flex; align-items: center; gap: 8px; }
+        .mileage-expiry-3m-label { font-size: 12px; color: var(--text-secondary); }
+        .mileage-expiry-3m-lastday { color: var(--text-secondary); font-weight: 500; }
+        .mileage-expiry-3m-chevron { font-size: 12px; color: var(--text-secondary); transition: transform 0.2s; }
+        .mileage-expiry-3m-chevron.open { transform: rotate(180deg); }
+        .mileage-expiry-3m-detail { display: none; padding: 12px 0 16px; border-top: 1px solid var(--bg-color); font-size: 13px; color: var(--text-secondary); }
+        .mileage-expiry-3m-detail.open { display: block; }
+        .mileage-expiry-3m-detail-row { padding: 4px 0; }
+        .mileage-expiry-3m-detail-section { margin-bottom: 12px; }
+        .mileage-expiry-3m-detail-section:last-child { margin-bottom: 0; }
+        .mileage-expiry-3m-detail-title { display: block; font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+        .mileage-expiry-3m-result .mileage-expiry-3m-detail-row { color: var(--primary-color); }
         .pagination {
             display: flex; justify-content: center; align-items: center; gap: 4px;
             margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);
@@ -145,6 +171,7 @@
         .status-badge { padding: 4px 8px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; }
         .status-charge { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
         .status-mileage { background: rgba(37, 99, 235, 0.1); color: var(--primary-color); }
+        .status-mileage_use { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
         .status-use { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
         .status-refund { background: rgba(100, 116, 139, 0.1); color: var(--secondary-color); }
         .amount-plus { color: var(--success-color); font-weight: 600; }
@@ -469,8 +496,11 @@
                             <div class="history-tabs" id="historyTabs">
                                 <button type="button" class="history-tab active" onclick="switchHistoryTab('all')">전체</button>
                                 <button type="button" class="history-tab" onclick="switchHistoryTab('charge')">포인트 충전</button>
-                                <button type="button" class="history-tab" onclick="switchHistoryTab('mileage')">마일리지 적립</button>
-                                <button type="button" class="history-tab" onclick="switchHistoryTab('use')">사용 내역</button>
+                                <button type="button" class="history-tab" onclick="switchHistoryTab('use')">포인트 사용 내역</button>
+                                <button type="button" class="history-tab" onclick="switchHistoryTab('mileage')">마일리지 사용 내역</button>
+                                <div class="history-tabs-right">
+                                    <button type="button" class="btn btn-outline btn-sm" onclick="openMileageExpiryByMonthModal()">소멸 예정 마일리지</button>
+                                </div>
                             </div>
                             <div class="history-content active" id="historyAll">
                                 <div class="table-container">
@@ -511,7 +541,8 @@
                                         <thead>
                                             <tr>
                                                 <th>날짜</th>
-                                                <th>적립 사유</th>
+                                                <th>구분</th>
+                                                <th>내용</th>
                                                 <th>금액</th>
                                                 <th>잔액</th>
                                             </tr>
@@ -567,6 +598,23 @@
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('phoneVerifyModal')">취소</button>
                 <button class="btn btn-primary" onclick="verifyPhoneMypage()">확인</button>
+            </div>
+        </div>
+    </div>
+    <!-- 소멸 예정 마일리지 (당월 포함 3개월) 모달 -->
+    <div class="modal-overlay" id="mileageExpiryByMonthModal" style="display: none;">
+        <div class="modal" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">소멸 예정 마일리지</h3>
+                <button class="modal-close" onclick="closeMileageExpiryByMonthModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="mileage-expiry-3m-desc">이후 3개월(당월포함)동안의 소멸예정 포인트 내역입니다.</p>
+                <p class="mileage-expiry-3m-note"><span class="asterisk">*</span> 사용 또는 사용취소한 포인트는 익일 소멸 예정 포인트에 반영됩니다.</p>
+                <div id="mileageExpiryByMonthBody"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeMileageExpiryByMonthModal()">확인</button>
             </div>
         </div>
     </div>
@@ -782,30 +830,168 @@
         var ITEMS_PER_PAGE = 20;
         var currentPages = { all: 1, charge: 1, mileage: 1, use: 1 };
         var allHistoryData = [
+            { date: '2024-03-05 11:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+15.5', balance: '99.5' },
+            { date: '2024-03-18 16:30', type: 'mileage', typeLabel: '마일리지', content: '이벤트 마일리지 적립', amount: '+10.0', balance: '84.0' },
+            { date: '2024-04-01 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+20.0', balance: '74.0' },
+            { date: '2024-04-12 09:15', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+7.0', balance: '54.0' },
             { date: '2024-11-19 14:30', type: 'charge', typeLabel: '충전', content: '포인트 충전 (신용카드)', amount: '+100,000', balance: '1,000,000' },
             { date: '2024-11-18 16:20', type: 'use', typeLabel: '사용', content: 'SMS 발송 (500건)', amount: '-10,000', balance: '900,000' },
             { date: '2024-11-18 10:15', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+12.6', balance: '92.6' },
+            { date: '2024-11-18 09:00', type: 'mileage_use', typeLabel: '마일리지 사용', content: 'SMS 발송 마일리지 사용', amount: '-2.0', balance: '80.0' },
             { date: '2024-11-17 15:00', type: 'use', typeLabel: '사용', content: 'LMS 발송 (300건)', amount: '-15,000', balance: '910,000' },
-            { date: '2024-11-17 14:30', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+15.0', balance: '80.0' },
+            { date: '2024-11-17 14:30', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+15.0', balance: '82.0' },
             { date: '2024-11-16 11:00', type: 'use', typeLabel: '사용', content: 'SMS 발송 (800건)', amount: '-16,000', balance: '925,000' },
-            { date: '2024-11-16 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+16.0', balance: '65.0' },
+            { date: '2024-11-16 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+16.0', balance: '67.0' },
+            { date: '2024-11-16 08:30', type: 'mileage_use', typeLabel: '마일리지 사용', content: 'LMS 발송 마일리지 사용', amount: '-5.0', balance: '51.0' },
             { date: '2024-11-15 09:15', type: 'charge', typeLabel: '충전', content: '포인트 충전 (실시간계좌이체)', amount: '+200,000', balance: '941,000' },
             { date: '2024-11-14 11:30', type: 'use', typeLabel: '사용', content: '알림톡 발송 (1,000건)', amount: '-30,000', balance: '741,000' },
-            { date: '2024-11-14 11:30', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+30.0', balance: '49.0' },
+            { date: '2024-11-14 11:30', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+30.0', balance: '56.0' },
             { date: '2024-11-13 16:00', type: 'use', typeLabel: '사용', content: 'SMS 발송 (200건)', amount: '-4,000', balance: '771,000' },
             { date: '2024-11-13 15:00', type: 'use', typeLabel: '사용', content: 'LMS 발송 (150건)', amount: '-7,500', balance: '775,000' },
-            { date: '2024-11-12 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+4.0', balance: '19.0' },
+            { date: '2024-11-13 11:00', type: 'mileage_use', typeLabel: '마일리지 사용', content: 'SMS 발송 마일리지 사용', amount: '-3.0', balance: '26.0' },
+            { date: '2024-11-12 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+4.0', balance: '29.0' },
             { date: '2024-11-12 09:00', type: 'use', typeLabel: '사용', content: 'MMS 발송 (50건)', amount: '-5,000', balance: '782,500' },
             { date: '2024-11-11 14:30', type: 'use', typeLabel: '사용', content: 'SMS 발송 (250건)', amount: '-5,000', balance: '787,500' },
-            { date: '2024-11-11 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+5.0', balance: '15.0' },
+            { date: '2024-11-11 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+5.0', balance: '28.0' },
             { date: '2024-11-10 16:45', type: 'charge', typeLabel: '충전', content: '포인트 충전 (가상계좌)', amount: '+300,000', balance: '792,500' },
             { date: '2024-11-10 11:00', type: 'use', typeLabel: '사용', content: '알림톡 발송 (300건)', amount: '-9,000', balance: '492,500' },
             { date: '2024-11-09 14:20', type: 'use', typeLabel: '사용', content: 'MMS 발송 (100건)', amount: '-10,000', balance: '501,500' },
-            { date: '2024-11-09 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+10.0', balance: '10.0' },
+            { date: '2024-11-09 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+10.0', balance: '23.0' },
         ];
         var chargeHistoryData = allHistoryData.filter(function(item) { return item.type === 'charge'; });
-        var mileageHistoryData = allHistoryData.filter(function(item) { return item.type === 'mileage'; });
+        var mileageHistoryData = allHistoryData.filter(function(item) { return item.type === 'mileage' || item.type === 'mileage_use'; });
         var useHistoryData = allHistoryData.filter(function(item) { return item.type === 'use' || item.type === 'refund'; });
+
+        function getMileageExpiryMonthKey(dateStr) {
+            var d = new Date(dateStr.replace(' ', 'T'));
+            if (isNaN(d.getTime())) return null;
+            d.setFullYear(d.getFullYear() + 1);
+            return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2);
+        }
+        function getMileageExpiryLastDay(dateStr) {
+            var d = new Date(dateStr.replace(' ', 'T'));
+            if (isNaN(d.getTime())) return null;
+            d.setFullYear(d.getFullYear() + 1);
+            d.setMonth(d.getMonth() + 1, 0);
+            return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+        }
+        function getMonthLastDayShort(monthKey) {
+            var parts = monthKey.split('-');
+            var y = parseInt(parts[0], 10), m = parseInt(parts[1], 10) - 1;
+            var d = new Date(y, m + 1, 0);
+            return d.getMonth() + 1 + '.' + ('0' + d.getDate()).slice(-2);
+        }
+        function openMileageExpiryByMonthModal() {
+            var expiryEntries = [];
+            mileageHistoryData.forEach(function(item) {
+                if (item.type !== 'mileage') return;
+                var key = getMileageExpiryMonthKey(item.date);
+                if (!key) return;
+                var amt = parseFloat(String(item.amount).replace(/[+,]/g, '')) || 0;
+                expiryEntries.push({ key: key, amount: amt, date: item.date, content: item.content });
+            });
+            expiryEntries.sort(function(a, b) {
+                if (a.key !== b.key) return a.key < b.key ? -1 : 1;
+                return a.date < b.date ? -1 : 1;
+            });
+            var usages = [];
+            mileageHistoryData.forEach(function(item) {
+                if (item.type !== 'mileage_use') return;
+                var amt = Math.abs(parseFloat(String(item.amount).replace(/[+,]/g, '')) || 0);
+                usages.push({ date: item.date, amount: amt, content: item.content });
+            });
+            usages.sort(function(a, b) { return a.date < b.date ? -1 : 1; });
+            var remaining = expiryEntries.map(function(e) { return { key: e.key, amount: e.amount, date: e.date, content: e.content }; });
+            var deductionsByKey = {};
+            usages.forEach(function(use) {
+                var toDeduct = use.amount;
+                for (var i = 0; i < remaining.length && toDeduct > 0; i++) {
+                    if (remaining[i].amount <= 0) continue;
+                    var take = Math.min(remaining[i].amount, toDeduct);
+                    remaining[i].amount -= take;
+                    toDeduct -= take;
+                    var k = remaining[i].key;
+                    if (!deductionsByKey[k]) deductionsByKey[k] = [];
+                    deductionsByKey[k].push({ date: use.date, amount: take, content: use.content });
+                }
+            });
+            var originalByKey = {};
+            expiryEntries.forEach(function(e) {
+                if (!originalByKey[e.key]) originalByKey[e.key] = [];
+                originalByKey[e.key].push({ date: e.date, content: e.content, amount: e.amount });
+            });
+            var mergeDeductions = function(list) {
+                var map = {};
+                list.forEach(function(d) {
+                    var id = d.date + '|' + d.content;
+                    if (!map[id]) map[id] = { date: d.date, content: d.content, amount: 0 };
+                    map[id].amount += d.amount;
+                });
+                return Object.keys(map).map(function(id) { return map[id]; });
+            };
+            var byMonth = {};
+            remaining.forEach(function(r) {
+                if (!byMonth[r.key]) byMonth[r.key] = { amount: 0, originalItems: originalByKey[r.key] || [], deductions: mergeDeductions(deductionsByKey[r.key] || []) };
+                byMonth[r.key].amount += r.amount;
+            });
+            var refDate = new Date(2025, 1, 1);
+            var threeMonths = [];
+            for (var i = 0; i < 3; i++) {
+                var y = refDate.getFullYear();
+                var m = refDate.getMonth() + i;
+                if (m > 11) { y += 1; m -= 12; }
+                threeMonths.push(y + '-' + ('0' + (m + 1)).slice(-2));
+            }
+            var listHtml = '';
+            threeMonths.forEach(function(key, idx) {
+                var v = byMonth[key] || { amount: 0, originalItems: [], deductions: [] };
+                var label = key.replace('-', '년 ') + '월';
+                var lastDayShort = getMonthLastDayShort(key);
+                var amountStr = v.amount === 0 ? '0' : v.amount.toFixed(1);
+                var detailRows = '';
+                detailRows += '<div class="mileage-expiry-3m-detail-section"><span class="mileage-expiry-3m-detail-title">적립 내역</span>';
+                if (v.originalItems && v.originalItems.length) {
+                    v.originalItems.forEach(function(it) {
+                        detailRows += '<div class="mileage-expiry-3m-detail-row">' + it.date + ' ' + it.content + ' <span class="amount-plus">+' + it.amount.toFixed(1) + ' M</span></div>';
+                    });
+                } else {
+                    detailRows += '<div class="mileage-expiry-3m-detail-row">없음</div>';
+                }
+                detailRows += '</div><div class="mileage-expiry-3m-detail-section"><span class="mileage-expiry-3m-detail-title">사용 내역</span>';
+                if (v.deductions && v.deductions.length) {
+                    v.deductions.forEach(function(d) {
+                        detailRows += '<div class="mileage-expiry-3m-detail-row">' + d.date + ' ' + d.content + ' <span class="amount-minus">-' + d.amount.toFixed(1) + ' M</span></div>';
+                    });
+                } else {
+                    detailRows += '<div class="mileage-expiry-3m-detail-row">없음</div>';
+                }
+                detailRows += '</div>';
+                listHtml += '<div class="mileage-expiry-3m-item" data-key="' + key + '">' +
+                    '<div class="mileage-expiry-3m-head" onclick="toggleMileageExpiryDetail(\'' + key + '\')">' +
+                    '<div class="mileage-expiry-3m-head-left"><span class="mileage-expiry-month">' + label + '</span><span class="mileage-expiry-3m-label">소멸예정 포인트 <span class="mileage-expiry-3m-lastday">' + lastDayShort + ' 소멸</span></span></div>' +
+                    '<div class="mileage-expiry-3m-head-right"><span class="mileage-expiry-amount">' + amountStr + ' M</span><span class="mileage-expiry-3m-chevron" id="chevron-' + key.replace('-', '_') + '">∨</span></div>' +
+                    '</div>' +
+                    '<div class="mileage-expiry-3m-detail" id="detail-' + key.replace('-', '_') + '">' + detailRows + '</div>' +
+                    '</div>';
+            });
+            var wrap = document.getElementById('mileageExpiryByMonthBody');
+            if (wrap) wrap.innerHTML = listHtml;
+            var modal = document.getElementById('mileageExpiryByMonthModal');
+            if (modal) modal.style.display = 'flex';
+        }
+        function toggleMileageExpiryDetail(key) {
+            var id = key.replace('-', '_');
+            var detail = document.getElementById('detail-' + id);
+            var chevron = document.getElementById('chevron-' + id);
+            if (detail && chevron) {
+                detail.classList.toggle('open');
+                chevron.classList.toggle('open');
+            }
+        }
+        function closeMileageExpiryByMonthModal() {
+            var modal = document.getElementById('mileageExpiryByMonthModal');
+            if (modal) modal.style.display = 'none';
+        }
 
         function renderTable(tabType) {
             var data, tbody, pagination;
@@ -830,7 +1016,8 @@
                     var method = item.content.replace('포인트 충전 (', '').replace(')', '');
                     html += '<tr><td>' + item.date + '</td><td>' + method + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
                 } else if (tabType === 'mileage') {
-                    html += '<tr><td>' + item.date + '</td><td>' + item.content + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
+                    var mileageKind = item.type === 'mileage_use' ? '사용' : '적립';
+                    html += '<tr><td>' + item.date + '</td><td><span class="status-badge status-' + item.type + '">' + mileageKind + '</span></td><td>' + item.content + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
                 } else if (tabType === 'use') {
                     var serviceParts = item.content.split(' (');
                     var service = serviceParts[0];
@@ -868,8 +1055,8 @@
             var tabs = document.querySelectorAll('.history-tab');
             if (tab === 'all') { tabs[0].classList.add('active'); document.getElementById('historyAll').classList.add('active'); }
             else if (tab === 'charge') { tabs[1].classList.add('active'); document.getElementById('historyCharge').classList.add('active'); }
-            else if (tab === 'mileage') { tabs[2].classList.add('active'); document.getElementById('historyMileage').classList.add('active'); }
-            else if (tab === 'use') { tabs[3].classList.add('active'); document.getElementById('historyUse').classList.add('active'); }
+            else if (tab === 'use') { tabs[2].classList.add('active'); document.getElementById('historyUse').classList.add('active'); }
+            else if (tab === 'mileage') { tabs[3].classList.add('active'); document.getElementById('historyMileage').classList.add('active'); }
             renderTable(tab);
         }
 
