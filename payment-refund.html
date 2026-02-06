@@ -580,8 +580,8 @@
                 <button class="modal-close" type="button" onclick="closeMileageExpiryByMonthModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="mileage-expiry-3m-desc">이후 3개월(당월포함)동안의 소멸예정 포인트 내역입니다.</p>
-                <p class="mileage-expiry-3m-note"><span class="asterisk">*</span> 사용 또는 사용취소한 포인트는 익일 소멸 예정 포인트에 반영됩니다.</p>
+                <p class="mileage-expiry-3m-desc">이후 3개월(당월포함)동안의 소멸예정 마일리지 내역입니다.</p>
+                <p class="mileage-expiry-3m-note"><span class="asterisk">*</span> 사용 또는 사용취소한 마일리지는 익일 소멸 예정 마일리지에 반영됩니다.</p>
                 <div id="mileageExpiryByMonthBody"></div>
             </div>
             <div class="modal-footer">
@@ -774,7 +774,7 @@
                 detailRows += '</div>';
                 listHtml += `<div class="mileage-expiry-3m-item" data-key="${key}">
                     <div class="mileage-expiry-3m-head" onclick="toggleMileageExpiryDetail('${key}')">
-                        <div class="mileage-expiry-3m-head-left"><span class="mileage-expiry-month">${label}</span><span class="mileage-expiry-3m-label">소멸예정 포인트 <span class="mileage-expiry-3m-lastday">${lastDayShort} 소멸</span></span></div>
+                        <div class="mileage-expiry-3m-head-left"><span class="mileage-expiry-month">${label}</span><span class="mileage-expiry-3m-label">소멸예정 마일리지 <span class="mileage-expiry-3m-lastday">${lastDayShort} 소멸</span></span></div>
                         <div class="mileage-expiry-3m-head-right"><span class="mileage-expiry-amount">${amountStr} M</span><span class="mileage-expiry-3m-chevron" id="chevron-${safeId}">∨</span></div>
                     </div>
                     <div class="mileage-expiry-3m-detail" id="detail-${safeId}">${detailRows}</div>

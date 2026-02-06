@@ -117,6 +117,14 @@
             margin-top: 24px;
         }
 
+        /* 이용내역: 기간 조회 */
+        .card-header-with-period { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .card-header-with-period .card-title { margin: 0; }
+        .history-period-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+        .history-period-dates { display: flex; align-items: center; gap: 8px; }
+        .history-period-dates .form-input.input-sm { width: 140px; padding: 6px 10px; font-size: 13px; }
+        .history-period-sep { color: var(--text-secondary); font-size: 14px; }
+        .history-period-btns { display: flex; gap: 6px; }
         /* 이용내역: history tabs & table (payment-refund와 동일) */
         .history-tabs { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
         .history-tabs-right { margin-left: auto; }
@@ -252,11 +260,11 @@
                     <div class="dashboard-summary-item">
                         <span class="dashboard-summary-label">발송 가능 건수</span>
                         <div class="dashboard-summary-send-counts" id="dashboardSendCounts">
-                            <span class="dashboard-summary-send-badge">SMS <span id="sendCountSms">0</span></span>
-                            <span class="dashboard-summary-send-badge">LMS <span id="sendCountLms">0</span></span>
-                            <span class="dashboard-summary-send-badge">MMS <span id="sendCountMms">0</span></span>
-                            <span class="dashboard-summary-send-badge">알림톡 <span id="sendCountAlimtalk">0</span></span>
-                            <span class="dashboard-summary-send-badge">브랜드메시지 <span id="sendCountBrandtalk">0</span></span>
+                            <span class="dashboard-summary-send-badge">SMS 발송 시 <span id="sendCountSms">0</span></span>
+                            <span class="dashboard-summary-send-badge">LMS 발송 시 <span id="sendCountLms">0</span></span>
+                            <span class="dashboard-summary-send-badge">MMS 발송 시 <span id="sendCountMms">0</span></span>
+                            <span class="dashboard-summary-send-badge">알림톡 발송 시 <span id="sendCountAlimtalk">0</span></span>
+                            <span class="dashboard-summary-send-badge">브랜드메시지 발송 시 <span id="sendCountBrandtalk">0</span></span>
                         </div>
                     </div>
                 </div>
@@ -490,36 +498,32 @@
                     <!-- 이용내역 (포인트/마일리지 내역 - 결제관리 환불 탭과 동일) -->
                     <div class="mypage-content-panel" id="panel-history">
                         <div class="card" id="historyCard">
-                            <div class="card-header">
+                            <div class="card-header card-header-with-period">
                                 <h3 class="card-title">포인트/마일리지 내역</h3>
+                                <div class="history-period-filter">
+                                    <div class="history-period-dates">
+                                        <input type="date" id="historyDateFrom" class="form-input input-sm">
+                                        <span class="history-period-sep">~</span>
+                                        <input type="date" id="historyDateTo" class="form-input input-sm">
+                                    </div>
+                                    <div class="history-period-btns">
+                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('1')">1개월</button>
+                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('3')">3개월</button>
+                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('6')">6개월</button>
+                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('12')">1년</button>
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="applyHistoryPeriod('custom')">검색</button>
+                                </div>
                             </div>
                             <div class="history-tabs" id="historyTabs">
-                                <button type="button" class="history-tab active" onclick="switchHistoryTab('all')">전체</button>
-                                <button type="button" class="history-tab" onclick="switchHistoryTab('charge')">포인트 충전</button>
+                                <button type="button" class="history-tab active" onclick="switchHistoryTab('charge')">포인트 충전 내역</button>
                                 <button type="button" class="history-tab" onclick="switchHistoryTab('use')">포인트 사용 내역</button>
-                                <button type="button" class="history-tab" onclick="switchHistoryTab('mileage')">마일리지 사용 내역</button>
+                                <button type="button" class="history-tab" onclick="switchHistoryTab('mileage')">마일리지 적립/사용 내역</button>
                                 <div class="history-tabs-right">
                                     <button type="button" class="btn btn-outline btn-sm" onclick="openMileageExpiryByMonthModal()">소멸 예정 마일리지</button>
                                 </div>
                             </div>
-                            <div class="history-content active" id="historyAll">
-                                <div class="table-container">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>날짜</th>
-                                                <th>구분</th>
-                                                <th>내용</th>
-                                                <th>금액</th>
-                                                <th>잔액</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="historyAllBody"></tbody>
-                                    </table>
-                                </div>
-                                <div class="pagination" id="paginationAll"></div>
-                            </div>
-                            <div class="history-content" id="historyCharge">
+                            <div class="history-content active" id="historyCharge">
                                 <div class="table-container">
                                     <table class="table">
                                         <thead>
@@ -609,8 +613,8 @@
                 <button class="modal-close" onclick="closeMileageExpiryByMonthModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="mileage-expiry-3m-desc">이후 3개월(당월포함)동안의 소멸예정 포인트 내역입니다.</p>
-                <p class="mileage-expiry-3m-note"><span class="asterisk">*</span> 사용 또는 사용취소한 포인트는 익일 소멸 예정 포인트에 반영됩니다.</p>
+                <p class="mileage-expiry-3m-desc">이후 3개월(당월포함)동안의 소멸예정 마일리지 내역입니다.</p>
+                <p class="mileage-expiry-3m-note"><span class="asterisk">*</span> 사용 또는 사용취소한 마일리지는 익일 소멸 예정 마일리지에 반영됩니다.</p>
                 <div id="mileageExpiryByMonthBody"></div>
             </div>
             <div class="modal-footer">
@@ -812,7 +816,7 @@
                 el.classList.toggle('active', el.id === 'panel-' + panelId);
             });
             if (panelId === 'history') {
-                renderTable('all');
+                renderTable('charge');
             }
         }
 
@@ -968,7 +972,7 @@
                 detailRows += '</div>';
                 listHtml += '<div class="mileage-expiry-3m-item" data-key="' + key + '">' +
                     '<div class="mileage-expiry-3m-head" onclick="toggleMileageExpiryDetail(\'' + key + '\')">' +
-                    '<div class="mileage-expiry-3m-head-left"><span class="mileage-expiry-month">' + label + '</span><span class="mileage-expiry-3m-label">소멸예정 포인트 <span class="mileage-expiry-3m-lastday">' + lastDayShort + ' 소멸</span></span></div>' +
+                    '<div class="mileage-expiry-3m-head-left"><span class="mileage-expiry-month">' + label + '</span><span class="mileage-expiry-3m-label">소멸예정 마일리지 <span class="mileage-expiry-3m-lastday">' + lastDayShort + ' 소멸</span></span></div>' +
                     '<div class="mileage-expiry-3m-head-right"><span class="mileage-expiry-amount">' + amountStr + ' M</span><span class="mileage-expiry-3m-chevron" id="chevron-' + key.replace('-', '_') + '">∨</span></div>' +
                     '</div>' +
                     '<div class="mileage-expiry-3m-detail" id="detail-' + key.replace('-', '_') + '">' + detailRows + '</div>' +
@@ -996,10 +1000,10 @@
         function renderTable(tabType) {
             var data, tbody, pagination;
             switch(tabType) {
-                case 'all': data = allHistoryData; tbody = document.getElementById('historyAllBody'); pagination = document.getElementById('paginationAll'); break;
                 case 'charge': data = chargeHistoryData; tbody = document.getElementById('historyChargeBody'); pagination = document.getElementById('paginationCharge'); break;
                 case 'mileage': data = mileageHistoryData; tbody = document.getElementById('historyMileageBody'); pagination = document.getElementById('paginationMileage'); break;
                 case 'use': data = useHistoryData; tbody = document.getElementById('historyUseBody'); pagination = document.getElementById('paginationUse'); break;
+                default: data = chargeHistoryData; tbody = document.getElementById('historyChargeBody'); pagination = document.getElementById('paginationCharge'); break;
             }
             var currentPage = currentPages[tabType];
             var totalPages = Math.ceil(data.length / ITEMS_PER_PAGE) || 1;
@@ -1010,9 +1014,7 @@
             var html = '';
             pageData.forEach(function(item) {
                 var amountClass = item.amount.indexOf('+') === 0 ? 'amount-plus' : 'amount-minus';
-                if (tabType === 'all') {
-                    html += '<tr><td>' + item.date + '</td><td><span class="status-badge status-' + item.type + '">' + item.typeLabel + '</span></td><td>' + item.content + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
-                } else if (tabType === 'charge') {
+                if (tabType === 'charge') {
                     var method = item.content.replace('포인트 충전 (', '').replace(')', '');
                     html += '<tr><td>' + item.date + '</td><td>' + method + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
                 } else if (tabType === 'mileage') {
@@ -1053,11 +1055,24 @@
             document.querySelectorAll('.history-tab').forEach(function(t) { t.classList.remove('active'); });
             document.querySelectorAll('.history-content').forEach(function(c) { c.classList.remove('active'); });
             var tabs = document.querySelectorAll('.history-tab');
-            if (tab === 'all') { tabs[0].classList.add('active'); document.getElementById('historyAll').classList.add('active'); }
-            else if (tab === 'charge') { tabs[1].classList.add('active'); document.getElementById('historyCharge').classList.add('active'); }
-            else if (tab === 'use') { tabs[2].classList.add('active'); document.getElementById('historyUse').classList.add('active'); }
-            else if (tab === 'mileage') { tabs[3].classList.add('active'); document.getElementById('historyMileage').classList.add('active'); }
+            if (tab === 'charge') { tabs[0].classList.add('active'); document.getElementById('historyCharge').classList.add('active'); }
+            else if (tab === 'use') { tabs[1].classList.add('active'); document.getElementById('historyUse').classList.add('active'); }
+            else if (tab === 'mileage') { tabs[2].classList.add('active'); document.getElementById('historyMileage').classList.add('active'); }
             renderTable(tab);
+        }
+        function applyHistoryPeriod(period) {
+            var fromEl = document.getElementById('historyDateFrom');
+            var toEl = document.getElementById('historyDateTo');
+            var end = new Date();
+            var start = new Date();
+            if (period === 'custom') {
+                if (fromEl && toEl && fromEl.value && toEl.value) { /* 실제 API 호출 시 기간 전달 */ }
+                return;
+            }
+            var n = parseInt(period, 10) || 1;
+            start.setMonth(start.getMonth() - n);
+            if (fromEl) fromEl.value = start.getFullYear() + '-' + ('0' + (start.getMonth() + 1)).slice(-2) + '-' + ('0' + start.getDate()).slice(-2);
+            if (toEl) toEl.value = end.getFullYear() + '-' + ('0' + (end.getMonth() + 1)).slice(-2) + '-' + ('0' + end.getDate()).slice(-2);
         }
 
         function applyMypagePanelFromHash() {
