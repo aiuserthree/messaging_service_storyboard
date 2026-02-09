@@ -228,7 +228,7 @@
         <script>document.write(createHeader());</script>
 
         <main class="main-content">
-            <div class="page-header">
+            <div class="page-header" id="pageHeader">
                 <h2>마이페이지</h2>
                 <p class="page-description">회원정보를 확인하고 내 정보, 비밀번호, 발신번호, 이용내역을 관리합니다</p>
             </div>
@@ -272,7 +272,7 @@
 
             <!-- LNB + 콘텐츠 -->
             <div class="mypage-layout">
-                <nav class="mypage-lnb">
+                <nav class="mypage-lnb" id="mypageLnb">
                     <button type="button" class="mypage-lnb-item active" data-panel="profile" onclick="switchMypagePanel('profile')">내정보수정</button>
                     <button type="button" class="mypage-lnb-item" data-panel="password" onclick="switchMypagePanel('password')">비밀번호변경</button>
                     <button type="button" class="mypage-lnb-item" data-panel="caller" onclick="switchMypagePanel('caller')">발신번호관리</button>
@@ -305,7 +305,7 @@
                                             <label class="form-label required">휴대폰번호</label>
                                             <div class="phone-verify">
                                                 <input type="tel" class="form-input" value="010-1234-5678" required>
-                                                <button type="button" class="btn btn-outline" onclick="openModal('phoneVerifyModal')">인증</button>
+                                                <button type="button" class="btn btn-outline" onclick="openModal('phoneVerifyModal')" title="클릭 시 휴대폰 인증 모달 오픈. SMS 인증번호 발송·입력 후 인증 완료 처리.">인증</button>
                                             </div>
                                             <div class="verify-status" id="phoneVerifyStatus" style="display: none;"><span>✓</span><span>인증 완료</span></div>
                                         </div>
@@ -313,7 +313,7 @@
                                             <label class="form-label required">이메일 주소</label>
                                             <div class="flex gap-2 email-with-btn">
                                                 <input type="email" class="form-input" value="user@example.com" required>
-                                                <button type="button" class="btn btn-outline" onclick="checkEmail()">중복 확인</button>
+                                                <button type="button" class="btn btn-outline" onclick="checkEmail()" title="입력 이메일이 기존 회원과 중복인지 확인. 사용 가능/이미 사용 중 메시지.">중복 확인</button>
                                             </div>
                                         </div>
                                     </div>
@@ -324,7 +324,7 @@
                                         <label class="form-label">우편번호</label>
                                         <div class="form-input-with-btn">
                                             <input type="text" class="form-input" value="12345" readonly>
-                                            <button type="button" class="btn btn-outline" onclick="openAddressSearch()">주소 검색</button>
+                                            <button type="button" class="btn btn-outline" onclick="openAddressSearch()" title="주소 검색 클릭 시 Daum 우편번호 API 팝업. 선택 시 우편번호·주소 자동 입력.">주소 검색</button>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -343,8 +343,8 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-2 mt-3" id="profileActions">
-                                    <button type="submit" class="btn btn-primary" id="saveProfileBtn">저장하기</button>
-                                    <button type="button" class="btn btn-outline" onclick="resetForm()" id="cancelProfileBtn">취소</button>
+                                    <button type="submit" class="btn btn-primary" id="saveProfileBtn" title="수정 정보 검증 후 저장. 필수값·형식·인증 완료 여부 등 검증. 성공 시 안내 메시지.">저장하기</button>
+                                    <button type="button" class="btn btn-outline" onclick="resetForm()" id="cancelProfileBtn" title="입력 내용 초기화, 원래 값으로 복원.">취소</button>
                                 </div>
                             </form>
                         </div>
@@ -365,7 +365,7 @@
                                 </table>
                             </div>
                             <div style="margin-top: 16px;">
-                                <button type="button" class="btn btn-primary" onclick="openModal('taxAutoApplyModal')">세금계산서 자동발행 신청</button>
+                                <button type="button" class="btn btn-primary" onclick="openModal('taxAutoApplyModal')" title="기업회원 전용. 클릭 시 세금계산서 자동발행 신청 모달 오픈. 담당자 정보 입력 후 신청.">세금계산서 자동발행 신청</button>
                             </div>
                         </div>
                         <div class="card" id="memberTypeCard" style="margin-top: 24px;">
@@ -377,12 +377,12 @@
                                     <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; text-align: center;">
                                         <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">개인사업자 회원</div>
                                         <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">세금계산서 발행 가능</div>
-                                        <a href="mypage-convert-business.html" class="btn btn-outline btn-sm">전환 신청</a>
+                                        <a href="mypage-convert-business.html" class="btn btn-outline btn-sm" title="개인→개인사업자 전환. 클릭 시 mypage-convert-business.html 이동.">전환 신청</a>
                                     </div>
                                     <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; text-align: center;">
                                         <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">법인사업자 회원</div>
                                         <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">세금계산서 발행 가능</div>
-                                        <a href="mypage-convert-corporate.html" class="btn btn-outline btn-sm">전환 신청</a>
+                                        <a href="mypage-convert-corporate.html" class="btn btn-outline btn-sm" title="개인/개인사업자→법인사업자 전환. 클릭 시 mypage-convert-corporate.html 이동.">전환 신청</a>
                                     </div>
                                 </div>
                             </div>
@@ -394,7 +394,7 @@
                             </div>
                         </div>
                         <p style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
-                            <a href="javascript:void(0)" onclick="openWithdrawalModal()" style="font-size: 14px; color: var(--text-secondary); text-decoration: underline;">회원 해지</a>
+                            <a href="javascript:void(0)" onclick="openWithdrawalModal()" style="font-size: 14px; color: var(--text-secondary); text-decoration: underline;" title="회원 탈퇴(해지) 절차 진입. 클릭 시 탈퇴 확인 모달 또는 탈퇴 페이지 이동.">회원 해지</a>
                         </p>
                     </div>
 
@@ -416,8 +416,8 @@
                                     <input type="password" class="form-input" required id="confirmPassword">
                                 </div>
                                 <div class="flex gap-2 mt-3" id="passwordActions">
-                                    <button type="submit" class="btn btn-primary" id="changePasswordBtn">변경하기</button>
-                                    <button type="button" class="btn btn-outline" onclick="resetPasswordForm()" id="cancelBtn">취소</button>
+                                    <button type="submit" class="btn btn-primary" id="changePasswordBtn" title="검증 후 비밀번호 변경 API 호출. 성공 시 완료 메시지 및 로그인 페이지 이동 등.">변경하기</button>
+                                    <button type="button" class="btn btn-outline" onclick="resetPasswordForm()" id="cancelBtn" title="입력 초기화 또는 이전 패널/페이지로 이동.">취소</button>
                                 </div>
                             </form>
                         </div>
@@ -439,14 +439,14 @@
                             <div class="flex-between mb-2">
                                 <h3 class="card-title">발신번호 목록</h3>
                                 <div style="display: flex; gap: 8px; align-items: center;">
-                                    <a href="mypage-caller-number.html" class="btn btn-primary" id="registerCallerBtn">발신번호 등록</a>
+                                    <a href="mypage-caller-number.html" class="btn btn-primary" id="registerCallerBtn" title="클릭 시 mypage-caller-number.html(발신번호 등록 페이지)로 이동.">발신번호 등록</a>
                                 </div>
                             </div>
                             <div class="status-filter" id="statusFilter">
-                                <button type="button" class="status-filter-btn active" data-filter="all" onclick="filterCallerStatus('all')">전체</button>
-                                <button type="button" class="status-filter-btn" data-filter="pending" onclick="filterCallerStatus('pending')">승인대기</button>
-                                <button type="button" class="status-filter-btn" data-filter="approved" onclick="filterCallerStatus('approved')">승인완료</button>
-                                <button type="button" class="status-filter-btn" data-filter="rejected" onclick="filterCallerStatus('rejected')">반려</button>
+                                <button type="button" class="status-filter-btn active" data-filter="all" onclick="filterCallerStatus('all')" title="발신번호 목록을 전체 상태로 조회.">전체</button>
+                                <button type="button" class="status-filter-btn" data-filter="pending" onclick="filterCallerStatus('pending')" title="승인 대기 중인 발신번호만 표시.">승인대기</button>
+                                <button type="button" class="status-filter-btn" data-filter="approved" onclick="filterCallerStatus('approved')" title="승인 완료된 발신번호만 표시.">승인완료</button>
+                                <button type="button" class="status-filter-btn" data-filter="rejected" onclick="filterCallerStatus('rejected')" title="반려된 발신번호만 표시.">반려</button>
                             </div>
                             <div class="table-container" id="callerNumberTableContainer">
                                 <table class="table" id="callerNumberTable">
@@ -469,7 +469,7 @@
                                             <td><span class="badge badge-success">승인완료</span></td>
                                             <td>2024-01-10</td>
                                             <td>2024-01-12</td>
-                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="deleteCallerNumberMypage(1)">삭제</button></td>
+                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="deleteCallerNumberMypage(1)" title="해당 발신번호 삭제. 확인 후 목록에서 제거.">삭제</button></td>
                                         </tr>
                                         <tr data-status="pending">
                                             <td>02-1234-5678 <span style="color: var(--text-secondary);">(고객센터)</span></td>
@@ -478,7 +478,7 @@
                                             <td><span class="badge badge-warning">승인대기</span></td>
                                             <td>2024-01-15</td>
                                             <td>-</td>
-                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="viewCallerDetailMypage(2)">상세보기</button></td>
+                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="viewCallerDetailMypage(2)" title="해당 발신번호 상세(발신번호 관리 페이지에서 확인 가능 안내).">상세보기</button></td>
                                         </tr>
                                         <tr data-status="rejected">
                                             <td>010-9876-5432 <span style="color: var(--text-secondary);">(본인 휴대폰)</span></td>
@@ -487,7 +487,7 @@
                                             <td><span class="badge badge-danger">반려</span></td>
                                             <td>2024-01-08</td>
                                             <td>-</td>
-                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="viewRejectionReasonMypage(3)">반려사유</button></td>
+                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="viewRejectionReasonMypage(3)" title="반려된 건의 반려 사유 팝업/페이지 표시.">반려사유</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -502,30 +502,31 @@
                                 <h3 class="card-title">포인트/마일리지 내역</h3>
                                 <div class="history-period-filter">
                                     <div class="history-period-dates">
-                                        <input type="date" id="historyDateFrom" class="form-input input-sm">
+                                        <input type="date" id="historyDateFrom" class="form-input input-sm" title="달력으로 조회 시작일 선택. 과거 데이터 검색용. 선택 구간은 최대 1년.">
                                         <span class="history-period-sep">~</span>
-                                        <input type="date" id="historyDateTo" class="form-input input-sm">
+                                        <input type="date" id="historyDateTo" class="form-input input-sm" title="달력으로 조회 종료일 선택. 과거 데이터 검색용. 시작일~종료일 최대 1년.">
                                     </div>
                                     <div class="history-period-btns">
-                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('1')">1개월</button>
-                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('3')">3개월</button>
-                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('6')">6개월</button>
-                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('12')">1년</button>
+                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('1')" title="최근 기준: 오늘부터 과거 1개월 구간 자동 설정 후 내역 조회.">1개월</button>
+                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('3')" title="최근 기준: 오늘부터 과거 3개월 구간 자동 설정 후 내역 조회.">3개월</button>
+                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('6')" title="최근 기준: 오늘부터 과거 6개월 구간 자동 설정 후 내역 조회.">6개월</button>
+                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('12')" title="최근 기준: 오늘부터 과거 1년 구간 자동 설정 후 내역 조회.">1년</button>
                                     </div>
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="applyHistoryPeriod('custom')">검색</button>
+                                    <button type="button" class="btn btn-primary btn-sm" id="historySearchBtn" onclick="applyHistoryPeriod('custom')">검색</button>
                                 </div>
                             </div>
+                            <p class="form-help" style="margin: -8px 0 12px 0; font-size: 12px; color: var(--text-secondary);">※ 기간 버튼(1/3/6개월, 1년)은 <strong>최근 기준</strong> 조회, 달력+검색은 <strong>과거 구간 직접 선택</strong> 조회(최대 1년)</p>
                             <div class="history-tabs" id="historyTabs">
-                                <button type="button" class="history-tab active" onclick="switchHistoryTab('charge')">포인트 충전 내역</button>
-                                <button type="button" class="history-tab" onclick="switchHistoryTab('use')">포인트 사용 내역</button>
-                                <button type="button" class="history-tab" onclick="switchHistoryTab('mileage')">마일리지 적립/사용 내역</button>
+                                <button type="button" class="history-tab active" onclick="switchHistoryTab('charge')" title="포인트 충전 내역 탭 선택. 날짜·결제수단·금액·잔액 등 표시.">포인트 충전 내역</button>
+                                <button type="button" class="history-tab" onclick="switchHistoryTab('use')" title="포인트 사용 내역 탭 선택. 날짜·서비스·발송 건수·금액·잔액 등 표시.">포인트 사용 내역</button>
+                                <button type="button" class="history-tab" onclick="switchHistoryTab('mileage')" title="마일리지 적립·사용 내역 탭 선택.">마일리지 적립/사용 내역</button>
                                 <div class="history-tabs-right">
-                                    <button type="button" class="btn btn-outline btn-sm" onclick="openMileageExpiryByMonthModal()">소멸 예정 마일리지</button>
+                                    <button type="button" class="btn btn-outline btn-sm" onclick="openMileageExpiryByMonthModal()" title="클릭 시 소멸 예정 마일리지 모달 오픈. 당월 포함 3개월 소멸 예정 내역 표시.">소멸 예정 마일리지</button>
                                 </div>
                             </div>
                             <div class="history-content active" id="historyCharge">
                                 <div class="table-container">
-                                    <table class="table">
+                                    <table class="table" title="충전 일시·결제수단·금액·잔액 목록. 페이지네이션 포함.">
                                         <thead>
                                             <tr>
                                                 <th>날짜</th>
@@ -541,7 +542,7 @@
                             </div>
                             <div class="history-content" id="historyMileage">
                                 <div class="table-container">
-                                    <table class="table">
+                                    <table class="table" title="일시·구분·내용·금액·잔액 목록. 페이지네이션 포함.">
                                         <thead>
                                             <tr>
                                                 <th>날짜</th>
@@ -558,7 +559,7 @@
                             </div>
                             <div class="history-content" id="historyUse">
                                 <div class="table-container">
-                                    <table class="table">
+                                    <table class="table" title="사용 일시·서비스·발송 건수·금액·잔액 목록. 페이지네이션 포함.">
                                         <thead>
                                             <tr>
                                                 <th>날짜</th>
@@ -1098,6 +1099,79 @@
     <script>
         document.write(createFloatingMenu());
         document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 (다른 페이지와 동일한 번호 마커 + 호버 툴팁 방식) -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            { selector: '#pageHeader h2', title: '1. 페이지 제목', position: { top: '-5px', left: '-10px' }, function: '마이페이지 메인 타이틀. 회원정보·설정·이용내역 관리 진입점.' },
+            { selector: '#pageHeader .page-description', title: '2. 페이지 설명', position: { top: '-5px', left: '-10px' }, function: '회원정보를 확인하고 내 정보, 비밀번호, 발신번호, 이용내역을 관리합니다 안내.' },
+            { selector: '#dashboardMemberType', title: '3. 회원유형', position: { top: '-5px', right: '-10px' }, function: '로그인 회원의 유형 표시(개인회원/기업회원). 대시보드와 동일한 요약 영역.' },
+            { selector: '#dashboardMemberGrade', title: '4. 회원등급', position: { top: '-5px', right: '-10px' }, function: '회원등급 표시(일반 등).' },
+            { selector: '#dashboardBalance', title: '5. 잔액', position: { top: '-5px', right: '-10px' }, function: '포인트·마일리지 등 잔액 정보. 전용계좌 안내 포함.' },
+            { selector: '#dashboardSendCounts', title: '6. 발송 가능 건수', position: { top: '-5px', right: '-10px' }, function: '일반/광고/선거 등 발송 가능 건수 뱃지 표시.' },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(1)', title: '7. 내정보수정', position: { top: '-5px', left: '-10px' }, function: '클릭 시 내정보수정 패널로 전환. 기본 정보·주소·회원유형 전환·세금계산서 신청 등.' },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(2)', title: '8. 비밀번호변경', position: { top: '-5px', left: '-10px' }, function: '클릭 시 비밀번호 변경 패널로 전환.' },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(3)', title: '9. 발신번호관리', position: { top: '-5px', left: '-10px' }, function: '클릭 시 발신번호 목록·등록·상태 필터 패널로 전환.' },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(4)', title: '10. 이용내역', position: { top: '-5px', left: '-10px' }, function: '클릭 시 포인트/마일리지 이용내역 패널로 전환. 기간 조회·탭별 내역 제공.' },
+            { selector: '#basicInfoSection .form-section-title', title: '11. 기본 정보 섹션', position: { top: '-5px', left: '-10px' }, function: '기본 정보 구역 구분.' },
+            { selector: '#basicInfoSection .form-group input[disabled]', title: '12. 아이디', position: { top: '-5px', right: '-10px' }, function: '로그인 아이디 조회 전용. 수정 불가(disabled), 회색 배경.' },
+            { selector: '#profileUserName', title: '13. 이름', position: { top: '-5px', right: '-10px' }, function: '회원 이름 수정. 한글/영문 2~20자, 필수.' },
+            { selector: '#basicInfoSection input[type="date"]', title: '14. 생년월일', position: { top: '-5px', right: '-10px' }, function: '날짜 선택(YYYY-MM-DD). 선택 항목.' },
+            { selector: '#basicInfoSection input[type="tel"]', title: '15. 휴대폰번호', position: { top: '-5px', right: '-10px' }, function: '010-XXXX-XXXX 형식. 필수. 하이픈 자동 입력.' },
+            { selector: '#basicInfoSection .phone-verify .btn', title: '16. 휴대폰 인증 버튼', position: { top: '-5px', right: '-10px' }, function: '클릭 시 휴대폰 인증 모달 오픈. SMS 인증번호 발송·입력 후 인증 완료 처리.' },
+            { selector: '#basicInfoSection input[type="email"]', title: '17. 이메일 주소', position: { top: '-5px', right: '-10px' }, function: '이메일 형식 검증, 필수.' },
+            { selector: '#basicInfoSection button[onclick="checkEmail()"]', title: '18. 이메일 중복 확인', position: { top: '-5px', right: '-10px' }, function: '입력 이메일이 기존 회원과 중복인지 확인. 사용 가능/이미 사용 중 메시지.' },
+            { selector: '#addressSection button[onclick="openAddressSearch()"]', title: '19. 주소 검색', position: { top: '-5px', right: '-10px' }, function: '주소 검색 클릭 시 Daum 우편번호 API 팝업. 선택 시 우편번호·주소 자동 입력.' },
+            { selector: '#addressSection .form-group:nth-child(2) .form-input', title: '20. 주소', position: { top: '-5px', right: '-10px' }, function: '우편번호 검색 후 자동 입력. 기본 주소(수정 불가).' },
+            { selector: '#addressSection .form-group:last-child .form-input', title: '21. 상세주소', position: { top: '-5px', right: '-10px' }, function: '직접 입력. 선택 항목.' },
+            { selector: '#joinDateSection .form-input', title: '22. 회원가입일', position: { top: '-5px', right: '-10px' }, function: '가입일 조회 전용. 수정 불가.' },
+            { selector: '#saveProfileBtn', title: '23. 저장하기', position: { top: '-5px', left: '-10px' }, function: '수정 정보 검증 후 저장. 필수값·형식·인증 완료 여부 등 검증. 성공 시 안내 메시지.' },
+            { selector: '#cancelProfileBtn', title: '24. 취소', position: { top: '-5px', right: '-10px' }, function: '입력 내용 초기화, 원래 값으로 복원.' },
+            { selector: '#businessInfoCard .card-title', title: '25. 기업 정보 카드', position: { top: '-5px', left: '-10px' }, function: '기업회원일 때만 표시. 회사명·사업자등록번호·대표자명·사업장 주소 등 조회.' },
+            { selector: 'button[onclick="openModal(\'taxAutoApplyModal\')"]', title: '26. 세금계산서 자동발행 신청', position: { top: '-5px', right: '-10px' }, function: '기업회원 전용. 클릭 시 세금계산서 자동발행 신청 모달 오픈. 담당자 정보 입력 후 신청.' },
+            { selector: '#currentMemberTypeText', title: '27. 현재 회원유형 표시', position: { top: '-5px', right: '-10px' }, function: '현재 회원유형 표시(개인회원 등).' },
+            { selector: '#memberTypeCard a[href="mypage-convert-business.html"]', title: '28. 개인사업자 전환 신청', position: { top: '-5px', right: '-10px' }, function: '개인→개인사업자 전환. 클릭 시 mypage-convert-business.html 이동.' },
+            { selector: '#memberTypeCard a[href="mypage-convert-corporate.html"]', title: '29. 법인사업자 전환 신청', position: { top: '-5px', right: '-10px' }, function: '개인/개인사업자→법인사업자 전환. 클릭 시 mypage-convert-corporate.html 이동.' },
+            { selector: '#panel-profile .alert-info', title: '30. 대행업체 안내', position: { top: '10px', left: '-10px' }, function: '대행업체 회원 시 계정 분리 안내. 고객센터 문의 유도.' },
+            { selector: 'a[onclick="openWithdrawalModal()"]', title: '31. 회원 해지', position: { top: '-5px', left: '-10px' }, function: '회원 탈퇴(해지) 절차 진입. 클릭 시 탈퇴 확인 모달 또는 탈퇴 페이지 이동.' },
+            { selector: '#currentPassword', title: '32. 현재 비밀번호', position: { top: '-5px', right: '-10px' }, function: '변경 전 본인 확인용. 필수. 타입 password, 표시/숨김 토글 가능.' },
+            { selector: '#newPassword', title: '33. 새 비밀번호', position: { top: '-5px', right: '-10px' }, function: '8~16자, 영문·숫자·특수문자 중 3종 이상 등 규칙 적용. 필수.' },
+            { selector: '#confirmPassword', title: '34. 새 비밀번호 확인', position: { top: '-5px', right: '-10px' }, function: '새 비밀번호와 일치 여부 실시간 체크. 필수.' },
+            { selector: '#changePasswordBtn', title: '35. 변경하기', position: { top: '-5px', left: '-10px' }, function: '검증 후 비밀번호 변경 API 호출. 성공 시 완료 메시지 및 로그인 페이지 이동 등.' },
+            { selector: '#cancelBtn', title: '36. 취소', position: { top: '-5px', right: '-10px' }, function: '입력 초기화 또는 이전 패널/페이지로 이동.' },
+            { selector: '#callerNumberNotice', title: '37. 발신번호 사전등록제 안내', position: { top: '10px', left: '-10px' }, function: '정보통신망법에 따른 사전 등록 의무·승인 소요 기간(1~3일) 안내.' },
+            { selector: '#agencyNotice', title: '38. 대행업체 안내', position: { top: '10px', left: '-10px' }, function: '대행업체 회원 시 고객사별 계정 생성·고객센터 문의 안내.' },
+            { selector: '#callerNumberCard .card-title', title: '39. 발신번호 목록', position: { top: '-5px', left: '-10px' }, function: '발신번호 목록 섹션 제목.' },
+            { selector: '#registerCallerBtn', title: '40. 발신번호 등록', position: { top: '-5px', right: '-10px' }, function: '클릭 시 mypage-caller-number.html(발신번호 등록 페이지)로 이동.' },
+            { selector: '#statusFilter button[data-filter="all"]', title: '41. 상태 필터 - 전체', position: { top: '-5px', left: '-10px' }, function: '발신번호 목록을 전체 상태로 조회.' },
+            { selector: '#statusFilter button[data-filter="pending"]', title: '42. 상태 필터 - 승인대기', position: { top: '-5px', left: '-10px' }, function: '승인 대기 중인 발신번호만 표시.' },
+            { selector: '#statusFilter button[data-filter="approved"]', title: '43. 상태 필터 - 승인완료', position: { top: '-5px', left: '-10px' }, function: '승인 완료된 발신번호만 표시.' },
+            { selector: '#statusFilter button[data-filter="rejected"]', title: '44. 상태 필터 - 반려', position: { top: '-5px', right: '-10px' }, function: '반려된 발신번호만 표시.' },
+            { selector: '#callerNumberTable', title: '45. 발신번호 목록 테이블', position: { top: '10px', left: '10px' }, function: '발신번호·통신사·용도·상태·등록일·승인일·관리(삭제/상세보기/반려사유) 컬럼.' },
+            { selector: '#callerNumberTableBody button[onclick*="deleteCallerNumberMypage"]', title: '46. 삭제 버튼', position: { top: '-5px', left: '-10px' }, function: '해당 발신번호 삭제. 확인 후 목록에서 제거.' },
+            { selector: '#callerNumberTableBody button[onclick*="viewCallerDetailMypage"]', title: '47. 상세보기 버튼', position: { top: '-5px', left: '-10px' }, function: '해당 발신번호 상세(발신번호 관리 페이지에서 확인 가능 안내).' },
+            { selector: '#callerNumberTableBody button[onclick*="viewRejectionReasonMypage"]', title: '48. 반려사유 버튼', position: { top: '-5px', right: '-10px' }, function: '반려된 건의 반려 사유 팝업/페이지 표시.' },
+            { selector: '#historyCard .card-title', title: '49. 포인트/마일리지 내역', position: { top: '-5px', left: '-10px' }, function: '포인트/마일리지 내역 섹션 제목.' },
+            { selector: '#historyDateFrom', title: '50. 조회 시작일', position: { top: '-5px', left: '-10px' }, function: '달력으로 조회 시작일 선택. 과거 데이터 검색용. 선택 구간은 최대 1년.', behavior: ['달력+검색은 과거 구간 직접 선택 조회(최대 1년)'] },
+            { selector: '#historyDateTo', title: '51. 조회 종료일', position: { top: '-5px', left: '-10px' }, function: '달력으로 조회 종료일 선택. 과거 데이터 검색용. 시작일~종료일 최대 1년.' },
+            { selector: '.history-period-btns button[onclick="applyHistoryPeriod(\'1\')"]', title: '52. 1개월', position: { top: '-5px', left: '-10px' }, function: '최근 기준: 오늘부터 과거 1개월 구간 자동 설정 후 내역 조회.', behavior: ['기간 버튼은 최근 기준 조회'] },
+            { selector: '.history-period-btns button[onclick="applyHistoryPeriod(\'3\')"]', title: '53. 3개월', position: { top: '-5px', left: '-10px' }, function: '최근 기준: 오늘부터 과거 3개월 구간 자동 설정 후 내역 조회.' },
+            { selector: '.history-period-btns button[onclick="applyHistoryPeriod(\'6\')"]', title: '54. 6개월', position: { top: '-5px', left: '-10px' }, function: '최근 기준: 오늘부터 과거 6개월 구간 자동 설정 후 내역 조회.' },
+            { selector: '.history-period-btns button[onclick="applyHistoryPeriod(\'12\')"]', title: '55. 1년', position: { top: '-5px', left: '-10px' }, function: '최근 기준: 오늘부터 과거 1년 구간 자동 설정 후 내역 조회.' },
+            { selector: '#historySearchBtn', title: '56. 검색 버튼', position: { top: '-5px', right: '-10px' }, function: '달력으로 선택한 시작일·종료일(과거 구간, 최대 1년)로 내역 조회.' },
+            { selector: '#historyTabs .history-tab:nth-child(1)', title: '57. 포인트 충전 내역 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 충전 내역 탭 선택. 날짜·결제수단·금액·잔액 등 표시.' },
+            { selector: '#historyTabs .history-tab:nth-child(2)', title: '58. 포인트 사용 내역 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 사용 내역 탭 선택. 날짜·서비스·발송 건수·금액·잔액 등 표시.' },
+            { selector: '#historyTabs .history-tab:nth-child(3)', title: '59. 마일리지 적립/사용 내역 탭', position: { top: '-5px', left: '-10px' }, function: '마일리지 적립·사용 내역 탭 선택.' },
+            { selector: 'button[onclick="openMileageExpiryByMonthModal()"]', title: '60. 소멸 예정 마일리지', position: { top: '-5px', right: '-10px' }, function: '클릭 시 소멸 예정 마일리지 모달 오픈. 당월 포함 3개월 소멸 예정 내역 표시.' },
+            { selector: '#historyCharge .table-container .table', title: '61. 포인트 충전 내역 테이블', position: { top: '10px', left: '10px' }, function: '충전 일시·결제수단·금액·잔액 목록. 페이지네이션 포함.' },
+            { selector: '#historyUse .table-container .table', title: '62. 포인트 사용 내역 테이블', position: { top: '10px', left: '10px' }, function: '사용 일시·서비스·발송 건수·금액·잔액 목록. 페이지네이션 포함.' },
+            { selector: '#historyMileage .table-container .table', title: '63. 마일리지 적립/사용 내역 테이블', position: { top: '10px', left: '10px' }, function: '일시·구분·내용·금액·잔액 목록. 페이지네이션 포함.' },
+            { selector: '#phoneVerifyModal .modal-title', title: '64. 휴대폰 인증 모달', position: { top: '-5px', left: '-10px' }, function: '휴대폰번호 확인·인증번호 입력·재전송·확인. 인증 완료 시 내정보 수정 폼에 반영.' },
+            { selector: '#mileageExpiryByMonthModal .modal-title', title: '65. 소멸 예정 마일리지 모달', position: { top: '-5px', left: '-10px' }, function: '당월 포함 이후 3개월 소멸 예정 마일리지 내역. 확인 버튼으로 닫기.' },
+            { selector: '#taxAutoApplyModal .modal-title', title: '66. 세금계산서 자동발행 신청 모달', position: { top: '-5px', left: '-10px' }, function: '담당자 이름·연락처·수신 이메일 입력 후 신청. 취소/신청 버튼.' }
+        ];
+        initSpecOverlay(specData);
     </script>
 </body>
 </html>
