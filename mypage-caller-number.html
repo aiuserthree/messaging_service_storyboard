@@ -1165,8 +1165,7 @@ body {
             </div>
 
             <div class="mypage-layout">
-                <nav class="mypage-lnb">
-                    <a href="mypage.html" class="mypage-lnb-item">마이페이지</a>
+                <nav class="mypage-lnb" id="mypageLnb">
                     <a href="mypage-profile.html" class="mypage-lnb-item">내정보수정</a>
                     <a href="mypage-password.html" class="mypage-lnb-item">비밀번호변경</a>
                     <a href="mypage-caller-number.html" class="mypage-lnb-item active">발신번호관리</a>
@@ -1794,6 +1793,12 @@ document.addEventListener('DOMContentLoaded', function() {
     initDropdownMenus();
     // 회원 유형 표시 업데이트
     updateMemberTypeDisplay();
+    // 마이페이지에서 "발신번호 등록" 클릭으로 진입 시(?open=register) 등록 팝업 자동 오픈
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('open') === 'register') {
+        setTimeout(function() { openRegisterModal(); }, 100);
+        history.replaceState(null, '', window.location.pathname);
+    }
 });
 
 // initDropdownMenus 함수는 header.js에서 제공됩니다
@@ -2609,11 +2614,12 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
         const specData = [
             // ===== 페이지 기본 요소 =====
-            // 1-4. 탭 메뉴
-            { selector: '#mypageTabs', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '마이페이지 탭 영역', function: '마이페이지 내 페이지 전환' },
-            { selector: '#mypageTabs .tab-item:nth-child(1)', title: '내 정보 수정 탭', position: { top: '-5px', left: '-10px' }, description: '프로필 수정 페이지', function: '클릭 시 mypage-profile.html로 이동' },
-            { selector: '#mypageTabs .tab-item:nth-child(2)', title: '비밀번호 변경 탭', position: { top: '-5px', left: '-10px' }, description: '비밀번호 변경 페이지', function: '클릭 시 mypage-password.html로 이동' },
-            { selector: '#mypageTabs .tab-item:nth-child(3)', title: '발신번호 관리 탭', position: { top: '-5px', right: '-10px' }, description: '발신번호 관리 (현재)', function: '현재 페이지', behavior: ['현재 활성 탭'] },
+            // 1-4. LNB (mypage와 동일: 내정보수정, 비밀번호변경, 발신번호관리, 이용내역)
+            { selector: '#mypageLnb', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '마이페이지 하위 메뉴 영역', function: '마이페이지 내 페이지 전환' },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(1)', title: '내정보수정', position: { top: '-5px', left: '-10px' }, description: '프로필 수정 페이지', function: '클릭 시 mypage-profile.html로 이동' },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(2)', title: '비밀번호변경', position: { top: '-5px', left: '-10px' }, description: '비밀번호 변경 페이지', function: '클릭 시 mypage-password.html로 이동' },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(3)', title: '발신번호관리 (현재)', position: { top: '-5px', right: '-10px' }, description: '발신번호 관리 (현재)', function: '현재 페이지', behavior: ['현재 활성'] },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(4)', title: '이용내역', position: { top: '-5px', left: '-10px' }, description: '이용내역', function: '클릭 시 mypage.html#history로 이동' },
             // 5. 안내 메시지
             { selector: '#callerNumberNotice', title: '사전등록제 안내', position: { top: '10px', left: '10px' }, description: '발신번호 등록 의무화 안내', function: '정보통신망법 안내' },
             // 6. 발신번호 카드
