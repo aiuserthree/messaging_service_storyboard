@@ -986,6 +986,71 @@ body {
             overflow: hidden;
             flex: 1;
         }
+        .template-phone-preview {
+            margin: 12px 0;
+            display: flex;
+            justify-content: center;
+        }
+        .template-phone-frame {
+            width: 180px;
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border-radius: 28px;
+            padding: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .template-phone-frame::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 4px;
+            background: #1a252f;
+            border-radius: 4px;
+            margin: 0 auto 6px;
+        }
+        .template-phone-screen {
+            background: #eaecee;
+            border-radius: 18px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
+        }
+        .template-phone-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 12px;
+            flex: 1;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .template-phone-content {
+            font-size: 12px;
+            line-height: 1.55;
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 7;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .template-phone-byte {
+            font-size: 10px;
+            color: #8395a7;
+            text-align: center;
+            margin-top: 8px;
+            padding-bottom: 2px;
+        }
+        .template-phone-frame::after {
+            content: '';
+            display: block;
+            width: 36px;
+            height: 4px;
+            background: #1a252f;
+            border-radius: 4px;
+            margin: 6px auto 0;
+        }
         .template-meta {
             display: flex;
             flex-direction: column;
@@ -1217,16 +1282,23 @@ body {
                                 </div>
                             </div>
                         </div>
-                        <div class="template-content">
-                            주문이 접수되었습니다. 주문번호: #{주문번호} 배송 예정일: #{배송일}
+                        <div class="template-phone-preview">
+                            <div class="template-phone-frame">
+                                <div class="template-phone-screen">
+                                    <div class="template-phone-card">
+                                        <div class="template-phone-content">주문이 접수되었습니다. 주문번호: #{주문번호} 배송 예정일: #{배송일}</div>
+                                    </div>
+                                    <div class="template-phone-byte">0/90 byte</div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="template-content" style="display: none;">주문이 접수되었습니다. 주문번호: #{주문번호} 배송 예정일: #{배송일}</div>
                         <div class="template-meta">
                             <div class="template-meta-info">
                                 <span>등록일: 2024-01-15</span>
-                                <span>사용: 45회</span>
                             </div>
                             <div class="template-actions-buttons" onclick="event.stopPropagation()">
-                                <button class="btn btn-sm btn-outline" onclick="previewTemplate(1)">미리보기</button>
+                                <button class="btn btn-sm btn-primary" onclick="window.location.href='message-send-ad.html'">발송하기</button>
                                 <button class="btn btn-sm btn-outline" onclick="editTemplate(1)">수정</button>
                                 <button class="btn btn-sm btn-outline" onclick="copyTemplate(1)">복사</button>
                                 <button class="btn btn-sm btn-outline" onclick="deleteTemplate(1)">삭제</button>
@@ -1246,16 +1318,23 @@ body {
                                 </div>
                             </div>
                         </div>
-                        <div class="template-content">
-                            안녕하세요. 주문하신 상품이 배송을 시작했습니다. 운송장번호: #{운송장번호} 배송조회: #{배송조회URL}
+                        <div class="template-phone-preview">
+                            <div class="template-phone-frame">
+                                <div class="template-phone-screen">
+                                    <div class="template-phone-card">
+                                        <div class="template-phone-content">안녕하세요. 주문하신 상품이 배송을 시작했습니다. 운송장번호: #{운송장번호} 배송조회: #{배송조회URL}</div>
+                                    </div>
+                                    <div class="template-phone-byte">0/90 byte</div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="template-content" style="display: none;">안녕하세요. 주문하신 상품이 배송을 시작했습니다. 운송장번호: #{운송장번호} 배송조회: #{배송조회URL}</div>
                         <div class="template-meta">
                             <div class="template-meta-info">
                                 <span>등록일: 2024-01-14</span>
-                                <span>사용: 32회</span>
                             </div>
                             <div class="template-actions-buttons" onclick="event.stopPropagation()">
-                                <button class="btn btn-sm btn-outline" onclick="previewTemplate(2)">미리보기</button>
+                                <button class="btn btn-sm btn-primary" onclick="window.location.href='message-send-ad.html'">발송하기</button>
                                 <button class="btn btn-sm btn-outline" onclick="editTemplate(2)">수정</button>
                                 <button class="btn btn-sm btn-outline" onclick="copyTemplate(2)">복사</button>
                                 <button class="btn btn-sm btn-outline" onclick="deleteTemplate(2)">삭제</button>
@@ -1275,16 +1354,23 @@ body {
                                 </div>
                             </div>
                         </div>
-                        <div class="template-content">
-                            특별 이벤트가 시작되었습니다! #{이벤트명} 자세한 내용은 이미지를 확인해주세요.
+                        <div class="template-phone-preview">
+                            <div class="template-phone-frame">
+                                <div class="template-phone-screen">
+                                    <div class="template-phone-card">
+                                        <div class="template-phone-content">특별 이벤트가 시작되었습니다! #{이벤트명} 자세한 내용은 이미지를 확인해주세요.</div>
+                                    </div>
+                                    <div class="template-phone-byte">0/90 byte</div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="template-content" style="display: none;">특별 이벤트가 시작되었습니다! #{이벤트명} 자세한 내용은 이미지를 확인해주세요.</div>
                         <div class="template-meta">
                             <div class="template-meta-info">
                                 <span>등록일: 2024-01-13</span>
-                                <span>사용: 18회</span>
                             </div>
                             <div class="template-actions-buttons" onclick="event.stopPropagation()">
-                                <button class="btn btn-sm btn-outline" onclick="previewTemplate(3)">미리보기</button>
+                                <button class="btn btn-sm btn-primary" onclick="window.location.href='message-send-ad.html'">발송하기</button>
                                 <button class="btn btn-sm btn-outline" onclick="editTemplate(3)">수정</button>
                                 <button class="btn btn-sm btn-outline" onclick="copyTemplate(3)">복사</button>
                                 <button class="btn btn-sm btn-outline" onclick="deleteTemplate(3)">삭제</button>
@@ -2084,7 +2170,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // CSV 헤더
-            const headers = ['템플릿명', '타입', '내용', '등록일', '사용횟수'];
+            const headers = ['템플릿명', '타입', '내용', '등록일'];
             const rows = [headers.join(',')];
 
             // 각 템플릿 데이터 추출
@@ -2094,7 +2180,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const content = item.querySelector('.template-content')?.textContent?.trim() || '';
                 const metaInfo = item.querySelectorAll('.template-meta-info span');
                 const regDate = metaInfo[0]?.textContent?.replace('등록일: ', '').trim() || '';
-                const useCount = metaInfo[1]?.textContent?.replace('사용: ', '').replace('회', '').trim() || '0';
 
                 // CSV 형식으로 변환 (쉼표와 줄바꿈 처리)
                 const escapeCSV = (str) => {
@@ -2108,8 +2193,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     escapeCSV(name),
                     escapeCSV(type),
                     escapeCSV(content),
-                    escapeCSV(regDate),
-                    escapeCSV(useCount)
+                    escapeCSV(regDate)
                 ].join(','));
             });
 

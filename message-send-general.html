@@ -1151,27 +1151,25 @@ body {
                                         <line x1="12" y1="16" x2="12" y2="12"></line>
                                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                     </svg>
-                                    주소록 불러오기, 엑셀 업로드, 직접 입력 모두 가능합니다.
+                                    주소록, 엑셀 업로드, 직접 입력 모두 가능합니다.
                                 </span>
                             </div>
                             <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
-                                <!-- 상단 탭 및 주소록 버튼 영역 -->
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color);" id="recipientToolbar">
-                                    <div style="display: flex; gap: 8px;" id="excelBtnGroup">
-                                        <button type="button" class="btn btn-primary" id="phoneOnlyInputBtn" onclick="openPhoneOnlyInputModal()">전화번호만 입력</button>
-                                        <input type="file" id="recipientExcelFileInput" class="form-input" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleRecipientExcelFileSelect(event)">
-                                        <button type="button" class="btn btn-primary" id="excelUploadBtn" onclick="document.getElementById('recipientExcelFileInput').click()">엑셀업로드</button>
-                                        <button type="button" class="btn btn-outline" id="excelSampleBtn" onclick="downloadSampleFile()">엑셀샘플 다운로드</button>
+                                <!-- 표 상단: 주소록에 저장 / 총 N명 / (공백) / 샘플 다운로드 / 엑셀 업로드 / 주소록 / 전화번호만 입력 -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 8px;" id="recipientToolbar">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <button type="button" class="btn btn-primary btn-sm" id="addToAddressBookBtn" onclick="addToAddressBook()">주소록에 저장</button>
+                                        <span style="font-size: 14px;">총 <strong id="recipientCount">0</strong>명</span>
                                     </div>
-                                    <div style="display: flex; gap: 8px;" id="addressBookBtnGroup">
-                                        <button type="button" class="btn btn-outline btn-sm" id="loadAddressBookBtn" onclick="loadRecipientAddressBook()">주소록 불러오기</button>
-                                        <select class="form-select" style="width: 120px;" id="recipientGroupSelect">
-                                            <option value="">그룹선택</option>
-                                            <option value="group1">VIP 고객</option>
-                                            <option value="group2">일반 고객</option>
-                                            <option value="group3">신규 고객</option>
-                                        </select>
-                                        <button type="button" class="btn btn-primary btn-sm" id="addToAddressBookBtn" onclick="addToAddressBook()">주소록에 추가</button>
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+                                        <a href="#" role="button" id="excelSampleBtn" onclick="downloadSampleFile(); return false;" style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--primary-color, #2563eb); text-decoration: underline; cursor: pointer;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                            샘플 다운로드
+                                        </a>
+                                        <input type="file" id="recipientExcelFileInput" class="form-input" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleRecipientExcelFileSelect(event)">
+                                        <button type="button" class="btn btn-primary" id="excelUploadBtn" onclick="document.getElementById('recipientExcelFileInput').click()">엑셀 업로드</button>
+                                        <button type="button" class="btn btn-outline btn-sm" id="loadAddressBookBtn" onclick="loadRecipientAddressBook()">주소록</button>
+                                        <button type="button" class="btn btn-primary" id="phoneOnlyInputBtn" onclick="openPhoneOnlyInputModal()">전화번호만 입력</button>
                                     </div>
                                 </div>
                                 
@@ -1216,9 +1214,6 @@ body {
                                     </div>
                                 </div>
                                 
-                            </div>
-                            <div class="form-help" style="margin-top: 8px;">
-                                총 <strong id="recipientCount">0</strong>명
                             </div>
                         </div>
 
@@ -1266,6 +1261,55 @@ body {
                             </div>
                             <textarea class="form-textarea" id="messageContent" rows="8" placeholder="메시지 내용을 입력하세요" required></textarea>
                             <div class="byte-counter" id="byteCounter">0 / 90 바이트</div>
+                            <div class="message-content-actions" style="margin-top: 8px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                <button type="button" class="btn btn-sm btn-outline" onclick="openRecentSentModal()">[최근발송]</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="toggleSpecialCharPanel()">[특수문자]</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="toggleEmojiPanel()">[이모지]</button>
+                            </div>
+                            <div id="specialCharPanel" style="display: none; margin-top: 12px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-color);">
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('♥')">♥</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('♡')">♡</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('★')">★</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('☆')">☆</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('►')">►</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('▷')">▷</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('◄')">◄</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('◁')">◁</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('▲')">▲</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('▼')">▼</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('●')">●</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('○')">○</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('■')">■</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('□')">□</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('◆')">◆</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('◇')">◇</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('™')">™</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('®')">®</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('☎')">☎</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('♨')">♨</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('♪')">♪</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('♬')">♬</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('♂')">♂</button>
+                                    <button type="button" class="special-char-btn" style="width: 36px; height: 36px; padding: 0; font-size: 18px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('♀')">♀</button>
+                                </div>
+                            </div>
+                            <div id="emojiPanel" style="display: none; margin-top: 12px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-color);">
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('😀')">😀</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('😊')">😊</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('😂')">😂</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('❤️')">❤️</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('👍')">👍</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('👋')">👋</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('🎉')">🎉</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('✅')">✅</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('⭐')">⭐</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('🔥')">🔥</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('💯')">💯</button>
+                                    <button type="button" class="emoji-btn" style="width: 36px; height: 36px; padding: 0; font-size: 20px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer;" onclick="insertIntoMessageContent('🙏')">🙏</button>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- 이미지 첨부 (MMS만) -->
@@ -1517,30 +1561,30 @@ body {
 
     <!-- 발송 확인 모달 -->
     <div class="modal-overlay" id="sendConfirmModal">
-        <div class="modal" id="sendConfirmModalContent">
+        <div class="modal" id="sendConfirmModalContent" style="max-width: 400px;">
             <div class="modal-header" id="sendConfirmModalHeader">
                 <h3 class="modal-title">발송 확인</h3>
                 <button class="modal-close" onclick="closeModal('sendConfirmModal')">&times;</button>
             </div>
             <div class="modal-body" id="sendConfirmModalBody">
-                <div class="form-group" id="sendConfirmInfo">
-                    <div class="cost-row">
+                <div class="form-group" id="sendConfirmInfo" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="cost-row" style="display: flex; justify-content: space-between; gap: 24px;">
                         <span>발신번호</span>
                         <span id="confirmCallerNumber">-</span>
                     </div>
-                    <div class="cost-row">
-                        <span>수신번호 개수</span>
-                        <span id="confirmRecipientCount">0명</span>
+                    <div class="cost-row" style="display: flex; justify-content: space-between; gap: 24px;">
+                        <span>받는사람</span>
+                        <span id="confirmRecipientCount">총 0명</span>
                     </div>
-                    <div class="cost-row">
+                    <div class="cost-row" style="display: flex; justify-content: space-between; gap: 24px;">
                         <span>메시지 타입</span>
                         <span id="confirmMessageType">-</span>
                     </div>
-                    <div class="cost-row">
+                    <div class="cost-row" style="display: flex; justify-content: space-between; gap: 24px;">
                         <span>발송 시간</span>
                         <span id="confirmSendTime">즉시 발송</span>
                     </div>
-                    <div class="cost-row cost-total">
+                    <div class="cost-row cost-total" style="display: flex; justify-content: space-between; gap: 24px;">
                         <span>예상 발송 포인트</span>
                         <span id="confirmCost">0</span>
                     </div>
@@ -1556,8 +1600,8 @@ body {
         </div>
     </div>
 
-    <!-- 전화번호만 입력 모달 -->
-    <div class="modal-overlay" id="phoneOnlyInputModal" onclick="if(event.target === this) closeModal('phoneOnlyInputModal')">
+    <!-- 전화번호만 입력 모달 (ESC/배경 클릭으로 닫히지 않음, 취소 버튼으로만 닫기) -->
+    <div class="modal-overlay" id="phoneOnlyInputModal">
         <div class="modal" style="max-width: 600px; width: 95%;">
             <div class="modal-body" style="padding: 24px;">
                 <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; background: white;">
@@ -1568,8 +1612,28 @@ body {
                         onkeydown="handlePhoneOnlyInputKeydown(event)"
                     ></textarea>
                 </div>
-                <div style="margin-top: 16px; text-align: center;">
+                <div style="margin-top: 16px; display: flex; justify-content: center; gap: 12px;">
                     <button type="button" class="btn btn-primary" style="min-width: 120px; padding: 10px 24px;" onclick="addPhoneNumbers()">번호추가 +</button>
+                    <button type="button" class="btn btn-outline" style="min-width: 120px; padding: 10px 24px;" onclick="closeModal('phoneOnlyInputModal')">취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 최근발송 문자 모달 -->
+    <div class="modal-overlay" id="recentSentModal">
+        <div class="modal" style="max-width: 480px; width: 95%;">
+            <div class="modal-header">
+                <h3 class="modal-title">최근발송 문자</h3>
+                <button class="modal-close" onclick="closeModal('recentSentModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 16px 20px;">
+                <ul style="margin: 0 0 16px 0; padding-left: 18px; color: var(--text-secondary); font-size: 13px; line-height: 1.8;">
+                    <li>가장 최근에 발송된 발송결과 내역이 보여집니다. (최대 10건)</li>
+                    <li>메시지를 선택하시면 메시지 내용을 불러옵니다.</li>
+                </ul>
+                <div id="recentSentList" style="max-height: 320px; overflow-y: auto;">
+                    <!-- 최근 발송 목록 (JS로 채움) -->
                 </div>
             </div>
         </div>
@@ -1759,12 +1823,13 @@ function closeModal(modalId) {
     }
 }
 
-// ESC 키로 모달 닫기
+// ESC 키로 모달 닫기 (전화번호만 입력 모달은 ESC로 닫히지 않음)
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' || e.keyCode === 27) {
         const activeModal = document.querySelector('.modal-overlay.active');
         if (activeModal) {
             const modalId = activeModal.id;
+            if (modalId === 'phoneOnlyInputModal') return;
             if (modalId && typeof closeModal === 'function') {
                 closeModal(modalId);
             } else {
@@ -1776,10 +1841,11 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// 모달 외부 클릭 시 닫기 (배경 음영 클릭 시)
+// 모달 외부 클릭 시 닫기 (배경 음영 클릭 시, 전화번호만 입력 모달은 제외)
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('modal-overlay')) {
         const modalId = e.target.id;
+        if (modalId === 'phoneOnlyInputModal') return;
         if (modalId && typeof closeModal === 'function') {
             closeModal(modalId);
         } else {
@@ -2358,6 +2424,60 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePreview();
         }
 
+        // 최근발송 문자 모달
+        const recentSentMockData = [
+            { type: '단문', date: '2026-01-21', time: '오후 3:08', content: '[톡벨] 안녕하세요. 겨울 맞이 이벤트 안내입니다.' },
+            { type: '단문', date: '2026-01-21', time: '오후 3:04', content: '예약이 완료되었습니다. 이용해 주셔서 감사합니다.' },
+            { type: '장문', date: '2026-01-20', time: '오전 10:15', content: '(광고)\n프로모션 안내 드립니다.\n자세한 내용은 링크에서 확인해 주세요.\n무료수신거부 080-123-4567' }
+        ];
+        function openRecentSentModal() {
+            const listEl = document.getElementById('recentSentList');
+            if (!listEl) return;
+            listEl.innerHTML = recentSentMockData.map((item, i) => {
+                const escaped = (item.content || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>');
+                return `
+                <div class="recent-sent-item" onclick="selectRecentMessageByIndex(${i})" style="display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--border-color); cursor: pointer;">
+                    <div style="width: 48px; height: 48px; background: var(--bg-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-secondary); flex-shrink: 0;">${i + 1}</div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 500; margin-bottom: 4px;">${item.type} · ${item.date} ${item.time}</div>
+                        <div style="font-size: 13px; color: var(--text-primary); line-height: 1.5; white-space: pre-wrap; word-break: break-word;">${escaped}</div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+            openModal('recentSentModal');
+        }
+        function selectRecentMessageByIndex(index) {
+            const item = recentSentMockData[index];
+            if (!item || item.content == null) return;
+            const ta = document.getElementById('messageContent');
+            if (ta) { ta.value = item.content; if (typeof updateByteCounter === 'function') updateByteCounter(); if (typeof updatePreview === 'function') updatePreview(); }
+            closeModal('recentSentModal');
+        }
+
+        function toggleSpecialCharPanel() {
+            const panel = document.getElementById('specialCharPanel');
+            const emojiPanel = document.getElementById('emojiPanel');
+            if (panel.style.display === 'none') { panel.style.display = 'block'; if (emojiPanel) emojiPanel.style.display = 'none'; }
+            else panel.style.display = 'none';
+        }
+        function toggleEmojiPanel() {
+            const panel = document.getElementById('emojiPanel');
+            const specialPanel = document.getElementById('specialCharPanel');
+            if (panel.style.display === 'none') { panel.style.display = 'block'; if (specialPanel) specialPanel.style.display = 'none'; }
+            else panel.style.display = 'none';
+        }
+        function insertIntoMessageContent(text) {
+            const textarea = document.getElementById('messageContent');
+            if (!textarea) return;
+            const start = textarea.selectionStart, end = textarea.selectionEnd, val = textarea.value;
+            textarea.value = val.substring(0, start) + text + val.substring(end);
+            textarea.focus();
+            textarea.setSelectionRange(start + text.length, start + text.length);
+            if (typeof updateByteCounter === 'function') updateByteCounter();
+            if (typeof updatePreview === 'function') updatePreview();
+        }
+
         function updateCost() {
             const count = parseInt(document.getElementById('recipientCount').textContent) || 0;
             const type = document.querySelector('input[name="messageType"]:checked').value;
@@ -2376,8 +2496,8 @@ document.addEventListener('DOMContentLoaded', function() {
         function showSendConfirm() {
             document.getElementById('confirmCallerNumber').textContent = 
                 document.getElementById('callerNumber').value || '-';
-            document.getElementById('confirmRecipientCount').textContent = 
-                document.getElementById('recipientCount').textContent + '명';
+document.getElementById('confirmRecipientCount').textContent =
+                '총 ' + document.getElementById('recipientCount').textContent + '명';
             document.getElementById('confirmMessageType').textContent = 
                 document.querySelector('input[name="messageType"]:checked').value;
             const sendTime = document.querySelector('input[name="sendTime"]:checked').value;
@@ -3084,55 +3204,9 @@ document.addEventListener('DOMContentLoaded', function() {
             showToast('주소록 불러오기 기능은 준비 중입니다.', 'info');
         }
 
-        // 주소록 불러오기
+        // 주소록 (그룹선택 콤보 삭제로 주소록 선택 모달/API 연동 전까지 안내)
         function loadRecipientAddressBook() {
-            const groupSelect = document.getElementById('recipientGroupSelect');
-            const selectedGroup = groupSelect.value;
-            
-            if (!selectedGroup) {
-                alert('그룹을 선택해주세요.');
-                return;
-            }
-            
-            // 그룹 선택에 따른 주소록 데이터 가져오기 (실제로는 API 호출)
-            // 예시 데이터
-            const addressBookData = {
-                'group1': [
-                    { name: '홍길동', phone: '010-1234-5678', variables: ['VIP', '서울', '2024', '1', 'A'] },
-                    { name: '김철수', phone: '010-2345-6789', variables: ['VIP', '부산', '2024', '2', 'B'] }
-                ],
-                'group2': [
-                    { name: '이영희', phone: '010-3456-7890', variables: ['일반', '대구', '2023', '3', 'C'] },
-                    { name: '박민수', phone: '010-4567-8901', variables: ['일반', '인천', '2023', '4', 'D'] }
-                ],
-                'group3': [
-                    { name: '최지영', phone: '010-5678-9012', variables: ['신규', '광주', '2024', '5', 'E'] }
-                ]
-            };
-            
-            const groupData = addressBookData[selectedGroup] || [];
-            
-            // 기존 데이터에 추가 (중복 제거)
-            groupData.forEach(item => {
-                const existingIndex = recipientTableData.findIndex(row => row.phone === item.phone);
-                if (existingIndex < 0) {
-                    recipientTableData.push({
-                        index: recipientTableData.length,
-                        name: item.name || '',
-                        phone: item.phone || '',
-                        variables: (item.variables || ['', '', '']).slice(0, 3)
-                    });
-                } else {
-                    // 기존 데이터 업데이트
-                    recipientTableData[existingIndex].name = item.name || recipientTableData[existingIndex].name;
-                    recipientTableData[existingIndex].variables = (item.variables || recipientTableData[existingIndex].variables || ['', '', '']).slice(0, 3);
-                }
-            });
-            
-            // 테이블 다시 렌더링 (데이터 개수에 맞춰)
-            renderRecipientTable();
-            updateRecipientCount();
-            showToast(`${groupData.length}개의 주소록이 추가되었습니다.`, 'success');
+            showToast('주소록 기능은 준비 중입니다.', 'info');
         }
 
         // 주소록에 추가 기능
@@ -3366,7 +3440,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                value="${row ? (row.phone || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;') : ''}" 
                                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                onblur="updateRecipientTableData(${i}, 'phone', this.value); updateRecipientCount();"
-                               onkeypress="if(event.key==='Enter') { event.preventDefault(); moveToNextCell(this); }">
+                               onkeydown="if(event.key==='Enter'||(event.key==='Tab'&&!event.shiftKey)){ event.preventDefault(); moveToNextCell(this); } if(event.key==='Tab'&&event.shiftKey){ event.preventDefault(); moveToPrevRowPhone(this); }">
                     </td>
                     ${[1,2,3].map(v => `
                         <td style="padding: 4px; border-bottom: 1px solid var(--border-color);">
@@ -3547,13 +3621,30 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 100);
         }
 
-        // 다음 셀으로 이동
+        // 다음 셀으로 이동 (전화번호 칸에서는 다음 행의 전화번호로 이동)
         function moveToNextCell(currentInput) {
+            const field = currentInput.getAttribute('data-field');
+            if (field === 'phone') {
+                const currentRow = parseInt(currentInput.getAttribute('data-row'), 10);
+                const nextPhone = document.querySelector('#recipientDataTableBody .recipient-input[data-row="' + (currentRow + 1) + '"][data-field="phone"]');
+                if (nextPhone) {
+                    nextPhone.focus();
+                    return;
+                }
+            }
             const inputs = Array.from(document.querySelectorAll('.recipient-input'));
             const currentIndex = inputs.indexOf(currentInput);
             if (currentIndex < inputs.length - 1) {
                 inputs[currentIndex + 1].focus();
             }
+        }
+
+        // 전화번호 칸에서 Shift+Tab 시 이전 행 전화번호로 이동
+        function moveToPrevRowPhone(currentInput) {
+            const currentRow = parseInt(currentInput.getAttribute('data-row'), 10);
+            if (currentRow <= 0) return;
+            const prevPhone = document.querySelector('#recipientDataTableBody .recipient-input[data-row="' + (currentRow - 1) + '"][data-field="phone"]');
+            if (prevPhone) prevPhone.focus();
         }
 
         // 엑셀 데이터로 테이블 업데이트
