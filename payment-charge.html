@@ -1135,7 +1135,7 @@ body {
 
                         <!-- 충전 포인트 선택 (신용카드 선택 시에만 노출, 5만~200만 P) -->
                         <div class="form-group" id="chargePointGroup" style="display: none;">
-                            <label class="form-label required">충전 포인트 금액</label>
+                            <label class="form-label required">충전 포인트</label>
                             <div class="amount-buttons" id="amountButtons">
                                 <div class="amount-btn" onclick="selectAmount(50000)">
                                     <div class="amount-btn-value">5만</div>
@@ -1221,19 +1221,19 @@ body {
                             </div>
                         </div>
 
-                        <!-- 결제 금액 정보 (단위: P) -->
+                        <!-- 결제 금액 정보 (충전 포인트: P, 부가세·총결제금액: 원) -->
                         <div class="price-info" id="priceInfoSection">
                             <div class="price-row">
-                                <span>충전포인트</span>
+                                <span>충전 포인트</span>
                                 <span id="chargeAmount">0 P</span>
                             </div>
                             <div class="price-row">
                                 <span>부가세 (10%)</span>
-                                <span id="vatAmount">0 P</span>
+                                <span id="vatAmount">0원</span>
                             </div>
                             <div class="price-row price-total">
                                 <span>총결제금액</span>
-                                <span id="totalAmount">0 P</span>
+                                <span id="totalAmount">0원</span>
                             </div>
                         </div>
 
@@ -1783,8 +1783,8 @@ document.addEventListener('DOMContentLoaded', function() {
             var vatEl = document.getElementById('vatAmount');
             var totalEl = document.getElementById('totalAmount');
             if (chargeEl) chargeEl.textContent = formatNumber(chargeAmount) + ' P';
-            if (vatEl) vatEl.textContent = formatNumber(vatAmount) + ' P';
-            if (totalEl) totalEl.textContent = formatNumber(totalAmount) + ' P';
+            if (vatEl) vatEl.textContent = formatNumber(vatAmount) + '원';
+            if (totalEl) totalEl.textContent = formatNumber(totalAmount) + '원';
         }
 
         function calculateCharge() {

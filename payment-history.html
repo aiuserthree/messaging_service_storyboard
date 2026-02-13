@@ -1992,7 +1992,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 13. 조회 버튼
             { selector: '#searchBtn', title: '조회 버튼', position: { top: '-5px', right: '-10px' }, function: '충전 내역 검색', api: 'GET /api/payment/history' },
             // 14. 충전 내역 테이블
-            { selector: '#historyTableContainer', title: '충전 내역 테이블', position: { top: '10px', left: '10px' }, function: '충전 내역 목록', behavior: ['날짜', '충전포인트', '충전방법', '상태'] },
+            { selector: '#historyTableContainer', title: '충전 내역 테이블', position: { top: '10px', left: '10px' }, function: '충전 내역 목록', behavior: ['날짜', '충전 포인트', '충전방법', '상태'] },
             // 15. 충전상태 (항목명)
             { selector: '#historyTable thead th:nth-child(4)', title: '충전상태', position: { top: '-5px', left: '-10px' }, function: '충전 건의 진행 상태 표시', description: '각 충전 건의 현재 상태를 배지로 표시하는 컬럼입니다.', behavior: ['1) 충전완료: 결제 정상 완료·포인트 적립된 상태 (신용카드/실시간이체/가상계좌 등 입금 확인 완료)', '2) 입금대기: 무통장입금·가상계좌 등 입금 전 또는 입금 확인 대기 중인 상태', '3) 취소: 사용자/관리자 취소 또는 환불 처리 완료된 상태 (결제 금액 취소선 표시 가능)'] },
             // 16. 엑셀 다운로드
