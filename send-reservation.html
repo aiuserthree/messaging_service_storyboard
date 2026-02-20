@@ -975,6 +975,12 @@ body {
 
             <!-- 예약내역 목록 -->
             <div class="card">
+                <div class="card-header flex-between">
+                    <h3 class="card-title">예약 내역</h3>
+                    <div class="flex gap-2">
+                        <button class="btn btn-outline btn-sm" onclick="downloadExcel()">엑셀 다운로드</button>
+                    </div>
+                </div>
                 <div class="table-container">
                     <table class="table">
                         <thead>
@@ -1022,11 +1028,6 @@ body {
                             </tr>
                         </tbody>
                     </table>
-                </div>
-
-                <!-- 엑셀 다운로드 버튼 (표 하단) -->
-                <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 8px;">
-                    <button class="btn btn-outline btn-sm" onclick="downloadExcel()">엑셀 다운로드</button>
                 </div>
 
                 <!-- 페이지네이션 -->
@@ -1682,6 +1683,8 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '.search-filter-section .form-select', title: '메시지 타입', position: { top: '-5px', left: '-10px' }, description: '메시지 타입별 필터링', function: '타입 선택', behavior: ['전체 타입/일반문자(SMS)/광고문자(LMS)/광고문자(MMS)/선거문자(LMS)/알림톡/브랜드 메시지'] },
             { selector: '.search-filter-section .form-input[type="text"]', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '제목 또는 내용 검색', function: '키워드 검색' },
             { selector: '.search-filter-section .btn-primary', title: '조회 버튼', position: { top: '-5px', right: '-10px' }, description: '검색 실행', function: '필터 조건으로 예약내역 검색', api: 'GET /api/reservations?startDate={startDate}&endDate={endDate}&type={type}&search={search}', behavior: ['클릭 시 목록 갱신'] },
+            // 목록 카드 헤더 (타이틀 좌측, 엑셀 버튼 우측)
+            { selector: '.card .card-header .card-title', title: '예약 내역 제목', position: { top: '-5px', left: '-10px' }, description: '목록 카드 좌측 상단 타이틀', function: '예약 내역 섹션 제목 표시' },
             // 12-18. 예약내역 테이블
             { selector: '.card .table', title: '예약내역 테이블', position: { top: '10px', left: '10px' }, description: '예약 목록 표시', function: '예약 내역 표시', behavior: ['등록일, 발송예정일, 제목/내용(클릭 시 상세 팝업), 메시지타입, 예약건수, 예약성공, 상태'] },
             { selector: '#selectAll', title: '전체 선택 체크박스', position: { top: '-5px', left: '-10px' }, description: '전체 행 선택/해제', function: '모든 예약 항목 체크박스 토글' },
@@ -1704,8 +1707,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 api: 'DELETE /api/reservations/{id}'
             },
-            // 19. 엑셀 다운로드 버튼
-            { selector: '.btn-outline[onclick*="downloadExcel"]', title: '엑셀 다운로드 버튼', position: { top: '-5px', right: '-10px' }, description: '예약 내역 엑셀 다운로드', function: 'downloadExcel() 호출', api: 'GET /api/reservations/export', behavior: ['조회된 결과를 엑셀 파일로 다운로드'] },
+            // 19. 엑셀 다운로드 버튼 (목록 카드 우측 상단)
+            { selector: '.btn-outline[onclick*="downloadExcel"]', title: '엑셀 다운로드 버튼', position: { top: '-5px', right: '-10px' }, description: '예약 내역 목록 우측 상단, 엑셀 다운로드', function: 'downloadExcel() 호출', api: 'GET /api/reservations/export', behavior: ['조회된 결과를 엑셀 파일로 다운로드'] },
             // 20. 페이지네이션
             { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, description: '결과 목록 페이지 이동', function: '페이지 전환', behavior: ['5건 단위 페이징'] },
             
