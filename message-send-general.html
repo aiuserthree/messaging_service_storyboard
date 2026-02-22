@@ -203,7 +203,7 @@ body {
     color: var(--text-secondary);
 }
 
-/* 카드 */
+/* 카드 (디자인: 여백·그림자 강화) */
 .card {
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
@@ -939,25 +939,140 @@ body {
             top: 80px;
             height: fit-content;
         }
-        .preview-phone {
-            background: #f5f5f5;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        /* 템플릿 리스트와 동일한 핸드폰 목업 */
+        .preview-section .template-phone-preview {
+            margin: 12px 0;
+            display: flex;
+            justify-content: center;
         }
-        .preview-phone-header {
-            background: #333;
-            color: white;
-            padding: 12px;
-            border-radius: 12px 12px 0 0;
+        .preview-section .template-phone-frame {
+            width: 256px;
+            height: 516px;
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border-radius: 28px;
+            padding: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .preview-section .template-phone-frame::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 4px;
+            background: #1a252f;
+            border-radius: 4px;
+            margin: 0 auto 6px;
+            flex-shrink: 0;
+        }
+        .preview-section .template-phone-screen {
+            background: #F8F8FA;
+            border-radius: 18px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+        /* 상단 발신번호 바: #363A42, 흰 글자 가운데 */
+        .preview-section .preview-phone-header {
+            background: #363A42;
+            color: #fff;
             text-align: center;
-            font-size: 12px;
+            padding: 12px 10px;
+            font-size: 16px;
+            font-weight: 500;
+            flex-shrink: 0;
         }
-        .preview-phone-body {
-            background: white;
-            padding: 16px;
-            border-radius: 0 0 12px 12px;
-            min-height: 200px;
+        /* 메시지 카드 영역 */
+        .preview-section .template-phone-card {
+            background: transparent;
+            border-radius: 0;
+            padding: 14px 12px;
+            flex: 1;
+            overflow: hidden;
+            box-shadow: none;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        /* 디폴트: 빈 메시지일 때 플레이스홀더 (말풍선 아이콘 + 문구) */
+        .preview-section .preview-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            color: #A9A9A9;
+            font-size: 14px;
+            text-align: center;
+            padding: 24px 16px;
+        }
+        .preview-section .preview-placeholder-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            background: #A9A9A9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #F8F8FA;
+            letter-spacing: 2px;
+        }
+        .preview-section .template-phone-card.has-content .preview-placeholder {
+            display: none;
+        }
+        .preview-section .template-phone-card #previewContent {
+            display: none;
+        }
+        .preview-section .template-phone-card.has-content #previewContent {
+            display: block;
+        }
+        .preview-section .template-phone-card.has-content #previewTitle {
+            display: block;
+        }
+        /* 제목: 검정, 굵게, 16~18px (LMS/MMS일 때만 JS로 표시) */
+        .preview-section .template-phone-card #previewTitle {
+            font-size: 17px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+        }
+        /* 메시지 내용: 검정, 일반, 14~16px */
+        .preview-section .template-phone-card #previewContent {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #000;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+        .preview-section .template-phone-card #previewImages {
+            margin-top: 12px;
+        }
+        /* 하단 바이트: 연한 회색, 작은 회색 글자 가운데 (디폴트 0/90 byte) */
+        .preview-section .template-phone-byte {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+            padding: 10px 10px 12px;
+            background: #e5e7eb;
+            flex-shrink: 0;
+        }
+        .preview-section .template-phone-frame::after {
+            content: '';
+            display: block;
+            width: 36px;
+            height: 4px;
+            background: #1a252f;
+            border-radius: 4px;
+            margin: 6px auto 0;
         }
         .byte-counter {
             text-align: right;
@@ -1376,18 +1491,25 @@ body {
                     </form>
                 </div>
 
-                <!-- 미리보기 영역 -->
+                <!-- 미리보기 영역 (템플릿 리스트와 동일한 핸드폰 목업) -->
                 <div class="preview-section" id="previewSection">
                     <div class="card">
                         <h3 class="card-title">메시지 미리보기</h3>
-                        <div class="preview-phone" id="previewPhone">
-                            <div class="preview-phone-header">
-                                <div id="previewCallerNumber">010-1234-5678</div>
-                            </div>
-                            <div class="preview-phone-body">
-                                <div id="previewTitle" style="font-weight: 600; margin-bottom: 8px; display: none;"></div>
-                                <div id="previewContent" style="white-space: pre-wrap; line-height: 1.6;"></div>
-                                <div id="previewImages" style="margin-top: 12px;"></div>
+                        <div class="template-phone-preview" id="previewPhone">
+                            <div class="template-phone-frame">
+                                <div class="template-phone-screen">
+                                    <div class="preview-phone-header" id="previewCallerNumber">발신번호를 선택하세요</div>
+                                    <div class="template-phone-card" id="previewPhoneCard">
+                                        <div class="preview-placeholder">
+                                            <div class="preview-placeholder-icon">⋯</div>
+                                            <span>메시지 내용을 입력하세요</span>
+                                        </div>
+                                        <div id="previewTitle" style="display: none;"></div>
+                                        <div id="previewContent" style="white-space: pre-wrap;"></div>
+                                        <div id="previewImages" style="margin-top: 12px;"></div>
+                                    </div>
+                                    <div class="template-phone-byte" id="previewPhoneByte">0/90 byte</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2126,11 +2248,17 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePreview();
         });
 
-        // 발신번호 변경 시 미리보기 업데이트
+        // 발신번호 변경 시 미리보기 업데이트 (비어 있으면 "발신번호를 선택하세요")
         document.getElementById('callerNumber').addEventListener('change', function() {
-            document.getElementById('previewCallerNumber').textContent = this.value || '010-1234-5678';
+            document.getElementById('previewCallerNumber').textContent = this.value.trim() ? this.value : '발신번호를 선택하세요';
             updateCurrentBalance();
         });
+        // 초기 발신번호 표시 (디폴트: 발신번호를 선택하세요)
+        (function() {
+            var caller = document.getElementById('callerNumber');
+            var preview = document.getElementById('previewCallerNumber');
+            if (caller && preview) preview.textContent = caller.value.trim() ? caller.value : '발신번호를 선택하세요';
+        })();
 
         function updateCurrentBalance() {
             const balanceDisplay = document.getElementById('currentBalanceDisplay');
@@ -2204,9 +2332,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const maxBytes = type === 'SMS' ? 90 : 2000;
+            const byteText = `${totalBytes} / ${maxBytes} 바이트`;
             const counter = document.getElementById('byteCounter');
-            counter.textContent = `${totalBytes} / ${maxBytes} 바이트`;
-            
+            counter.textContent = byteText;
+            const previewByte = document.getElementById('previewPhoneByte');
+            if (previewByte) previewByte.textContent = `${totalBytes}/${maxBytes} byte`;
+
             counter.className = 'byte-counter';
             if (totalBytes > maxBytes * 0.9) {
                 counter.classList.add('warning');
@@ -2235,17 +2366,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const content = document.getElementById('messageContent').value;
             const titleEl = document.getElementById('previewTitle');
             const contentEl = document.getElementById('previewContent');
+            const card = document.getElementById('previewPhoneCard');
             
             if (title) {
                 titleEl.textContent = title;
                 titleEl.style.display = 'block';
             } else {
+                titleEl.textContent = '';
                 titleEl.style.display = 'none';
             }
             
-            contentEl.textContent = content || '메시지 내용을 입력하세요';
+            contentEl.textContent = content || '';
+            if (card) {
+                if ((content || '').trim()) card.classList.add('has-content');
+                else card.classList.remove('has-content');
+            }
             
-            // 이미지 미리보기 업데이트
             updatePreviewImages();
         }
         

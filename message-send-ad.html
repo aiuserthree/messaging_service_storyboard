@@ -938,25 +938,135 @@ body {
             top: 80px;
             height: fit-content;
         }
-        .preview-phone {
-            background: #f5f5f5;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        /* 템플릿 리스트와 동일한 핸드폰 목업 */
+        .preview-section .template-phone-preview {
+            margin: 12px 0;
+            display: flex;
+            justify-content: center;
         }
-        .preview-phone-header {
-            background: #333;
-            color: white;
-            padding: 12px;
-            border-radius: 12px 12px 0 0;
+        .preview-section .template-phone-frame {
+            width: 256px;
+            height: 516px;
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border-radius: 28px;
+            padding: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .preview-section .template-phone-frame::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 4px;
+            background: #1a252f;
+            border-radius: 4px;
+            margin: 0 auto 6px;
+            flex-shrink: 0;
+        }
+        .preview-section .template-phone-screen {
+            background: #F8F8FA;
+            border-radius: 18px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+        /* 상단 발신번호 바: #363A42, 흰 글자 가운데 */
+        .preview-section .preview-phone-header {
+            background: #363A42;
+            color: #fff;
             text-align: center;
-            font-size: 12px;
+            padding: 12px 10px;
+            font-size: 16px;
+            font-weight: 500;
+            flex-shrink: 0;
         }
-        .preview-phone-body {
-            background: white;
-            padding: 16px;
-            border-radius: 0 0 12px 12px;
-            min-height: 200px;
+        .preview-section .template-phone-card {
+            background: transparent;
+            border-radius: 0;
+            padding: 14px 12px;
+            flex: 1;
+            overflow: hidden;
+            box-shadow: none;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        .preview-section .preview-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            color: #A9A9A9;
+            font-size: 14px;
+            text-align: center;
+            padding: 24px 16px;
+        }
+        .preview-section .preview-placeholder-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            background: #A9A9A9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #F8F8FA;
+            letter-spacing: 2px;
+        }
+        .preview-section .template-phone-card.has-content .preview-placeholder {
+            display: none;
+        }
+        .preview-section .template-phone-card #previewMessage {
+            display: none;
+        }
+        .preview-section .template-phone-card.has-content #previewMessage {
+            display: block;
+        }
+        .preview-section .template-phone-card #previewTitle {
+            font-size: 17px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+        }
+        .preview-section .template-phone-card.has-content #previewTitle {
+            display: block;
+        }
+        .preview-section .template-phone-card.has-content #previewMessage {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #000;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+        .preview-section .template-phone-card #previewImage {
+            margin-top: 12px;
+        }
+        .preview-section .template-phone-byte {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+            padding: 10px 10px 12px;
+            background: #e5e7eb;
+            flex-shrink: 0;
+        }
+        .preview-section .template-phone-frame::after {
+            content: '';
+            display: block;
+            width: 36px;
+            height: 4px;
+            background: #1a252f;
+            border-radius: 4px;
+            margin: 6px auto 0;
         }
         .byte-counter {
             text-align: right;
@@ -1428,21 +1538,25 @@ body {
                     </form>
                 </div>
 
-                <!-- 미리보기 영역 -->
+                <!-- 미리보기 영역 (템플릿 리스트와 동일한 핸드폰 목업) -->
                 <div class="preview-section">
                     <div class="card">
                         <h3 class="card-title">메시지 미리보기</h3>
-                        <div class="preview-phone">
-                            <div class="preview-phone-header">
-                                <div id="previewSenderNumber">010-1234-5678</div>
-                            </div>
-                            <div class="preview-phone-body">
-                                <div id="previewTitle" style="font-weight: 600; margin-bottom: 8px; display: none;"></div>
-                                <div id="previewMessage" style="white-space: pre-wrap; line-height: 1.6;">
-                                    <span class="ad-prefix">(광고)</span> 메시지 내용을 입력하세요
-                                    <div class="reject-number" style="margin-top: 8px;">무료수신거부 080-</div>
+                        <div class="template-phone-preview">
+                            <div class="template-phone-frame">
+                                <div class="template-phone-screen">
+                                    <div class="preview-phone-header" id="previewSenderNumber">발신번호를 선택하세요</div>
+                                    <div class="template-phone-card" id="previewPhoneCard">
+                                        <div class="preview-placeholder">
+                                            <div class="preview-placeholder-icon">⋯</div>
+                                            <span>메시지 내용을 입력하세요</span>
+                                        </div>
+                                        <div id="previewTitle" style="display: none;"></div>
+                                        <div id="previewMessage" style="white-space: pre-wrap;"></div>
+                                        <div id="previewImage" class="image-preview" style="margin-top: 12px;"></div>
+                                    </div>
+                                    <div class="template-phone-byte" id="previewPhoneByte">0/90 byte</div>
                                 </div>
-                                <div id="previewImage" class="image-preview" style="margin-top: 12px;"></div>
                             </div>
                         </div>
                     </div>
@@ -2190,10 +2304,11 @@ document.head.appendChild(style);
 // 드롭다운 메뉴 초기화
 document.addEventListener('DOMContentLoaded', function() {
     initDropdownMenus();
-    // 수신거부 번호 고정값 설정 및 미리보기 업데이트
-    if (typeof updateRejectNumberPreview === 'function') {
-        updateRejectNumberPreview();
-    }
+    // 발신번호 디폴트 표시 (비어 있으면 "발신번호를 선택하세요")
+    var senderSelect = document.getElementById('senderNumber');
+    var previewSender = document.getElementById('previewSenderNumber');
+    if (senderSelect && previewSender) previewSender.textContent = senderSelect.value.trim() ? senderSelect.value : '발신번호를 선택하세요';
+    if (typeof updateRejectNumberPreview === 'function') updateRejectNumberPreview();
 });
 
 </script>
@@ -2252,7 +2367,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function updateRejectNumber() {
             const select = document.getElementById('senderNumber');
-            document.getElementById('previewSenderNumber').textContent = select.value;
+            document.getElementById('previewSenderNumber').textContent = select.value.trim() ? select.value : '발신번호를 선택하세요';
             updatePreview();
             updateCurrentBalance();
         }
@@ -2380,9 +2495,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const type = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
             const maxBytes = type === 'SMS' ? 90 : 2000;
-            
+            const byteText = `${totalBytes} / ${maxBytes} 바이트`;
             const counter = document.getElementById('byteCounter');
-            counter.textContent = `${totalBytes} / ${maxBytes} 바이트`;
+            counter.textContent = byteText;
+            const previewByte = document.getElementById('previewPhoneByte');
+            if (previewByte) previewByte.textContent = `${totalBytes}/${maxBytes} byte`;
             counter.className = 'byte-counter';
             
             if (totalBytes > maxBytes * 0.9) {
@@ -2410,20 +2527,27 @@ document.addEventListener('DOMContentLoaded', function() {
             const rejectNumber = rejectInput ? '080-' + rejectInput : '080-';
             const preview = document.getElementById('previewMessage');
             const previewTitle = document.getElementById('previewTitle');
-            // 우측 미리보기에서만 (광고) 디폴트로 제목·메시지 앞에 표시
-            let previewContent = `<span class="ad-prefix">(광고)</span> ${content || '메시지 내용을 입력하세요'}<div class="reject-number" style="margin-top: 8px;">무료수신거부 ${rejectNumber}</div>`;
-            preview.innerHTML = previewContent;
+            const card = document.getElementById('previewPhoneCard');
+            
+            if ((content || '').trim()) {
+                const previewContent = `<span class="ad-prefix">(광고)</span> ${content}<div class="reject-number" style="margin-top: 8px;">무료수신거부 ${rejectNumber}</div>`;
+                preview.innerHTML = previewContent;
+                if (card) card.classList.add('has-content');
+            } else {
+                preview.innerHTML = '';
+                if (card) card.classList.remove('has-content');
+            }
             
             if (previewTitle) {
                 if (title) {
                     previewTitle.textContent = '(광고) ' + title;
                     previewTitle.style.display = 'block';
                 } else {
+                    previewTitle.textContent = '';
                     previewTitle.style.display = 'none';
                 }
             }
             
-            // 이미지 미리보기 업데이트
             updatePreviewImages();
         }
         

@@ -1028,6 +1028,16 @@ body {
             overflow: hidden;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
+        .template-phone-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
         .template-phone-content {
             font-size: 12px;
             line-height: 1.55;
@@ -1306,6 +1316,7 @@ body {
                             <div class="template-phone-frame">
                                 <div class="template-phone-screen">
                                     <div class="template-phone-card">
+                                        <div class="template-phone-title">배송 안내</div>
                                         <div class="template-phone-content">안녕하세요. 주문하신 상품이 배송을 시작했습니다. 운송장번호: #{운송장번호} 배송조회: #{배송조회URL}</div>
                                     </div>
                                     <div class="template-phone-byte">0/90 byte</div>
@@ -1342,6 +1353,7 @@ body {
                             <div class="template-phone-frame">
                                 <div class="template-phone-screen">
                                     <div class="template-phone-card">
+                                        <div class="template-phone-title">이벤트 안내</div>
                                         <div class="template-phone-content">특별 이벤트가 시작되었습니다! #{이벤트명} 자세한 내용은 이미지를 확인해주세요.</div>
                                     </div>
                                     <div class="template-phone-byte">0/90 byte</div>

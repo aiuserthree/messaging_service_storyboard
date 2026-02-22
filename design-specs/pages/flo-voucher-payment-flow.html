@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLO 이용권 · 결제 · 구독 완료</title>
+    <style>
+        :root {
+            --flo-pink: #ff2d78;
+            --flo-pink-dark: #e61e6b;
+            --flo-purple: #7c3aed;
+            --flo-gradient: linear-gradient(135deg, #ff2d78 0%, #a855f7 100%);
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --bg-page: #fafafa;
+            --bg-card: #fff;
+            --border: #eee;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 2px 12px rgba(0,0,0,.06);
+            --shadow-modal: 0 8px 32px rgba(0,0,0,.12);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-page); color: var(--text-primary); line-height: 1.5; }
+
+        /* ========== 헤더 ========== */
+        .header {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--bg-card); border-bottom: 1px solid var(--border);
+            height: 56px; padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .header-left { display: flex; align-items: center; gap: 32px; }
+        .logo { font-size: 22px; font-weight: 800; color: var(--flo-pink); letter-spacing: -0.5px; }
+        .nav { display: flex; gap: 24px; }
+        .nav a { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; }
+        .nav a:hover { color: var(--flo-pink); }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .search-wrap { position: relative; }
+        .search-wrap input {
+            width: 200px; height: 36px; padding: 0 12px 0 36px;
+            border: 1px solid var(--border); border-radius: 20px;
+            font-size: 13px; background: #f5f5f5;
+        }
+        .search-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; }
+        .icon-btn { width: 36px; height: 36px; border: none; background: none; cursor: pointer; font-size: 20px; border-radius: 50%; }
+        .icon-btn:hover { background: #f0f0f0; }
+
+        /* ========== 히어로 배너 ========== */
+        .hero {
+            background: var(--flo-gradient); border-radius: var(--radius-lg); margin: 24px 24px 0;
+            padding: 48px 40px; display: flex; align-items: center; justify-content: space-between;
+            min-height: 200px; position: relative; overflow: hidden;
+        }
+        .hero::before { content: ''; position: absolute; right: 40px; bottom: 0; width: 180px; height: 180px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='rgba(255,255,255,0.1)' width='80' height='120' rx='40' transform='rotate(-20 50 50)'/%3E%3C/svg%3E") no-repeat; opacity: 0.6; }
+        .hero-text { color: #fff; }
+        .hero-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .hero-desc { font-size: 14px; opacity: 0.95; }
+        .hero-dots { display: flex; gap: 6px; position: absolute; bottom: 16px; left: 40px; }
+        .hero-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); }
+        .hero-dots span.active { background: #fff; }
+
+        /* ========== 카테고리 아이콘 ========== */
+        .categories { padding: 24px 24px 0; display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+        .cat-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .cat-circle { width: 56px; height: 56px; border-radius: 50%; background: var(--bg-card); box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .cat-item span { font-size: 12px; color: var(--text-secondary); }
+
+        /* ========== 이용권 추천 목록 ========== */
+        .section-title { font-size: 18px; font-weight: 700; padding: 32px 24px 16px; }
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 0 24px 24px; max-width: 900px; }
+        .product-card {
+            background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow);
+            overflow: hidden; padding: 16px; position: relative; cursor: pointer; transition: transform .2s, box-shadow .2s;
+        }
+        .product-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,.08); }
+        .product-card .thumb { width: 100%; aspect-ratio: 16/10; background: linear-gradient(145deg, #fce7f3, #f3e8ff); border-radius: 8px; margin-bottom: 12px; }
+        .product-card .name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .product-card .desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+        .product-card .price { font-size: 14px; font-weight: 700; color: var(--flo-pink); }
+        .product-card .add-btn {
+            position: absolute; right: 16px; bottom: 16px; width: 36px; height: 36px;
+            border-radius: 50%; border: none; background: var(--flo-pink); color: #fff; font-size: 18px; cursor: pointer; line-height: 1;
+        }
+        .product-card .add-btn:hover { background: var(--flo-pink-dark); }
+
+        /* ========== 우측 사이드바 ========== */
+        .sidebar {
+            position: fixed; right: 24px; top: 80px; width: 260px;
+            background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 20px;
+        }
+        .sidebar .search-wrap input { width: 100%; }
+        .sidebar-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .sidebar-section h4 { font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-secondary); }
+        .sidebar-section a { display: block; font-size: 13px; color: var(--text-primary); text-decoration: none; margin-bottom: 8px; }
+        .sidebar-section a:hover { color: var(--flo-pink); }
+        .sidebar-cta { margin-top: 16px; padding: 12px; background: linear-gradient(135deg, #fdf2f8, #f5f3ff); border-radius: 8px; font-size: 13px; }
+        .sidebar-cta strong { display: block; margin-bottom: 4px; }
+        .sidebar-cta .tel { color: var(--flo-pink); font-weight: 700; }
+
+        /* ========== 하단 네비 ========== */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; height: 56px;
+            background: var(--bg-card); border-top: 1px solid var(--border);
+            display: flex; justify-content: space-around; align-items: center; z-index: 90;
+        }
+        .bottom-nav span { font-size: 11px; color: var(--text-secondary); }
+        .bottom-nav .active { color: var(--flo-pink); font-weight: 600; }
+
+        /* ========== 구분선 + 결제하기 섹션 ========== */
+        .flow-divider { height: 48px; background: var(--border); display: flex; align-items: center; padding: 0 24px; margin-top: 24px; }
+        .step-bar { background: var(--flo-pink); color: #fff; padding: 12px 24px; font-size: 14px; font-weight: 700; }
+        .payment-page { max-width: 900px; margin: 0 auto; padding: 24px; padding-bottom: 80px; }
+        .payment-page h1 { font-size: 22px; font-weight: 700; margin-bottom: 24px; }
+        .two-col { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+        .panel { background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; margin-bottom: 16px; }
+        .panel h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-secondary); }
+        .order-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+        .order-item:last-child { border-bottom: none; }
+        .payment-option { border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 12px; cursor: pointer; }
+        .payment-option.selected { border-color: var(--flo-pink); background: #fff5f9; }
+        .payment-option .icon { font-size: 20px; margin-bottom: 4px; }
+        .flo-pay-section { border: 2px solid var(--flo-pink); border-radius: 8px; padding: 16px; background: #fff5f9; margin-top: 12px; }
+        .flo-pay-section input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; margin: 8px 0; }
+        .flo-pay-btns { display: flex; gap: 8px; margin-top: 8px; }
+        .btn-sm { padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 1px solid var(--border); background: var(--bg-card); }
+        .btn-sm.primary { background: var(--flo-pink); color: #fff; border: none; }
+        .agree-check { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; font-size: 12px; color: var(--text-secondary); }
+        .agree-check input { margin-top: 2px; }
+        .summary-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
+        .summary-row.total { font-size: 18px; font-weight: 700; color: var(--flo-pink); margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+        .btn-pay { width: 100%; padding: 16px; border: none; border-radius: 12px; background: var(--flo-pink); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 16px; }
+        .btn-pay:hover { background: var(--flo-pink-dark); }
+
+        /* ========== 모달 ========== */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; align-items: center; justify-content: center; }
+        .modal-overlay.on { display: flex; }
+        .modal { background: var(--bg-card); border-radius: var(--radius-lg); padding: 24px; max-width: 400px; width: 90%; box-shadow: var(--shadow-modal); text-align: center; }
+        .modal p { font-size: 15px; line-height: 1.6; color: var(--text-primary); }
+        .modal .btn-close { margin-top: 20px; padding: 10px 24px; border: none; border-radius: 8px; background: var(--flo-pink); color: #fff; cursor: pointer; font-size: 14px; }
+
+        /* ========== 구독 완료 섹션 ========== */
+        .complete-section { max-width: 560px; margin: 0 auto; padding: 48px 24px 100px; text-align: center; }
+        .complete-section .step-bar { margin: -24px -24px 32px -24px; }
+        .complete-icon { font-size: 48px; margin-bottom: 16px; }
+        .complete-title { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+        .complete-desc { font-size: 15px; color: var(--text-secondary); margin-bottom: 32px; }
+        .complete-card { background: var(--bg-card); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 16px; text-align: left; }
+        .complete-card .thumb { width: 56px; height: 56px; border-radius: 12px; background: var(--flo-gradient); }
+        .complete-card .info .name { font-weight: 600; margin-bottom: 4px; }
+        .complete-card .info .buttons { display: flex; gap: 8px; margin-top: 12px; }
+        .complete-card .info .buttons button { padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 1px solid var(--border); background: #fff; }
+        .complete-card .info .buttons button.primary { background: var(--flo-pink); color: #fff; border: none; }
+        .popular-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; text-align: left; }
+        .popular-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+        .popular-item { background: var(--bg-card); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); cursor: pointer; }
+        .popular-item .thumb { aspect-ratio: 1; background: linear-gradient(145deg, #fce7f3, #f3e8ff); }
+        .popular-item .title { font-size: 12px; padding: 8px; font-weight: 500; }
+        .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .cta-buttons button { padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
+        .cta-buttons .btn-home { background: var(--flo-pink); color: #fff; border: none; }
+        .cta-buttons .btn-app { background: #fff; color: var(--flo-pink); border: 2px solid var(--flo-pink); }
+
+        .main-content { padding-bottom: 80px; }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-left">
+            <span class="logo">FLO</span>
+            <nav class="nav">
+                <a href="#">샵</a>
+                <a href="#">매거진</a>
+                <a href="#">이용권</a>
+                <a href="#">쿠폰</a>
+                <a href="#">혜택</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="search-wrap"><input type="text" placeholder="검색"></div>
+            <button type="button" class="icon-btn" aria-label="프로필">👤</button>
+            <button type="button" class="icon-btn" aria-label="장바구니">🛒</button>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <!-- 히어로 배너 -->
+        <section class="hero">
+            <div class="hero-text">
+                <h2 class="hero-title">Flo가 스튜디오를 넘어선다!</h2>
+                <p class="hero-desc">국내 유일한 음악부터 영상까지, 지금 만나보세요.</p>
+            </div>
+            <div class="hero-dots">
+                <span class="active"></span><span></span><span></span>
+            </div>
+        </section>
+
+        <!-- 카테고리 -->
+        <section class="categories">
+            <div class="cat-item"><div class="cat-circle">🎵</div><span>뮤직</span></div>
+            <div class="cat-item"><div class="cat-circle">🎧</div><span>오디오</span></div>
+            <div class="cat-item"><div class="cat-circle">🎬</div><span>영상</span></div>
+            <div class="cat-item"><div class="cat-circle">📱</div><span>이용권</span></div>
+        </section>
+
+        <!-- 이용권 추천 목록 -->
+        <h2 class="section-title">이용권 추천 목록</h2>
+        <div class="product-grid">
+            <article class="product-card" data-product="모두의 무제한 듣기" data-price="7900">
+                <div class="thumb"></div>
+                <p class="name">모두의 무제한 듣기</p>
+                <p class="desc">전곡 무제한 스트리밍</p>
+                <p class="price">월 7,900원</p>
+                <button type="button" class="add-btn" aria-label="담기">+</button>
+            </article>
+            <article class="product-card">
+                <div class="thumb"></div>
+                <p class="name">프리미엄 플러스</p>
+                <p class="desc">고음질 + 다운로드</p>
+                <p class="price">월 10,900원</p>
+                <button type="button" class="add-btn" aria-label="담기">+</button>
+            </article>
+            <article class="product-card">
+                <div class="thumb"></div>
+                <p class="name">스튜디오 패스</p>
+                <p class="desc">영상 + 음악 통합</p>
+                <p class="price">월 12,900원</p>
+                <button type="button" class="add-btn" aria-label="담기">+</button>
+            </article>
+            <article class="product-card">
+                <div class="thumb"></div>
+                <p class="name">연간 이용권</p>
+                <p class="desc">1년 구독 20% 할인</p>
+                <p class="price">연 95,040원</p>
+                <button type="button" class="add-btn" aria-label="담기">+</button>
+            </article>
+        </div>
+
+        <!-- 우측 사이드바 -->
+        <aside class="sidebar">
+            <div class="search-wrap"><input type="text" placeholder="검색"></div>
+            <div class="sidebar-section">
+                <h4>내 이용권 현황</h4>
+                <a href="#">이용권 보기</a>
+                <a href="#">자주 묻는 질문</a>
+                <a href="#">1:1 문의</a>
+            </div>
+            <div class="sidebar-cta">
+                <strong>FLO 고객센터</strong>
+                <span class="tel">1544-7989</span>
+            </div>
+        </aside>
+    </div>
+
+    <!-- 결제하기 플로우 -->
+    <div class="flow-divider"></div>
+    <div class="step-bar">2. 결제하기</div>
+    <section class="payment-page">
+        <h1>결제하기</h1>
+        <div class="two-col">
+            <div>
+                <div class="panel">
+                    <h3>주문 상품</h3>
+                    <div class="order-item">
+                        <span id="orderProductName">모두의 무제한 듣기</span>
+                        <span id="orderProductPrice">월 7,900원</span>
+                    </div>
+                </div>
+                <div class="panel">
+                    <h3>결제 수단</h3>
+                    <div class="payment-option"><div class="icon">💳</div> 카드 결제</div>
+                    <div class="payment-option"><div class="icon">📱</div> 휴대폰 소액 결제</div>
+                    <div class="flo-pay-section">
+                        <strong>Flo Pay</strong>
+                        <input type="password" placeholder="비밀번호 입력" id="floPayPw">
+                        <div class="flo-pay-btns">
+                            <button type="button" class="btn-sm primary" id="btnRegister">등록하기</button>
+                            <button type="button" class="btn-sm">변경</button>
+                        </div>
+                        <p style="font-size:12px; color:#666; margin-top:8px;">Flo Pay로 간편 결제하세요. 결제 내용 확인 및 동의에 체크해 주세요.</p>
+                        <label class="agree-check">
+                            <input type="checkbox" id="agreePay">
+                            <span>결제 내용 확인 및 동의</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="button" class="btn-pay" id="btnPay">결제하기</button>
+            </div>
+            <div>
+                <div class="panel">
+                    <h3>결제 금액</h3>
+                    <div class="summary-row"><span>주문 상품</span><span id="sumProduct">7,900원</span></div>
+                    <div class="summary-row"><span>할인 (쿠폰)</span><span>0원</span></div>
+                    <div class="summary-row"><span>할인 (제휴)</span><span>0원</span></div>
+                    <div class="summary-row"><span>포인트</span><span>0원</span></div>
+                    <div class="summary-row total"><span>총 결제 금액</span><span id="sumTotal">7,900원</span></div>
+                    <button type="button" class="btn-pay" id="btnPayRight">결제하기</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 모달: Flo Pay 미등록 안내 -->
+    <div class="modal-overlay" id="modalFloPay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal">
+            <p id="modalTitle">Flo Pay 결제수단이 등록되지 않아 이용할 수 없습니다.</p>
+            <button type="button" class="btn-close" id="modalClose">확인</button>
+        </div>
+    </div>
+
+    <!-- 구독 완료 섹션 -->
+    <div class="flow-divider"></div>
+    <div class="step-bar">3. 구독 완료</div>
+    <section class="complete-section" id="completeSection">
+        <div class="complete-icon">🎉</div>
+        <h2 class="complete-title">구독을 완료했어요.</h2>
+        <p class="complete-desc">지금 바로 FLO의 새로운 음악 세상을 만나보세요.</p>
+        <div class="complete-card">
+            <div class="thumb"></div>
+            <div class="info">
+                <p class="name">모두의 무제한 듣기</p>
+                <div class="buttons">
+                    <button type="button" class="primary">내 이용권 보기</button>
+                    <button type="button">결제 내역 확인</button>
+                </div>
+            </div>
+        </div>
+        <h3 class="popular-title">FLO에서 지금 가장 인기있는</h3>
+        <div class="popular-grid">
+            <div class="popular-item"><div class="thumb"></div><p class="title">인기곡 1</p></div>
+            <div class="popular-item"><div class="thumb"></div><p class="title">인기곡 2</p></div>
+            <div class="popular-item"><div class="thumb"></div><p class="title">인기곡 3</p></div>
+            <div class="popular-item"><div class="thumb"></div><p class="title">인기곡 4</p></div>
+        </div>
+        <div class="cta-buttons">
+            <button type="button" class="btn-home">홈으로 이동</button>
+            <button type="button" class="btn-app">Flo 앱으로 이동</button>
+        </div>
+    </section>
+
+    <!-- 하단 네비 -->
+    <nav class="bottom-nav">
+        <span class="active">홈</span>
+        <span>탐색</span>
+        <span>보관함</span>
+        <span>MY</span>
+    </nav>
+
+    <script>
+        (function () {
+            var modal = document.getElementById('modalFloPay');
+            var btnPay = document.getElementById('btnPay');
+            var btnPayRight = document.getElementById('btnPayRight');
+            var modalClose = document.getElementById('modalClose');
+
+            function openModal() {
+                modal.classList.add('on');
+            }
+            function closeModal() {
+                modal.classList.remove('on');
+            }
+
+            if (btnPay) btnPay.addEventListener('click', openModal);
+            if (btnPayRight) btnPayRight.addEventListener('click', openModal);
+            if (modalClose) modalClose.addEventListener('click', closeModal);
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) closeModal();
+            });
+        })();
+    </script>
+</body>
+</html>
