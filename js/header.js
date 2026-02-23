@@ -167,7 +167,7 @@ function createHeader(activeMenu = '') {
                     <div>
                         <div style="margin-bottom: 4px;">
                             <span style="color: #fbbf24; font-weight: 600;">마일리지</span>
-                            <span style="float: right; font-weight: 600;">92.6 P</span>
+                            <span style="float: right; font-weight: 600;">92.6 M</span>
                         </div>
                         <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; text-align: left;">
                             └ 문자발송 시 사용가능 (환불불가)
