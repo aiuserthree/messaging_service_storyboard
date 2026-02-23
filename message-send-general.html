@@ -4394,9 +4394,9 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• LMS (value: lms) - 2,000바이트 이하, 단가 26.5P/건',
                     '• MMS (value: mms) - 이미지 포함, 단가 59P/건',
                     '【동작】',
-                    '• SMS 선택 시: 제목 입력 숨김, 이미지 첨부 숨김',
-                    '• LMS 선택 시: 제목 입력 표시, 이미지 첨부 숨김',
-                    '• MMS 선택 시: 제목 입력 표시, 이미지 첨부 표시',
+                    '• SMS 선택 시: 제목 입력·안내 모두 숨김, 이미지 첨부 숨김',
+                    '• LMS/MMS 선택 시: 메시지 내용 90바이트 이하 → 제목 안내만 표시, 90바이트 초과 → 제목 입력란 표시·안내 숨김',
+                    '• MMS 선택 시: 이미지 첨부 표시',
                     '• 바이트 카운터 최대값 변경'
                 ],
                 tags: [{ text: '필수', type: 'required' }]
@@ -4644,20 +4644,36 @@ document.getElementById('confirmRecipientCount').textContent =
             },
             // 27. LMS/MMS 제목 입력
             {
-                selector: '#messageTitleGroup',
+                selector: '#titleGroup',
                 title: '27. 메시지 제목',
                 position: { top: '5px', left: '5px' },
                 description: '텍스트 입력 (Text Input)',
                 function: 'LMS/MMS 메시지 제목 입력',
                 behavior: [
                     '【표시 조건】',
-                    '• LMS 또는 MMS 타입 선택 시에만 표시',
+                    '• LMS 또는 MMS 타입 선택 시, 메시지 내용 90바이트 초과 시에만 표시',
+                    '• 90바이트 이하일 때는 제목 영역 숨김',
                     '【입력 조건】',
-                    '• 선택 입력 항목',
-                    '• 최대 40바이트 (한글 20자)',
-                    '• placeholder: "제목을 입력하세요 (선택)"',
-                    '【Alert 메시지】',
-                    '• 바이트 초과: "제목은 40바이트(한글 20자)를 초과할 수 없습니다."'
+                    '• 선택 입력 항목, 최대 40자',
+                    '• placeholder: "제목을 입력하세요 (최대 40자)"',
+                    '【동작】',
+                    '• 메시지 내용 입력 시 바이트에 따라 제목 영역 표시/숨김 전환'
+                ],
+                tags: [{ text: 'LMS/MMS', type: 'info' }]
+            },
+            // 27-1. 제목 안내 메시지
+            {
+                selector: '#titleHelpMessage',
+                title: '27-1. 제목 입력 안내',
+                position: { top: '5px', left: '5px' },
+                description: '안내 텍스트 (빨간색)',
+                function: '제목 입력 가능 조건 안내',
+                behavior: [
+                    '【표시 조건】',
+                    '• LMS 또는 MMS 타입 선택 시, 메시지 내용 90바이트 이하일 때만 표시',
+                    '• 90바이트 초과 시(제목 입력란 표시 시)에는 숨김',
+                    '【표시 내용】',
+                    '• "* 제목 입력은 메시지 내용 90바이트 초과 입력 시 가능합니다." (빨간색)'
                 ],
                 tags: [{ text: 'LMS/MMS', type: 'info' }]
             },
