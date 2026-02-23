@@ -1351,14 +1351,11 @@ body {
                             </div>
                         </div>
 
-                        <!-- 제목 (LMS/MMS, 메시지 내용 90바이트 초과 시에만 표시) -->
+                        <!-- 제목 (LMS/MMS만 표시, 90바이트 초과 시에만 입력 가능) -->
                         <div class="form-group" id="titleGroup" style="display: none;">
                             <label class="form-label">제목</label>
-                            <input type="text" class="form-input" id="messageTitle" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40">
-                        </div>
-                        <!-- 제목 안내 (LMS/MMS, 90바이트 이하일 때만 표시) -->
-                        <div class="form-group" id="titleHelpMessage" style="display: none; margin-top: -8px; margin-bottom: 8px;">
-                            <div class="form-help" style="font-size: 12px; color: var(--danger-color);">* 제목 입력은 메시지 내용 90바이트 초과 입력 시 가능합니다.</div>
+                            <input type="text" class="form-input" id="messageTitle" placeholder="" maxlength="40" disabled>
+                            <div class="form-help" style="margin-top: 6px; font-size: 12px; color: var(--danger-color);">* 제목 입력은 메시지 내용 90바이트 초과 입력 시 가능합니다.</div>
                         </div>
 
                         <!-- 메시지 내용 -->
@@ -2293,13 +2290,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const reservedTimeGroup = document.getElementById('reservedTimeGroup');
             
             const contentBytes = calculateByteLength(document.getElementById('messageContent').value);
-            const titleHelpEl = document.getElementById('titleHelpMessage');
+            const titleInput = document.getElementById('messageTitle');
             if (type === 'LMS' || type === 'MMS') {
-                titleGroup.style.display = contentBytes > 90 ? 'block' : 'none';
-                if (titleHelpEl) titleHelpEl.style.display = contentBytes <= 90 ? 'block' : 'none';
+                titleGroup.style.display = 'block';
+                if (titleInput) {
+                    titleInput.disabled = contentBytes <= 90;
+                    titleInput.placeholder = contentBytes > 90 ? '제목을 입력하세요 (최대 40자)' : '';
+                }
             } else {
                 titleGroup.style.display = 'none';
-                if (titleHelpEl) titleHelpEl.style.display = 'none';
+                if (titleInput) { titleInput.disabled = true; titleInput.placeholder = ''; }
             }
             
             // MMS일 때만 예약발송 비활성화
@@ -2334,13 +2334,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const title = document.getElementById('messageTitle').value;
             const type = document.querySelector('input[name="messageType"]:checked').value;
             const contentBytes = calculateByteLength(content);
-            const titleGroupEl = document.getElementById('titleGroup');
-            const titleHelpEl = document.getElementById('titleHelpMessage');
-            if (type === 'LMS' || type === 'MMS') {
-                if (titleGroupEl) titleGroupEl.style.display = contentBytes > 90 ? 'block' : 'none';
-                if (titleHelpEl) titleHelpEl.style.display = contentBytes <= 90 ? 'block' : 'none';
-            } else {
-                if (titleHelpEl) titleHelpEl.style.display = 'none';
+            const titleInput = document.getElementById('messageTitle');
+            if (titleInput && (type === 'LMS' || type === 'MMS')) {
+                titleInput.disabled = contentBytes <= 90;
+                titleInput.placeholder = contentBytes > 90 ? '제목을 입력하세요 (최대 40자)' : '';
             }
             let totalBytes = contentBytes;
             if (title) {
@@ -4394,8 +4391,8 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• LMS (value: lms) - 2,000바이트 이하, 단가 26.5P/건',
                     '• MMS (value: mms) - 이미지 포함, 단가 59P/건',
                     '【동작】',
-                    '• SMS 선택 시: 제목 입력·안내 모두 숨김, 이미지 첨부 숨김',
-                    '• LMS/MMS 선택 시: 메시지 내용 90바이트 이하 → 제목 안내만 표시, 90바이트 초과 → 제목 입력란 표시·안내 숨김',
+                    '• SMS 선택 시: 제목 영역 숨김, 이미지 첨부 숨김',
+                    '• LMS/MMS 선택 시: 제목 영역(입력란+안내) 항상 표시, 90바이트 이하일 때 입력란 비활성화',
                     '• MMS 선택 시: 이미지 첨부 표시',
                     '• 바이트 카운터 최대값 변경'
                 ],
@@ -4647,33 +4644,16 @@ document.getElementById('confirmRecipientCount').textContent =
                 selector: '#titleGroup',
                 title: '27. 메시지 제목',
                 position: { top: '5px', left: '5px' },
-                description: '텍스트 입력 (Text Input)',
+                description: '텍스트 입력 (Text Input) + 안내 문구',
                 function: 'LMS/MMS 메시지 제목 입력',
                 behavior: [
                     '【표시 조건】',
-                    '• LMS 또는 MMS 타입 선택 시, 메시지 내용 90바이트 초과 시에만 표시',
-                    '• 90바이트 이하일 때는 제목 영역 숨김',
-                    '【입력 조건】',
-                    '• 선택 입력 항목, 최대 40자',
-                    '• placeholder: "제목을 입력하세요 (최대 40자)"',
-                    '【동작】',
-                    '• 메시지 내용 입력 시 바이트에 따라 제목 영역 표시/숨김 전환'
-                ],
-                tags: [{ text: 'LMS/MMS', type: 'info' }]
-            },
-            // 27-1. 제목 안내 메시지
-            {
-                selector: '#titleHelpMessage',
-                title: '27-1. 제목 입력 안내',
-                position: { top: '5px', left: '5px' },
-                description: '안내 텍스트 (빨간색)',
-                function: '제목 입력 가능 조건 안내',
-                behavior: [
-                    '【표시 조건】',
-                    '• LMS 또는 MMS 타입 선택 시, 메시지 내용 90바이트 이하일 때만 표시',
-                    '• 90바이트 초과 시(제목 입력란 표시 시)에는 숨김',
-                    '【표시 내용】',
-                    '• "* 제목 입력은 메시지 내용 90바이트 초과 입력 시 가능합니다." (빨간색)'
+                    '• LMS 또는 MMS 타입 선택 시 제목 영역 항상 표시',
+                    '【입력란 동작】',
+                    '• 메시지 내용 90바이트 이하: 제목 입력란 비활성화(disabled), placeholder 숨김',
+                    '• 메시지 내용 90바이트 초과: 제목 입력란 활성화, placeholder "제목을 입력하세요 (최대 40자)"',
+                    '【안내 메시지】',
+                    '• 입력란 아래 항상 표시 (빨간색): "* 제목 입력은 메시지 내용 90바이트 초과 입력 시 가능합니다."'
                 ],
                 tags: [{ text: 'LMS/MMS', type: 'info' }]
             },
