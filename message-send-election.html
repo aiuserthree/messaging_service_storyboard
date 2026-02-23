@@ -1329,7 +1329,8 @@ body {
                         <!-- 제목 (LMS/MMS만) -->
                         <div class="form-group" id="titleGroup" style="display: none;">
                             <label class="form-label">제목</label>
-                            <input type="text" class="form-input" id="messageTitle" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40" oninput="updatePreview(); updateByteCounter();">
+                            <input type="text" class="form-input" id="messageTitle" placeholder="" maxlength="40" disabled oninput="updatePreview(); updateByteCounter();">
+                            <div class="form-help" id="titleGroupHelp" style="margin-top: 6px; font-size: 12px; color: var(--danger-color);">* 제목 입력은 메시지 내용 90바이트 초과 입력 시 가능합니다.</div>
                         </div>
 
                         <!-- 메시지 내용 -->
@@ -2428,10 +2429,17 @@ if (document.readyState === 'loading') {
             const immediateRadio = document.querySelector('input[name="sendTime"][value="immediate"]');
             const reservedTimeGroup = document.getElementById('reservedTimeGroup');
             
+            const titleInput = document.getElementById('messageTitle');
+            const contentBytes = titleInput ? calculateByteLength(document.getElementById('messageContent').value) : 0;
             if (type === 'LMS' || type === 'MMS') {
                 titleGroup.style.display = 'block';
+                if (titleInput) {
+                    titleInput.disabled = contentBytes <= 90;
+                    titleInput.placeholder = contentBytes > 90 ? '제목을 입력하세요 (최대 40자)' : '';
+                }
             } else {
                 titleGroup.style.display = 'none';
+                if (titleInput) { titleInput.disabled = true; titleInput.placeholder = ''; }
             }
             
             // MMS일 때만 예약발송 비활성화
@@ -2601,14 +2609,18 @@ if (document.readyState === 'loading') {
         function updateByteCounter() {
             const content = document.getElementById('messageContent').value;
             const title = document.getElementById('messageTitle').value;
+            const type = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
+            const contentBytes = calculateByteLength(content);
+            const titleInput = document.getElementById('messageTitle');
+            if (titleInput && (type === 'LMS' || type === 'MMS')) {
+                titleInput.disabled = contentBytes <= 90;
+                titleInput.placeholder = contentBytes > 90 ? '제목을 입력하세요 (최대 40자)' : '';
+            }
             const rejectText = '\n불법수집정보 신고 : 1390\n개인정보침해 신고 : 118\n무료거부 0801234567';
             const electionPrefix = '(선거운동정보) ';
-            
             // 전체 텍스트 구성: (선거운동정보) + 제목(LMS/MMS) + (선거운동정보) + 내용 + 수신거부
             let fullText = (title ? electionPrefix + title + '\n' : '') + electionPrefix + content + rejectText;
             let totalBytes = calculateByteLength(fullText);
-            
-            const type = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
             const maxBytes = type === 'SMS' ? 90 : 2000;
             
             const counter = document.getElementById('byteCounter');

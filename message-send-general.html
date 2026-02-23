@@ -1354,7 +1354,8 @@ body {
                         <!-- 제목 (LMS/MMS만) -->
                         <div class="form-group" id="titleGroup" style="display: none;">
                             <label class="form-label">제목</label>
-                            <input type="text" class="form-input" id="messageTitle" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40">
+                            <input type="text" class="form-input" id="messageTitle" placeholder="" maxlength="40" disabled>
+                            <div class="form-help" id="titleGroupHelp" style="margin-top: 6px; font-size: 12px; color: var(--danger-color);">* 제목 입력은 메시지 내용 90바이트 초과 입력 시 가능합니다.</div>
                         </div>
 
                         <!-- 메시지 내용 -->
@@ -2288,10 +2289,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const immediateRadio = document.querySelector('input[name="sendTime"][value="immediate"]');
             const reservedTimeGroup = document.getElementById('reservedTimeGroup');
             
+            const titleInput = document.getElementById('messageTitle');
+            const contentBytes = titleInput ? calculateByteLength(document.getElementById('messageContent').value) : 0;
             if (type === 'LMS' || type === 'MMS') {
                 titleGroup.style.display = 'block';
+                if (titleInput) {
+                    titleInput.disabled = contentBytes <= 90;
+                    titleInput.placeholder = contentBytes > 90 ? '제목을 입력하세요 (최대 40자)' : '';
+                }
             } else {
                 titleGroup.style.display = 'none';
+                if (titleInput) { titleInput.disabled = true; titleInput.placeholder = ''; }
             }
             
             // MMS일 때만 예약발송 비활성화
@@ -2325,8 +2333,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const content = document.getElementById('messageContent').value;
             const title = document.getElementById('messageTitle').value;
             const type = document.querySelector('input[name="messageType"]:checked').value;
-            
-            let totalBytes = calculateByteLength(content);
+            const contentBytes = calculateByteLength(content);
+            const titleInput = document.getElementById('messageTitle');
+            if (titleInput && (type === 'LMS' || type === 'MMS')) {
+                titleInput.disabled = contentBytes <= 90;
+                titleInput.placeholder = contentBytes > 90 ? '제목을 입력하세요 (최대 40자)' : '';
+            }
+            let totalBytes = contentBytes;
             if (title) {
                 totalBytes += calculateByteLength(title);
             }
