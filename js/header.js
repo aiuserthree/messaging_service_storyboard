@@ -154,7 +154,7 @@ function createHeader(activeMenu = '') {
     } else if (isLoggedIn) {
         // 로그인 후
         headerActionsHTML = `
-            <div class="balance-tooltip-wrapper">
+            <a href="payment-charge.html" class="balance-tooltip-wrapper balance-clickable" title="충전하기">
                 <div class="balance-info">
                     <span class="balance-label">잔액</span>
                     <span class="balance-amount">1,000,000 P</span>
@@ -174,7 +174,7 @@ function createHeader(activeMenu = '') {
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
             <div class="header-dropdown-wrapper" id="chargeDropdown">
                 <button class="btn btn-sm btn-primary header-dropdown-btn" style="padding: 6px 12px; font-size: 12px;">
                     충전/관리
@@ -683,6 +683,10 @@ function createFloatingMenu() {
                 position: relative;
                 display: inline-block;
                 cursor: pointer;
+            }
+            .balance-clickable {
+                text-decoration: none;
+                color: inherit;
             }
             
             .balance-tooltip-content {

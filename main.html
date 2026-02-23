@@ -394,6 +394,15 @@ body {
     font-size: 12px;
     line-height: 1.5;
 }
+.dashboard-summary-caller-count-link {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+.dashboard-summary-caller-count-link:hover {
+    text-decoration: underline;
+}
 .dashboard-summary-send-counts {
     display: flex;
     flex-wrap: wrap;
@@ -2048,12 +2057,14 @@ body {
                         <span class="dashboard-summary-label">잔액</span>
                         <div id="dashboardBalance">
                             <div class="dashboard-summary-balance-line">
-                                <div class="dashboard-summary-balance-row"><span id="dashboardPoints">1,000,000</span><span class="unit">포인트</span></div>
+                                <div class="dashboard-summary-balance-row"><a href="payment-charge.html" class="dashboard-summary-caller-count-link" id="dashboardPointsLink" title="충전하기"><span id="dashboardPoints">1,000,000</span></a><span class="unit">포인트</span></div>
                                 <div class="dashboard-summary-balance-row"><span id="dashboardMileage">92.6</span><span class="unit">마일리지</span></div>
                             </div>
-                            <div class="dashboard-summary-dedicated-account" id="dashboardDedicatedAccount">
-                                <div class="dashboard-summary-dedicated-account-label">전용계좌</div>
-                                <div class="dashboard-summary-dedicated-account-content" id="dashboardDedicatedAccountContent">KB국민은행 123-456-789012 (예금주: 홍길동)</div>
+                            <div class="dashboard-summary-dedicated-account" id="dashboardCallerCountSection">
+                                <div class="dashboard-summary-dedicated-account-label">발신번호 등록 건수</div>
+                                <div class="dashboard-summary-dedicated-account-content">
+                                    <a href="mypage.html#caller" class="dashboard-summary-caller-count-link" id="dashboardCallerCountLink" title="발신번호 관리"><span id="dashboardCallerCount">3</span>건</a>
+                                </div>
                             </div>
                         </div>
                     </div>

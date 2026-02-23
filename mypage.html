@@ -42,6 +42,8 @@
         .dashboard-summary-dedicated-account { margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; }
         .dashboard-summary-dedicated-account-label { font-weight: 600; color: #475569; margin-bottom: 4px; }
         .dashboard-summary-dedicated-account-content { font-size: 12px; line-height: 1.5; }
+        .dashboard-summary-caller-count-link { color: var(--primary-color); font-weight: 600; text-decoration: none; cursor: pointer; }
+        .dashboard-summary-caller-count-link:hover { text-decoration: underline; }
         .dashboard-summary-send-counts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
         .dashboard-summary-send-badge {
             display: inline-flex; align-items: center; gap: 6px;
@@ -248,12 +250,14 @@
                         <span class="dashboard-summary-label">잔액</span>
                         <div id="dashboardBalance">
                             <div class="dashboard-summary-balance-line">
-                                <div class="dashboard-summary-balance-row"><span id="dashboardPoints">1,000,000</span><span class="unit">포인트</span></div>
+                                <div class="dashboard-summary-balance-row"><a href="payment-charge.html" class="dashboard-summary-caller-count-link" id="dashboardPointsLink" title="충전하기"><span id="dashboardPoints">1,000,000</span></a><span class="unit">포인트</span></div>
                                 <div class="dashboard-summary-balance-row"><span id="dashboardMileage">92.6</span><span class="unit">마일리지</span></div>
                             </div>
-                            <div class="dashboard-summary-dedicated-account" id="dashboardDedicatedAccount">
-                                <div class="dashboard-summary-dedicated-account-label">전용계좌</div>
-                                <div class="dashboard-summary-dedicated-account-content" id="dashboardDedicatedAccountContent">KB국민은행 123-456-789012 (예금주: 홍길동)</div>
+                            <div class="dashboard-summary-dedicated-account" id="dashboardCallerCountSection">
+                                <div class="dashboard-summary-dedicated-account-label">발신번호 등록 건수</div>
+                                <div class="dashboard-summary-dedicated-account-content">
+                                    <a href="mypage.html#caller" class="dashboard-summary-caller-count-link" id="dashboardCallerCountLink" title="발신번호 관리"><span id="dashboardCallerCount">3</span>건</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -809,7 +813,7 @@
         function viewCallerDetailMypage(id) { showToast('상세보기는 발신번호관리 페이지에서 확인할 수 있습니다.', 'info'); }
         function viewRejectionReasonMypage(id) { alert('반려 사유: 제출 서류가 불명확합니다. 고객센터(1588-0000)로 문의해 주세요.'); }
 
-        // LNB 패널 전환
+        // LNB 패널 전환 (클릭 시 URL 해시도 해당 패널로 변경)
         function switchMypagePanel(panelId) {
             document.querySelectorAll('.mypage-lnb-item').forEach(function(el) {
                 el.classList.toggle('active', el.getAttribute('data-panel') === panelId);
@@ -819,6 +823,12 @@
             });
             if (panelId === 'history') {
                 renderTable('charge');
+            }
+            // URL 해시를 패널과 동기화 (mypage.html#profile, #password, #caller, #history)
+            try {
+                history.replaceState(null, '', '#' + panelId);
+            } catch (e) {
+                location.hash = panelId;
             }
         }
 
