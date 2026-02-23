@@ -1616,10 +1616,10 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '.btn-primary.btn-lg', title: '발신프로필 등록', position: { top: '-5px', left: '-10px' }, function: '프로필 등록 모달 열기' },
             // 검색 및 필터
             { selector: '.form-input[placeholder*="프로필"]', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '프로필ID 또는 채널명 검색' },
-            { selector: '.form-select', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '프로필 상태 필터', behavior: ['전체/대기중/승인완료/거부'] },
+            { selector: '.form-select', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '프로필 상태 필터', behavior: ['【상태 항목】 전체, 대기중, 승인완료, 거부'] },
             { selector: '.btn-primary:not(.btn-lg)', title: '검색 버튼', position: { top: '-5px', right: '-10px' }, function: '필터 조건으로 검색', api: 'GET /api/kakao/profiles' },
             // 프로필 목록
-            { selector: '.table', title: '프로필 목록', position: { top: '10px', left: '10px' }, function: '등록된 발신프로필 목록' },
+            { selector: '.table', title: '프로필 목록', position: { top: '10px', left: '10px' }, function: '등록된 발신프로필 목록', behavior: ['【상태 컬럼 값】 활성(녹색), 검수중(노란색), 대기중, 거부(빨간색)'] },
             { selector: '.btn-outline.btn-sm', title: '상세보기 버튼', position: { top: '-5px', left: '-10px' }, function: '프로필 상세 모달 열기' },
             { selector: '.btn-danger.btn-sm', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '프로필 삭제 확인 모달 열기' },
             { selector: '.pagination', title: '페이지네이션', position: { top: '-5px', left: '50%', transform: 'translateX(-50%)' }, function: '목록 페이지 전환' },
@@ -1669,7 +1669,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#detailProfileId', title: '프로필 ID 표시', position: { top: '-5px', right: '-10px' }, function: '카카오 프로필 ID' },
             { selector: '#detailChannelName', title: '채널명 표시', position: { top: '-5px', right: '-10px' }, function: '카카오 채널 이름' },
             { selector: '#detailRegisterDate', title: '등록일 표시', position: { top: '-5px', right: '-10px' }, function: '프로필 등록 날짜' },
-            { selector: '#detailStatus', title: '상태 표시', position: { top: '-5px', right: '-10px' }, function: '활성/대기/거부 상태' },
+            { selector: '#detailStatus', title: '상태 표시', position: { top: '-5px', right: '-10px' }, function: '프로필 승인 상태', behavior: ['【상태 항목】 활성(녹색), 검수중(노란색), 대기중, 거부(빨간색)'] },
             { selector: '#detailBrandMessage', title: '브랜드메시지 여부', position: { top: '-5px', right: '-10px' }, function: 'M,N 타깃 사용 가능 여부' },
             { selector: '#detailPhoneNumber', title: '담당자 번호 표시', position: { top: '-5px', right: '-10px' }, function: '등록된 담당자 번호' },
             { selector: '#detailCategories', title: '카테고리 표시', position: { top: '-5px', right: '-10px' }, function: '등록된 카테고리' },

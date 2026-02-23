@@ -2412,7 +2412,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#endDate', title: '종료일', position: { top: '-5px', left: '-10px' }, description: '조회 기간 종료일', function: '날짜 선택 (date picker)', behavior: ['기본값: 현재월 말일'] },
             { selector: '#callerNumberFilter', title: '발신번호 필터', position: { top: '-5px', left: '-10px' }, description: '등록된 발신번호별 필터링', function: '발신번호 선택', behavior: ['전체/등록된 발신번호 목록'] },
             { selector: '#messageTypeFilter', title: '메시지 타입', position: { top: '-5px', left: '-10px' }, description: '메시지 타입별 필터링', function: '타입 선택', behavior: ['전체/일반문자(SMS)/광고문자(LMS)/광고문자(MMS)/선거문자(LMS)/알림톡/브랜드메시지'] },
-            { selector: '#statusFilter', title: '상태 필터', position: { top: '-5px', left: '-10px' }, description: '발송 상태별 필터링', function: '상태 선택', behavior: ['전체/성공/실패/대기중/전송중'] },
+            { selector: '#statusFilter', title: '상태 필터', position: { top: '-5px', left: '-10px' }, description: '발송 상태별 필터링', function: '상태 선택', behavior: ['【상태 항목】 전체, 성공, 실패, 대기중, 전송중'] },
             { selector: '#searchInput', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '수신번호 또는 메시지 내용 검색', function: '수신번호·메시지 내용으로 검색' },
             { selector: '#filterSection .btn-primary', title: '조회 버튼', position: { top: '-5px', left: '-10px' }, description: '검색 실행 버튼', function: '필터 조건으로 발송결과 검색', api: 'GET /api/messages/results?startDate={startDate}&endDate={endDate}&callerNumber={callerNumber}&messageType={messageType}&status={status}&search={search}', behavior: ['필수: 발신번호 선택', '클릭 시 통계 및 목록 갱신'] },
             { selector: '#filterSection .btn-outline', title: '초기화 버튼', position: { top: '-5px', right: '-10px' }, description: '필터 조건 초기화', function: '모든 필터 조건을 기본값으로 초기화', behavior: ['통계 값도 초기화'] },
@@ -2446,7 +2446,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 api: 'GET /api/messages/results/export'
             },
             // 23-28. 발송결과 테이블
-            { selector: '.table', title: '발송결과 테이블', position: { top: '10px', left: '10px' }, description: '발송 결과 목록', function: '발송 내역 표시', behavior: ['발송일시, 발신번호, 메시지타입(세분화), 수신번호수(성공/실패), 메시지내용(클릭 시 상세 팝업), 상태, 사용포인트'] },
+            { selector: '.table', title: '발송결과 테이블', position: { top: '10px', left: '10px' }, description: '발송 결과 목록', function: '발송 내역 표시', behavior: ['발송일시, 발신번호, 메시지타입(세분화), 수신번호수(성공/실패), 메시지내용(클릭 시 상세 팝업), 상태, 사용포인트', '【상태 컬럼 값】 완료(녹색), 실패(빨간색), 전송중(파란색), 예약대기(노란색)'] },
             { selector: '.msg-content-cell', title: '메시지 내용 셀', position: { top: '-5px', left: '-10px' }, description: '클릭 시 발송 상세 팝업', function: 'viewDetail(id) 호출 → 상세보기 모달 열림', behavior: ['말줄임 처리', 'title로 전체 내용 툴팁', '클릭 시 해당 발송 상세보기 모달 표시'] },
             // 재발송 버튼
             {

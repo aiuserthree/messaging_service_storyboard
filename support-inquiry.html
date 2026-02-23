@@ -813,7 +813,9 @@
             // 22. 문의 내역 영역
             { selector: '#inquiryHistory', title: '문의 내역 영역', position: { top: '10px', left: '10px' }, description: '이전 문의 목록', function: '문의 내역 테이블 표시', api: 'GET /api/inquiries' },
             // 23. 문의 내역 테이블
-            { selector: '#inquiryHistory .table', title: '문의 내역 테이블', position: { top: '10px', left: '10px' }, description: '문의 목록 표시', function: '번호/문의유형/제목/답변여부/등록일 표시', behavior: ['행 클릭 시 상세 내용 확인 가능'] }
+            { selector: '#inquiryHistory .table', title: '문의 내역 테이블', position: { top: '10px', left: '10px' }, description: '문의 목록 표시', function: '번호/문의유형/제목/답변여부/등록일 표시', behavior: ['행 클릭 시 상세 내용 확인 가능'] },
+            // 24. 환불 신청 내역 테이블
+            { selector: '#inquiryRefundHistory .table', title: '환불 신청 내역 테이블', position: { top: '10px', left: '10px' }, description: '환불 신청 목록', function: '신청일/환불금액/상태/처리일/비고 표시', behavior: ['【상태 항목】 환불완료(녹색), 처리중(노란색), 반려(빨간색)'] }
         ];
         initSpecOverlay(specData);
     </script>

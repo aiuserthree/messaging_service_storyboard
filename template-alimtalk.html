@@ -1934,7 +1934,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 검색 섹션
             { selector: '#searchFilterSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, function: '템플릿 검색 및 필터링 영역' },
             { selector: '#searchFilterSection input[type="text"]', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '템플릿명으로 검색' },
-            { selector: '#searchFilterSection .form-select:nth-of-type(1)', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '심사상태별 필터링' },
+            { selector: '#searchFilterSection .form-select:nth-of-type(1)', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '심사상태별 필터링', behavior: ['【상태 항목】 전체, 승인, 검수중(심사요청/심사필요), 반려'] },
             { selector: '#searchFilterSection .form-select:nth-of-type(2)', title: '카테고리 필터', position: { top: '-5px', left: '-10px' }, function: '카테고리별 필터링' },
             { selector: '#searchFilterSection .btn-primary', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, function: '검색 실행', api: 'GET /api/kakao/templates/alimtalk' },
             { selector: '#searchFilterSection .btn-outline', title: '초기화 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 조건 초기화' },
@@ -1942,7 +1942,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#templateListSection', title: '템플릿 목록 섹션', position: { top: '10px', left: '10px' }, function: '알림톡 템플릿 테이블 표시' },
             { selector: '#templateListSection .btn-primary:first-of-type', title: '템플릿 등록 버튼', position: { top: '-10px', left: '-15px' }, function: '새 알림톡 템플릿 등록 페이지로 이동' },
             { selector: '#selectAll', title: '전체 선택 체크박스', position: { top: '-5px', left: '-10px' }, function: '모든 템플릿 일괄 선택/해제' },
-            { selector: '.template-table', title: '템플릿 테이블', position: { top: '5px', left: '5px' }, function: '템플릿 정보 표시' },
+            { selector: '.template-table', title: '템플릿 테이블', position: { top: '5px', left: '5px' }, function: '템플릿 정보 표시', behavior: ['【템플릿 상태 컬럼 값】 승인(녹색), 심사요청/심사필요(노란색), 반려(빨간색)'] },
             // 테이블 내 버튼들
             { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="openPreviewModal"]', title: '미리보기 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 미리보기 모달 열기' },
             { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="copyTemplate"]', title: '복사 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 복사하여 새로 생성' },
@@ -2001,7 +2001,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#reviewResultModal .table', title: '심사결과 테이블', position: { top: '5px', left: '5px' }, function: '심사 이력 목록' },
             { selector: '#reviewResultAuthor', title: '작성자', position: { top: '-5px', left: '-10px' }, function: '심사 요청자 ID' },
             { selector: '#reviewResultTime', title: '등록시간', position: { top: '-5px', left: '-10px' }, function: '심사 요청 시간' },
-            { selector: '#reviewResultStatus', title: '심사 상태', position: { top: '-5px', left: '-10px' }, function: '심사 상태 배지' },
+            { selector: '#reviewResultStatus', title: '심사 상태', position: { top: '-5px', left: '-10px' }, function: '심사 상태 배지', behavior: ['【상태 항목】 승인(녹색), 반려(빨간색)'] },
             { selector: '#reviewResultContent', title: '결과 및 요청사항', position: { top: '-5px', right: '-10px' }, function: '심사 결과 또는 문의사항' },
             { selector: '#reviewResultFile', title: '첨부파일', position: { top: '-5px', right: '-10px' }, function: '첨부파일 다운로드' },
             { selector: '#reviewResultModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', right: '-10px' }, function: '모달 닫기' },

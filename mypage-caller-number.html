@@ -1492,9 +1492,9 @@ body {
                     </div>
                 </div>
 
-                <div class="card" id="documentSection" style="display: none;">
+                <div class="card" id="detailDocumentSection" style="display: none;">
                     <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">제출 서류</h4>
-                    <div id="documentList">
+                    <div id="detailDocumentList">
                         <!-- 동적으로 생성됨 -->
                     </div>
                 </div>
@@ -2571,10 +2571,11 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('detailContactPhone').textContent = data.contactPhone;
             document.getElementById('detailContactEmail').textContent = data.contactEmail || '-';
 
-            // 서류 목록 표시
-            if (data.documents && data.documents.length > 0) {
-                const documentList = document.getElementById('documentList');
-                documentList.innerHTML = data.documents.map(doc => `
+            // 서류 목록 표시 (상세 모달 전용 id 사용)
+            const detailDocSection = document.getElementById('detailDocumentSection');
+            const detailDocList = document.getElementById('detailDocumentList');
+            if (data.documents && data.documents.length > 0 && detailDocList) {
+                detailDocList.innerHTML = data.documents.map(doc => `
                     <div style="padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
@@ -2587,13 +2588,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                 `).join('');
-                document.getElementById('documentSection').style.display = 'block';
+                if (detailDocSection) detailDocSection.style.display = 'block';
             } else {
-                document.getElementById('documentSection').style.display = 'none';
+                if (detailDocSection) detailDocSection.style.display = 'none';
             }
 
             // 모달 열기
-            openModal('detailModal');
+            const modalEl = document.getElementById('detailModal');
+            if (modalEl) {
+                modalEl.style.display = 'flex';
+                modalEl.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
         }
 
         function downloadDocument(fileName) {
@@ -2628,13 +2634,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // 7. 발신번호 등록 버튼
             { selector: '#registerCallerBtn', title: '발신번호 등록 버튼', position: { top: '-5px', right: '-10px' }, description: '신규 발신번호 등록', function: 'openRegisterModal() 호출', behavior: ['클릭 시 5단계 등록 모달 열기'] },
             // 8-11. 상태 필터
-            { selector: '#statusFilter', title: '상태 필터 영역', position: { top: '-5px', left: '-10px' }, description: '승인 상태별 필터링', function: '상태별 목록 필터링' },
+            { selector: '#statusFilter', title: '상태 필터 영역', position: { top: '-5px', left: '-10px' }, description: '승인 상태별 필터링', function: '상태별 목록 필터링', behavior: ['【상태 항목】 1) 전체 2) 승인대기 3) 승인완료 4) 반려'] },
             { selector: '#statusFilter .status-filter-btn:nth-child(1)', title: '전체 필터', position: { top: '-5px', left: '-10px' }, description: '전체 발신번호 표시', function: "filterStatus('all') 호출" },
             { selector: '#statusFilter .status-filter-btn:nth-child(2)', title: '승인대기 필터', position: { top: '-5px', left: '-10px' }, description: '승인대기 상태만 표시', function: "filterStatus('pending') 호출" },
             { selector: '#statusFilter .status-filter-btn:nth-child(3)', title: '승인완료 필터', position: { top: '-5px', left: '-10px' }, description: '승인완료 상태만 표시', function: "filterStatus('approved') 호출" },
             { selector: '#statusFilter .status-filter-btn:nth-child(4)', title: '반려 필터', position: { top: '-5px', right: '-10px' }, description: '반려 상태만 표시', function: "filterStatus('rejected') 호출" },
             // 12. 발신번호 테이블
-            { selector: '#callerNumberTable', title: '발신번호 테이블', position: { top: '10px', left: '10px' }, description: '등록된 발신번호 목록', function: '발신번호/통신사/용도/상태/등록일/승인일/관리 표시', api: 'GET /api/caller-numbers' },
+            { selector: '#callerNumberTable', title: '발신번호 테이블', position: { top: '10px', left: '10px' }, description: '등록된 발신번호 목록', function: '발신번호/통신사/용도/상태/등록일/승인일/관리 표시', behavior: ['【상태 컬럼 값】 승인완료(녹색 배지), 승인대기(노란 배지), 반려(빨간 배지)'], api: 'GET /api/caller-numbers' },
             // 13-15. 테이블 내 버튼
             { selector: 'tr[data-status="approved"] .btn-sm', title: '삭제 버튼 (승인완료)', position: { top: '-5px', right: '-10px' }, description: '승인된 발신번호 삭제', function: 'deleteCallerNumber(id) 호출', api: 'DELETE /api/caller-numbers/{id}', behavior: ['확인 다이얼로그 후 삭제'] },
             { selector: 'tr[data-status="pending"] .btn-sm', title: '상세보기 버튼 (승인대기)', position: { top: '-5px', right: '-10px' }, description: '승인대기 상세 정보', function: 'viewDetail(id) 호출', behavior: ['클릭 시 상세보기 모달 열기'] },
@@ -2704,12 +2710,12 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#detailCallerNumber', title: '발신번호', position: { top: '-5px', right: '-10px' }, description: '등록된 발신번호' },
             { selector: '#detailCarrier', title: '통신사', position: { top: '-5px', right: '-10px' }, description: '발신번호 통신사' },
             { selector: '#detailPurpose', title: '용도', position: { top: '-5px', right: '-10px' }, description: '사용 용도' },
-            { selector: '#detailStatus', title: '상태', position: { top: '-5px', right: '-10px' }, description: '승인 상태 배지' },
+            { selector: '#detailStatus', title: '상태', position: { top: '-5px', right: '-10px' }, description: '승인 상태 배지', behavior: ['【상태 항목】 승인완료(녹색), 승인대기(노란색), 반려(빨간색)'] },
             { selector: '#detailRegisterDate', title: '등록일', position: { top: '-5px', right: '-10px' }, description: '등록 신청일' },
             { selector: '#detailApproveDate', title: '승인일', position: { top: '-5px', right: '-10px' }, description: '승인 날짜' },
-            { selector: '#documentList', title: '서류 목록', position: { top: '10px', left: '10px' }, description: '제출 서류 목록', function: '서류 다운로드 가능' },
+            { selector: '#detailDocumentList', title: '서류 목록', position: { top: '10px', left: '10px' }, description: '제출 서류 목록', function: '서류 다운로드 가능' },
             // 45. 서류 다운로드 버튼
-            { selector: '#documentList .btn-sm', title: '다운로드 버튼', position: { top: '-5px', right: '-10px' }, description: '서류 다운로드', function: 'downloadDocument(fileName) 호출' },
+            { selector: '#detailDocumentList .btn-sm', title: '다운로드 버튼', position: { top: '-5px', right: '-10px' }, description: '서류 다운로드', function: 'downloadDocument(fileName) 호출' },
             // 46. 닫기 버튼
             { selector: '#detailModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, description: '모달 닫기', function: "closeModal('detailModal') 호출" }
         ];
