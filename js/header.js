@@ -199,6 +199,7 @@ function createHeader(activeMenu = '') {
                     <a href="mypage.html#password" class="header-dropdown-item" data-mypage-panel="password">비밀번호 변경</a>
                     <a href="mypage.html#caller" class="header-dropdown-item" data-mypage-panel="caller">발신번호 관리</a>
                     <a href="mypage.html#history" class="header-dropdown-item" data-mypage-panel="history">이용내역</a>
+                    <a href="support-inquiry.html#history" class="header-dropdown-item">내 문의 내역</a>
                     <div class="header-dropdown-divider"></div>
                     <a href="#" class="header-dropdown-item" onclick="handleLogout(); return false;">로그아웃</a>
                 </div>
