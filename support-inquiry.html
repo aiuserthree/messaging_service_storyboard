@@ -749,10 +749,12 @@
             { selector: '#supportTabs .support-tab:nth-child(2)', title: '이벤트 탭', position: { top: '-5px', left: '-10px' }, description: '이벤트 페이지', function: '클릭 시 support-event.html로 이동' },
             { selector: '#supportTabs .support-tab:nth-child(3)', title: 'FAQ 탭', position: { top: '-5px', left: '-10px' }, description: 'FAQ 페이지', function: '클릭 시 support-faq.html로 이동' },
             { selector: '#supportTabs .support-tab:nth-child(4)', title: '1:1 문의 탭', position: { top: '-5px', right: '-10px' }, description: '1:1 문의 페이지 (현재)', function: '현재 페이지', behavior: ['현재 활성 탭'] },
-            // 6-8. 문의 탭 메뉴
-            { selector: '#inquiryTabs', title: '문의 탭 메뉴', position: { top: '-5px', left: '-10px' }, description: '문의하기/문의내역 전환', function: '하위 탭 전환' },
+            // 6-10. 문의 탭 메뉴
+            { selector: '#inquiryTabs', title: '문의 탭 메뉴', position: { top: '-5px', left: '-10px' }, description: '문의하기/문의내역/환불신청/환불신청내역 전환', function: '하위 탭 전환' },
             { selector: '#inquiryFormTab', title: '1:1 문의하기 탭', position: { top: '-5px', left: '-10px' }, description: '새 문의 작성', function: "switchInquiryTab('form') 호출", behavior: ['클릭 시 문의 작성 폼 표시', '현재 활성화 상태 표시'] },
-            { selector: '#inquiryHistoryTab', title: '1:1 문의내역 탭', position: { top: '-5px', right: '-10px' }, description: '이전 문의 내역 조회', function: "switchInquiryTab('history') 호출", behavior: ['클릭 시 문의 내역 테이블 표시'], api: 'GET /api/inquiries' },
+            { selector: '#inquiryHistoryTab', title: '1:1 문의내역 탭', position: { top: '-5px', left: '-10px' }, description: '이전 문의 내역 조회', function: "switchInquiryTab('history') 호출", behavior: ['클릭 시 문의 내역 테이블 표시'], api: 'GET /api/inquiries' },
+            { selector: '#inquiryRefundTab', title: '환불신청 탭', position: { top: '-5px', left: '-10px' }, description: '포인트 환불 신청', function: "switchInquiryTab('refund') 호출", behavior: ['클릭 시 환불신청 패널 표시(잔여 포인트·환불 금액·계좌 정보·통장사본·환불 신청하기)'] },
+            { selector: '#inquiryRefundHistoryTab', title: '환불신청내역 탭', position: { top: '-5px', right: '-10px' }, description: '환불 신청 내역 조회', function: "switchInquiryTab('refundHistory') 호출", behavior: ['클릭 시 환불 신청 내역 테이블 표시'], api: 'GET /api/refund-requests' },
             
             // ===== 1:1 문의하기 폼 =====
             // 9. 문의 폼 영역
@@ -814,8 +816,30 @@
             { selector: '#inquiryHistory', title: '문의 내역 영역', position: { top: '10px', left: '10px' }, description: '이전 문의 목록', function: '문의 내역 테이블 표시', api: 'GET /api/inquiries' },
             // 23. 문의 내역 테이블
             { selector: '#inquiryHistory .table', title: '문의 내역 테이블', position: { top: '10px', left: '10px' }, description: '문의 목록 표시', function: '번호/문의유형/제목/답변여부/등록일 표시', behavior: ['행 클릭 시 상세 내용 확인 가능'] },
-            // 24. 환불 신청 내역 테이블
-            { selector: '#inquiryRefundHistory .table', title: '환불 신청 내역 테이블', position: { top: '10px', left: '10px' }, description: '환불 신청 목록', function: '신청일/환불금액/상태/처리일/비고 표시', behavior: ['【상태 항목】 환불완료(녹색), 처리중(노란색), 반려(빨간색)'] }
+
+            // ===== 환불신청 =====
+            // 24. 환불신청 패널
+            { selector: '#inquiryRefund', title: '환불신청 패널', position: { top: '10px', left: '10px' }, description: '포인트 환불 신청 영역', function: '잔여 포인트·환불 금액 표시 및 계좌 정보 입력 후 환불 신청', behavior: ['환불신청 탭 선택 시 표시', '잔여 포인트 전액 환불, 수수료 10% 차감 후 실 환불금 입금'] },
+            { selector: '#refundBalanceSummary', title: '환불 잔액 요약', position: { top: '5px', left: '10px' }, description: '잔여 포인트·환불 금액·마일리지 카드', function: '잔여 포인트, 환불 금액(수수료 10% 차감 후), 마일리지(환불 불가) 표시', behavior: ['data-remaining-points 기반 계산'] },
+            { selector: '#refundRemainingPoints', title: '잔여 포인트', position: { top: '-5px', right: '-10px' }, description: '현재 보유 포인트', function: '잔여 포인트 표시' },
+            { selector: '#refundableAmount', title: '환불 금액', position: { top: '-5px', right: '-10px' }, description: '수수료 차감 후 실 환불 예정 금액', function: '환불 금액(10% 수수료 차감 후) 표시' },
+            { selector: '#refundTargetDisplay', title: '환불 대상', position: { top: '-5px', right: '-10px' }, description: '환불 계산 행', function: '잔여 포인트 전액 표시' },
+            { selector: '#refundFeeDisplay', title: '환불 수수료', position: { top: '-5px', right: '-10px' }, description: '10% 수수료 금액', function: '차감 수수료 표시' },
+            { selector: '#refundFinalDisplay', title: '실제 환불 금액', position: { top: '-5px', right: '-10px' }, description: '최종 환불 금액', function: '실제 환불 금액 표시' },
+            { selector: '#refundBank', title: '은행 선택', position: { top: '-5px', left: '-10px' }, description: '환불 받을 계좌 은행', function: '은행 선택 (필수)', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#refundAccountNumber', title: '계좌번호', position: { top: '-5px', left: '-10px' }, description: "'-' 없이 숫자만 입력", function: '계좌번호 입력', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#refundAccountHolder', title: '예금주명', position: { top: '-5px', left: '-10px' }, description: '예금주 이름', function: '예금주명 입력', tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#refundBankCopy', title: '통장사본', position: { top: '-5px', left: '-10px' }, description: '이미지 또는 PDF 업로드', function: '통장사본 파일 첨부', behavior: ['환불 받을 계좌 확인용'], tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#refundReasonText', title: '환불 사유', position: { top: '-5px', left: '-10px' }, description: '선택 입력', function: '환불 사유 입력 (선택)' },
+            { selector: '#refundPrivacyAgree', title: '개인정보 수집·이용 동의', position: { top: '-5px', left: '-10px' }, description: '환불 처리용 개인정보 동의', function: '체크박스 선택', behavior: ['미체크 시 환불 신청 불가'], tags: [{ text: '필수', type: 'required' }] },
+            { selector: '#inquiryRefund button[onclick="submitRefundApply()"]', title: '환불 신청하기 버튼', position: { top: '-5px', right: '-10px' }, description: '환불 신청 제출', function: 'submitRefundApply() 호출', behavior: ['계좌 정보·통장사본·개인정보 동의 필수', '유효성 검사 후 환불 완료 페이지로 이동'], api: 'POST /api/refund-requests' },
+
+            // ===== 환불신청내역 =====
+            // 25. 환불신청내역 패널
+            { selector: '#inquiryRefundHistory', title: '환불신청내역 패널', position: { top: '10px', left: '10px' }, description: '환불 신청 내역 조회 영역', function: '과거 환불 신청 목록 표시', behavior: ['환불신청내역 탭 선택 시 표시'], api: 'GET /api/refund-requests' },
+            { selector: '#inquiryRefundHistory .card-title', title: '환불 신청 내역 제목', position: { top: '-5px', left: '-10px' }, description: '섹션 제목', function: '환불 신청 내역 표시' },
+            { selector: '#inquiryRefundHistory .table', title: '환불 신청 내역 테이블', position: { top: '10px', left: '10px' }, description: '환불 신청 목록', function: '신청일/환불금액/상태/처리일/비고 표시', behavior: ['【상태 항목】 환불완료(녹색), 처리중(노란색), 반려(빨간색)'] },
+            { selector: '#refundHistoryBody', title: '환불 내역 테이블 본문', position: { top: '10px', left: '10px' }, description: '환불 신청 행 목록', function: '각 신청 건별 신청일·금액·상태·처리일·비고 표시' }
         ];
         initSpecOverlay(specData);
     </script>
