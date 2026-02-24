@@ -2061,6 +2061,40 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
+            // 휴대폰+본인 명의 선택 순간 스텝 바에서 3·4단계 숨김
+            updateStepIndicatorVisibility();
+            // 2단계 푸터: 휴대폰+본인 명의+인증완료 시 등록 버튼 표시
+            updateStep2FooterButton();
+        }
+
+        // 2단계에서 휴대폰+본인 명의+인증 완료면 '등록' 버튼, 아니면 '다음' 버튼
+        function updateStep2FooterButton() {
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            if (!nextBtn || !submitBtn) return;
+            if (currentStep === 2 && numberType === 'MOBILE' && selectedOwnershipType === 'self' && authCompleted) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+                submitBtn.textContent = '등록';
+            } else if (currentStep === 2) {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+                submitBtn.textContent = '승인요청';
+            }
+        }
+
+        // 휴대폰+본인 명의일 때 스텝 인디케이터에서 3·4단계 숨김
+        function updateStepIndicatorVisibility() {
+            const step3El = document.getElementById('step3');
+            const step4El = document.getElementById('step4');
+            if (!step3El || !step4El) return;
+            if (numberType === 'MOBILE' && selectedOwnershipType === 'self') {
+                step3El.style.display = 'none';
+                step4El.style.display = 'none';
+            } else {
+                step3El.style.display = '';
+                step4El.style.display = '';
+            }
         }
 
         // 명의 구분별 서류 섹션 업데이트
@@ -2328,6 +2362,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     showToast('본인인증을 완료해주세요.', 'warning');
                     return;
                 }
+                // 휴대폰+본인 명의+인증 완료: 3·4단계 생략, 등록 버튼만 표시하고 여기서 종료
+                if (numberType === 'MOBILE' && selectedOwnershipType === 'self' && authCompleted) {
+                    updateStep2FooterButton();
+                    return;
+                }
             }
             if (currentStep === 3) {
                 const contactPhone = document.getElementById('contactPhoneInput').value;
@@ -2349,16 +2388,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 // STEP 2 진입 시 명의 구분 섹션 업데이트
                 if (currentStep === 2) {
                     updateOwnershipSection();
+                    updateStepIndicatorVisibility();
                 }
                 
                 if (currentStep === 4) {
                     document.getElementById('nextBtn').style.display = 'none';
                     document.getElementById('submitBtn').style.display = 'block';
+                    document.getElementById('submitBtn').textContent = '승인요청';
                     // 최종 확인 정보 업데이트
                     updateReviewInfo();
                 } else {
                     document.getElementById('nextBtn').style.display = 'block';
                     document.getElementById('submitBtn').style.display = 'none';
+                    document.getElementById('submitBtn').textContent = '승인요청';
+                    // 휴대폰 번호 + 본인 명의: 2단계에서 인증 완료 시 등록 버튼 표시 (3·4단계 생략)
+                    updateStep2FooterButton();
                 }
             }
         }
@@ -2459,6 +2503,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (selectedOwnershipType === 'self') {
                     updateDocumentSection();
                 }
+                // 휴대폰 + 본인 명의: 2단계에서 즉시 다음 → 등록 버튼으로 전환
+                function showRegisterButton() {
+                    if (currentStep !== 2 || numberType !== 'MOBILE' || selectedOwnershipType !== 'self' || !authCompleted) return;
+                    const nextBtn = document.getElementById('nextBtn');
+                    const submitBtn = document.getElementById('submitBtn');
+                    if (nextBtn) {
+                        nextBtn.style.setProperty('display', 'none', 'important');
+                        nextBtn.style.visibility = 'hidden';
+                    }
+                    if (submitBtn) {
+                        submitBtn.style.setProperty('display', 'block', 'important');
+                        submitBtn.style.visibility = 'visible';
+                        submitBtn.textContent = '등록';
+                    }
+                }
+                showRegisterButton();
+                updateStep2FooterButton();
+                setTimeout(showRegisterButton, 0);
+                setTimeout(showRegisterButton, 100);
             }, 1000);
         }
 
@@ -2503,9 +2566,16 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('step1').classList.add('active');
             document.getElementById('step1Content').style.display = 'block';
             
+            // 스텝 인디케이터 3·4단계 다시 표시
+            const step3El = document.getElementById('step3');
+            const step4El = document.getElementById('step4');
+            if (step3El) step3El.style.display = '';
+            if (step4El) step4El.style.display = '';
+            
             // 버튼 초기화
             document.getElementById('nextBtn').style.display = 'block';
             document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('submitBtn').textContent = '승인요청';
             
             // 입력값 초기화
             document.getElementById('registerForm').reset();
