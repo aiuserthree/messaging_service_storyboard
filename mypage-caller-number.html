@@ -1402,6 +1402,10 @@ body {
                                         <th>용도</th>
                                         <td id="reviewPurpose">-</td>
                                     </tr>
+                                    <tr id="reviewBusinessAddressRow" style="display: none;">
+                                        <th>사업장 주소</th>
+                                        <td id="reviewBusinessAddress">-</td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -2380,6 +2384,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             document.getElementById('reviewOwnershipType').textContent = ownershipText;
             document.getElementById('reviewPurpose').textContent = document.getElementById('purposeInput').value || '-';
+
+            var businessAddrRow = document.getElementById('reviewBusinessAddressRow');
+            var businessAddrCell = document.getElementById('reviewBusinessAddress');
+            if (businessAddrRow && businessAddrCell) {
+                if (selectedMemberType === 'business') {
+                    businessAddrRow.style.display = '';
+                    businessAddrCell.textContent = '서울특별시 강남구 테헤란로 123'; // 회원 정보(기업)의 사업장 주소
+                } else {
+                    businessAddrRow.style.display = 'none';
+                    businessAddrCell.textContent = '-';
+                }
+            }
         }
 
         function handleFileUpload(input, id, maxSize) {
@@ -2667,7 +2683,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#contactPhoneInput', title: '휴대폰번호 입력', position: { top: '-5px', left: '-10px' }, description: '결과 알림 연락처', function: '휴대폰번호 입력', tags: [{ text: '필수', type: 'required' }] },
             { selector: '#contactEmailInput', title: '이메일 입력', position: { top: '-5px', left: '-10px' }, description: '결과 수신 이메일 (선택)', function: '이메일 입력' },
             // 28. STEP 4: 제출
-            { selector: '#step4Content', title: 'STEP 4: 제출', position: { top: '10px', left: '10px' }, description: '최종 확인 및 제출', function: '입력 정보 확인', behavior: ['모든 입력 정보 요약 표시', '제출 후 수정 불가 안내'] },
+            { selector: '#step4Content', title: 'STEP 4: 제출', position: { top: '10px', left: '10px' }, description: '최종 확인 및 제출', function: '입력 정보 확인', behavior: ['모든 입력 정보 요약 표시', '기업회원일 때 사업장 주소(reviewBusinessAddressRow) 항목 추가 노출', '제출 후 수정 불가 안내'] },
             // 32-34. 모달 하단 버튼
             { selector: '#registerModal .modal-footer .btn-outline', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, description: '등록 취소', function: "closeModal('registerModal') 호출" },
             { selector: '#nextBtn', title: '다음 버튼', position: { top: '-5px', left: '10px' }, description: '다음 단계로 이동', function: 'nextStep() 호출', behavior: ['현재 단계 유효성 검증 후 진행'] },

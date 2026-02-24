@@ -85,7 +85,7 @@
     <div class="app-container">
         <script>document.write(createHeader());</script>
         <main class="main-content">
-            <a href="mypage-profile.html" class="btn btn-outline btn-sm" style="margin-bottom: 16px;">← 내 정보 수정으로 돌아가기</a>
+            <a href="mypage.html#profile" class="btn btn-outline btn-sm" style="margin-bottom: 16px;">← 내 정보 수정으로 돌아가기</a>
             <div class="page-header">
                 <h2>개인사업자 회원으로 전환</h2>
                 <p style="color: var(--text-secondary); margin-top: 8px;">기업 정보 등록 후 발신번호 등록까지 한 번에 진행합니다. (기업회원 발신번호 등록 프로세스 적용)</p>
@@ -116,7 +116,21 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label required">사업장 주소</label>
-                    <input type="text" class="form-input" id="businessAddress" placeholder="사업장 주소 입력">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label class="form-label">우편번호</label>
+                        <div class="flex gap-2">
+                            <input type="text" class="form-input" id="businessZipcode" placeholder="우편번호" readonly style="max-width: 120px;">
+                            <button type="button" class="btn btn-outline" onclick="openBusinessAddressSearch()">주소 검색</button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label class="form-label">주소</label>
+                        <input type="text" class="form-input" id="businessAddressBase" placeholder="우편번호 검색 시 자동 입력" readonly>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">상세주소</label>
+                        <input type="text" class="form-input" id="businessAddressDetail" placeholder="상세주소를 입력하세요">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label required">사업자등록증 사본</label>
@@ -216,6 +230,7 @@
                         <table class="table">
                             <tr><th>기업명</th><td id="reviewCompanyName">-</td></tr>
                             <tr><th>사업자등록번호</th><td id="reviewBusinessNumber">-</td></tr>
+                            <tr><th>사업장 주소</th><td id="reviewBusinessAddress">-</td></tr>
                             <tr><th>발신번호</th><td id="reviewCallerNumber">-</td></tr>
                             <tr><th>명의 구분</th><td id="reviewOwnershipType">-</td></tr>
                             <tr><th>용도</th><td id="reviewPurpose">-</td></tr>
@@ -230,7 +245,7 @@
             </div>
 
             <div style="margin-top: 24px;">
-                <a href="mypage-profile.html" class="btn btn-outline">취소</a>
+                <a href="mypage.html#profile" class="btn btn-outline">취소</a>
             </div>
         </main>
     </div>
@@ -252,12 +267,23 @@
         var fileAccept = '.jpg,.jpeg,.gif,.png,.pdf,.tif,.tiff,.zip';
         var maxSize = 10 * 1024 * 1024;
 
+        function getBusinessAddressFull() {
+            var base = (document.getElementById('businessAddressBase') || {}).value || '';
+            var detail = (document.getElementById('businessAddressDetail') || {}).value.trim();
+            if (!base) return '';
+            return detail ? base + ' ' + detail : base;
+        }
+        function openBusinessAddressSearch() {
+            if (typeof showToast === 'function') showToast('주소 검색 창을 엽니다. 선택 시 우편번호·주소가 자동 입력됩니다.', 'info');
+            document.getElementById('businessZipcode').value = '06134';
+            document.getElementById('businessAddressBase').value = '서울특별시 강남구 테헤란로 123';
+        }
         function goToCallerStep1() {
             var name = document.getElementById('companyName').value;
             var num = document.getElementById('businessNumber').value;
             var rep = document.getElementById('repName').value;
-            var addr = document.getElementById('businessAddress').value.trim();
-            if (!name || !num || !rep || !addr) { alert('기업명, 사업자등록번호, 대표자명, 사업장 주소를 입력해 주세요.'); return; }
+            var addr = getBusinessAddressFull();
+            if (!name || !num || !rep || !addr) { alert('기업명, 사업자등록번호, 대표자명, 사업장 주소(우편번호 검색 후 주소·상세주소)를 입력해 주세요.'); return; }
             document.getElementById('businessInfoCard').style.display = 'none';
             document.getElementById('callerSectionCard').style.display = 'block';
         }
@@ -336,7 +362,7 @@
             if (callerStep === 4) {
                 document.getElementById('reviewCompanyName').textContent = document.getElementById('companyName').value || '-';
                 document.getElementById('reviewBusinessNumber').textContent = document.getElementById('businessNumber').value || '-';
-                document.getElementById('reviewBusinessAddress').textContent = document.getElementById('businessAddress').value.trim() || '-';
+                document.getElementById('reviewBusinessAddress').textContent = getBusinessAddressFull() || '-';
                 document.getElementById('reviewCallerNumber').textContent = document.getElementById('callerNumberInput').value || '-';
                 document.getElementById('reviewOwnershipType').textContent = selectedOwnershipType === 'self' ? '본인(자사) 명의' : selectedOwnershipType === 'others' ? '타인 명의' : '타사 명의';
                 document.getElementById('reviewPurpose').textContent = document.getElementById('purposeInput').value || '-';
@@ -349,18 +375,21 @@
             } else {
                 alert('개인사업자 전환 신청 및 발신번호 등록이 완료되었습니다.');
             }
-            setTimeout(function() { window.location.href = 'mypage-profile.html'; }, 1500);
+            setTimeout(function() { window.location.href = 'mypage.html#profile'; }, 1500);
         }
     </script>
     <!-- 화면설계 오버레이 -->
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
-            { selector: '.main-content a.btn-outline', title: '내 정보 수정으로 돌아가기', position: { top: '-5px', left: '-10px' }, description: '내 정보 수정 페이지로 이동', function: 'mypage-profile.html 이동' },
+            { selector: '.main-content a.btn-outline', title: '내 정보 수정으로 돌아가기', position: { top: '-5px', left: '-10px' }, description: '내 정보 수정 페이지로 이동', function: 'mypage.html#profile 이동' },
             { selector: '.page-header h2', title: '페이지 제목', position: { top: '-5px', left: '-10px' }, description: '개인사업자 회원 전환', function: '페이지 목적 표시', behavior: ['기업 정보 등록 + 발신번호 등록까지 포함 (기존 발신번호 등록 프로세스에서 기업회원일 경우 프로세스 그대로 적용)'] },
             { selector: '.alert.alert-warning', title: '전환 불가 안내', position: { top: '5px', left: '10px' }, description: '사업자 전환 후 되돌리기 불가', function: '주의 안내' },
             { selector: '.alert.alert-danger', title: '발신번호 초기화 안내', position: { top: '5px', left: '10px' }, description: '전환 시 기존 발신번호 초기화', function: '안내 문구' },
-            { selector: '#businessInfoCard', title: '1. 기업 정보 등록 카드', position: { top: '10px', left: '10px' }, description: '기업명, 사업자등록번호, 대표자명, 사업자등록증', function: '기업 정보 입력', behavior: ['기업명/사업자등록번호/대표자명 필수', '사업자등록번호 확인 버튼', '다음: 발신번호 등록 클릭 시 발신번호 단계로 이동'] },
+            { selector: '#businessInfoCard', title: '1. 기업 정보 등록 카드', position: { top: '10px', left: '10px' }, description: '기업명, 사업자등록번호, 대표자명, 사업장 주소(3칸), 사업자등록증', function: '기업 정보 입력', behavior: ['기업명/사업자등록번호/대표자명/사업장 주소 필수', '사업장 주소: 우편번호 검색 → 주소 자동입력, 상세주소 직접입력(3칸)', '사업자등록번호 확인 버튼', '다음: 발신번호 등록 클릭 시 발신번호 단계로 이동'] },
+            { selector: '#businessZipcode', title: '사업장 우편번호', position: { top: '-5px', left: '-10px' }, function: '우편번호 검색 버튼 클릭 시 자동 입력' },
+            { selector: 'button[onclick="openBusinessAddressSearch()"]', title: '사업장 주소 검색', position: { top: '-5px', left: '-10px' }, function: '주소 검색(우편번호 API). 선택 시 우편번호·주소 자동 입력' },
+            { selector: '#businessAddressDetail', title: '사업장 상세주소', position: { top: '-5px', left: '-10px' }, function: '상세주소 직접 입력' },
             { selector: '#companyName', title: '기업명 입력', position: { top: '-5px', left: '-10px' }, function: '기업명 입력', tags: [{ text: '필수', type: 'required' }] },
             { selector: '#businessNumber', title: '사업자등록번호 입력', position: { top: '-5px', left: '-10px' }, function: '사업자등록번호 입력 및 확인', behavior: ['확인 버튼으로 유효성 검증'], tags: [{ text: '필수', type: 'required' }] },
             { selector: '#repName', title: '대표자명 입력', position: { top: '-5px', left: '-10px' }, function: '대표자명 입력', tags: [{ text: '필수', type: 'required' }] },
@@ -374,8 +403,8 @@
             { selector: '#documentSection', title: '서류 제출 섹션', position: { top: '5px', left: '10px' }, function: '명의 구분별 필수 서류 업로드', behavior: ['본인(자사)+휴대폰: 서류 불필요', '본인(자사)+유선: 통신서비스 이용증명원', '타인/타사: 위임장 등 추가 서류'] },
             { selector: '#contactPhoneInput', title: '연락처(휴대폰)', position: { top: '-5px', left: '-10px' }, function: '승인/반려 결과 수신 연락처', tags: [{ text: '필수', type: 'required' }] },
             { selector: '#contactEmailInput', title: '결과 수신 이메일', position: { top: '-5px', left: '-10px' }, function: '선택 입력' },
-            { selector: '#reviewCompanyName', title: '최종 확인 영역', position: { top: '5px', left: '10px' }, description: '기업명/사업자번호/발신번호 등 요약', function: '제출 전 확인' },
-            { selector: 'button[onclick="submitConvertAndCaller()"]', title: '전환 신청 및 발신번호 등록', position: { top: '-5px', right: '-10px' }, function: 'submitConvertAndCaller()', behavior: ['Toast/Alert 완료 메시지', 'mypage-profile.html로 이동'], api: 'POST 전환+발신번호 등록' }
+            { selector: '#reviewCompanyName', title: '최종 확인 영역', position: { top: '5px', left: '10px' }, description: '기업명/사업자번호/사업장 주소/발신번호 등 요약', function: '제출 전 확인', behavior: ['사업장 주소(reviewBusinessAddress) 항목 포함. 돌아가기·취소·전환 완료 시 mypage.html#profile 이동'] },
+            { selector: 'button[onclick="submitConvertAndCaller()"]', title: '전환 신청 및 발신번호 등록', position: { top: '-5px', right: '-10px' }, function: 'submitConvertAndCaller()', behavior: ['Toast/Alert 완료 메시지', 'mypage.html#profile로 이동'], api: 'POST 전환+발신번호 등록' }
         ];
         initSpecOverlay(specData);
     </script>

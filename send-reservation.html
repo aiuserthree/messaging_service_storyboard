@@ -1059,8 +1059,8 @@ body {
                                 <tr>
                                     <th>발송 예정일시</th>
                                     <td>
-                                        <input type="datetime-local" id="waitScheduledDateInput" class="form-input" style="max-width: 220px;">
-                                        <button type="button" class="btn btn-sm btn-primary" onclick="saveScheduledDate()" style="margin-left: 8px;">저장</button>
+                                        <span id="waitScheduledDateDisplay">2024-11-20 09:00:00</span>
+                                        <button type="button" class="btn btn-sm btn-outline" onclick="openEditScheduledDateModal()" style="margin-left: 8px;">수정</button>
                                         <span id="waitScheduledDateError" class="text-danger" style="display: none; font-size: 12px; margin-left: 8px;"></span>
                                     </td>
                                 </tr>
@@ -1160,7 +1160,29 @@ body {
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('detailModal')">닫기</button>
                 <button class="btn btn-outline" id="detailCancelBtn" onclick="cancelReservationFromDetail()">취소하기</button>
+                <button class="btn btn-primary" id="detailSaveScheduleBtn" onclick="saveScheduledDate()" style="display: none;">저장</button>
                 <button class="btn btn-primary" id="detailCopySendBtn" onclick="copyAndSend()">복사하여 새로 보내기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 발송 예정일시 수정 모달 -->
+    <div class="modal-overlay" id="editScheduledDateModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">발송 예정일시 수정</h3>
+                <button class="modal-close" onclick="closeModal('editScheduledDateModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">날짜와 시간</label>
+                    <input type="datetime-local" id="editScheduledDateInput" class="form-input" style="width: 100%;">
+                    <span id="editScheduledDateError" class="text-danger" style="display: none; font-size: 12px; margin-top: 6px;"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('editScheduledDateModal')">취소</button>
+                <button class="btn btn-primary" onclick="applyScheduledDateEdit()">적용</button>
             </div>
         </div>
     </div>
@@ -1465,6 +1487,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     <script>
         var currentDetailId = null;
+        var pendingScheduledDate = null; // 수정 모달에서 '적용' 시 반영, 상세보기 '저장' 클릭 시 최종 저장
 
         // datetime-local용 포맷: YYYY-MM-DDTHH:mm
         function formatDateTimeLocal(d) {
@@ -1487,19 +1510,67 @@ document.addEventListener('DOMContentLoaded', function() {
             return str.replace(' ', 'T').substring(0, 16);
         }
 
-        function saveScheduledDate() {
-            var inputEl = document.getElementById('waitScheduledDateInput');
-            var errEl = document.getElementById('waitScheduledDateError');
+        function openEditScheduledDateModal() {
+            var inputEl = document.getElementById('editScheduledDateInput');
+            var errEl = document.getElementById('editScheduledDateError');
+            if (!inputEl || !errEl) return;
+            errEl.style.display = 'none';
+            errEl.textContent = '';
+            var current = pendingScheduledDate || '';
+            inputEl.value = parseDateTimeForInput(current);
+            var minDate = new Date(Date.now() + 10 * 60 * 1000);
+            inputEl.min = formatDateTimeLocal(minDate);
+            openModal('editScheduledDateModal');
+        }
+
+        function applyScheduledDateEdit() {
+            var inputEl = document.getElementById('editScheduledDateInput');
+            var errEl = document.getElementById('editScheduledDateError');
             if (!inputEl || !errEl) return;
             var value = inputEl.value.trim();
             if (!value) {
                 errEl.textContent = '발송예정일시를 선택해주세요.';
-                errEl.style.display = 'inline';
+                errEl.style.display = 'block';
                 return;
             }
             var selected = new Date(value);
-            var minVal = inputEl.min;
-            var minDate = minVal ? new Date(minVal) : new Date(Date.now() + 10 * 60 * 1000);
+            var minDate = new Date(Date.now() + 10 * 60 * 1000);
+            if (selected.getTime() < minDate.getTime()) {
+                errEl.textContent = '현재 시간 기준 10분 이후로 설정해주세요.';
+                errEl.style.display = 'block';
+                return;
+            }
+            errEl.style.display = 'none';
+            errEl.textContent = '';
+            // YYYY-MM-DD HH:mm:ss 형태로 보관
+            var formatted = selected.getFullYear() + '-' + String(selected.getMonth() + 1).padStart(2, '0') + '-' + String(selected.getDate()).padStart(2, '0') + ' ' + String(selected.getHours()).padStart(2, '0') + ':' + String(selected.getMinutes()).padStart(2, '0') + ':00';
+            pendingScheduledDate = formatted;
+            document.getElementById('waitScheduledDateDisplay').textContent = formatted;
+            var diff = selected.getTime() - Date.now();
+            var hours = Math.floor(diff / (60 * 60 * 1000));
+            var mins = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+            document.getElementById('waitRemaining').textContent = (hours > 0 ? hours + '시간 ' : '') + mins + '분 후 발송 예정';
+            document.getElementById('waitScheduledDateError').style.display = 'none';
+            document.getElementById('waitScheduledDateError').textContent = '';
+            closeModal('editScheduledDateModal');
+        }
+
+        function saveScheduledDate() {
+            var errEl = document.getElementById('waitScheduledDateError');
+            if (!errEl) return;
+            var value = (pendingScheduledDate || '').trim();
+            if (!value) {
+                errEl.textContent = '발송예정일시를 선택해주세요. (수정 버튼에서 날짜·시간을 설정한 뒤 저장해주세요.)';
+                errEl.style.display = 'inline';
+                return;
+            }
+            var selected = new Date(value.replace(' ', 'T'));
+            if (isNaN(selected.getTime())) {
+                errEl.textContent = '올바른 날짜 형식이 아닙니다.';
+                errEl.style.display = 'inline';
+                return;
+            }
+            var minDate = new Date(Date.now() + 10 * 60 * 1000);
             if (selected.getTime() < minDate.getTime()) {
                 errEl.textContent = '현재 시간 기준 10분 이후로 설정해주세요.';
                 errEl.style.display = 'inline';
@@ -1507,13 +1578,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             errEl.style.display = 'none';
             errEl.textContent = '';
-            // 남은 시간 문구 갱신 (간단히)
-            var diff = selected.getTime() - Date.now();
-            var hours = Math.floor(diff / (60 * 60 * 1000));
-            var mins = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
-            document.getElementById('waitRemaining').textContent = (hours > 0 ? hours + '시간 ' : '') + mins + '분 후 발송 예정';
-            if (typeof showToast === 'function') showToast('발송예정일시가 변경되었습니다.', 'success');
-            else alert('발송예정일시가 변경되었습니다.');
+            // 목록에서 해당 예약 행의 발송 예정일 갱신 (실제로는 API 호출 후 목록 재조회 가능)
+            var row = document.querySelector('tbody tr[data-id="' + currentDetailId + '"]');
+            if (row && row.cells && row.cells.length >= 3) {
+                var listDateStr = value.length >= 16 ? value.substring(0, 16).replace('T', ' ') : value;
+                row.cells[2].textContent = listDateStr;
+            }
+            if (typeof showToast === 'function') showToast('발송예정일시가 저장되었습니다.', 'success');
+            else alert('발송예정일시가 저장되었습니다.');
+            closeModal('detailModal');
         }
 
         function viewDetail(id, status) {
@@ -1532,12 +1605,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isWaiting) {
                 waitBlock.classList.remove('hidden');
                 document.getElementById('detailCancelBtn').style.display = '';
+                document.getElementById('detailSaveScheduleBtn').style.display = '';
             } else if (isCompleted) {
                 compBlock.classList.remove('hidden');
                 document.getElementById('detailCancelBtn').style.display = 'none';
+                document.getElementById('detailSaveScheduleBtn').style.display = 'none';
             } else if (isCancelled) {
                 cancelBlock.classList.remove('hidden');
                 document.getElementById('detailCancelBtn').style.display = 'none';
+                document.getElementById('detailSaveScheduleBtn').style.display = 'none';
             }
 
             // 복사하여 새로 보내기: 발송완료일 때만 숨김 (예약대기·취소 시 표시)
@@ -1550,16 +1626,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // 샘플 데이터 (실제로는 id로 API 조회)
             if (isWaiting) {
                 document.getElementById('waitRegDate').textContent = '2024-11-19 14:30:00';
-                // 발송예정일시: 수정 가능 (현재 시간 기준 10분 후부터 설정 가능)
                 var scheduledStr = '2024-11-20 09:00:00';
-                var scheduledDate = parseDateTimeForInput(scheduledStr);
-                var inputEl = document.getElementById('waitScheduledDateInput');
-                if (inputEl) {
-                    inputEl.value = scheduledDate;
-                    var minDate = new Date(Date.now() + 10 * 60 * 1000);
-                    inputEl.min = formatDateTimeLocal(minDate);
-                    inputEl.dataset.original = scheduledDate;
-                }
+                pendingScheduledDate = scheduledStr;
+                document.getElementById('waitScheduledDateDisplay').textContent = scheduledStr;
                 document.getElementById('waitRemaining').textContent = '14시간 30분 후 발송 예정';
                 document.getElementById('waitScheduledDateError').style.display = 'none';
                 document.getElementById('waitScheduledDateError').textContent = '';
@@ -1716,13 +1785,16 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#detailModal', title: '예약 상세 모달', position: { top: '10px', left: '10px' }, description: '예약 상세 정보 조회 모달', function: '예약 상세 정보 표시' },
             { selector: '#detailModal .modal-header', title: '모달 헤더', position: { top: '-5px', left: '-10px' }, description: '모달 제목 영역', function: '예약 상세보기 제목 표시' },
             { selector: '#detailModal .modal-close', title: '모달 닫기 버튼 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: 'closeModal("detailModal") 호출' },
-            { selector: '#detailModal .card:first-of-type', title: '기본 정보 카드', position: { top: '5px', left: '5px' }, description: '예약 기본 정보', function: '등록일시, 발송예정일시(예약대기 시 수정 가능), 남은시간, 상태 표시', behavior: ['예약대기: 발송예정일시 datetime-local 입력·저장 버튼', '최소값: 현재 시간 기준 10분 후'] },
-            { selector: '#waitScheduledDateInput', title: '발송예정일시 입력', position: { top: '-5px', left: '-10px' }, description: '예약대기 시에만 표시', function: '발송예정일시 수정 (현재+10분 이후만 선택 가능)', behavior: ['min=현재+10분', '저장 시 유효성 검사 후 반영'] },
-            { selector: 'button[onclick="saveScheduledDate()"]', title: '발송예정일시 저장', position: { top: '-5px', left: '-10px' }, description: '변경된 발송예정일시 저장', function: 'saveScheduledDate() 호출', behavior: ['10분 이내 선택 시 에러 메시지', '저장 성공 시 토스트 및 남은시간 갱신'] },
+            { selector: '#detailModal .card:first-of-type', title: '기본 정보 카드', position: { top: '5px', left: '5px' }, description: '예약 기본 정보', function: '등록일시, 발송예정일시(예약대기 시 표시+수정 버튼), 남은시간, 상태 표시', behavior: ['예약대기: 발송예정일시 텍스트 표시 + 수정 버튼', '수정 클릭 시 발송 예정일시 수정 모달 오픈'] },
+            { selector: '#waitScheduledDateDisplay', title: '발송예정일시 표시', position: { top: '-5px', left: '-10px' }, description: '예약대기 시에만 표시', function: '현재 발송 예정일시 표시 (수정 모달 적용 시 여기만 갱신, 저장 버튼으로 최종 반영)', behavior: ['읽기 전용 표시'] },
+            { selector: 'button[onclick="openEditScheduledDateModal()"]', title: '발송예정일시 수정 버튼', position: { top: '-5px', left: '-10px' }, description: '예약대기 시에만 표시', function: 'openEditScheduledDateModal() 호출 → 날짜·시간 입력 모달 열기', behavior: ['클릭 시 editScheduledDateModal 오픈'] },
+            { selector: '#editScheduledDateModal', title: '발송 예정일시 수정 모달', position: { top: '10px', left: '10px' }, description: '날짜·시간 입력용 서브 모달', function: '날짜와 시간 선택 후 적용 시 상세보기 표시만 갱신, 취소 시 닫기', behavior: ['적용: 유효성 검사 후 상세보기 발송예정일시·남은시간 갱신, 모달 닫기 (최종 저장 아님)', '취소: 모달만 닫기', 'min=현재+10분'] },
+            { selector: '#editScheduledDateInput', title: '발송예정일시 입력', position: { top: '-5px', left: '-10px' }, description: '수정 모달 내 datetime-local', function: '날짜·시간 선택 (현재+10분 이후만)', behavior: ['적용 시 유효성 검사'] },
+            { selector: '#detailSaveScheduleBtn', title: '저장 버튼 (상세보기 하단)', position: { top: '-5px', left: '-10px' }, description: '예약대기 시에만 표시', function: 'saveScheduledDate() 호출 → 발송예정일시 최종 저장', behavior: ['수정 모달에서 적용한 일시를 이 버튼으로 최종 저장', '10분 이내 선택 시 에러 메시지', '저장 성공 시 토스트, 상세 모달 닫고 목록으로 이동, 해당 예약 행의 발송 예정일 컬럼에 수정된 일시 반영'] },
             { selector: '#detailModal .card:nth-of-type(2)', title: '발송 정보 카드', position: { top: '5px', left: '5px' }, description: '발송 상세 정보', function: '발신번호, 메시지타입, 예약건수, 메시지내용 표시' },
             { selector: '#detailModal .modal-footer .btn-outline:first-child', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, description: '모달 닫기', function: 'closeModal("detailModal") 호출' },
             { selector: '#detailModal .modal-footer .btn-outline:nth-child(2)', title: '취소하기 버튼', position: { top: '-5px', left: '-10px' }, description: '예약 취소', function: 'cancelReservation(id) 호출', behavior: ['클릭 시 취소 확인 모달 열기'] },
-            { selector: '#detailModal .modal-footer .btn-primary', title: '복사하여 새로 보내기 버튼', position: { top: '-5px', right: '-10px' }, description: '예약 내용 복사 후 새 발송', function: 'copyAndSend() 호출', behavior: ['예약 내용을 복사하여 새 발송 페이지로 이동'] },
+            { selector: '#detailCopySendBtn', title: '복사하여 새로 보내기 버튼', position: { top: '-5px', right: '-10px' }, description: '예약 내용 복사 후 새 발송', function: 'copyAndSend() 호출', behavior: ['예약 내용을 복사하여 새 발송 페이지로 이동'] },
             
             // === 취소 확인 모달 ===
             { selector: '#cancelModal', title: '취소 확인 모달', position: { top: '10px', left: '10px' }, description: '예약 취소 확인 모달', function: '취소 확인 요청' },
