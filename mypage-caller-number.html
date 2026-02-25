@@ -2775,7 +2775,6 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '.caller-number-cell', title: '발신번호(상세)', position: { top: '-5px', left: '-10px' }, description: '클릭 시 용도 수정 모달', function: 'openEditPurposeModal(id, 번호, 현재용도) 호출 → 용도 수정 팝업', behavior: ['발신번호·괄호 안 용도 표시', '클릭 시 용도 수정 모달에서 용도 변경 가능'] },
             // 13-15. 테이블 내 버튼
             { selector: 'tr[data-status="approved"] .btn-sm', title: '삭제 버튼 (승인완료)', position: { top: '-5px', right: '-10px' }, description: '승인된 발신번호 삭제', function: 'deleteCallerNumber(id) 호출', api: 'DELETE /api/caller-numbers/{id}', behavior: ['확인 다이얼로그 후 삭제'] },
-            { selector: 'tr[data-status="pending"] td:last-child', title: '승인대기 행 관리 칸', position: { top: '-5px', right: '-10px' }, description: '승인대기 시 상세보기 버튼 없음', function: '— 표시(상세보기 삭제됨)', behavior: ['승인대기일 때는 상세보기 버튼 미노출'] },
             { selector: 'tr[data-status="rejected"] .btn-sm', title: '반려사유 버튼', position: { top: '-5px', right: '-10px' }, description: '반려 사유 확인', function: 'viewRejectionReason(id) 호출', behavior: ['반려 사유 알림 표시'] },
             
             // ===== 발신번호 등록 모달 =====
