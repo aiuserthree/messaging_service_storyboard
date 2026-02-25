@@ -217,6 +217,122 @@
         .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning-color); }
         .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+        /* 발신번호 등록 팝업 스타일 (mypage-caller-number.html과 동일) */
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+        .step-item {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-weight: 600;
+        }
+        .step-item.active .step-circle {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .step-item.completed .step-circle {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        .step-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .step-item.active .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .file-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+        .file-upload-area.drag-over {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
+        }
+        .uploaded-file {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-color);
+            border-radius: var(--radius-md);
+            margin-top: 12px;
+        }
+        .number-type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .number-type-mobile {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .number-type-landline {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        .auth-completed {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+        }
+        .auth-completed::before {
+            content: '✓';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: #2e7d32;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-weight: bold;
+        }
         .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
         .form-row-2 .form-group { margin-bottom: 0; }
         .email-with-btn { display: grid; grid-template-columns: 1fr 100px; gap: 8px; align-items: center; }
@@ -449,30 +565,46 @@
                         </div>
                     </div>
 
-                    <!-- 발신번호관리 (목록 바로 표시) -->
+                    <!-- 발신번호관리: mypage-caller-number.html 본문 그대로 표시 (iframe 없이) -->
                     <div class="mypage-content-panel" id="panel-caller">
                         <div class="alert alert-info" id="callerNumberNotice">
                             <strong>발신번호 사전등록제 안내</strong>
-                            <p style="margin-top: 8px; font-size: 12px;">정보통신망법에 따라 발신번호 사전 등록이 의무화되었습니다. 발신번호 등록 후 영업일 기준 1~3일 이내 승인 처리됩니다.</p>
+                            <p style="margin-top: 8px; font-size: 12px;">
+                                정보통신망법에 따라 발신번호 사전 등록이 의무화되었습니다.
+                                발신번호 등록 후 영업일 기준 1~3일 이내 승인 처리됩니다.
+                            </p>
                         </div>
                         <div class="alert alert-warning" id="agencyNotice" style="margin-top: 16px;">
                             <div style="display: flex; align-items: flex-start; gap: 12px;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                                <div style="font-size: 13px; line-height: 1.6;"><strong>메시지 발송 대행업체에 해당하는 회원일 경우</strong><br>충전 및 정산(세금계산서) 등의 분리를 위해서 위임하는 고객사별로 사업자 계정을 각각 생성하여야 합니다. 계정 생성을 원하시면 고객센터(<strong>1588-0000</strong>)로 문의 부탁 드립니다.</div>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <div style="font-size: 13px; line-height: 1.6;">
+                                    <strong>메시지 발송 대행업체에 해당하는 회원일 경우</strong><br>
+                                    충전 및 정산(세금계산서) 등의 분리를 위해서 위임하는 고객사별로 사업자 계정을 각각 생성하여야 합니다. 계정 생성을 원하시면 고객센터(<strong>1588-0000</strong>)로 문의 부탁 드립니다.
+                                </div>
                             </div>
                         </div>
                         <div class="card" id="callerNumberCard">
                             <div class="flex-between mb-2">
                                 <h3 class="card-title">발신번호 목록</h3>
                                 <div style="display: flex; gap: 8px; align-items: center;">
-                                    <a href="mypage-caller-number.html?open=register" class="btn btn-primary" id="registerCallerBtn" title="클릭 시 발신번호 등록 페이지로 이동 후 등록 팝업 자동 오픈.">발신번호 등록</a>
+                                    <div style="display: flex; gap: 4px; align-items: center; padding: 4px 8px; background: var(--bg-color); border-radius: var(--radius-md); font-size: 12px;">
+                                        <span style="color: var(--text-secondary); margin-right: 4px;">테스트:</span>
+                                        <button class="btn btn-sm btn-outline" onclick="setTestMemberType('personal')" style="padding: 4px 8px; font-size: 11px;">개인회원</button>
+                                        <button class="btn btn-sm btn-outline" onclick="setTestMemberType('business')" style="padding: 4px 8px; font-size: 11px;">기업회원</button>
+                                        <span id="callerPanelMemberTypeDisplay" style="margin-left: 8px; color: var(--primary-color); font-weight: 600;"></span>
+                                    </div>
+                                    <button class="btn btn-primary" onclick="openRegisterModal()" id="registerCallerBtn">발신번호 등록</button>
                                 </div>
                             </div>
                             <div class="status-filter" id="statusFilter">
-                                <button type="button" class="status-filter-btn active" data-filter="all" onclick="filterCallerStatus('all')" title="발신번호 목록을 전체 상태로 조회.">전체</button>
-                                <button type="button" class="status-filter-btn" data-filter="pending" onclick="filterCallerStatus('pending')" title="승인 대기 중인 발신번호만 표시.">승인대기</button>
-                                <button type="button" class="status-filter-btn" data-filter="approved" onclick="filterCallerStatus('approved')" title="승인 완료된 발신번호만 표시.">승인완료</button>
-                                <button type="button" class="status-filter-btn" data-filter="rejected" onclick="filterCallerStatus('rejected')" title="반려된 발신번호만 표시.">반려</button>
+                                <button class="status-filter-btn active" onclick="filterStatus('all')">전체</button>
+                                <button class="status-filter-btn" onclick="filterStatus('pending')">승인대기</button>
+                                <button class="status-filter-btn" onclick="filterStatus('approved')">승인완료</button>
+                                <button class="status-filter-btn" onclick="filterStatus('rejected')">반려</button>
                             </div>
                             <div class="table-container" id="callerNumberTableContainer">
                                 <table class="table" id="callerNumberTable">
@@ -480,7 +612,7 @@
                                         <tr>
                                             <th>발신번호</th>
                                             <th>통신사</th>
-                                            <th>용도</th>
+                                            <th>명의</th>
                                             <th>상태</th>
                                             <th>등록일</th>
                                             <th>승인일</th>
@@ -488,32 +620,36 @@
                                         </tr>
                                     </thead>
                                     <tbody id="callerNumberTableBody">
-                                        <tr data-status="approved">
-                                            <td>010-1234-5678 <span style="color: var(--text-secondary);">(마케팅팀)</span></td>
+                                        <tr data-id="1" data-status="approved">
+                                            <td class="caller-number-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="openEditPurposeModal(1, '010-1234-5678', '마케팅팀')" title="클릭 시 용도 수정">010-1234-5678 <span style="color: var(--text-secondary);">(마케팅팀)</span></td>
                                             <td>SKT</td>
-                                            <td>마케팅팀</td>
+                                            <td>본인</td>
                                             <td><span class="badge badge-success">승인완료</span></td>
                                             <td>2024-01-10</td>
                                             <td>2024-01-12</td>
-                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="deleteCallerNumberMypage(1)" title="해당 발신번호 삭제. 확인 후 목록에서 제거.">삭제</button></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); deleteCallerNumber(1)">삭제</button>
+                                            </td>
                                         </tr>
-                                        <tr data-status="pending">
-                                            <td>02-1234-5678 <span style="color: var(--text-secondary);">(고객센터)</span></td>
+                                        <tr data-id="2" data-status="pending">
+                                            <td class="caller-number-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="openEditPurposeModal(2, '02-1234-5678', '고객센터')" title="클릭 시 용도 수정">02-1234-5678 <span style="color: var(--text-secondary);">(고객센터)</span></td>
                                             <td>KT</td>
-                                            <td>고객센터</td>
+                                            <td>타사</td>
                                             <td><span class="badge badge-warning">승인대기</span></td>
                                             <td>2024-01-15</td>
                                             <td>-</td>
-                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="viewCallerDetailMypage(2)" title="해당 발신번호 상세(발신번호 관리 페이지에서 확인 가능 안내).">상세보기</button></td>
+                                            <td>—</td>
                                         </tr>
-                                        <tr data-status="rejected">
-                                            <td>010-9876-5432 <span style="color: var(--text-secondary);">(본인 휴대폰)</span></td>
+                                        <tr data-id="3" data-status="rejected">
+                                            <td class="caller-number-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="openEditPurposeModal(3, '010-9876-5432', '본인 휴대폰')" title="클릭 시 용도 수정">010-9876-5432 <span style="color: var(--text-secondary);">(본인 휴대폰)</span></td>
                                             <td>LG U+</td>
-                                            <td>본인 휴대폰</td>
+                                            <td>본인</td>
                                             <td><span class="badge badge-danger">반려</span></td>
                                             <td>2024-01-08</td>
                                             <td>-</td>
-                                            <td><button type="button" class="btn btn-sm btn-outline" onclick="viewRejectionReasonMypage(3)" title="반려된 건의 반려 사유 팝업/페이지 표시.">반려사유</button></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline" onclick="viewRejectionReason(3)">반려사유</button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -734,7 +870,175 @@
         </div>
     </div>
 
+    <!-- 발신번호 등록/상세/용도수정 모달 (발신번호관리 패널용) -->
+    <div class="modal-overlay" id="registerModal" style="display: none;">
+        <div class="modal" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 class="modal-title">발신번호 신규등록</h3>
+                <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 24px; padding: 12px; background: var(--bg-color); border-radius: var(--radius-md);">
+                    <strong>발신번호 등록 문의: 1588-5412</strong><br>
+                    <small>기존 번호 관리는 발신번호관리 메뉴에서 가능합니다</small>
+                </div>
+                <div class="step-indicator">
+                    <div class="step-item active" id="step1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">기본 정보</div>
+                    </div>
+                    <div class="step-item" id="step2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">인증 및 서류</div>
+                    </div>
+                    <div class="step-item" id="step3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">연락처</div>
+                    </div>
+                    <div class="step-item" id="step4">
+                        <div class="step-circle">4</div>
+                        <div class="step-label">제출</div>
+                    </div>
+                </div>
+                <form id="registerForm">
+                    <div id="step1Content" class="step-content">
+                        <h3 style="margin-bottom: 20px;">기본 정보 입력</h3>
+                        <div class="form-group">
+                            <label class="form-label required">발신번호 등록</label>
+                            <div class="flex gap-2">
+                                <input type="tel" id="callerNumberInput" class="form-input" placeholder="010-1234-5678 또는 02-1234-5678" required oninput="detectNumberType()">
+                                <button type="button" class="btn btn-outline" onclick="checkDuplicateNumber()">확인</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">발신번호 용도</label>
+                            <input type="text" id="purposeInput" class="form-input" placeholder="예: 마케팅팀, 고객센터, 본인 휴대폰">
+                        </div>
+                    </div>
+                    <div id="step2Content" class="step-content" style="display: none;">
+                        <h3 style="margin-bottom: 20px;">명의 구분 및 서류 제출</h3>
+                        <div class="form-group">
+                            <label class="form-label required">명의 구분</label>
+                            <div id="ownershipTypeSection"></div>
+                        </div>
+                        <div class="form-group" id="authSection" style="display: none;">
+                            <label class="form-label required">본인인증</label>
+                            <div id="authStatus" style="margin-bottom: 8px;">
+                                <button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>
+                            </div>
+                            <div class="form-help" id="authHelpText">발신번호 명의자 본인인증이 필요합니다</div>
+                        </div>
+                        <div class="form-group" id="documentSection"></div>
+                    </div>
+                    <div id="step3Content" class="step-content" style="display: none;">
+                        <h3 style="margin-bottom: 20px;">연락처 정보</h3>
+                        <div class="form-group">
+                            <label class="form-label required">휴대폰번호</label>
+                            <input type="tel" id="contactPhoneInput" class="form-input" placeholder="010-1234-5678" required>
+                            <div class="form-help">승인/반려 결과 알림을 받을 연락처입니다</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">결과 수신 이메일</label>
+                            <input type="email" id="contactEmailInput" class="form-input" placeholder="example@email.com">
+                            <div class="form-help">발신번호 등록 결과를 이메일로도 받으시려면 입력해 주세요</div>
+                        </div>
+                    </div>
+                    <div id="step4Content" class="step-content" style="display: none;">
+                        <h3 style="margin-bottom: 20px;">최종 확인</h3>
+                        <div class="alert alert-info">모든 정보를 확인하신 후 제출해주세요. 제출 후 수정이 불가능합니다.</div>
+                        <div class="card">
+                            <div class="table-container">
+                                <table class="table">
+                                    <tr><th style="width: 150px;">회원 유형</th><td id="reviewMemberType">-</td></tr>
+                                    <tr><th>발신번호</th><td id="reviewCallerNumber">-</td></tr>
+                                    <tr><th>번호 유형</th><td id="reviewNumberType">-</td></tr>
+                                    <tr><th>명의 구분</th><td id="reviewOwnershipType">-</td></tr>
+                                    <tr><th>용도</th><td id="reviewPurpose">-</td></tr>
+                                    <tr id="reviewBusinessAddressRow" style="display: none;"><th>사업장 주소</th><td id="reviewBusinessAddress">-</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('registerModal')">취소</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextStep()" style="display: none;">다음</button>
+                <button class="btn btn-primary" id="submitBtn" onclick="submitRegister()" style="display: none;">승인요청</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="detailModal" style="display: none;">
+        <div class="modal" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 class="modal-title">발신번호 상세 정보</h3>
+                <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="card" style="margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">기본 정보</h4>
+                    <div class="table-container">
+                        <table class="table">
+                            <tr><th style="width: 150px;">발신번호</th><td id="detailCallerNumber">-</td></tr>
+                            <tr><th>통신사</th><td id="detailCarrier">-</td></tr>
+                            <tr><th>용도</th><td id="detailPurpose">-</td></tr>
+                            <tr><th>상태</th><td id="detailStatus">-</td></tr>
+                            <tr><th>등록일</th><td id="detailRegisterDate">-</td></tr>
+                            <tr><th>승인일</th><td id="detailApproveDate">-</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="card" style="margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">신청 정보</h4>
+                    <div class="table-container">
+                        <table class="table">
+                            <tr><th style="width: 150px;">회원 유형</th><td id="detailMemberType">-</td></tr>
+                            <tr><th>명의 구분</th><td id="detailOwnershipType">-</td></tr>
+                            <tr><th>번호 유형</th><td id="detailNumberType">-</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="card" style="margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">연락처 정보</h4>
+                    <div class="table-container">
+                        <table class="table">
+                            <tr><th style="width: 150px;">결과 수신 휴대폰</th><td id="detailContactPhone">-</td></tr>
+                            <tr><th>결과 수신 이메일</th><td id="detailContactEmail">-</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="card" id="detailDocumentSection" style="display: none;">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">제출 서류</h4>
+                    <div id="detailDocumentList"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('detailModal')">닫기</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="editPurposeModal" style="display: none;">
+        <div class="modal" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">발신번호 용도 수정</h3>
+                <button class="modal-close" onclick="closeModal('editPurposeModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 12px; font-size: 14px; color: var(--text-secondary);"><strong id="editPurposeModalNumber">-</strong></p>
+                <div class="form-group">
+                    <label class="form-label required">용도</label>
+                    <input type="text" id="editPurposeInput" class="form-input" placeholder="예: 마케팅팀, 고객센터" maxlength="50">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('editPurposeModal')">취소</button>
+                <button class="btn btn-primary" onclick="saveCallerPurpose()">저장</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/common.js"></script>
+    <script src="js/caller-number-panel.js"></script>
     <script>
         // 모달 (마이페이지 내 패널용)
         function openModal(modalId) {
@@ -766,11 +1070,13 @@
             var display = document.getElementById('currentMemberTypeDisplay');
             var textEl = document.getElementById('currentMemberTypeText');
             var dashboardMemberTypeEl = document.getElementById('dashboardMemberType');
+            var callerPanelDisplay = document.getElementById('callerPanelMemberTypeDisplay');
             var businessCard = document.getElementById('businessInfoCard');
             var memberTypeCard = document.getElementById('memberTypeCard');
             if (display) display.textContent = typeText;
             if (textEl) textEl.textContent = typeText;
             if (dashboardMemberTypeEl) dashboardMemberTypeEl.textContent = typeText;
+            if (callerPanelDisplay) callerPanelDisplay.textContent = typeText;
             if (businessCard) businessCard.style.display = type === 'business' ? 'block' : 'none';
             if (memberTypeCard) memberTypeCard.style.display = type === 'business' ? 'none' : 'block';
         }
@@ -847,19 +1153,6 @@
         }
         function resetPasswordForm() { if (confirm('변경사항을 취소하시겠습니까?')) document.getElementById('passwordForm').reset(); }
         document.getElementById('passwordForm').addEventListener('submit', function(e) { e.preventDefault(); showToast('비밀번호가 변경되었습니다.', 'success'); });
-        // 발신번호관리 (목록 필터·버튼)
-        function filterCallerStatus(status) {
-            document.querySelectorAll('#statusFilter .status-filter-btn').forEach(function(btn) {
-                btn.classList.toggle('active', btn.getAttribute('data-filter') === status);
-            });
-            document.querySelectorAll('#callerNumberTableBody tr').forEach(function(tr) {
-                var s = tr.getAttribute('data-status');
-                tr.style.display = (status === 'all' || s === status) ? '' : 'none';
-            });
-        }
-        function deleteCallerNumberMypage(id) { if (confirm('해당 발신번호를 삭제하시겠습니까?')) { var tr = event.target.closest('tr'); if (tr) tr.remove(); showToast('삭제되었습니다.', 'success'); } }
-        function viewCallerDetailMypage(id) { showToast('상세보기는 발신번호관리 페이지에서 확인할 수 있습니다.', 'info'); }
-        function viewRejectionReasonMypage(id) { alert('반려 사유: 제출 서류가 불명확합니다. 고객센터(1588-0000)로 문의해 주세요.'); }
 
         // LNB 패널 전환 (클릭 시 URL 해시도 해당 패널로 변경)
         function switchMypagePanel(panelId) {
@@ -1208,9 +1501,10 @@
             { selector: '#statusFilter button[data-filter="pending"]', title: '42. 상태 필터 - 승인대기', position: { top: '-5px', left: '-10px' }, function: '승인 대기 중인 발신번호만 표시.' },
             { selector: '#statusFilter button[data-filter="approved"]', title: '43. 상태 필터 - 승인완료', position: { top: '-5px', left: '-10px' }, function: '승인 완료된 발신번호만 표시.' },
             { selector: '#statusFilter button[data-filter="rejected"]', title: '44. 상태 필터 - 반려', position: { top: '-5px', right: '-10px' }, function: '반려된 발신번호만 표시.' },
-            { selector: '#callerNumberTable', title: '45. 발신번호 목록 테이블', position: { top: '10px', left: '10px' }, function: '발신번호·통신사·용도·상태·등록일·승인일·관리(삭제/상세보기/반려사유) 컬럼.', behavior: ['【상태 컬럼 값】 승인완료(녹색), 승인대기(노란색), 반려(빨간색)'] },
+            { selector: '#callerNumberTable', title: '45. 발신번호 목록 테이블', position: { top: '10px', left: '10px' }, function: '발신번호·통신사·명의·상태·등록일·승인일·관리(삭제/—/반려사유) 컬럼. 승인대기 시 관리 칸은 상세보기 없이 — 표시.', behavior: ['【명의 컬럼값】 본인(본인 명의), 타인(타인 명의), 타사(타사/타기업 명의) 구분', '【상태 컬럼 값】 승인완료(녹색), 승인대기(노란색), 반려(빨간색)', '【발신번호 셀】 클릭 시 용도 수정 모달 열림'] },
+            { selector: '.caller-number-cell-mypage', title: '45-1. 발신번호(상세)', position: { top: '-5px', left: '-10px' }, description: '클릭 시 용도 수정 모달', function: 'openEditPurposeModalMypage(id, 번호, 현재용도) 호출 → 용도 수정 팝업', behavior: ['발신번호·괄호 안 용도 표시', '클릭 시 용도 수정 모달에서 용도 변경 가능'] },
             { selector: '#callerNumberTableBody button[onclick*="deleteCallerNumberMypage"]', title: '46. 삭제 버튼', position: { top: '-5px', left: '-10px' }, function: '해당 발신번호 삭제. 확인 후 목록에서 제거.' },
-            { selector: '#callerNumberTableBody button[onclick*="viewCallerDetailMypage"]', title: '47. 상세보기 버튼', position: { top: '-5px', left: '-10px' }, function: '해당 발신번호 상세(발신번호 관리 페이지에서 확인 가능 안내).' },
+            { selector: '#callerNumberTableBody tr[data-status="pending"] td:last-child', title: '47. 승인대기 행 관리 칸', position: { top: '-5px', left: '-10px' }, function: '승인대기 시 상세보기 버튼 없음, — 표시.' },
             { selector: '#callerNumberTableBody button[onclick*="viewRejectionReasonMypage"]', title: '48. 반려사유 버튼', position: { top: '-5px', right: '-10px' }, function: '반려된 건의 반려 사유 팝업/페이지 표시.' },
             { selector: '#historyCard .card-title', title: '49. 포인트/마일리지 내역', position: { top: '-5px', left: '-10px' }, function: '포인트/마일리지 내역 섹션 제목.' },
             { selector: '#historyDateFrom', title: '50. 조회 시작일', position: { top: '-5px', left: '-10px' }, function: '달력으로 조회 시작일 선택. 과거 데이터 검색용. 선택 구간은 최대 1년.', behavior: ['달력+검색은 과거 구간 직접 선택 조회(최대 1년)'] },

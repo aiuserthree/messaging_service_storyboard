@@ -1227,7 +1227,7 @@ body {
                             <tr>
                                 <th>발신번호</th>
                                 <th>통신사</th>
-                                <th>용도</th>
+                                <th>명의</th>
                                 <th>상태</th>
                                 <th>등록일</th>
                                 <th>승인일</th>
@@ -1235,32 +1235,30 @@ body {
                             </tr>
                         </thead>
                         <tbody id="callerNumberTableBody">
-                            <tr data-status="approved">
-                                <td>010-1234-5678 <span style="color: var(--text-secondary);">(마케팅팀)</span></td>
+                            <tr data-id="1" data-status="approved">
+                                <td class="caller-number-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="openEditPurposeModal(1, '010-1234-5678', '마케팅팀')" title="클릭 시 용도 수정">010-1234-5678 <span style="color: var(--text-secondary);">(마케팅팀)</span></td>
                                 <td>SKT</td>
-                                <td>마케팅팀</td>
+                                <td>본인</td>
                                 <td><span class="badge badge-success">승인완료</span></td>
                                 <td>2024-01-10</td>
                                 <td>2024-01-12</td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline" onclick="deleteCallerNumber(1)">삭제</button>
+                                    <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); deleteCallerNumber(1)">삭제</button>
                                 </td>
                             </tr>
-                            <tr data-status="pending">
-                                <td>02-1234-5678 <span style="color: var(--text-secondary);">(고객센터)</span></td>
+                            <tr data-id="2" data-status="pending">
+                                <td class="caller-number-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="openEditPurposeModal(2, '02-1234-5678', '고객센터')" title="클릭 시 용도 수정">02-1234-5678 <span style="color: var(--text-secondary);">(고객센터)</span></td>
                                 <td>KT</td>
-                                <td>고객센터</td>
+                                <td>타사</td>
                                 <td><span class="badge badge-warning">승인대기</span></td>
                                 <td>2024-01-15</td>
                                 <td>-</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline" onclick="viewDetail(2)">상세보기</button>
-                                </td>
+                                <td>—</td>
                             </tr>
-                            <tr data-status="rejected">
-                                <td>010-9876-5432 <span style="color: var(--text-secondary);">(본인 휴대폰)</span></td>
+                            <tr data-id="3" data-status="rejected">
+                                <td class="caller-number-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="openEditPurposeModal(3, '010-9876-5432', '본인 휴대폰')" title="클릭 시 용도 수정">010-9876-5432 <span style="color: var(--text-secondary);">(본인 휴대폰)</span></td>
                                 <td>LG U+</td>
-                                <td>본인 휴대폰</td>
+                                <td>본인</td>
                                 <td><span class="badge badge-danger">반려</span></td>
                                 <td>2024-01-08</td>
                                 <td>-</td>
@@ -1278,7 +1276,7 @@ body {
     </div>
 
     <!-- 발신번호 등록 모달 -->
-    <div class="modal-overlay" id="registerModal">
+    <div class="modal-overlay" id="registerModal" style="display: none;">
         <div class="modal" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
                 <h3 class="modal-title">발신번호 신규등록</h3>
@@ -1417,7 +1415,7 @@ body {
     </div>
 
     <!-- 발신번호 상세보기 모달 -->
-    <div class="modal-overlay" id="detailModal">
+    <div class="modal-overlay" id="detailModal" style="display: none;">
         <div class="modal" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
                 <h3 class="modal-title">발신번호 상세 정보</h3>
@@ -1501,6 +1499,27 @@ body {
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('detailModal')">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 발신번호 용도 수정 모달 -->
+    <div class="modal-overlay" id="editPurposeModal" style="display: none;">
+        <div class="modal" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">발신번호 용도 수정</h3>
+                <button class="modal-close" onclick="closeModal('editPurposeModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 12px; font-size: 14px; color: var(--text-secondary);"><strong id="editPurposeModalNumber">-</strong></p>
+                <div class="form-group">
+                    <label class="form-label required">용도</label>
+                    <input type="text" id="editPurposeInput" class="form-input" placeholder="예: 마케팅팀, 고객센터" maxlength="50">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('editPurposeModal')">취소</button>
+                <button class="btn btn-primary" onclick="saveCallerPurpose()">저장</button>
             </div>
         </div>
     </div>
@@ -2690,6 +2709,37 @@ document.addEventListener('DOMContentLoaded', function() {
         function viewRejectionReason(id) {
             alert('반려 사유: 서류가 불명확합니다. 명확한 서류를 다시 제출해주세요.');
         }
+
+        var editingCallerId = null;
+
+        function openEditPurposeModal(id, callerNumber, currentPurpose) {
+            editingCallerId = id;
+            document.getElementById('editPurposeModalNumber').textContent = callerNumber;
+            document.getElementById('editPurposeInput').value = currentPurpose || '';
+            openModal('editPurposeModal');
+            setTimeout(function() { document.getElementById('editPurposeInput').focus(); }, 100);
+        }
+
+        function saveCallerPurpose() {
+            var purpose = (document.getElementById('editPurposeInput').value || '').trim();
+            if (!purpose) {
+                showToast('용도를 입력해주세요.', 'error');
+                return;
+            }
+            if (editingCallerId == null) return;
+            var row = document.querySelector('#callerNumberTableBody tr[data-id="' + editingCallerId + '"]');
+            if (row) {
+                var numberTd = row.querySelector('.caller-number-cell');
+                if (numberTd) {
+                    var num = numberTd.textContent.replace(/\s*\([^)]*\)\s*$/, '').trim();
+                    numberTd.innerHTML = num + ' <span style="color: var(--text-secondary);">(' + purpose + ')</span>';
+                    numberTd.onclick = function() { openEditPurposeModal(editingCallerId, num, purpose); };
+                }
+            }
+            showToast('용도가 수정되었습니다.', 'success');
+            closeModal('editPurposeModal');
+            editingCallerId = null;
+        }
     </script>
     <script src="js/footer.js"></script>
     <script>
@@ -2720,10 +2770,12 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#statusFilter .status-filter-btn:nth-child(3)', title: '승인완료 필터', position: { top: '-5px', left: '-10px' }, description: '승인완료 상태만 표시', function: "filterStatus('approved') 호출" },
             { selector: '#statusFilter .status-filter-btn:nth-child(4)', title: '반려 필터', position: { top: '-5px', right: '-10px' }, description: '반려 상태만 표시', function: "filterStatus('rejected') 호출" },
             // 12. 발신번호 테이블
-            { selector: '#callerNumberTable', title: '발신번호 테이블', position: { top: '10px', left: '10px' }, description: '등록된 발신번호 목록', function: '발신번호/통신사/용도/상태/등록일/승인일/관리 표시', behavior: ['【상태 컬럼 값】 승인완료(녹색 배지), 승인대기(노란 배지), 반려(빨간 배지)'], api: 'GET /api/caller-numbers' },
+            { selector: '#callerNumberTable', title: '발신번호 테이블', position: { top: '10px', left: '10px' }, description: '등록된 발신번호 목록', function: '발신번호/통신사/명의/상태/등록일/승인일/관리 표시', behavior: ['【명의 컬럼값】 본인(본인 명의), 타인(타인 명의), 타사(타사/타기업 명의) 구분', '【상태 컬럼 값】 승인완료(녹색 배지), 승인대기(노란 배지), 반려(빨간 배지)', '【발신번호 셀】 클릭 시 용도 수정 모달 열림'], api: 'GET /api/caller-numbers' },
+            // 12-1. 발신번호 셀 클릭 → 용도 수정
+            { selector: '.caller-number-cell', title: '발신번호(상세)', position: { top: '-5px', left: '-10px' }, description: '클릭 시 용도 수정 모달', function: 'openEditPurposeModal(id, 번호, 현재용도) 호출 → 용도 수정 팝업', behavior: ['발신번호·괄호 안 용도 표시', '클릭 시 용도 수정 모달에서 용도 변경 가능'] },
             // 13-15. 테이블 내 버튼
             { selector: 'tr[data-status="approved"] .btn-sm', title: '삭제 버튼 (승인완료)', position: { top: '-5px', right: '-10px' }, description: '승인된 발신번호 삭제', function: 'deleteCallerNumber(id) 호출', api: 'DELETE /api/caller-numbers/{id}', behavior: ['확인 다이얼로그 후 삭제'] },
-            { selector: 'tr[data-status="pending"] .btn-sm', title: '상세보기 버튼 (승인대기)', position: { top: '-5px', right: '-10px' }, description: '승인대기 상세 정보', function: 'viewDetail(id) 호출', behavior: ['클릭 시 상세보기 모달 열기'] },
+            { selector: 'tr[data-status="pending"] td:last-child', title: '승인대기 행 관리 칸', position: { top: '-5px', right: '-10px' }, description: '승인대기 시 상세보기 버튼 없음', function: '— 표시(상세보기 삭제됨)', behavior: ['승인대기일 때는 상세보기 버튼 미노출'] },
             { selector: 'tr[data-status="rejected"] .btn-sm', title: '반려사유 버튼', position: { top: '-5px', right: '-10px' }, description: '반려 사유 확인', function: 'viewRejectionReason(id) 호출', behavior: ['반려 사유 알림 표시'] },
             
             // ===== 발신번호 등록 모달 =====
