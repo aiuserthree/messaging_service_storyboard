@@ -363,6 +363,49 @@
                 gap: 8px;
             }
         }
+
+        /* 페이지네이션 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background-color: var(--bg-color);
+            border-color: #cbd5e1;
+        }
+
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-ellipsis {
+            padding: 8px 4px;
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 <body>
@@ -424,12 +467,12 @@
 
             <!-- 카테고리 필터 -->
             <div class="category-filters" id="categoryFilters">
-                <button class="category-btn active" onclick="filterCategory('all')">전체</button>
-                <button class="category-btn" onclick="filterCategory('account')">회원/계정</button>
-                <button class="category-btn" onclick="filterCategory('payment')">결제/포인트</button>
-                <button class="category-btn" onclick="filterCategory('message')">문자발송</button>
-                <button class="category-btn" onclick="filterCategory('kakao')">카카오톡</button>
-                <button class="category-btn" onclick="filterCategory('etc')">기타</button>
+                <button type="button" class="category-btn active" data-category="all">전체</button>
+                <button type="button" class="category-btn" data-category="account">회원/계정</button>
+                <button type="button" class="category-btn" data-category="payment">결제/포인트</button>
+                <button type="button" class="category-btn" data-category="message">문자발송</button>
+                <button type="button" class="category-btn" data-category="kakao">카카오톡</button>
+                <button type="button" class="category-btn" data-category="etc">기타</button>
             </div>
 
             <!-- FAQ 목록 -->
@@ -701,6 +744,9 @@
                 </div>
             </div>
 
+            <!-- FAQ 페이지네이션 (1페이지당 10개) -->
+            <div class="pagination" id="faqPagination"></div>
+
             <!-- 문의하기 안내 -->
             <div class="inquiry-guide">
                 <h3 class="inquiry-guide-title">원하는 답변을 찾지 못하셨나요?</h3>
@@ -717,81 +763,139 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof initDropdownMenus === 'function') {
-                initDropdownMenus();
+        var FAQ_PER_PAGE = 10;
+        var currentFaqCategory = 'all';
+        var currentFaqSearch = '';
+        var currentFaqPage = 1;
+
+        function getVisibleFaqItems() {
+            try {
+                var items = document.querySelectorAll('.faq-item');
+                if (!items || items.length === 0) return [];
+                var list = [];
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    if (currentFaqCategory !== 'all' && item.getAttribute('data-category') !== currentFaqCategory) continue;
+                    if (currentFaqSearch.trim()) {
+                        var term = currentFaqSearch.toLowerCase();
+                        var titleEl = item.querySelector('.faq-title');
+                        var contentEl = item.querySelector('.faq-answer-content');
+                        var title = (titleEl ? titleEl.textContent : '') || '';
+                        var content = (contentEl ? contentEl.textContent : '') || '';
+                        if (title.toLowerCase().indexOf(term) === -1 && content.toLowerCase().indexOf(term) === -1) continue;
+                    }
+                    list.push(item);
+                }
+                return list;
+            } catch (e) { return []; }
+        }
+
+        function renderFaqPage() {
+            try {
+                var allItems = document.querySelectorAll('.faq-item');
+                if (!allItems.length) return;
+                var visible = getVisibleFaqItems();
+                if (visible.length === 0) {
+                    for (var i = 0; i < allItems.length; i++) allItems[i].style.display = 'block';
+                    var pe = document.getElementById('faqPagination');
+                    if (pe) pe.innerHTML = '';
+                    return;
+                }
+                var totalPages = Math.max(1, Math.ceil(visible.length / FAQ_PER_PAGE));
+                currentFaqPage = Math.min(Math.max(1, currentFaqPage), totalPages);
+                var start = (currentFaqPage - 1) * FAQ_PER_PAGE;
+                var pageItems = visible.slice(start, start + FAQ_PER_PAGE);
+                for (var j = 0; j < allItems.length; j++) allItems[j].style.display = 'none';
+                for (var k = 0; k < pageItems.length; k++) pageItems[k].style.display = 'block';
+
+                var paginationEl = document.getElementById('faqPagination');
+                if (!paginationEl) return;
+                if (totalPages <= 1) {
+                    paginationEl.innerHTML = '<button type="button" class="page-btn" disabled>이전</button><button type="button" class="page-btn active">1</button><button type="button" class="page-btn" disabled>다음</button>';
+                    return;
+                }
+                var html = '<button type="button" class="page-btn" data-page="prev" ' + (currentFaqPage === 1 ? 'disabled' : '') + '>이전</button>';
+                for (var p = 1; p <= totalPages; p++) {
+                    html += '<button type="button" class="page-btn' + (p === currentFaqPage ? ' active' : '') + '" data-page="' + p + '">' + p + '</button>';
+                }
+                html += '<button type="button" class="page-btn" data-page="next" ' + (currentFaqPage === totalPages ? 'disabled' : '') + '>다음</button>';
+                paginationEl.innerHTML = html;
+                var btns = paginationEl.querySelectorAll('.page-btn');
+                for (var b = 0; b < btns.length; b++) {
+                    (function(btn) {
+                        var pageVal = btn.getAttribute('data-page');
+                        if (!pageVal) return;
+                        btn.addEventListener('click', function() {
+                            if (pageVal === 'prev') currentFaqPage--;
+                            else if (pageVal === 'next') currentFaqPage++;
+                            else currentFaqPage = parseInt(pageVal, 10);
+                            renderFaqPage();
+                        });
+                    })(btns[b]);
+                }
+            } catch (e) {
+                var items = document.querySelectorAll('.faq-item');
+                for (var i = 0; i < items.length; i++) items[i].style.display = 'block';
             }
-        });
+        }
 
         function toggleFaq(element) {
-            const faqItem = element.parentElement;
-            const allItems = document.querySelectorAll('.faq-item');
-            
-            allItems.forEach(item => {
-                if (item !== faqItem) {
-                    item.classList.remove('open');
-                }
-            });
-            
+            var faqItem = element.parentElement;
+            var allItems = document.querySelectorAll('.faq-item');
+            for (var i = 0; i < allItems.length; i++) {
+                if (allItems[i] !== faqItem) allItems[i].classList.remove('open');
+            }
             faqItem.classList.toggle('open');
         }
 
         function openFaq(faqId) {
-            const faqItem = document.getElementById(faqId);
+            var faqItem = document.getElementById(faqId);
             if (faqItem) {
-                // 모든 FAQ 닫기
-                document.querySelectorAll('.faq-item').forEach(item => {
-                    item.classList.remove('open');
-                });
-                // 해당 FAQ 열기
+                var items = document.querySelectorAll('.faq-item');
+                for (var i = 0; i < items.length; i++) items[i].classList.remove('open');
                 faqItem.classList.add('open');
-                // 스크롤 이동
-                setTimeout(() => {
-                    faqItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
+                setTimeout(function() { faqItem.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
             }
         }
 
-        function filterCategory(category) {
-            // 버튼 활성화 상태 변경
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // FAQ 필터링
-            const faqItems = document.querySelectorAll('.faq-item');
-            faqItems.forEach(item => {
-                if (category === 'all' || item.dataset.category === category) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-
-        // 검색 기능
-        document.querySelector('.search-input').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const faqItems = document.querySelectorAll('.faq-item');
-
-            faqItems.forEach(item => {
-                const title = item.querySelector('.faq-title').textContent.toLowerCase();
-                const content = item.querySelector('.faq-answer-content').textContent.toLowerCase();
-                
-                if (title.includes(searchTerm) || content.includes(searchTerm)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-
-            // 카테고리 버튼 초기화
-            if (searchTerm) {
-                document.querySelectorAll('.category-btn').forEach(btn => {
-                    btn.classList.remove('active');
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                if (typeof initDropdownMenus === 'function') initDropdownMenus();
+            } catch (e) {}
+            try {
+                renderFaqPage();
+            } catch (e) {
+                var items = document.querySelectorAll('.faq-item');
+                for (var i = 0; i < items.length; i++) items[i].style.display = 'block';
+            }
+            var searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    currentFaqSearch = (e.target && e.target.value) ? e.target.value : '';
+                    currentFaqPage = 1;
+                    var catBtns = document.querySelectorAll('.category-btn');
+                    if (currentFaqSearch.trim()) {
+                        for (var i = 0; i < catBtns.length; i++) catBtns[i].classList.remove('active');
+                    } else {
+                        var first = document.querySelector('.category-btn[data-category="all"]');
+                        if (first) first.classList.add('active');
+                    }
+                    renderFaqPage();
                 });
-            } else {
-                document.querySelector('.category-btn').classList.add('active');
+            }
+            var catFilters = document.getElementById('categoryFilters');
+            if (catFilters) {
+                catFilters.addEventListener('click', function(e) {
+                    var btn = e.target && e.target.closest ? e.target.closest('.category-btn') : null;
+                    if (!btn) return;
+                    var category = btn.getAttribute('data-category') || 'all';
+                    var btns = catFilters.querySelectorAll('.category-btn');
+                    for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+                    btn.classList.add('active');
+                    currentFaqCategory = category;
+                    currentFaqPage = 1;
+                    renderFaqPage();
+                });
             }
         });
     </script>
