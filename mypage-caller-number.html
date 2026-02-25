@@ -1226,7 +1226,6 @@ body {
                         <thead>
                             <tr>
                                 <th>발신번호</th>
-                                <th>통신사</th>
                                 <th>명의</th>
                                 <th>상태</th>
                                 <th>등록일</th>
@@ -1237,7 +1236,6 @@ body {
                         <tbody id="callerNumberTableBody">
                             <tr data-id="1" data-status="approved">
                                 <td class="caller-number-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="openEditPurposeModal(1, '010-1234-5678', '마케팅팀')" title="클릭 시 용도 수정">010-1234-5678 <span style="color: var(--text-secondary);">(마케팅팀)</span></td>
-                                <td>SKT</td>
                                 <td>본인</td>
                                 <td><span class="badge badge-success">승인완료</span></td>
                                 <td>2024-01-10</td>
@@ -1248,7 +1246,6 @@ body {
                             </tr>
                             <tr data-id="2" data-status="pending">
                                 <td class="caller-number-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="openEditPurposeModal(2, '02-1234-5678', '고객센터')" title="클릭 시 용도 수정">02-1234-5678 <span style="color: var(--text-secondary);">(고객센터)</span></td>
-                                <td>KT</td>
                                 <td>타사</td>
                                 <td><span class="badge badge-warning">승인대기</span></td>
                                 <td>2024-01-15</td>
@@ -1257,7 +1254,6 @@ body {
                             </tr>
                             <tr data-id="3" data-status="rejected">
                                 <td class="caller-number-cell" style="cursor: pointer; color: var(--primary-color); text-decoration: underline;" onclick="openEditPurposeModal(3, '010-9876-5432', '본인 휴대폰')" title="클릭 시 용도 수정">010-9876-5432 <span style="color: var(--text-secondary);">(본인 휴대폰)</span></td>
-                                <td>LG U+</td>
                                 <td>본인</td>
                                 <td><span class="badge badge-danger">반려</span></td>
                                 <td>2024-01-08</td>
@@ -1429,10 +1425,6 @@ body {
                             <tr>
                                 <th style="width: 150px;">발신번호</th>
                                 <td id="detailCallerNumber">-</td>
-                            </tr>
-                            <tr>
-                                <th>통신사</th>
-                                <td id="detailCarrier">-</td>
                             </tr>
                             <tr>
                                 <th>용도</th>
@@ -2648,7 +2640,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // 모달에 데이터 채우기
             document.getElementById('detailCallerNumber').textContent = data.callerNumber;
-            document.getElementById('detailCarrier').textContent = data.carrier;
             document.getElementById('detailPurpose').textContent = data.purpose;
             
             // 상태 배지 생성
@@ -2770,7 +2761,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#statusFilter .status-filter-btn:nth-child(3)', title: '승인완료 필터', position: { top: '-5px', left: '-10px' }, description: '승인완료 상태만 표시', function: "filterStatus('approved') 호출" },
             { selector: '#statusFilter .status-filter-btn:nth-child(4)', title: '반려 필터', position: { top: '-5px', right: '-10px' }, description: '반려 상태만 표시', function: "filterStatus('rejected') 호출" },
             // 12. 발신번호 테이블
-            { selector: '#callerNumberTable', title: '발신번호 테이블', position: { top: '10px', left: '10px' }, description: '등록된 발신번호 목록', function: '발신번호/통신사/명의/상태/등록일/승인일/관리 표시', behavior: ['【명의 컬럼값】 본인(본인 명의), 타인(타인 명의), 타사(타사/타기업 명의) 구분', '【상태 컬럼 값】 승인완료(녹색 배지), 승인대기(노란 배지), 반려(빨간 배지)', '【발신번호 셀】 클릭 시 용도 수정 모달 열림'], api: 'GET /api/caller-numbers' },
+            { selector: '#callerNumberTable', title: '발신번호 테이블', position: { top: '10px', left: '10px' }, description: '등록된 발신번호 목록', function: '발신번호/명의/상태/등록일/승인일/관리 표시', behavior: ['【명의 컬럼값】 본인(본인 명의), 타인(타인 명의), 타사(타사/타기업 명의) 구분', '【상태 컬럼 값】 승인완료(녹색 배지), 승인대기(노란 배지), 반려(빨간 배지)', '【발신번호 셀】 클릭 시 용도 수정 모달 열림'], api: 'GET /api/caller-numbers' },
             // 12-1. 발신번호 셀 클릭 → 용도 수정
             { selector: '.caller-number-cell', title: '발신번호(상세)', position: { top: '-5px', left: '-10px' }, description: '클릭 시 용도 수정 모달', function: 'openEditPurposeModal(id, 번호, 현재용도) 호출 → 용도 수정 팝업', behavior: ['발신번호·괄호 안 용도 표시', '클릭 시 용도 수정 모달에서 용도 변경 가능'] },
             // 13-15. 테이블 내 버튼
@@ -2839,7 +2830,6 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#detailModal .modal-close', title: '모달 닫기 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: "closeModal('detailModal') 호출" },
             // 37-44. 상세 정보
             { selector: '#detailCallerNumber', title: '발신번호', position: { top: '-5px', right: '-10px' }, description: '등록된 발신번호' },
-            { selector: '#detailCarrier', title: '통신사', position: { top: '-5px', right: '-10px' }, description: '발신번호 통신사' },
             { selector: '#detailPurpose', title: '용도', position: { top: '-5px', right: '-10px' }, description: '사용 용도' },
             { selector: '#detailStatus', title: '상태', position: { top: '-5px', right: '-10px' }, description: '승인 상태 배지', behavior: ['【상태 항목】 승인완료(녹색), 승인대기(노란색), 반려(빨간색)'] },
             { selector: '#detailRegisterDate', title: '등록일', position: { top: '-5px', right: '-10px' }, description: '등록 신청일' },

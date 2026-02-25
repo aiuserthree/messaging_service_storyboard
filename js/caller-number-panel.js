@@ -823,7 +823,6 @@
 
             // 모달에 데이터 채우기
             document.getElementById('detailCallerNumber').textContent = data.callerNumber;
-            document.getElementById('detailCarrier').textContent = data.carrier;
             document.getElementById('detailPurpose').textContent = data.purpose;
             
             // 상태 배지 생성
