@@ -854,136 +854,79 @@ function openPolicyModal(type) {
         `,
         'spam': `
             <div style="line-height: 1.8; color: var(--text-primary);">
-                <p style="margin-bottom: 24px;">
-                    주식회사 아이뱅크(이하 "회사")는 다수 이용자의 편리한 서비스 이용과 스팸, 불법스팸으로 인한 폐해를 방지하기 위해 스팸방지정책을 수립하여 운영하고 있습니다. 아래와 같이 불법스팸(문자, 팩스, 카카오 비즈메시지)을 발송한 이용자에 대해서는 이용정지 및 해지, 형사고발 등의 조치를 취하겠습니다.
-                </p>
+                <p style="margin-bottom: 16px;"><strong>제1조 (목적)</strong></p>
+                <p style="margin-bottom: 24px; padding-left: 16px;">이 정책은 주식회사 아이뱅크(이하 '회사')가 운영하는 톡벨(TalkBell) 서비스(이하 '서비스')의 이용과 관련하여 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」(이하 "정보통신망법") 및 한국인터넷진흥원(KISA)의 불법스팸 방지 가이드라인을 준수하여, 회사와 이용자의 권리∙의무 및 책임사항을 규정함을 목적으로 합니다.</p>
                 
-                <p style="margin-bottom: 12px;"><strong>1. 용어 정의</strong></p>
+                <p style="margin-bottom: 12px;"><strong>제2조 (용어의 정의)</strong></p>
                 <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;"><strong>스팸</strong>: 정보통신망을 통해 이용자가 원하지 않는데도 불구하고 일방적으로 전송 또는 게시되는 영리목적의 광고성 정보</li>
-                    <li style="margin-bottom: 6px;"><strong>불법스팸</strong>: 정보통신망 이용촉진 및 정보보호 등에 관한 법률(이하 "정보통신망법") 및 회사 운영정책을 위반하여 전송 또는 게시되는 영리목적의 광고성 정보</li>
+                    <li style="margin-bottom: 6px;">① "스팸"이란 정보통신망을 통해 수신자의 명시적인 사전 동의 없이 일방적으로 전송되는 영리목적의 광고성 정보를 말합니다.</li>
+                    <li style="margin-bottom: 6px;">② "불법스팸"이란 정보통신망법 제50조부터 제50조의8을 위반하여 전송 또는 게시되는 영리목적의 광고성 정보를 말합니다.</li>
+                    <li style="margin-bottom: 6px;">③ "서비스"란 회사가 제공하는 문자메시지(SMS, LMS, MMS), 알림톡, 브랜드 메시지 등 모든 메시지 전송 서비스를 의미하며, 이용약관 제2조의 정의를 따릅니다.</li>
                 </ul>
                 
-                <p style="margin-bottom: 12px;"><strong>2. 발송 시 유의사항</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;">"정보통신망법" 제50조에 의한 문자, 카카오 비즈메시지 등 발송 시 유의사항에 대해 안내 드립니다.</p>
+                <p style="margin-bottom: 12px;"><strong>제3조 (부정송신 방지 관련 개인정보 수집항목 및 이용)</strong></p>
                 <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">영리 목적의 광고성 문자, 알림톡, 친구톡 등을 발송 시 반드시 수신자의 <strong>사전 동의</strong>를 얻어야 합니다.</li>
-                    <li style="margin-bottom: 6px;">수신자의 사전 동의를 얻었다 하더라도 메시지 내용에 <strong>무료 수신거부 방법(080 번호 등)</strong>을 반드시 표시하여야 합니다.</li>
-                    <li style="margin-bottom: 6px;">수신자의 수신 거부 시 기술적으로 수신거부를 회피하거나 방해해서는 안 됩니다.</li>
-                    <li style="margin-bottom: 6px;">야간 시간대(오후 9시 ~ 다음날 오전 8시)에 광고성 정보를 전송할 경우 수신자로부터 별도의 <strong>야간 수신 동의</strong>를 얻어야 합니다.</li>
+                    <li style="margin-bottom: 6px;">① 회사는 개인정보의 수집 시 관련법규에 따라 가입신청서 또는 이용약관에 그 수집범위 및 목적을 사전 고지합니다.</li>
+                    <li style="margin-bottom: 6px;">② 회사는 개인정보 처리방침에서 규정하고 있는 수집항목 및 이용목적 외에, 불법스팸 전송 및 발신번호 변작 등으로 서비스 이용정지 또는 계약해지 된 고객의 재가입을 제한하기 위하여 성명, 생년월일(법인등록번호·사업자등록번호), 전화번호, 정지 및 해지사유, IP주소, 접속로그 등의 정보를 해지일로부터 1년간 수집하여 보관할 수 있습니다.</li>
                 </ul>
                 
-                <p style="margin-bottom: 12px;"><strong>3. 스팸방지 관련 약관 공지</strong></p>
-                <div style="background-color: var(--bg-color, #f8fafc); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-                    <p style="margin-bottom: 12px;"><strong>제11조 [이용자의 의무]</strong></p>
-                    <p style="margin-bottom: 16px; padding-left: 16px;">4. 이용자는 스팸 또는 불법스팸을 전송함으로써 발생하는 모든 민·형사상의 책임을 부담합니다.</p>
-                    
-                    <p style="margin-bottom: 12px;"><strong>제16조 [서비스 이용의 제한 및 정지]</strong></p>
-                    <p style="margin-bottom: 8px; padding-left: 16px;">2. 회사는 명의도용, 불법스팸 전송, 해킹, 악성 프로그램 배포 등 관련 법령 및 운영정책을 위반한 경우 즉시 영구이용정지를 할 수 있습니다. 이 경우 서비스 내 잔액, 포인트, 마일리지 등은 소멸되며 회사는 이를 보상하지 않습니다.</p>
-                    <p style="margin-bottom: 8px; padding-left: 16px;">3. 회사는 다음 각 호에 해당하는 경우 서비스 이용을 정지할 수 있습니다.</p>
-                    <ul style="padding-left: 32px; margin-bottom: 12px;">
-                        <li style="margin-bottom: 4px;">① 방송통신위원회 또는 한국인터넷진흥원(KISA)이 불법스팸 전송사실을 확인하여 이용정지를 요청하는 경우</li>
-                        <li style="margin-bottom: 4px;">② 이용자가 전송하는 대량의 스팸으로 인하여 회사의 시스템 장애를 야기하거나 야기할 우려가 있는 경우</li>
-                        <li style="margin-bottom: 4px;">③ 수신자가 스팸으로 신고하는 건수가 급증하는 경우</li>
-                    </ul>
-                    <p style="margin-bottom: 16px; padding-left: 16px;">5. 회사는 스팸 전송을 방지하기 위하여 일일 발송량을 제한할 수 있으며, 자체 모니터링 시스템을 통해 감시를 강화할 수 있습니다.</p>
-                    
-                    <p style="margin-bottom: 12px;"><strong>제17조 [계약해지]</strong></p>
-                    <p style="margin-bottom: 8px; padding-left: 16px;">2. 회사는 이용자가 다음 각 호에 해당할 경우 동의 없이 이용계약을 해지할 수 있습니다.</p>
-                    <ul style="padding-left: 32px; margin-bottom: 12px;">
-                        <li style="margin-bottom: 4px;">① 이용자가 약관을 위반하고 일정 기간 내에 위반 내용을 해소하지 않는 경우</li>
-                        <li style="margin-bottom: 4px;">② 방송통신위원회 또는 KISA가 불법스팸 전송사실을 확인하여 계약해지를 요청하는 경우</li>
-                        <li style="margin-bottom: 4px;">③ 이용정지 조치 이후 1년 이내에 동일한 사유가 재발한 경우</li>
-                    </ul>
-                    
-                    <p style="margin-bottom: 12px;"><strong>제18조 [발송량 제한]</strong></p>
-                    <p style="margin-bottom: 8px; padding-left: 16px;">회사는 스팸 방지를 위해 아래와 같이 발송량을 제한합니다.</p>
-                    <ul style="padding-left: 32px;">
-                        <li style="margin-bottom: 4px;">개인 회원: 1일 500건 (전기통신사업법 준수)</li>
-                        <li style="margin-bottom: 4px;">사업자 회원: 1회 최대 1,000,000건 (운영 상황에 따라 조정 가능)</li>
-                        <li style="margin-bottom: 4px;">단, 적법한 업무용 광고 발송 등 소명을 통해 사전 승인을 얻은 경우 제한을 완화할 수 있습니다.</li>
-                    </ul>
-                </div>
-                
-                <p style="margin-bottom: 12px;"><strong>4. 사전 수신동의</strong></p>
-                <div style="background-color: #fff3cd; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-                    <p style="margin-bottom: 8px;"><strong>제50조 (영리목적의 광고성 정보전송의 제한)</strong></p>
-                    <p style="margin-bottom: 8px; padding-left: 16px;">1. 누구든지 수신자의 명시적인 수신거부의사에 반하는 영리목적의 광고성 정보를 전송하여서는 아니 된다.</p>
-                    <p style="padding-left: 16px;">2. 수신자의 전화·모사전송기기에 영리목적의 광고성 정보를 전송하고자 하는 자는 당해 수신자의 사전 동의를 받아야 한다.</p>
-                </div>
+                <p style="margin-bottom: 12px;"><strong>제4조 (부정송신 방지를 위한 이용신청 승낙의 제한)</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 다음 각 호의 하나에 해당하는 이용신청에 대하여는 승낙을 하지 아니합니다.</p>
                 <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">광고 전송자는 전송 이전에 내용 및 전송매체에 대해 정확히 고지하고 동의를 받아야 합니다.</li>
-                    <li style="margin-bottom: 6px;">하나의 사업자가 여러 서비스를 제공할 경우, 포괄적 동의가 아닌 <strong>서비스 유형별 개별 동의</strong>를 받아야 합니다.</li>
+                    <li style="margin-bottom: 6px;">1. 가입통신사를 불문하고 스팸 전송 또는 발신번호 변작을 사유로 이용정지 또는 계약해지를 당한 이후 1년이 경과하지 않은 개인 또는 법인(법인대표자 포함)</li>
+                    <li style="margin-bottom: 6px;">2. 방송통신위원회 또는 한국인터넷진흥원으로부터 스팸 또는 불법스팸 전송자로 확인되어 이용정지 또는 계약해지를 요청받았거나 과태료 부과 처분을 받고서 1년이 경과하지 않은 경우</li>
+                    <li style="margin-bottom: 6px;">3. 과학기술정보통신부 또는 한국인터넷진흥원으로부터 발신번호 변작으로 확인되어 이용정지 또는 계약해지를 요청받았거나 과태료 부과 처분을 받고서 1년이 경과하지 않은 경우</li>
+                    <li style="margin-bottom: 6px;">4. 서비스 개설 본래의 목적을 위반하여 대포폰(타인 명의 단말기)을 매개 또는 개통, 이용한 사실이 있거나 처벌받은 경우</li>
+                    <li style="margin-bottom: 6px;">5. 불법스팸 전송 등으로 과태료 처분을 받은 자가 질서위반행위규제법 제53조에 따라 신용정보 집중기관에 과태료 체납자로 등록된 경우</li>
+                    <li style="margin-bottom: 6px;">6. 휴대전화를 개통하여 불법스팸을 전송하는 자에게 이동전화 서비스 또는 이동전화 번호를 임대한 적이 있는 경우</li>
                 </ul>
                 
-                <p style="margin-bottom: 12px;"><strong>5. 기존 거래관계</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">기존 거래관계가 있었거나 현재 지속 중인 이용자에게는 동종의 재화 및 서비스에 대한 광고에 한해 별도 동의 없이 전송할 수 있습니다.</li>
-                    <li style="margin-bottom: 6px;">단순 무료 서비스 가입이나 문의만으로는 거래관계가 성립되지 않으므로 주의해야 합니다.</li>
-                    <li style="margin-bottom: 6px;">거래관계에 의한 예외는 해당 거래를 기초로 하므로, 거래가 종료된 후 <strong>6개월이 경과</strong>한 경우에는 다시 사전 동의를 받는 것을 권장합니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>6. 수신동의 철회</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">톡벨 서비스는 모든 광고성 메시지에 <strong>080 무료 수신거부 번호</strong>를 자동으로 포함하여 제공합니다. 회원은 이를 임의로 삭제하거나 변경해서는 안 됩니다.</li>
-                    <li style="margin-bottom: 6px;">수신거부 의사는 해당 전송자가 보내는 모든 광고에 적용되어야 합니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>7. 광고전송 허용시간</strong></p>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
-                    <tr style="background-color: var(--bg-color, #f8fafc);">
-                        <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">구분</th>
-                        <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">시간</th>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">일반 전송 가능 시간</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">오전 8시 ~ 오후 9시</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">야간 전송 제한 시간</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">오후 9시 ~ 다음날 오전 8시 (별도 동의 필요)</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">카카오 브랜드 메시지</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">오후 8시 50분부터 제한될 수 있음</td>
-                    </tr>
-                </table>
-                
-                <p style="margin-bottom: 12px;"><strong>8. 광고 전송 시 표시사항</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>[문자 메시지의 명시사항 및 방법]</strong></p>
+                <p style="margin-bottom: 12px;"><strong>제5조 (회원의 의무 및 광고성 정보 전송 시 준수사항)</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">① 회원은 서비스를 이용하여 광고성 정보를 전송함에 있어 정보통신망법 제50조 및 동법 시행령을 준수하여야 하며, 다음 각 호의 의무사항을 반드시 이행해야 합니다.</p>
                 <ul style="padding-left: 32px; margin-bottom: 16px;">
-                    <li style="margin-bottom: 6px;"><strong>(광고) 문구</strong>: 본문 시작 부분에 반드시 표기해야 합니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>전송자 명칭 및 연락처</strong>: 수신자가 식별할 수 있는 업체명 또는 서비스명을 본문에 표기해야 합니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>무료 수신거부 번호</strong>: 본문 하단 또는 끝부분에 080 번호 등을 명시하여 비용 부담 없이 수신거부할 수 있음을 알려야 합니다.</li>
+                    <li style="margin-bottom: 6px;">1. 사전 수신 동의 획득: 광고성 정보를 전송하기 위해 수신자로부터 명시적인 사전 동의를 받아야 합니다.</li>
+                    <li style="margin-bottom: 6px;">2. 야간 광고 전송 제한: 오후 9시부터 그 다음 날 오전 8시까지는 별도의 야간 광고 전송에 대한 사전 동의를 받지 않는 한 광고성 정보를 전송할 수 없습니다.</li>
+                    <li style="margin-bottom: 6px;">3. 표기 의무 준수: 광고성 문자의 본문에는 다음 사항을 반드시 명시해야 합니다.<br>가) 시작되는 부분에 "(광고)" 문구 표시 (변칙 표기 금지: (광/고), (Ad), (광 고) 등 변칙 표기 불가)<br>나) 전송자의 명칭 및 연락처<br>다) 수신의 거부 또는 수신동의의 철회 의사를 쉽게 표시할 수 있는 조치 및 방법 (예: 무료수신거부 080 번호 등)</li>
+                    <li style="margin-bottom: 6px;">4. 비용 부담 금지: 수신자가 수신거부 또는 수신동의 철회를 할 때 발생하는 전화요금 등의 금전적 비용을 수신자가 부담하지 않도록 조치해야 합니다 (080 무료수신거부 서비스 등).</li>
+                    <li style="margin-bottom: 6px;">5. 정기적 수신동의 확인: 수신동의를 받은 날로부터 2년마다 수신자에게 수신동의 여부를 확인하여야 합니다.</li>
+                    <li style="margin-bottom: 6px;">6. 처리결과 통지: 수신자가 수신동의, 수신거부 또는 수신동의 철회 의사를 표시한 경우 14일 이내에 그 처리 결과를 수신자에게 통지해야 합니다.</li>
                 </ul>
-                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>[카카오톡 비즈메시지의 명시사항]</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;"><strong>알림톡</strong>: 정보성 메시지만 가능하며, 광고성 내용이 포함될 경우 발송이 반려됩니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>친구톡/브랜드 메시지</strong>: (광고) 표기 및 수신거부 방법(채널 차단 등)이 포함되어야 합니다.</li>
-                </ul>
-                <p style="margin-bottom: 16px; padding: 12px; background-color: #d1fae5; border-radius: 8px;">
-                    💡 톡벨 시스템은 광고 메시지 발송 시 (광고) 문구와 080 번호를 자동으로 삽입합니다.
-                </p>
-                
-                <p style="margin-bottom: 12px;"><strong>9. 스팸을 위한 기술적 조치 금지</strong></p>
-                <div style="background-color: #fee2e2; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-                    <p style="margin-bottom: 8px;"><strong>제50조 (영리목적의 광고성 정보전송의 제한)</strong></p>
-                    <p style="margin-bottom: 8px;">6. 영리를 목적으로 광고를 전송하는 자는 다음 각 호의 기술적 조치를 하여서는 아니 된다.</p>
-                    <ul style="padding-left: 24px;">
-                        <li style="margin-bottom: 4px;">① 수신거부를 회피·방해하는 조치</li>
-                        <li style="margin-bottom: 4px;">② 전화번호를 자동으로 생성(생성기 등)하여 전송하는 조치</li>
-                        <li style="margin-bottom: 4px;">③ 발신번호를 변작(조작)하여 전송하는 조치</li>
-                    </ul>
-                </div>
-                <p style="margin-bottom: 24px; padding-left: 16px;">
-                    회사는 <strong>발신번호 사전등록제</strong>를 통해 등록된 번호로만 발송을 허용하며, 변작이 의심될 경우 즉시 차단합니다.
-                </p>
-                
-                <p style="margin-bottom: 12px;"><strong>10. 수신자에게 수신거부비용 부담 금지</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">② 회원은 서비스를 이용하여 다음 각 호에 해당하는 내용을 발송하여서는 안 됩니다.</p>
                 <ul style="padding-left: 32px; margin-bottom: 16px;">
-                    <li style="margin-bottom: 6px;">광고 전송 시 제공하는 수신거부 방법(080 ARS 등)은 수신자가 <strong>무료</strong>로 이용할 수 있어야 합니다.</li>
-                    <li style="margin-bottom: 6px;">톡벨은 회원에게 080 무료 수신거부 서비스를 기본 기능으로 제공하여 이를 지원합니다.</li>
+                    <li style="margin-bottom: 6px;">1. 법 도박, 불법 대출, 보이스피싱, 스미싱, 불법 의약품, 마약, 성매매 알선 등 법률에서 금지하는 재화나 서비스에 대한 내용</li>
+                    <li style="margin-bottom: 6px;">2. 음란, 청소년 유해 매체물 등 공공질서와 미풍양속을 해치는 내용</li>
+                    <li style="margin-bottom: 6px;">3. 발신번호를 변작하거나(사전 등록된 번호 외 사용), 회신을 유도하기 위해 수신자를 기망하는 내용</li>
+                    <li style="margin-bottom: 6px;">4. 수신거부 또는 수신동의 철회를 회피·방해하는 기술적 조치를 하거나, 수신자의 연락처를 자동으로 생성하여 전송하는 행위</li>
                 </ul>
+                <p style="margin-bottom: 24px; padding-left: 16px;">③ 회원은 전기통신사업법 제84조의2에 따라 발신번호 사전등록 후 등록된 번호로만 문자메시지를 발송하여야 하며, 거짓으로 표시하여서는 안 됩니다.</p>
+                
+                <p style="margin-bottom: 12px;"><strong>제6조 (문자 발송량 제한)</strong></p>
+                <ul style="padding-left: 32px; margin-bottom: 24px;">
+                    <li style="margin-bottom: 6px;">① 회사는 스팸 방지를 위하여 개인 회원의 ID 당 문자 전송량을 1일 500통으로 제한합니다.</li>
+                    <li style="margin-bottom: 6px;">② 다만, 다음 각 호의 경우에는 예외를 인정할 수 있습니다.<br>1. 적법한 업무용 광고 발송, 동창회 연락 등 이용자 불편을 최소화하기 위하여 회사가 요구하는 증빙서류를 제출하고 승인을 얻은 경우</li>
+                </ul>
+                
+                <p style="margin-bottom: 12px;"><strong>제7조 (이용제한 및 계약해지)</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 이용자가 다음 각 호의 어느 하나에 해당하는 경우, 즉시 서비스 이용을 정지하거나 계약을 해지할 수 있습니다.</p>
+                <ul style="padding-left: 32px; margin-bottom: 16px;">
+                    <li style="margin-bottom: 6px;">1. 방송통신위원회, 한국인터넷진흥원, 과학기술정보통신부 등 관계 기관이 불법스팸 전송 또는 발신번호 변작 사실을 확인하여 이용정지 또는 해지를 요청하는 경우</li>
+                    <li style="margin-bottom: 6px;">2. 이용자가 전송한 광고로 인해 회사의 서비스 제공에 장애를 야기하거나, 다수의 수신자로부터 스팸 신고가 접수된 경우</li>
+                    <li style="margin-bottom: 6px;">3. 제5조의 의무사항(표기의무 위반, 변칙 표기, 야간전송 제한 위반 등)을 위반하여 불법스팸을 전송한 사실이 확인된 경우</li>
+                    <li style="margin-bottom: 6px;">4. 타인의 명의를 도용하거나 발신번호를 변작하여 등록한 경우</li>
+                    <li style="margin-bottom: 6px;">5. 계약 시 제출한 자료 및 정보가 허위 또는 누락되었음이 확인 된 경우</li>
+                    <li style="margin-bottom: 6px;">6. 회사의 서비스 제공목적 외의 용도로 서비스를 이용하거나 제3자에게 임의로 서비스를 임대한 경우</li>
+                </ul>
+                <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 제1항에 따라 이용제한 또는 계약해지를 하는 경우 그 사실을 이용자에게 통지합니다. 단, 긴급하게 차단할 필요가 있는 경우 조치 후 통지할 수 있습니다.</p>
+                <p style="margin-bottom: 24px; padding-left: 16px;">③ 본 조에 따라 스팸 발송, 명의 도용 등 부정한 방법으로 이용 계약이 해지되는 경우, 회원이 보유한 잔여 포인트 및 마일리지는 즉시 소멸되며 환불되지 않습니다.</p>
+                
+                <p style="margin-bottom: 12px;"><strong>제8조 (기존거래관계에 따른 예외)</strong></p>
+                <p style="margin-bottom: 24px; padding-left: 16px;">회원은 재화 및 용역의 거래관계를 통하여 수신자로부터 직접 연락처를 수집한 경우, 거래가 종료된 날로부터 6개월 이내에는 해당 수신자의 별도 사전 동의 없이 동종의 재화 및 용역에 대한 영리 목적의 광고성 정보를 전송할 수 있습니다. 다만, 이 경우에도 제5조 제1항 제3호 및 제4호에 따른 표기 의무((광고)표시, 무료수신거부 등)는 반드시 준수하여야 합니다.</p>
+                
+                <p style="margin-bottom: 12px;"><strong>제9조 (면책)</strong></p>
+                <p style="margin-bottom: 24px; padding-left: 16px;">회원이 본 정책 및 정보통신망법을 위반하여 발송한 메시지로 인해 발생하는 모든 민·형사상 책임 및 과태료는 회원이 전적으로 부담하며, 회사는 고의 또는 중대한 과실이 없는 한 이에 대해 책임을 지지 않습니다.</p>
+                
+                <p style="margin-bottom: 12px;"><strong>부칙</strong></p>
+                <p style="margin-bottom: 16px; padding-left: 16px;">본 약관은 2026년 XX월 XX일부터 시행합니다.</p>
             </div>
         `,
         'refund': `
