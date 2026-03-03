@@ -218,6 +218,21 @@
         .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
 
+        /* 기업정보 카드: 우측 상세정보 왼쪽 정렬 (가운데 정렬 시 여백 과다 방지) */
+        #businessInfoCard .table th,
+        #businessInfoCard .table td { text-align: left; }
+        #businessInfoCard .table-container { max-width: 100%; }
+        /* 우편번호+주소검색: 입력란과 버튼을 왼쪽에 붙여 배치 */
+        #businessInfoCard .form-input-with-btn {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 8px;
+            width: max-content;
+        }
+        #businessInfoCard .form-input-with-btn .form-input { min-width: 0; width: 120px; }
+        #businessInfoCard .form-input-with-btn .btn { flex-shrink: 0; }
+
         /* 발신번호 등록 팝업 스타일 (mypage-caller-number.html과 동일) */
         .step-indicator {
             display: flex;
@@ -504,7 +519,9 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div style="margin-top: 16px;">
+                            <div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                                <button type="button" class="btn btn-primary" id="saveBusinessInfoBtn" onclick="saveBusinessInfo()" title="기업 정보(회사명·사업자번호·대표자·사업장 주소) 수정 사항 저장">저장하기</button>
+                                <button type="button" class="btn btn-outline" onclick="resetBusinessInfo()" title="기업 정보 입력 내용 초기화">취소</button>
                                 <button type="button" class="btn btn-primary" onclick="openModal('taxAutoApplyModal')" title="기업회원 전용. 클릭 시 세금계산서 자동발행 신청 모달 오픈. 담당자 정보 입력 후 신청.">세금계산서 자동발행 신청</button>
                             </div>
                         </div>
@@ -1079,6 +1096,19 @@
         function openAddressSearch() { if (typeof showToast === 'function') showToast('주소 검색 창을 엽니다.', 'info'); }
         function openBusinessAddressSearch() { if (typeof showToast === 'function') showToast('주소 검색 창을 엽니다. 선택 시 우편번호·주소가 자동 입력됩니다.', 'info'); var z = document.getElementById('businessZipcode'); var b = document.getElementById('businessAddressBase'); if (z) z.value = '06134'; if (b) b.value = '서울특별시 강남구 테헤란로 123'; }
         function resetForm() { if (confirm('변경사항을 취소하시겠습니까?')) document.getElementById('profileForm').reset(); }
+        function saveBusinessInfo() {
+            if (typeof showToast === 'function') showToast('기업 정보가 저장되었습니다.', 'success');
+        }
+        function resetBusinessInfo() {
+            if (!confirm('기업 정보 변경사항을 취소하시겠습니까?')) return;
+            var z = document.getElementById('businessZipcode');
+            var b = document.getElementById('businessAddressBase');
+            var d = document.getElementById('businessAddressDetail');
+            if (z) z.value = '06134';
+            if (b) b.value = '서울특별시 강남구 테헤란로 123';
+            if (d) d.value = '';
+            if (typeof showToast === 'function') showToast('기업 정보가 초기화되었습니다.', 'info');
+        }
         function verifyPhoneMypage() { document.getElementById('phoneVerifyStatus').style.display = 'flex'; closeModal('phoneVerifyModal'); if (typeof showToast === 'function') showToast('인증이 완료되었습니다.', 'success'); }
         function submitTaxAutoApplyMypage() { closeModal('taxAutoApplyModal'); if (typeof showToast === 'function') showToast('세금계산서 자동발행 신청이 접수되었습니다.', 'success'); }
         document.getElementById('profileForm').addEventListener('submit', function(e) { e.preventDefault(); if (typeof showToast === 'function') showToast('저장되었습니다.', 'success'); });
