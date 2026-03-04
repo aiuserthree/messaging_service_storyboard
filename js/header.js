@@ -279,7 +279,7 @@ function createHeader(activeMenu = '') {
         <header class="header">
             <div class="header-content">
                 <div class="logo">
-                    <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                    <a href="main.html" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
                         <img src="img/logo/tokbell_logo.png" alt="Tokbell" class="header-logo" style="height: 32px; width: auto;" />
                     </a>
                 </div>
