@@ -14,7 +14,7 @@ function createFooter() {
                 <div class="footer-section footer-company">
                     <h4 class="footer-title">회사정보</h4>
                     <div class="footer-logo-wrap">
-                        <img src="img/logo/logo.png" alt="ibank" class="footer-logo" />
+                        <img src="img/logo/tokbell_logo.png" alt="Tokbell" class="footer-logo" />
                     </div>
                     <div class="footer-info">
                         <p class="footer-text">상호 : (주)아이뱅크</p>

@@ -198,7 +198,7 @@ function createHeader(activeMenu = '') {
                     <a href="mypage.html#profile" class="header-dropdown-item" data-mypage-panel="profile">내 정보 수정</a>
                     <a href="mypage.html#password" class="header-dropdown-item" data-mypage-panel="password">비밀번호 변경</a>
                     <a href="mypage.html#caller" class="header-dropdown-item" data-mypage-panel="caller">발신번호 관리</a>
-                    <a href="mypage.html#history" class="header-dropdown-item" data-mypage-panel="history">이용내역</a>
+                    <a href="mypage.html#history" class="header-dropdown-item" data-mypage-panel="history">포인트/마일리지 내역</a>
                     <a href="support-inquiry.html#history" class="header-dropdown-item">내 문의 내역</a>
                     <div class="header-dropdown-divider"></div>
                     <a href="#" class="header-dropdown-item" onclick="handleLogout(); return false;">로그아웃</a>
@@ -279,8 +279,8 @@ function createHeader(activeMenu = '') {
         <header class="header">
             <div class="header-content">
                 <div class="logo">
-                    <a href="index.html" style="text-decoration: none; color: inherit;">
-                        <h1>Tokbell</h1>
+                    <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                        <img src="img/logo/tokbell_logo.png" alt="Tokbell" class="header-logo" style="height: 32px; width: auto;" />
                     </a>
                 </div>
                 <nav class="main-nav">
