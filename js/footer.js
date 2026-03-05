@@ -47,8 +47,8 @@ function createFooter() {
         </footer>
         <style>
             .footer {
-                background-color: var(--text-primary);
-                color: var(--surface-color);
+                background-color: #fff;
+                color: var(--text-primary, #1e293b);
                 padding: 40px 24px 24px;
                 margin-top: 64px;
             }
@@ -59,17 +59,17 @@ function createFooter() {
                 flex-wrap: wrap;
                 gap: 8px 24px;
                 padding-bottom: 24px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+                border-bottom: 1px solid var(--border-color, #e2e8f0);
             }
             .footer-top-link {
                 font-size: 14px;
                 font-weight: 500;
-                color: rgba(255, 255, 255, 0.9);
+                color: var(--text-primary, #1e293b);
                 text-decoration: none;
                 transition: color 0.2s;
             }
             .footer-top-link:hover {
-                color: var(--surface-color);
+                color: var(--primary-color, #2563eb);
                 text-decoration: underline;
             }
             .footer-content {
@@ -90,7 +90,7 @@ function createFooter() {
                 font-size: 15px;
                 font-weight: 600;
                 margin-bottom: 14px;
-                color: var(--surface-color);
+                color: var(--text-primary, #1e293b);
             }
             .footer-info {
                 display: flex;
@@ -99,16 +99,16 @@ function createFooter() {
             }
             .footer-text {
                 font-size: 13px;
-                color: rgba(255, 255, 255, 0.8);
+                color: var(--text-secondary, #64748b);
                 line-height: 1.6;
                 margin: 0;
             }
             .footer-inline-link {
-                color: rgba(255, 255, 255, 0.9);
+                color: var(--text-primary, #1e293b);
                 text-decoration: none;
             }
             .footer-inline-link:hover {
-                color: var(--surface-color);
+                color: var(--primary-color, #2563eb);
                 text-decoration: underline;
             }
             .footer-logo-wrap {
@@ -127,7 +127,7 @@ function createFooter() {
                 max-width: 1400px;
                 margin: 0 auto;
                 padding-top: 24px;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                border-top: 1px solid var(--border-color, #e2e8f0);
                 text-align: center;
             }
             .footer-cert-logos {
@@ -147,7 +147,7 @@ function createFooter() {
             }
             .footer-copyright {
                 font-size: 12px;
-                color: rgba(255, 255, 255, 0.6);
+                color: var(--text-muted, #94a3b8);
                 margin: 0;
             }
             @media (max-width: 768px) {
