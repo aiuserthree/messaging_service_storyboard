@@ -127,6 +127,7 @@
         .history-period-dates .form-input.input-sm { width: 140px; padding: 6px 10px; font-size: 13px; }
         .history-period-sep { color: var(--text-secondary); font-size: 14px; }
         .history-period-btns { display: flex; gap: 6px; }
+        .history-period-btns .history-period-btn.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         /* 이용내역: history tabs & table (payment-refund와 동일) */
         .history-tabs { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
         .history-tabs-right { margin-left: auto; }
@@ -681,15 +682,15 @@
                                         <input type="date" id="historyDateTo" class="form-input input-sm" title="달력으로 조회 종료일 선택. 과거 데이터 검색용. 시작일~종료일 최대 1년.">
                                     </div>
                                     <div class="history-period-btns">
-                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('1')" title="최근 기준: 오늘부터 과거 1개월 구간 자동 설정 후 내역 조회.">1개월</button>
-                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('3')" title="최근 기준: 오늘부터 과거 3개월 구간 자동 설정 후 내역 조회.">3개월</button>
-                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('6')" title="최근 기준: 오늘부터 과거 6개월 구간 자동 설정 후 내역 조회.">6개월</button>
-                                        <button type="button" class="btn btn-outline btn-sm" onclick="applyHistoryPeriod('12')" title="최근 기준: 오늘부터 과거 1년 구간 자동 설정 후 내역 조회.">1년</button>
+                                        <button type="button" class="btn btn-outline btn-sm history-period-btn" data-period="1" onclick="applyHistoryPeriod('1')" title="최근 기준: 오늘부터 과거 1개월 구간 자동 설정 후 내역 조회.">1개월</button>
+                                        <button type="button" class="btn btn-outline btn-sm history-period-btn" data-period="3" onclick="applyHistoryPeriod('3')" title="최근 기준: 오늘부터 과거 3개월 구간 자동 설정 후 내역 조회.">3개월</button>
+                                        <button type="button" class="btn btn-outline btn-sm history-period-btn" data-period="6" onclick="applyHistoryPeriod('6')" title="최근 기준: 오늘부터 과거 6개월 구간 자동 설정 후 내역 조회.">6개월</button>
+                                        <button type="button" class="btn btn-outline btn-sm history-period-btn" data-period="12" onclick="applyHistoryPeriod('12')" title="최근 기준: 오늘부터 과거 1년 구간 자동 설정 후 내역 조회.">1년</button>
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm" id="historySearchBtn" onclick="applyHistoryPeriod('custom')">검색</button>
                                 </div>
                             </div>
-                            <p class="form-help" style="margin: -8px 0 12px 0; font-size: 12px; color: var(--text-secondary);">※ 기간 버튼(1/3/6개월, 1년)은 <strong>최근 기준</strong> 조회, 달력+검색은 <strong>과거 구간 직접 선택</strong> 조회(최대 1년)</p>
+                            <p class="form-help" style="margin: -8px 0 12px 0; font-size: 12px; color: var(--text-secondary);">※ 최대 1년 간의 포인트/마일리지 이용 내역을 조회할 수 있습니다.</p>
                             <div class="history-tabs" id="historyTabs">
                                 <button type="button" class="history-tab active" onclick="switchHistoryTab('charge')" title="포인트 충전 내역 탭 선택. 날짜·결제수단·금액·잔액 등 표시.">포인트 충전 내역</button>
                                 <button type="button" class="history-tab" onclick="switchHistoryTab('use')" title="포인트 사용 내역 탭 선택. 날짜·서비스·발송 건수·금액·잔액 등 표시.">포인트 사용 내역</button>
@@ -788,7 +789,7 @@
                 <button class="modal-close" onclick="closeMileageExpiryByMonthModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="mileage-expiry-3m-desc">이후 3개월(당월포함)동안의 소멸예정 마일리지 내역입니다.</p>
+                <p class="mileage-expiry-3m-desc">3개월 이내에 소멸 예정인 마일리지 내역입니다.<br>마일리지가 소멸되기 전에 사용해주세요.</p>
                 <p class="mileage-expiry-3m-note"><span class="asterisk">*</span> 사용 또는 사용취소한 마일리지는 익일 소멸 예정 마일리지에 반영됩니다.</p>
                 <div id="mileageExpiryByMonthBody"></div>
             </div>
@@ -1432,10 +1433,14 @@
             var toEl = document.getElementById('historyDateTo');
             var end = new Date();
             var start = new Date();
+            var periodBtns = document.querySelectorAll('.history-period-btns .history-period-btn');
+            periodBtns.forEach(function(btn) { btn.classList.remove('active'); });
             if (period === 'custom') {
                 if (fromEl && toEl && fromEl.value && toEl.value) { /* 실제 API 호출 시 기간 전달 */ }
                 return;
             }
+            var activeBtn = document.querySelector('.history-period-btns .history-period-btn[data-period="' + period + '"]');
+            if (activeBtn) activeBtn.classList.add('active');
             var n = parseInt(period, 10) || 1;
             start.setMonth(start.getMonth() - n);
             if (fromEl) fromEl.value = start.getFullYear() + '-' + ('0' + (start.getMonth() + 1)).slice(-2) + '-' + ('0' + start.getDate()).slice(-2);
