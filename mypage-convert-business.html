@@ -88,12 +88,11 @@
             <a href="mypage.html#profile" class="btn btn-outline btn-sm" style="margin-bottom: 16px;">← 내 정보 수정으로 돌아가기</a>
             <div class="page-header">
                 <h2>개인사업자 회원으로 전환</h2>
-                <p style="color: var(--text-secondary); margin-top: 8px;">기업 정보 등록 후 발신번호 등록까지 한 번에 진행합니다. (기업회원 발신번호 등록 프로세스 적용)</p>
+                <p style="color: var(--text-secondary); margin-top: 8px;">기업 정보를 등록한 후 전환을 신청합니다.</p>
             </div>
             <div class="top-notice-block">
                 <p class="top-notice-item">· 입력하는 사업자 정보는 반드시 실제 사업자등록증과 일치해야 합니다.</p>
                 <p class="top-notice-item">· 사업자 회원으로 전환 후에는 개인 회원으로 되돌릴 수 없습니다.</p>
-                <p class="top-notice-item">· 사업자 회원 전환 시 기존 발신번호가 초기화됩니다. 아래에서 발신번호를 새로 등록해 주세요.</p>
             </div>
 
             <!-- 1. 기업 정보 등록 -->
@@ -137,111 +136,7 @@
                     <input type="file" class="form-input" id="businessLicense" accept=".pdf,.jpg,.png">
                     <div class="form-help">PDF, JPG, PNG (최대 10MB)</div>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="goToCallerStep1()">다음: 발신번호 등록</button>
-            </div>
-
-            <!-- 2. 발신번호 등록 (기업회원 프로세스) -->
-            <div class="card" id="callerSectionCard" style="display: none;">
-                <h3 class="form-section-title">2. 발신번호 등록</h3>
-                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">기업회원 발신번호 등록 절차와 동일합니다.</p>
-                <div class="step-indicator">
-                    <div class="step-item active" id="callerStep1"><div class="step-circle">1</div><div class="step-label">기본 정보</div></div>
-                    <div class="step-item" id="callerStep2"><div class="step-circle">2</div><div class="step-label">인증 및 서류</div></div>
-                    <div class="step-item" id="callerStep3"><div class="step-circle">3</div><div class="step-label">연락처</div></div>
-                    <div class="step-item" id="callerStep4"><div class="step-circle">4</div><div class="step-label">제출</div></div>
-                </div>
-
-                <div id="callerStep1Content" class="step-content active">
-                    <div class="form-group">
-                        <label class="form-label required">발신번호</label>
-                        <div class="flex gap-2">
-                            <input type="tel" id="callerNumberInput" class="form-input" placeholder="010-1234-5678 또는 02-1234-5678" oninput="detectNumberType()">
-                            <button type="button" class="btn btn-outline" onclick="checkDuplicateNumber()">확인</button>
-                        </div>
-                        <div id="numberTypeBadge" style="margin-top: 8px; display: none;"><span class="badge" id="numberTypeText"></span></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">발신번호 용도</label>
-                        <input type="text" id="purposeInput" class="form-input" placeholder="예: 마케팅팀, 고객센터">
-                    </div>
-                    <div class="flex gap-2">
-                        <button type="button" class="btn btn-outline" onclick="document.getElementById('callerSectionCard').style.display='none'; document.getElementById('businessInfoCard').style.display='block'">이전</button>
-                        <button type="button" class="btn btn-primary" onclick="nextCallerStep(1)">다음</button>
-                    </div>
-                </div>
-
-                <div id="callerStep2Content" class="step-content">
-                    <h4 style="margin-bottom: 16px;">명의 구분 및 서류</h4>
-                    <div class="form-group">
-                        <label class="form-label required">명의 구분</label>
-                        <div class="flex gap-2" style="flex-direction: column;">
-                            <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer;">
-                                <input type="radio" name="ownershipType" value="self" onchange="selectOwnershipType('self')">
-                                <div><strong>본인(자사) 명의</strong><p style="font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0;">본인(자사) 명의 발신번호를 등록합니다</p></div>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer;">
-                                <input type="radio" name="ownershipType" value="others" onchange="selectOwnershipType('others')">
-                                <div><strong>타인 명의</strong><p style="font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0;">타인 명의 발신번호. 위임장 및 추가 서류 필요</p></div>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer;">
-                                <input type="radio" name="ownershipType" value="other_company" onchange="selectOwnershipType('other_company')">
-                                <div><strong>타사 명의</strong><p style="font-size: 12px; color: var(--text-secondary); margin: 4px 0 0 0;">타사 명의. 위임장, 위임/수임 업체 사업자등록증 필요</p></div>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group" id="authSection" style="display: none;">
-                        <label class="form-label required">본인인증</label>
-                        <div id="authStatus" style="margin-bottom: 8px;">
-                            <button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>
-                        </div>
-                        <div class="form-help" id="authHelpText">서류 제출자 본인인증이 필요합니다</div>
-                    </div>
-                    <div class="form-group" id="documentSection">
-                        <p style="color: var(--text-secondary);">명의 구분을 선택해주세요.</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button type="button" class="btn btn-outline" onclick="nextCallerStep(2, -1)">이전</button>
-                        <button type="button" class="btn btn-primary" onclick="nextCallerStep(2)">다음</button>
-                    </div>
-                </div>
-
-                <div id="callerStep3Content" class="step-content">
-                    <h4 style="margin-bottom: 16px;">연락처 정보</h4>
-                    <div class="form-group">
-                        <label class="form-label required">휴대폰번호</label>
-                        <input type="tel" id="contactPhoneInput" class="form-input" placeholder="010-1234-5678">
-                        <div class="form-help">승인/반려 결과 알림을 받을 연락처입니다</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">결과 수신 이메일</label>
-                        <input type="email" id="contactEmailInput" class="form-input" placeholder="example@email.com">
-                        <div class="form-help">발신번호 등록 결과를 이메일로도 받으시려면 입력해 주세요</div>
-                    </div>
-                    <div class="flex gap-2">
-                        <button type="button" class="btn btn-outline" onclick="nextCallerStep(3, -1)">이전</button>
-                        <button type="button" class="btn btn-primary" onclick="nextCallerStep(3)">다음</button>
-                    </div>
-                </div>
-
-                <div id="callerStep4Content" class="step-content">
-                    <h4 style="margin-bottom: 16px;">최종 확인</h4>
-                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">기업 정보와 발신번호 등록 정보를 확인한 후 제출해 주세요.</p>
-                    <div style="background: var(--bg-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
-                        <table class="table">
-                            <tr><th>기업명</th><td id="reviewCompanyName">-</td></tr>
-                            <tr><th>사업자등록번호</th><td id="reviewBusinessNumber">-</td></tr>
-                            <tr><th>사업장 주소</th><td id="reviewBusinessAddress">-</td></tr>
-                            <tr><th>발신번호</th><td id="reviewCallerNumber">-</td></tr>
-                            <tr><th>명의 구분</th><td id="reviewOwnershipType">-</td></tr>
-                            <tr><th>용도</th><td id="reviewPurpose">-</td></tr>
-                            <tr><th>연락처</th><td id="reviewContact">-</td></tr>
-                        </table>
-                    </div>
-                    <div class="flex gap-2">
-                        <button type="button" class="btn btn-outline" onclick="nextCallerStep(4, -1)">이전</button>
-                        <button type="button" class="btn btn-primary" onclick="submitConvertAndCaller()">전환 신청 및 발신번호 등록</button>
-                    </div>
-                </div>
+                <button type="button" class="btn btn-primary" onclick="submitConvert()">전환 신청</button>
             </div>
 
             <div style="margin-top: 24px;">
@@ -258,15 +153,6 @@
         });
     </script>
     <script>
-        var callerStep = 1;
-        var numberType = '';
-        var selectedOwnershipType = '';
-        var requiresAuth = false;
-        var authCompleted = false;
-        var authInfo = null;
-        var fileAccept = '.jpg,.jpeg,.gif,.png,.pdf,.tif,.tiff,.zip';
-        var maxSize = 10 * 1024 * 1024;
-
         function getBusinessAddressFull() {
             var base = (document.getElementById('businessAddressBase') || {}).value || '';
             var detail = (document.getElementById('businessAddressDetail') || {}).value.trim();
@@ -278,102 +164,17 @@
             document.getElementById('businessZipcode').value = '06134';
             document.getElementById('businessAddressBase').value = '서울특별시 강남구 테헤란로 123';
         }
-        function goToCallerStep1() {
+        function checkBusinessNumber() { if (typeof showToast === 'function') showToast('사업자등록번호 확인이 완료되었습니다.', 'success'); else alert('사업자등록번호 확인 완료'); }
+        function submitConvert() {
             var name = document.getElementById('companyName').value;
             var num = document.getElementById('businessNumber').value;
             var rep = document.getElementById('repName').value;
             var addr = getBusinessAddressFull();
             if (!name || !num || !rep || !addr) { alert('기업명, 사업자등록번호, 대표자명, 사업장 주소(우편번호 검색 후 주소·상세주소)를 입력해 주세요.'); return; }
-            document.getElementById('businessInfoCard').style.display = 'none';
-            document.getElementById('callerSectionCard').style.display = 'block';
-        }
-        function checkBusinessNumber() { if (typeof showToast === 'function') showToast('사업자등록번호 확인이 완료되었습니다.', 'success'); else alert('사업자등록번호 확인 완료'); }
-        function detectNumberType() {
-            var v = (document.getElementById('callerNumberInput') || {}).value || '';
-            var digits = v.replace(/\D/g, '');
-            var badge = document.getElementById('numberTypeBadge');
-            var text = document.getElementById('numberTypeText');
-            if (digits.length >= 9) {
-                numberType = digits.indexOf('010') === 0 || digits.indexOf('011') === 0 ? 'MOBILE' : 'LANDLINE';
-                requiresAuth = (numberType === 'MOBILE');
-                if (badge) { badge.style.display = 'block'; if (text) text.textContent = numberType === 'MOBILE' ? '휴대폰 번호' : '유선번호'; }
-            } else { numberType = ''; requiresAuth = false; if (badge) badge.style.display = 'none'; }
-            updateAuthSection();
-            if (selectedOwnershipType) selectOwnershipType(selectedOwnershipType);
-        }
-        function updateAuthSection() {
-            var authSection = document.getElementById('authSection');
-            if (!authSection) return;
-            if (requiresAuth && numberType === 'MOBILE' && selectedOwnershipType === 'self') {
-                authSection.style.display = 'block';
-                if (!authCompleted) {
-                    var authStatus = document.getElementById('authStatus');
-                    if (authStatus) authStatus.innerHTML = '<button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>';
-                }
-            } else {
-                authSection.style.display = 'none';
-            }
-        }
-        function openPhoneAuth() {
-            if (typeof showToast === 'function') showToast('본인인증 팝업이 열립니다.', 'info');
-            setTimeout(function() {
-                authCompleted = true;
-                authInfo = { name: '홍길동', birthDate: '1990-01-01', carrier: 'SKT' };
-                var authStatus = document.getElementById('authStatus');
-                if (authStatus) authStatus.innerHTML = '<div class="auth-completed"><span>인증 완료</span><span style="font-size: 12px; color: var(--text-secondary);">(' + (authInfo.name) + ')</span></div>';
-                if (typeof showToast === 'function') showToast('본인인증이 완료되었습니다.', 'success'); else alert('본인인증 완료');
-            }, 1000);
-        }
-        function checkDuplicateNumber() { if (typeof showToast === 'function') showToast('사용 가능한 발신번호입니다.', 'success'); else alert('사용 가능한 발신번호입니다.'); }
-        function selectOwnershipType(type) {
-            selectedOwnershipType = type;
-            var doc = document.getElementById('documentSection');
-            if (!doc) return;
-            if (type === 'self') {
-                if (numberType === 'MOBILE') {
-                    doc.innerHTML = '<p style="font-size: 14px; color: var(--text-secondary);">휴대폰 번호는 추가 서류 제출이 필요하지 않습니다.</p>';
-                } else if (numberType === 'LANDLINE') {
-                    doc.innerHTML = '<label class="form-label required">통신서비스 이용증명원 또는 통신사 가입증명서</label><div class="file-upload-area" onclick="this.querySelector(\'input\').click()"><p>파일 선택</p><input type="file" style="display:none" accept="' + fileAccept + '"></div>';
-                } else {
-                    doc.innerHTML = '<p style="color: var(--text-secondary);">발신번호를 입력해 주세요.</p>';
-                }
-            } else if (type === 'others') {
-                doc.innerHTML = '<label class="form-label required">통신서비스 이용증명원</label><div class="file-upload-area"><p>파일 선택</p><input type="file" accept="' + fileAccept + '"></div><label class="form-label required" style="margin-top:16px">위임장</label><div class="file-upload-area"><p>파일 선택</p><input type="file" accept="' + fileAccept + '"></div><label class="form-label required" style="margin-top:16px">재직증명서 또는 신분증</label><div class="file-upload-area"><p>파일 선택</p><input type="file" accept="' + fileAccept + '"></div>';
-            } else {
-                doc.innerHTML = '<label class="form-label required">통신서비스 이용증명원</label><div class="file-upload-area"><p>파일 선택</p><input type="file" accept="' + fileAccept + '"></div><label class="form-label required" style="margin-top:16px">위임장</label><div class="file-upload-area"><p>파일 선택</p><input type="file" accept="' + fileAccept + '"></div><label class="form-label required" style="margin-top:16px">위임 업체 사업자등록증</label><div class="file-upload-area"><p>파일 선택</p><input type="file" accept="' + fileAccept + '"></div><label class="form-label required" style="margin-top:16px">수임 업체 사업자등록증</label><div class="file-upload-area"><p>파일 선택</p><input type="file" accept="' + fileAccept + '"></div>';
-            }
-            updateAuthSection();
-        }
-        function nextCallerStep(step, dir) {
-            var d = (dir === -1) ? -1 : 1;
-            if (d > 0 && step === 2 && requiresAuth && selectedOwnershipType === 'self' && !authCompleted) {
-                if (typeof showToast === 'function') showToast('본인인증을 완료해 주세요.', 'warning'); else alert('본인인증을 완료해 주세요.');
-                return;
-            }
-            document.getElementById('callerStep' + callerStep + 'Content').classList.remove('active');
-            document.getElementById('callerStep' + callerStep).classList.remove('active');
-            if (d > 0) document.getElementById('callerStep' + callerStep).classList.add('completed');
-            callerStep = callerStep + d;
-            if (callerStep < 1) callerStep = 1;
-            if (callerStep > 4) callerStep = 4;
-            document.getElementById('callerStep' + callerStep + 'Content').classList.add('active');
-            document.getElementById('callerStep' + callerStep).classList.add('active');
-            if (callerStep === 2 && !selectedOwnershipType) selectOwnershipType('self');
-            if (callerStep === 4) {
-                document.getElementById('reviewCompanyName').textContent = document.getElementById('companyName').value || '-';
-                document.getElementById('reviewBusinessNumber').textContent = document.getElementById('businessNumber').value || '-';
-                document.getElementById('reviewBusinessAddress').textContent = getBusinessAddressFull() || '-';
-                document.getElementById('reviewCallerNumber').textContent = document.getElementById('callerNumberInput').value || '-';
-                document.getElementById('reviewOwnershipType').textContent = selectedOwnershipType === 'self' ? '본인(자사) 명의' : selectedOwnershipType === 'others' ? '타인 명의' : '타사 명의';
-                document.getElementById('reviewPurpose').textContent = document.getElementById('purposeInput').value || '-';
-                document.getElementById('reviewContact').textContent = document.getElementById('contactPhoneInput').value || '-';
-            }
-        }
-        function submitConvertAndCaller() {
             if (typeof showToast === 'function') {
-                showToast('개인사업자 전환 신청 및 발신번호 등록이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다.', 'success');
+                showToast('개인사업자 전환 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다.', 'success');
             } else {
-                alert('개인사업자 전환 신청 및 발신번호 등록이 완료되었습니다.');
+                alert('개인사업자 전환 신청이 완료되었습니다.');
             }
             setTimeout(function() { window.location.href = 'mypage.html#profile'; }, 1500);
         }
@@ -383,10 +184,9 @@
     <script>
         const specData = [
             { selector: '.main-content a.btn-outline', title: '내 정보 수정으로 돌아가기', position: { top: '-5px', left: '-10px' }, description: '내 정보 수정 페이지로 이동', function: 'mypage.html#profile 이동' },
-            { selector: '.page-header h2', title: '페이지 제목', position: { top: '-5px', left: '-10px' }, description: '개인사업자 회원 전환', function: '페이지 목적 표시', behavior: ['기업 정보 등록 + 발신번호 등록까지 포함 (기존 발신번호 등록 프로세스에서 기업회원일 경우 프로세스 그대로 적용)'] },
+            { selector: '.page-header h2', title: '페이지 제목', position: { top: '-5px', left: '-10px' }, description: '개인사업자 회원 전환', function: '페이지 목적 표시', behavior: ['기업 정보 등록 후 전환 신청'] },
             { selector: '.alert.alert-warning', title: '전환 불가 안내', position: { top: '5px', left: '10px' }, description: '사업자 전환 후 되돌리기 불가', function: '주의 안내' },
-            { selector: '.alert.alert-danger', title: '발신번호 초기화 안내', position: { top: '5px', left: '10px' }, description: '전환 시 기존 발신번호 초기화', function: '안내 문구' },
-            { selector: '#businessInfoCard', title: '1. 기업 정보 등록 카드', position: { top: '10px', left: '10px' }, description: '기업명, 사업자등록번호, 대표자명, 사업장 주소(3칸), 사업자등록증', function: '기업 정보 입력', behavior: ['기업명/사업자등록번호/대표자명/사업장 주소 필수', '사업장 주소: 우편번호 검색 → 주소 자동입력, 상세주소 직접입력(3칸)', '사업자등록번호 확인 버튼', '다음: 발신번호 등록 클릭 시 발신번호 단계로 이동'] },
+            { selector: '#businessInfoCard', title: '기업 정보 등록 카드', position: { top: '10px', left: '10px' }, description: '기업명, 사업자등록번호, 대표자명, 사업장 주소(3칸), 사업자등록증', function: '기업 정보 입력', behavior: ['기업명/사업자등록번호/대표자명/사업장 주소 필수', '사업장 주소: 우편번호 검색 → 주소 자동입력, 상세주소 직접입력(3칸)', '사업자등록번호 확인 버튼', '전환 신청 클릭 시 유효성 검증 후 전환 신청 완료'] },
             { selector: '#businessZipcode', title: '사업장 우편번호', position: { top: '-5px', left: '-10px' }, function: '우편번호 검색 버튼 클릭 시 자동 입력' },
             { selector: 'button[onclick="openBusinessAddressSearch()"]', title: '사업장 주소 검색', position: { top: '-5px', left: '-10px' }, function: '주소 검색(우편번호 API). 선택 시 우편번호·주소 자동 입력' },
             { selector: '#businessAddressDetail', title: '사업장 상세주소', position: { top: '-5px', left: '-10px' }, function: '상세주소 직접 입력' },
@@ -394,17 +194,7 @@
             { selector: '#businessNumber', title: '사업자등록번호 입력', position: { top: '-5px', left: '-10px' }, function: '사업자등록번호 입력 및 확인', behavior: ['확인 버튼으로 유효성 검증'], tags: [{ text: '필수', type: 'required' }] },
             { selector: '#repName', title: '대표자명 입력', position: { top: '-5px', left: '-10px' }, function: '대표자명 입력', tags: [{ text: '필수', type: 'required' }] },
             { selector: '#businessLicense', title: '사업자등록증 사본', position: { top: '-5px', left: '-10px' }, function: '파일 업로드 (PDF/JPG/PNG)', tags: [{ text: '필수', type: 'required' }] },
-            { selector: '#businessInfoCard .btn-primary', title: '다음: 발신번호 등록 버튼', position: { top: '-5px', right: '-10px' }, function: 'goToCallerStep1() 호출', behavior: ['기업명/사업자번호/대표자명 유효성 검증', '통과 시 발신번호 등록 카드 표시'] },
-            { selector: '#callerSectionCard', title: '2. 발신번호 등록 카드', position: { top: '10px', left: '10px' }, description: '기업회원 발신번호 등록 4단계', function: '발신번호 등록 (기업회원 프로세스 동일)', behavior: ['Step1 기본정보 → Step2 인증/서류 → Step3 연락처 → Step4 제출', '본인(자사) 명의+휴대폰 시 본인인증 필수'] },
-            { selector: '.step-indicator', title: '발신번호 등록 단계 표시', position: { top: '-10px', left: '50%' }, function: '1~4단계 진행 표시' },
-            { selector: '#callerNumberInput', title: '발신번호 입력', position: { top: '-5px', left: '-10px' }, function: '발신번호 입력 및 중복확인', tags: [{ text: '필수', type: 'required' }] },
-            { selector: '#purposeInput', title: '발신번호 용도', position: { top: '-5px', left: '-10px' }, function: '용도 입력 (예: 마케팅팀)' },
-            { selector: '#authSection', title: '본인인증 섹션', position: { top: '5px', left: '10px' }, description: '휴대폰+본인(자사) 명의 시 표시', function: '휴대폰 본인인증', behavior: ['본인(자사) 명의 및 휴대폰 번호일 때만 노출', '인증 완료 후 다음 단계 가능'] },
-            { selector: '#documentSection', title: '서류 제출 섹션', position: { top: '5px', left: '10px' }, function: '명의 구분별 필수 서류 업로드', behavior: ['본인(자사)+휴대폰: 서류 불필요', '본인(자사)+유선: 통신서비스 이용증명원', '타인/타사: 위임장 등 추가 서류'] },
-            { selector: '#contactPhoneInput', title: '연락처(휴대폰)', position: { top: '-5px', left: '-10px' }, function: '승인/반려 결과 수신 연락처', tags: [{ text: '필수', type: 'required' }] },
-            { selector: '#contactEmailInput', title: '결과 수신 이메일', position: { top: '-5px', left: '-10px' }, function: '선택 입력' },
-            { selector: '#reviewCompanyName', title: '최종 확인 영역', position: { top: '5px', left: '10px' }, description: '기업명/사업자번호/사업장 주소/발신번호 등 요약', function: '제출 전 확인', behavior: ['사업장 주소(reviewBusinessAddress) 항목 포함. 돌아가기·취소·전환 완료 시 mypage.html#profile 이동'] },
-            { selector: 'button[onclick="submitConvertAndCaller()"]', title: '전환 신청 및 발신번호 등록', position: { top: '-5px', right: '-10px' }, function: 'submitConvertAndCaller()', behavior: ['Toast/Alert 완료 메시지', 'mypage.html#profile로 이동'], api: 'POST 전환+발신번호 등록' }
+            { selector: '#businessInfoCard .btn-primary', title: '전환 신청 버튼', position: { top: '-5px', right: '-10px' }, function: 'submitConvert() 호출', behavior: ['기업명/사업자번호/대표자명/사업장 주소 유효성 검증', '통과 시 전환 신청 완료 후 mypage.html#profile 이동'], api: 'POST 전환 신청' }
         ];
         initSpecOverlay(specData);
     </script>

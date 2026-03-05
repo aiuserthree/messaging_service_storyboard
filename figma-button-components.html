@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>버튼 컴포넌트 - Figma용</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            padding: 48px;
+            color: #1e293b;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 32px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .row:last-child { margin-bottom: 0; }
+
+        /* Primary */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+        .btn-primary-lg {
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+        }
+        .btn-primary-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        /* Outline */
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background: transparent;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+        .btn-outline-lg {
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+        }
+        .btn-outline-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 6px;
+        }
+
+        /* Pill (CTA style) */
+        .btn-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+        .btn-pill:hover {
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+        }
+
+        /* Ghost */
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background: #f1f5f9;
+            color: #475569;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-ghost:hover {
+            background: #e2e8f0;
+        }
+
+        /* Danger */
+        .btn-danger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .label-inline {
+            font-size: 12px;
+            color: #94a3b8;
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <h1>버튼 컴포넌트</h1>
+    <p class="subtitle">이 페이지를 html.to.design으로 캡처하여 Figma에 가져오세요.</p>
+
+    <div class="section">
+        <div class="section-title">Primary</div>
+        <div class="row">
+            <span class="label-inline">Large</span>
+            <button type="button" class="btn-primary btn-primary-lg">견적 문의하기</button>
+        </div>
+        <div class="row">
+            <span class="label-inline">Medium</span>
+            <button type="button" class="btn-primary">신청하기</button>
+        </div>
+        <div class="row">
+            <span class="label-inline">Small</span>
+            <button type="button" class="btn-primary btn-primary-sm">저장</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Outline</div>
+        <div class="row">
+            <span class="label-inline">Large</span>
+            <button type="button" class="btn-outline btn-outline-lg">서비스 소개서 받기</button>
+        </div>
+        <div class="row">
+            <span class="label-inline">Medium</span>
+            <button type="button" class="btn-outline">취소</button>
+        </div>
+        <div class="row">
+            <span class="label-inline">Small</span>
+            <button type="button" class="btn-outline btn-outline-sm">더보기</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Pill (CTA)</div>
+        <div class="row">
+            <button type="button" class="btn-pill">견적 문의하기</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Ghost</div>
+        <div class="row">
+            <button type="button" class="btn-ghost">자세히 보기 →</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Danger</div>
+        <div class="row">
+            <button type="button" class="btn-danger">삭제</button>
+        </div>
+    </div>
+</body>
+</html>
