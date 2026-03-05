@@ -7,8 +7,7 @@
     <script src="js/header.js"></script>
     <link rel="stylesheet" href="css/common.css">
     <style>
-        .support-center { max-width: 900px; margin: 0 auto; padding-bottom: 48px; }
-        .page-header { margin-bottom: 28px; }
+        .page-header { margin-bottom: 32px; }
         .page-header h2 { font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
         .page-description { color: var(--text-secondary); font-size: 14px; }
         .quick-actions { display: flex; justify-content: center; gap: 40px; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border-color); flex-wrap: wrap; }
@@ -35,14 +34,14 @@
 </head>
 <body>
     <div class="app-container">
-        <script>document.write(createHeader(''));</script>
+        <script>document.write(createHeader('support'));</script>
         <main class="main-content">
-            <div class="support-center">
-                <div class="page-header">
-                    <h2>고객센터</h2>
-                    <p class="page-description">톡벨의 공지사항 및 문의를 확인하실 수 있습니다.</p>
-                </div>
-                <div class="support-grid">
+            <div class="page-header">
+                <h2>고객센터</h2>
+                <p class="page-description">톡벨의 공지사항 및 문의를 확인하실 수 있습니다.</p>
+            </div>
+
+            <div class="support-grid">
                     <div class="support-block" id="section-notice">
                         <div class="support-block-header">공지사항 <a href="support-notice.html" class="expand-btn" title="공지사항 목록">+</a></div>
                         <div class="support-block-body">
@@ -99,7 +98,6 @@
                         <span>환불신청</span>
                     </a>
                 </div>
-            </div>
         </main>
     </div>
     <script>
