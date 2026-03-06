@@ -1201,9 +1201,23 @@ body {
                         <tr><th>사업장 주소</th><td>서울시 강남구 테헤란로 123</td></tr>
                     </table>
                 </div>
+                <div class="form-section" style="margin-top: 24px; padding-top: 20px;">
+                    <h3 class="form-section-title" style="margin-bottom: 16px;">세금계산서 정보</h3>
+                    <div class="form-group">
+                        <label class="form-label">담당자 이름</label>
+                        <input type="text" class="form-input" id="taxManagerName" value="홍길동" placeholder="담당자 이름">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">담당자 연락처</label>
+                        <input type="text" class="form-input" id="taxManagerPhone" value="010-1234-5678" placeholder="010-0000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">수신 이메일</label>
+                        <input type="email" class="form-input" id="taxManagerEmail" value="example@company.com" placeholder="세금계산서 수신 이메일">
+                    </div>
+                </div>
                 <div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
                     <button type="button" class="btn btn-primary" onclick="saveBusinessInfo()">저장하기</button>
-                    <button type="button" class="btn btn-primary" onclick="openModal('taxAutoApplyModal')">세금계산서 자동발행 신청</button>
                 </div>
             </div>
 
@@ -1274,36 +1288,6 @@ body {
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('phoneVerifyModal')">취소</button>
                 <button class="btn btn-primary" onclick="verifyPhone()">확인</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 세금계산서 자동발행 신청 모달 -->
-    <div class="modal-overlay" id="taxAutoApplyModal">
-        <div class="modal" style="max-width: 500px;">
-            <div class="modal-header">
-                <h3 class="modal-title">세금계산서 자동발행 신청</h3>
-                <button class="modal-close" onclick="closeModal('taxAutoApplyModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">세금계산서 담당자 정보를 입력 후 신청해 주세요.</p>
-                <div class="form-group">
-                    <label class="form-label required">담당자 이름</label>
-                    <input type="text" class="form-input" id="taxManagerName" value="홍길동" placeholder="담당자 이름">
-                </div>
-                <div class="form-group">
-                    <label class="form-label required">담당자 연락처</label>
-                    <input type="text" class="form-input" id="taxManagerPhone" value="010-1234-5678" placeholder="010-0000-0000">
-                </div>
-                <div class="form-group">
-                    <label class="form-label required">수신 이메일</label>
-                    <input type="email" class="form-input" id="taxManagerEmail" value="example@company.com" placeholder="세금계산서 수신 이메일">
-                    <div class="form-help">세금계산서가 발행되면 이메일로 자동 발송됩니다</div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeModal('taxAutoApplyModal')">취소</button>
-                <button class="btn btn-primary" onclick="submitTaxAutoApply()">신청</button>
             </div>
         </div>
     </div>
@@ -1608,8 +1592,8 @@ function updateMemberTypeDisplay() {
     if (memberTypeCard) memberTypeCard.style.display = type === 'business' ? 'none' : 'block';
 }
 function submitTaxAutoApply() {
-    if (typeof showToast === 'function') showToast('세금계산서 자동발행 신청이 완료되었습니다.', 'success');
-    closeModal('taxAutoApplyModal');
+    // 세금계산서 정보는 기업 정보 카드 내 인라인 필드로 수정·저장 (저장하기 버튼으로 함께 저장)
+    if (typeof showToast === 'function') showToast('저장되었습니다.', 'success');
 }
 
 // initDropdownMenus 함수는 header.js에서 제공됩니다
@@ -2104,7 +2088,7 @@ function submitTaxAutoApply() {
                 title: '테스트: 기업회원',
                 position: { top: '-5px', right: '-10px' },
                 function: '기업회원 화면으로 전환 (테스트용)',
-                behavior: ['기업 정보 카드 및 세금계산서 자동발행 신청 버튼 표시', '기업회원일 경우의 내정보수정 화면 확인용']
+                behavior: ['기업 정보 카드 및 세금계산서 정보(인라인) 영역 표시', '기업회원일 경우의 내정보수정 화면 확인용']
             },
             // ===== 기업 정보 (기업회원일 경우만 표시) =====
             {
@@ -2112,27 +2096,25 @@ function submitTaxAutoApply() {
                 title: '기업 정보 카드',
                 position: { top: '10px', left: '10px' },
                 function: '기업회원 전용 — 회사명·사업자번호·대표자·주소 표시',
-                behavior: ['기업회원일 때만 표시 (세금계산서 발행에 있던 기업정보를 내정보수정으로 이동)', '그 아래 세금계산서 자동발행 신청 버튼']
+                behavior: ['기업회원일 때만 표시 (세금계산서 발행에 있던 기업정보를 내정보수정으로 이동)', '사업장 주소 아래 세금계산서 정보(담당자 이름·연락처·수신 이메일) 수정 가능']
             },
             {
-                selector: '#businessInfoCard .btn-primary',
-                title: '세금계산서 자동발행 신청 버튼',
+                selector: '#businessInfoCard #taxManagerName, #taxManagerPhone, #taxManagerEmail',
+                title: '세금계산서 정보 (인라인)',
                 position: { top: '-5px', right: '-10px' },
-                function: '세금계산서 담당자 정보 입력 팝업 열기',
-                behavior: ['클릭 시 세금계산서 자동발행 신청 모달(taxAutoApplyModal) 표시', '담당자 이름·연락처·수신 이메일 입력 후 신청']
+                function: '담당자 이름·연락처·수신 이메일 입력 (수정 가능). 저장하기로 함께 저장.',
+                behavior: ['기업회원일 때만 표시', '세금계산서 발행 시 사용']
             },
-            // ===== 세금계산서 자동발행 신청 모달 =====
+            // ===== 세금계산서 정보 (모달 없음, 기업정보 카드 내 인라인) =====
             {
-                selector: '#taxAutoApplyModal',
-                title: '세금계산서 자동발행 신청 모달',
+                selector: '#businessInfoCard .form-section',
+                title: '세금계산서 정보 영역',
                 position: { top: '60px', left: '20px' },
-                function: '담당자 정보 입력 및 신청',
+                function: '담당자 이름·연락처·수신 이메일 수정 (사업장 주소 아래 인라인)',
                 behavior: [
-                    '【표시】',
+                    '【표시】 기업회원일 때만, 사업장 주소 아래',
                     '• 담당자 이름, 담당자 연락처, 수신 이메일 (세금계산서 자동 발송)',
-                    '【버튼】',
-                    '• 취소: 모달 닫기',
-                    '• 신청: submitTaxAutoApply() 호출 후 완료 Toast'
+                    '【저장】 저장하기 버튼으로 기업정보와 함께 저장'
                 ]
             },
             // ===== 저장/취소 버튼 =====
