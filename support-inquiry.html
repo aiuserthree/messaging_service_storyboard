@@ -501,7 +501,7 @@
                         <div class="balance-card-label" style="font-size: 12px; margin-top: 4px;">잔여 포인트 전액 환불</div>
                     </div>
                     <div class="balance-card">
-                        <div class="balance-card-label">마일리지</div>
+                        <div class="balance-card-label">차감 마일리지</div>
                         <div class="balance-card-value" id="refundMileage">92.6</div>
                         <div class="balance-card-label" style="font-size: 12px; margin-top: 4px;">환불 불가</div>
                     </div>
@@ -577,29 +577,33 @@
                                     <th>상태</th>
                                     <th>처리일</th>
                                     <th>비고</th>
+                                    <th>관리</th>
                                 </tr>
                             </thead>
                             <tbody id="refundHistoryBody">
-                                <tr>
+                                <tr data-id="1" data-status="completed">
                                     <td>2024-11-20 14:30</td>
                                     <td>90,000 P</td>
                                     <td><span class="badge badge-success">환불완료</span></td>
                                     <td>2024-11-22</td>
                                     <td>-</td>
+                                    <td>-</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="2" data-status="pending">
                                     <td>2024-11-15 10:00</td>
                                     <td>50,000 P</td>
                                     <td><span class="badge badge-warning">처리중</span></td>
                                     <td>-</td>
                                     <td>영업일 기준 7일 이내</td>
+                                    <td><button type="button" class="btn btn-sm btn-outline" onclick="cancelRefundRequest(2)">취소</button></td>
                                 </tr>
-                                <tr>
+                                <tr data-id="3" data-status="rejected">
                                     <td>2024-11-01 09:00</td>
                                     <td>200,000 P</td>
                                     <td><span class="badge badge-danger">반려</span></td>
                                     <td>2024-11-02</td>
                                     <td>계좌정보 불일치</td>
+                                    <td>-</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -715,6 +719,18 @@
             var fee = Math.floor(remaining * 0.1);
             var finalAmount = remaining - fee;
             window.location.href = 'payment-refund-complete.html?target=' + remaining + '&amount=' + finalAmount;
+        }
+
+        function cancelRefundRequest(id) {
+            if (!confirm('환불 신청을 취소하시겠습니까?')) return;
+            var row = document.querySelector('#refundHistoryBody tr[data-id="' + id + '"]');
+            if (row) {
+                row.querySelector('td:nth-child(3)').innerHTML = '<span class="badge badge-secondary">취소됨</span>';
+                row.querySelector('td:nth-child(6)').innerHTML = '-';
+                row.setAttribute('data-status', 'cancelled');
+            }
+            if (typeof showToast === 'function') showToast('환불 신청이 취소되었습니다.', 'success');
+            else alert('환불 신청이 취소되었습니다.');
         }
 
         // URL 해시에 따라 탭 표시
