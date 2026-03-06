@@ -492,13 +492,13 @@
             <div id="inquiryRefund" class="inquiry-tab-content" style="display: none;">
                 <div class="balance-summary" id="refundBalanceSummary" data-remaining-points="1000000">
                     <div class="balance-card highlight">
-                        <div class="balance-card-label">잔여 포인트</div>
+                        <div class="balance-card-label">환불 대상 포인트</div>
                         <div class="balance-card-value" id="refundRemainingPoints">1,000,000 P</div>
+                        <div class="balance-card-label" style="font-size: 12px; margin-top: 6px; color: var(--text-muted);">* 이벤트 또는 프로모션으로 지급된 포인트는 환불 대상이 아닙니다.</div>
                     </div>
                     <div class="balance-card">
                         <div class="balance-card-label">환불 금액 (수수료 10% 차감 후)</div>
                         <div class="balance-card-value" id="refundableAmount">900,000 P</div>
-                        <div class="balance-card-label" style="font-size: 12px; margin-top: 6px; color: var(--text-muted);">* 이벤트 또는 프로모션으로 지급된 포인트는 환불 대상이 아닙니다.</div>
                     </div>
                     <div class="balance-card">
                         <div class="balance-card-label">차감 마일리지</div>
@@ -508,9 +508,8 @@
                 </div>
                 <div class="card">
                     <h3 class="card-title" style="margin-bottom: 20px;">환불 신청</h3>
-                    <p class="form-help" style="margin-bottom: 8px;">잔여 포인트 전액이 환불됩니다. 수수료 10% 차감 후 금액이 계좌로 입금됩니다.</p>
-                    <p class="form-help" style="margin-bottom: 20px; color: var(--text-muted);">* 이벤트 또는 프로모션으로 지급된 포인트는 환불 대상이 아닙니다.</p>
-                    <div class="calc-row"><span>환불 대상 (잔여 포인트 전액)</span><span id="refundTargetDisplay">1,000,000 P</span></div>
+                    <p class="form-help" style="margin-bottom: 20px;">잔여 포인트 전액이 환불됩니다. 수수료 10% 차감 후 금액이 계좌로 입금됩니다.</p>
+                    <div class="calc-row"><span>환불 대상 포인트</span><span id="refundTargetDisplay">1,000,000 P</span></div>
                     <div class="calc-row"><span>환불 수수료 (10%)</span><span id="refundFeeDisplay">-100,000 P</span></div>
                     <div class="calc-row total"><span>실제 환불 금액</span><span id="refundFinalDisplay">900,000 P</span></div>
                     <div class="form-group" style="margin-top: 24px;">
