@@ -355,6 +355,13 @@
         }
         .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
         .form-row-2 .form-group { margin-bottom: 0; }
+        /* 기본 정보 영역: 입력란·인증 버튼 연한 회색 배경으로 통일 (첨부 이미지 스타일) */
+        #basicInfoSection .form-section-title { border-bottom-width: 1px; border-bottom-color: #e2e8f0; }
+        #basicInfoSection .form-input { background-color: #f1f5f9; color: var(--text-primary); }
+        #basicInfoSection .phone-verify { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+        #basicInfoSection .phone-verify .form-input { min-width: 0; }
+        #basicInfoSection .basic-info-auth-btn { padding: 12px 16px; font-size: 14px; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); background-color: #f1f5f9; color: var(--text-primary); cursor: pointer; }
+        #basicInfoSection .basic-info-auth-btn:hover { background-color: #e2e8f0; }
         .email-with-btn { display: grid; grid-template-columns: 1fr 100px; gap: 8px; align-items: center; }
         .email-with-btn .form-input { min-width: 0; }
         .email-with-btn .btn { justify-self: end; white-space: nowrap; }
@@ -427,35 +434,28 @@
                             <form id="profileForm">
                                 <div class="form-section" id="basicInfoSection">
                                     <h3 class="form-section-title">기본 정보</h3>
-                                    <div class="form-group">
-                                        <label class="form-label">아이디</label>
-                                        <input type="text" class="form-input" value="user@example.com" disabled style="background: var(--bg-color);">
-                                    </div>
                                     <div class="form-row-2">
                                         <div class="form-group">
-                                            <label class="form-label required">이름</label>
-                                            <input type="text" class="form-input" id="profileUserName" value="홍길동" required>
+                                            <label class="form-label">아이디</label>
+                                            <input type="text" class="form-input" value="jhcho5784@naver.com" disabled readonly>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label">생년월일</label>
-                                            <input type="date" class="form-input">
+                                            <label class="form-label required">이름</label>
+                                            <input type="text" class="form-input" id="profileUserName" value="조준형" required>
                                         </div>
                                     </div>
                                     <div class="form-row-2">
                                         <div class="form-group">
                                             <label class="form-label required">휴대폰번호</label>
                                             <div class="phone-verify">
-                                                <input type="tel" class="form-input" value="010-1234-5678" required>
-                                                <button type="button" class="btn btn-outline" onclick="openModal('phoneVerifyModal')" title="클릭 시 휴대폰 인증 모달 오픈. SMS 인증번호 발송·입력 후 인증 완료 처리.">인증</button>
+                                                <input type="tel" class="form-input" value="010-9872-5784" required>
+                                                <button type="button" class="basic-info-auth-btn" onclick="openModal('phoneVerifyModal')" title="클릭 시 휴대폰 인증 모달 오픈. SMS 인증번호 발송·입력 후 인증 완료 처리.">인증</button>
                                             </div>
                                             <div class="verify-status" id="phoneVerifyStatus" style="display: none;"><span>✓</span><span>인증 완료</span></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label required">이메일 주소</label>
-                                            <div class="flex gap-2 email-with-btn">
-                                                <input type="email" class="form-input" value="user@example.com" required>
-                                                <button type="button" class="btn btn-outline" onclick="checkEmail()" title="입력 이메일이 기존 회원과 중복인지 확인. 사용 가능/이미 사용 중 메시지.">중복 확인</button>
-                                            </div>
+                                            <label class="form-label">생년월일</label>
+                                            <input type="text" class="form-input" value="1981년 07월 09일" readonly>
                                         </div>
                                     </div>
                                 </div>
