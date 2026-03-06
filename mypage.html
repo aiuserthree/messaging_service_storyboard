@@ -529,6 +529,28 @@
                             <div class="form-section" style="margin-bottom: 0;">
                                 <h3 class="form-section-title">회원유형 전환</h3>
                                 <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">현재 회원유형: <strong style="color: var(--primary-color);" id="currentMemberTypeText">개인회원</strong></p>
+                                <!-- 회원유형 전환 신청 대기 시 노출 (실제 서비스에서는 API 응답/상태에 따라 표시) -->
+                                <div id="memberTypePendingNotice" class="alert alert-info member-type-pending-notice" style="display: none; margin-bottom: 20px;">
+                                    <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">회원유형 전환 신청이 접수되었습니다</div>
+                                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0 0 12px 0; line-height: 1.5;">검토 중입니다. 영업일 기준 1~3일 이내에 결과를 안내해 드립니다.</p>
+                                            <button type="button" class="btn btn-outline btn-sm" id="cancelMemberTypeApplyBtn" onclick="cancelMemberTypeApplication()" title="전환 신청 취소. 확인 후 취소 처리.">신청 취소</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 회원유형 전환 신청 반려 시 노출 (실제 서비스에서는 API 응답/상태에 따라 표시) -->
+                                <div id="memberTypeRejectedNotice" class="alert alert-warning member-type-rejected-notice" style="display: none; margin-bottom: 20px;">
+                                    <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">회원유형 전환 신청이 반려되었습니다</div>
+                                            <p id="memberTypeRejectedReason" style="font-size: 13px; color: var(--text-secondary); margin: 0 0 8px 0; line-height: 1.5;">제출하신 사업자등록증과 회원 정보가 일치하지 않습니다. 사업자등록증 사본을 다시 확인하여 수정 후 재신청해 주세요.</p>
+                                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">문의사항이 있으시면 고객센터(1588-0000)로 연락해 주세요.</p>
+                                        </div>
+                                    </div>
+                                </div>
                                 <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">아래 회원유형으로 전환하여 추가 서비스를 이용할 수 있습니다.</p>
                                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
                                     <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; text-align: center;">
@@ -541,6 +563,11 @@
                                         <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">세금계산서 발행 가능</div>
                                         <a href="mypage-convert-corporate.html" class="btn btn-outline btn-sm" title="개인/개인사업자→법인사업자 전환. 클릭 시 mypage-convert-corporate.html 이동.">전환 신청</a>
                                     </div>
+                                </div>
+                                <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+                                    <span style="font-size: 12px; color: var(--text-muted);">테스트: </span>
+                                    <button type="button" class="btn btn-sm btn-outline" onclick="toggleMemberTypePending()" id="togglePendingBtn" style="padding: 4px 10px; font-size: 12px;">대기 상태 보기</button>
+                                    <button type="button" class="btn btn-sm btn-outline" onclick="toggleMemberTypeRejected()" id="toggleRejectedBtn" style="padding: 4px 10px; font-size: 12px;">반려 상태 보기</button>
                                 </div>
                             </div>
                         </div>
@@ -1093,6 +1120,39 @@
             if (businessCard) businessCard.style.display = type === 'business' ? 'block' : 'none';
             if (memberTypeCard) memberTypeCard.style.display = type === 'business' ? 'none' : 'block';
         }
+        // 회원유형 전환 신청 대기 상태 표시 토글 (테스트/화면설계용. 실제 서비스에서는 API 응답에 따라 표시)
+        function toggleMemberTypePending() {
+            var notice = document.getElementById('memberTypePendingNotice');
+            var btn = document.getElementById('togglePendingBtn');
+            var rejectedNotice = document.getElementById('memberTypeRejectedNotice');
+            var rejectedBtn = document.getElementById('toggleRejectedBtn');
+            if (!notice || !btn) return;
+            var isHidden = notice.style.display === 'none' || !notice.style.display;
+            notice.style.display = isHidden ? 'block' : 'none';
+            btn.textContent = isHidden ? '대기 상태 숨기기' : '대기 상태 보기';
+            if (isHidden && rejectedNotice) { rejectedNotice.style.display = 'none'; if (rejectedBtn) rejectedBtn.textContent = '반려 상태 보기'; }
+        }
+        // 회원유형 전환 신청 반려 상태 표시 토글 (테스트/화면설계용. 실제 서비스에서는 API 응답에 따라 표시)
+        function toggleMemberTypeRejected() {
+            var notice = document.getElementById('memberTypeRejectedNotice');
+            var btn = document.getElementById('toggleRejectedBtn');
+            var pendingNotice = document.getElementById('memberTypePendingNotice');
+            var pendingBtn = document.getElementById('togglePendingBtn');
+            if (!notice || !btn) return;
+            var isHidden = notice.style.display === 'none' || !notice.style.display;
+            notice.style.display = isHidden ? 'block' : 'none';
+            btn.textContent = isHidden ? '반려 상태 숨기기' : '반려 상태 보기';
+            if (isHidden && pendingNotice) { pendingNotice.style.display = 'none'; if (pendingBtn) pendingBtn.textContent = '대기 상태 보기'; }
+        }
+        // 회원유형 전환 신청 취소 (확인 후 대기 상태 숨김. 실제 서비스에서는 취소 API 호출)
+        function cancelMemberTypeApplication() {
+            if (!confirm('전환 신청을 취소하시겠습니까?')) return;
+            var notice = document.getElementById('memberTypePendingNotice');
+            var btn = document.getElementById('togglePendingBtn');
+            if (notice) notice.style.display = 'none';
+            if (btn) btn.textContent = '대기 상태 보기';
+            if (typeof showToast === 'function') showToast('전환 신청이 취소되었습니다.', 'success');
+        }
         function checkEmail() { if (typeof showToast === 'function') showToast('사용 가능한 이메일입니다.', 'success'); }
         function openAddressSearch() { if (typeof showToast === 'function') showToast('주소 검색 창을 엽니다.', 'info'); }
         function openBusinessAddressSearch() { if (typeof showToast === 'function') showToast('주소 검색 창을 엽니다. 선택 시 우편번호·주소가 자동 입력됩니다.', 'info'); var z = document.getElementById('businessZipcode'); var b = document.getElementById('businessAddressBase'); if (z) z.value = '06134'; if (b) b.value = '서울특별시 강남구 테헤란로 123'; }
@@ -1505,6 +1565,9 @@
             { selector: '#saveBusinessInfoBtn', title: '25-1. 기업정보 저장하기', position: { top: '-5px', left: '-10px' }, function: '기업 정보(회사명·사업자번호·대표자·사업장 주소) 수정 사항 저장. saveBusinessInfo() 호출.', behavior: ['검증 후 저장 API 호출', '성공 시 안내 메시지'] },
             { selector: 'button[onclick="openModal(\'taxAutoApplyModal\')"]', title: '26. 세금계산서 자동발행 신청', position: { top: '-5px', right: '-10px' }, function: '기업회원 전용. 클릭 시 세금계산서 자동발행 신청 모달 오픈. 담당자 정보 입력 후 신청.' },
             { selector: '#currentMemberTypeText', title: '27. 현재 회원유형 표시', position: { top: '-5px', right: '-10px' }, function: '현재 회원유형 표시(개인회원 등).' },
+            { selector: '#memberTypePendingNotice', title: '27-1. 회원유형 전환 신청 대기 안내', position: { top: '-5px', left: '-10px' }, function: '전환 신청 접수 후 검토 중일 때 동일 영역에 노출. 신청 취소 버튼으로 취소 가능.', behavior: ['실제 서비스에서는 API/전환 신청 상태에 따라 표시', '검토 기간 안내(영업일 1~3일)'] },
+            { selector: '#cancelMemberTypeApplyBtn', title: '27-2. 신청 취소', position: { top: '-5px', right: '-10px' }, function: '전환 신청 취소. 확인 후 취소 처리.', behavior: ['클릭 시 확인 다이얼로그', '취소 완료 시 대기 안내 숨김 및 토스트'] },
+            { selector: '#memberTypeRejectedNotice', title: '27-3. 회원유형 전환 신청 반려 안내', position: { top: '-5px', left: '-10px' }, function: '전환 신청이 반려된 경우 동일 영역에 노출. 반려 사유 안내. 아래 전환 신청 버튼으로 재신청 가능.', behavior: ['실제 서비스에서는 API/전환 신청 상태에 따라 표시', '반려 사유 문구 표시(#memberTypeRejectedReason)'] },
             { selector: '#memberTypeCard a[href="mypage-convert-business.html"]', title: '28. 개인사업자 전환 신청', position: { top: '-5px', right: '-10px' }, function: '개인→개인사업자 전환. 클릭 시 mypage-convert-business.html 이동.' },
             { selector: '#memberTypeCard a[href="mypage-convert-corporate.html"]', title: '29. 법인사업자 전환 신청', position: { top: '-5px', right: '-10px' }, function: '개인/개인사업자→법인사업자 전환. 클릭 시 mypage-convert-corporate.html 이동.' },
             { selector: '#panel-profile .alert-info', title: '30. 대행업체 안내', position: { top: '10px', left: '-10px' }, function: '대행업체 회원 시 계정 분리 안내. 고객센터 문의 유도.' },

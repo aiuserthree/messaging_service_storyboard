@@ -2761,7 +2761,7 @@ body {
                 selector: '.balance-tooltip-wrapper',
                 title: '잔액 표시 영역',
                 position: { top: '10px', right: '10px' },
-                function: '현재 보유 포인트 잔액 표시 및 상세 정보 툴팁',
+                function: '현재 보유 포인트 잔액 표시 및 상세 정보 툴팁. 클릭 시 결제관리-충전하기 페이지로 이동',
                 behavior: [
                     '【잔액 표시】',
                     '• "잔액 1,000,000 P" 형태로 표시',
@@ -2769,7 +2769,9 @@ body {
                     '【마우스 호버 시 툴팁 표시】',
                     '• 포인트: 충전 가능, 환불 가능한 금액',
                     '• 마일리지: 문자발송 시 사용가능 (환불불가)',
-                    '• 각 항목별 금액 표시'
+                    '• 각 항목별 금액 표시',
+                    '【클릭 시】',
+                    '• 결제관리 - 충전하기 페이지(payment-charge.html)로 이동'
                 ],
                 api: 'GET /api/users/me/balance'
             },
