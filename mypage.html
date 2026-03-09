@@ -1485,7 +1485,15 @@
             var periodBtns = document.querySelectorAll('.history-period-btns .history-period-btn');
             periodBtns.forEach(function(btn) { btn.classList.remove('active'); });
             if (period === 'custom') {
-                if (fromEl && toEl && fromEl.value && toEl.value) { /* 실제 API 호출 시 기간 전달 */ }
+                if (!fromEl || !toEl || !fromEl.value || !toEl.value) {
+                    alert('조회 기간(시작일, 종료일)을 선택해 주세요.');
+                    return;
+                }
+                if (toEl.value < fromEl.value) {
+                    alert('종료일은 시작일보다 이전일 수 없습니다.');
+                    return;
+                }
+                /* 실제 API 호출 시 기간 전달 */
                 return;
             }
             var activeBtn = document.querySelector('.history-period-btns .history-period-btn[data-period="' + period + '"]');
