@@ -189,6 +189,48 @@ function closeModal(modalId) {
     }
 }
 
+// 개인정보처리방침 시행일(이전 버전) 전환
+function switchPrivacyVersion(value) {
+    var currentEl = document.getElementById('privacyContentCurrent');
+    var previousEl = document.getElementById('privacyContentPrevious');
+    if (!currentEl || !previousEl) return;
+    if (value === 'current') {
+        currentEl.style.display = 'block';
+        previousEl.style.display = 'none';
+    } else {
+        currentEl.style.display = 'none';
+        previousEl.style.display = 'block';
+    }
+}
+
+// 이용약관 시행일(이전 버전) 전환
+function switchTermsVersion(value) {
+    var currentEl = document.getElementById('termsContentCurrent');
+    var previousEl = document.getElementById('termsContentPrevious');
+    if (!currentEl || !previousEl) return;
+    if (value === 'current') {
+        currentEl.style.display = 'block';
+        previousEl.style.display = 'none';
+    } else {
+        currentEl.style.display = 'none';
+        previousEl.style.display = 'block';
+    }
+}
+
+// 스팸방지정책 시행일(이전 버전) 전환
+function switchSpamVersion(value) {
+    var currentEl = document.getElementById('spamContentCurrent');
+    var previousEl = document.getElementById('spamContentPrevious');
+    if (!currentEl || !previousEl) return;
+    if (value === 'current') {
+        currentEl.style.display = 'block';
+        previousEl.style.display = 'none';
+    } else {
+        currentEl.style.display = 'none';
+        previousEl.style.display = 'block';
+    }
+}
+
 // 정책 모달 열기 함수
 function openPolicyModal(type) {
     const modalId = 'policyModal';
@@ -368,6 +410,13 @@ function openPolicyModal(type) {
         `,
         'terms': `
             <div style="line-height: 1.8; color: var(--text-primary);">
+                <div class="policy-version-selector" style="margin-bottom: 20px; padding: 12px 16px; background: var(--bg-color, #f8fafc); border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px;">
+                    <label for="termsVersionSelect" style="font-weight: 600;">시행일 선택: </label>
+                    <select id="termsVersionSelect" onchange="switchTermsVersion(this.value)" style="padding: 6px 12px; margin-left: 8px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">
+                        <option value="current">현재 (2026년 XX월 XX일)</option>
+                    </select>
+                </div>
+                <div id="termsContentCurrent">
             <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--primary-color);">제1장 총칙</h4>
             <p style="margin-bottom: 12px;"><strong>제1조(목적)</strong></p>
             <p style="margin-bottom: 8px; padding-left: 16px;">이 약관은 주식회사 아이뱅크(이하 ‘회사’라 합니다)가 운영하는 톡벨(TalkBell) 서비스의 이용과 관련하여 회사와 이용자의 권리∙의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
@@ -378,9 +427,11 @@ function openPolicyModal(type) {
             <li style="margin-bottom: 6px;">“비밀번호”라 함은 회원이 이용하는 이메일과 일치되는 회원임을 확인하고 비밀보호를 위해 회원 자신이 정한 문자 또는 숫자의 조합을 말합니다.</li>
             <li style="margin-bottom: 6px;">“서비스”라 함은 이용자가 전송하고자 하는 내용ㆍ정보 등을 문자메시지(SMS), 장문메시지(LMS), 멀티미디어메시지(MMS)의 형태로 변환하여 전송하거나 카카오톡을 통한 알림톡 또는 브랜드 메시지의 형태로 변환하여 전송하고 알림톡 또는 브랜드 메시지 전송 실패 시 대체발송 옵션 설정에 따라 문자메시지, 멀티미디어메시지 등의 형태로 변환하여 전송하는 서비스 및 회사가 추가 개발하거나 다른 회사와의 제휴계약 등을 통해 이용자에게 제공할 일체의 서비스를 의미합니다.</li>
             <li style="margin-bottom: 6px;">“이용자(회원)”라 함은 회사와 서비스 이용계약을 체결한 자를 말하며, 다음 각 목으로 구분됩니다.</li>
-            <li style="margin-bottom: 6px;">가)	개인 회원: 개인 자격으로 서비스를 이용하고자 하는 만 19세 이상의 대한민국 국적 거주민으로, 본인 명의 휴대폰 인증을 완료한 자</li>
-            <li style="margin-bottom: 6px;">나)	사업자 회원: 유효한 사업자등록증을 보유하고 기업 명의로 서비스를 이용하는 자</li>
-            <li style="margin-bottom: 6px;">다)	선거 회원: 선거 문자 서비스를 이용하기 위해 개인 회원에서 전환된 자로서, 공직선거법에 따른 예비 후보자, 후보자 및 선거사무소 당직자 등</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">가)	개인 회원: 개인 자격으로 서비스를 이용하고자 하는 만 19세 이상의 대한민국 국적 거주민으로, 본인 명의 휴대폰 인증을 완료한 자</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">나)	사업자 회원: 유효한 사업자등록증을 보유하고 기업 명의로 서비스를 이용하는 자</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">다)	선거 회원: 선거 문자 서비스를 이용하기 위해 개인 회원에서 전환된 자로서, 공직선거법에 따른 예비 후보자, 후보자 및 선거사무소 당직자 등</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
             <li style="margin-bottom: 6px;">“이용계약”이라 함은 서비스를 제공받기 위하여 회사와 회원 간에 체결하는 계약을 말합니다.</li>
             <li style="margin-bottom: 6px;">“이용제한”이라 함은 회사가 정한 일정한 요건에 따라 회원의 서비스 이용을 제한하는 것을 말합니다.</li>
             <li style="margin-bottom: 6px;">“휴면계정”이라 함은 12개월 이상 계속해서 로그인을 포함한 서비스 이용이 없는 아이디(ID)를 말합니다.</li>
@@ -404,7 +455,6 @@ function openPolicyModal(type) {
             <p style="margin-bottom: 8px; padding-left: 16px;">⑥ 이용자는 약관의 변경에 대하여 주의의무를 다하여야 하며 변경된 약관으로 인한 회원의 피해는 회사가 책임지지 않습니다.</p>
             <p style="margin-bottom: 12px;"><strong>제4조 (약관 이외의 준칙)</strong></p>
             <p style="margin-bottom: 8px; padding-left: 16px;">이 약관에서 정하지 아니한 사항과 이 약관의 해석에 관하여는 국내 관계법령 또는 상관례에 따릅니다.</p>
-            
             <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제2장 이용자의 이용계약 및 관리</h4>
             <p style="margin-bottom: 12px;"><strong>제5조(이용계약의 성립)</strong></p>
             <p style="margin-bottom: 8px; padding-left: 16px;">① 이용계약은 회원이 되고자 하는 자(이하 “가입신청자”)가 이용신청 및 약관에 대한 동의와 회사의 이용승낙으로 성립하며, 회사는 가입신청자의 이용 신청을 승낙을 한 때부터 서비스를 개시합니다.</p>
@@ -439,7 +489,6 @@ function openPolicyModal(type) {
             <p style="margin-bottom: 12px;"><strong>제9조 (이용자에 대한 통지)</strong></p>
             <p style="margin-bottom: 8px; padding-left: 16px;">① 회사가 이용자에 대한 통지를 하는 경우 이 약관에 별도 규정이 없는 한 이용자가 제공한 이메일, (휴대)전화번호, 알림톡 등으로 통지할 수 있습니다. 단, 회원이 이메일 또는 휴대전화번호의 부재, 변경, 오류 등 또는 정보를 허위로 제출하거나 변경된 정보를 회사에 알리지 않은 경우 회사는 회원이 제출한 정보로 통지를 발송한 때에 회원에게 도달된 것으로 봅니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 전체 또는 불특정 다수 이용자에 대한 통지의 경우 7일 이상 서비스 공지사항에 게시함으로써 제1항의 통지에 갈음할 수 있습니다.</p>
-            
             <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제3장 계약당사자의 권리 및 의무</h4>
             <p style="margin-bottom: 12px;"><strong>제10조(회사의 의무)</strong></p>
             <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 관련법과 본 약관이 금지하거나 미풍양속에 반하는 행위를 하지 않으며, 계속적이고 안정적으로 서비스를 제공하기 위하여 노력합니다.</p>
@@ -468,7 +517,6 @@ function openPolicyModal(type) {
             <p style="margin-bottom: 8px; padding-left: 16px;">③ 이용자는 정보통신망법에 따라 메시지 전송을 위하여 수신자의 사전 수신동의를 직접 얻어야 하며, 수신거부 요청에 대해서는 즉각적으로 처리해야 합니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">④ 이용자는 전기통신사업법 등 관련 법령에 따라 발신번호 사전등록을 완료하고 등록된 번호로만 메시지를 발송해야 합니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 이용자가 회사에 제공한 수신자 정보(휴대전화번호 등)는 적법한 절차에 따라 수집된 것이어야 하며, 이와 관련하여 발생하는 개인정보보호법 위반 등의 법적 책임은 전적으로 이용자에게 있습니다.</p>
-            
             <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제4장 이용자의 권리에 관한 조치</h4>
             <p style="margin-bottom: 8px; padding-left: 16px;">제12 조 (동의의 철회)</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">회사는 이용자가 서비스 화면에서 자신의 개인정보에 대한 수집, 이용 또는 제공에 대한 동의를 철회할 수 있도록 필요한 조치를 취해야 합니다.</p>
@@ -477,8 +525,6 @@ function openPolicyModal(type) {
             <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 접수된 사항을 신속하게 처리하며, 처리가 곤란한 경우 그 사유와 일정을 통보합니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">③ 고객센터의 운영 시간 및 상담 채널(전화, 1:1 문의 등)은 홈페이지 내 공지사항 또는 고객센터</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">안내 페이지에 따릅니다. 운영 시간 외 접수된 문의는 익영업일에 순차적으로 처리됩니다.</p>
-            
-            
             <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제5장 서비스의 이용</h4>
             <p style="margin-bottom: 12px;"><strong>제14조 (서비스의 제공 및 변경)</strong></p>
             <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 회원에게 문자(SMS, LMS, MMS), 카카오 알림톡, 카카오 브랜드 메시지 등 메시지 발송 및 부가 서비스를 제공합니다.</p>
@@ -540,21 +586,25 @@ function openPolicyModal(type) {
             <p style="margin-bottom: 8px; padding-left: 16px;">① 서비스에 대한 저작권 및 지적재산권은 회사에 귀속됩니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">② 회원이 서비스 페이지에 게시하거나 등록한 자료의 지적재산권은 회원에게 귀속됩니다. 단, 회사는 서비스 홈페이지의 게재권을 가지며 회사의 서비스 내에 한하여 회원의 게시물을 활용할 수 있습니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">③ 회원은 서비스를 이용하여 얻은 정보를 가공, 판매하는 행위 등 게재된 자료를 상업적으로 이용할 수 없으며 이를 위반하여 발생하는 제반 문제에 대한 책임은 회원에게 있습니다.</p>
-            
             <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제6장 요금 및 환불</h4>
             <p style="margin-bottom: 12px;"><strong>제21조 (요금 계산 및 결제)</strong></p>
             <p style="margin-bottom: 8px; padding-left: 16px;">① 회사가 제공하는 유료서비스 이용과 관련하여 회원이 납부하여야 할 요금은 이용료 안내에 게재한 바에 따릅니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">② 서비스 이용 요금은 선불 충전(포인트) 차감 방식을 원칙으로 합니다.</p>
-            <p style="margin-bottom: 8px; padding-left: 16px;">③ 메시지 발송 실패 시 차감된 포인트는 자동으로 복구(재적립)되는 것을 원칙으로 합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 메시지 발송 시 ‘메시지 발송 건수 X 발송 메시지 유형 별 단가’ 비용만큼 전체 차감 후, 발송 실패 건수에 대한 비용은 복구가 됩니다. 실패 시 차감된 포인트는 자동으로 복구(재적립)되는 것을 원칙으로 합니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">단, 다음 각 호의 경우에는 발송이 실패 처리되더라도 포인트가 복구되지 않습니다.</p>
             <ul style="padding-left: 32px; margin-bottom: 16px;">
             <li style="margin-bottom: 6px;">스팸성 문구 포함, KISA(한국인터넷진흥원)의 요청 등으로 인해 통신사가 강제로 발송을 차단한 경우</li>
             <li style="margin-bottom: 6px;">발송 결과가 ‘성공(Success)’인 경우 (수신자가 단말기 자체 기능으로 수신을 차단하여 확인하지 못한 경우 포함)</li>
+            <li style="margin-bottom: 6px;">존재하지 않거나 오탈자, 유효하지 않은 번호, 해지된 번호인 경우</li>
+            <li style="margin-bottom: 6px;">휴대폰 전원 꺼짐/비행기 모드/통신 불가로 인한 수신 실패</li>
+            <li style="margin-bottom: 6px;">수신자의 발신번호 차단</li>
+            <li style="margin-bottom: 6px;">통신사 또는 단말기의 스팸 필터로 인한 수신 실패</li>
+            <li style="margin-bottom: 6px;">톡벨 서버 내부 오류로 인한 발송 실패</li>
             </ul>
             <p style="margin-bottom: 8px; padding-left: 16px;">④ 이용자는 이용자의 관리 소홀 및 부주의로 인해 이용요금이 발생될 경우, 이에 대한 이용요금을 자신의 비용으로 모두 부담해야 합니다.</p>
             <p style="margin-bottom: 12px;"><strong>제22조 (포인트의 유효기간)</strong></p>
-            <p style="margin-bottom: 8px; padding-left: 16px;">① 유료 충전한 포인트의 유효기간은 마지막 충전일로부터 1년입니다.</p>
-            <p style="margin-bottom: 8px; padding-left: 16px;">② 무상으로 지급된 마일리지의 유효기간은 지급일로부터 1년입니다. 단, 마케팅 이벤트 등을 통해 지급된 한시적 마일리지의 경우 별도로 공지된 유효기간을 따릅니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 유료 충전한 포인트의 유효기간은 마지막 충전일로부터 5년입니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 무상으로 지급된 마일리지의 유효기간은 지급일로부터 5년입니다. 단, 마케팅 이벤트 등을 통해 지급된 한시적 마일리지의 경우 별도로 공지된 유효기간을 따릅니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">③ 유효기간이 경과한 포인트와 마일리지는 자동으로 소멸되며, 복구되지 않습니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">④ 회사는 포인트 및 마일리지의 소멸 예정일 30일 전, 7일 전, 1일 전에 회원에게 등록된 연락처(휴대전화 또는 이메일)로 소멸 내역을 통지합니다. 이는 마케팅 수신 동의 여부와 관계없이 발송될 수 있습니다. 다만, 제9조 [회원에 대한 통지]에 따라 회원이 이메일 또는 휴대전화번호의 부재, 변경, 오류 등 또는 정보를 허위로 제출하거나 변경된 정보를 회사에 알리지 않은 경우 회사는 회원이 제출한 정보로 통지를 발송한 때에 회원에게 도달된 것으로 봅니다.</p>
             <p style="margin-bottom: 12px;"><strong>제23조 (요금 등의 환불)</strong></p>
@@ -563,9 +613,11 @@ function openPolicyModal(type) {
             <ul style="padding-left: 32px; margin-bottom: 16px;">
             <li style="margin-bottom: 6px;">최소 환불 가능 금액: 잔여 포인트가 10,000포인트 이상 시 신청 가능합니다.</li>
             <li style="margin-bottom: 6px;">환불 수수료:</li>
-            <li style="margin-bottom: 6px;">전액 결제 취소: 충전 후 7일 이내이며, 포인트 및 마일리지를 전혀 사용하지 않은 경우</li>
-            <li style="margin-bottom: 6px;">환불: 충전 후 7일이 경과하였거나, 포인트를 일부라도 사용한 경우 잔여금액의 10%를 환불수수료로 공제 후 환불</li>
-            <li style="margin-bottom: 6px;">마일리지 사용 시 : 충전 후 7일 이내라 하더라도, 충전 시 지급된 무료 마일리지를 사용한 경우에는 해당 결제 건을 서비스를 이용한 것으로 간주하여 잔여 포인트의 10%를 환불수수료로 공제 후 환불</li>
+            </ul>
+            <p style="margin-bottom: 6px; padding-left: 32px;">전액 결제 취소: 충전 후 7일 이내이며, 포인트 및 마일리지를 전혀 사용하지 않은 경우</p>
+            <p style="margin-bottom: 6px; padding-left: 32px;">환불: 충전 후 7일이 경과하였거나, 포인트를 일부라도 사용한 경우 잔여금액의 10%를 환불수수료로 공제 후 환불</p>
+            <p style="margin-bottom: 6px; padding-left: 32px;">마일리지 사용 시 : 충전 후 7일 이내라 하더라도, 충전 시 지급된 무료 마일리지를 사용한 경우에는 해당 결제 건을 서비스를 이용한 것으로 간주하여 잔여 포인트의 10%를 환불수수료로 공제 후 환불</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
             <li style="margin-bottom: 6px;">선거 회원 특례: 선거 기간 종료 후 남은 잔액은 수수료 없이 100% 전액 환불합니다.</li>
             </ul>
             <p style="margin-bottom: 8px; padding-left: 16px;">② 무료 지급된 마일리지는 환불 대상이 아니며 소멸됩니다.</p>
@@ -583,12 +635,12 @@ function openPolicyModal(type) {
             <li style="margin-bottom: 6px;">포인트 유효기간이 만료된 경우</li>
             <li style="margin-bottom: 6px;">제16조 (서비스 이용의 제한 및 정지)에 의한 영구 이용정지의 경우</li>
             <li style="margin-bottom: 6px;">회원이 서비스 자진 탈퇴 시 잔여 포인트 환불을 포기한 경우</li>
+            <li style="margin-bottom: 6px;">잔여 포인트가 10,000 포인트 이하인 경우</li>
             </ul>
-            
             <h4 style="margin-top: 28px; margin-bottom: 12px; color: var(--primary-color);">제7장 손해배상 등</h4>
             <p style="margin-bottom: 12px;"><strong>제24조 (손해배상)</strong></p>
             <p style="margin-bottom: 8px; padding-left: 16px;">① 회사의 귀책사유로 인해 서비스를 이용하지 못한 경우, 회사는 회원이 입은 손해를 배상합니다.</p>
-            <p style="margin-bottom: 8px; padding-left: 16px;">② 손해배상은 회원이 서비스를 이용하지 못한 시간에 해당하는 이용 요금의 3배를 한도로 합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 손해배상은 회원이 서비스를 이용하지 못한 시간에 해당하는 이용 요금의 2배를 한도로 합니다.</p>
             <p style="margin-bottom: 12px;"><strong>제25조 (면책)</strong></p>
             <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 다음 각 호의 경우로 서비스를 제공할 수 없는 경우, 이로 인하여 이용자에게 발생한 손해에 대해서는 책임을 부담하지 않습니다.</p>
             <ul style="padding-left: 32px; margin-bottom: 16px;">
@@ -601,33 +653,37 @@ function openPolicyModal(type) {
             <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사는 무료로 제공하는 서비스(마일리지 발송 등) 이용과 관련하여 발생한 손해에 대해서는 책임을 지지 않습니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">④ 회사는 이용자가 게시 또는 전송한 자료의 내용에 대해서는 책임을 면합니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 회사는 이용자 상호간 또는 이용자와 제3자 상호간에 서비스를 매개로 하여 물품거래 등을 한 경우에는 책임을 면합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑥ 회사는 선거 회원의 선거 비용 보전을 위해 발송 결과 리포트, 세금계산서, 080 수신거부 내역, 입금 확인증 등 회사가 제공하는 표준 양식의 증빙 서류를 제공합니다. 이용자가 특정 양식을 별도로 요구하거나, 선거관리위원회 제출 과정에서 발생한 서류 누락, 기한 경과, 보전 거부 등에 대해서는 책임을 지지 않습니다.</p>
             <p style="margin-bottom: 12px;"><strong>제25조 (분쟁조정 및 관할법원)</strong></p>
             <p style="margin-bottom: 8px; padding-left: 16px;">① 본 약관은 대한민국법령에 의하여 규정되고 이행됩니다.</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">② 서비스 이용과 관련하여 발생한 분쟁에 대해 소송이 제기될 경우, 회사의 본사 소재지를 관할하는 법원을 전속 관할 법원으로 합니다.</p>
-            
-            
-            
-            
             <p style="margin-bottom: 8px; padding-left: 16px;">부칙</p>
             <p style="margin-bottom: 8px; padding-left: 16px;">본 약관은 2026년 XX월 XX일부터 시행합니다.</p>
+                </div>
+                <div id="termsContentPrevious" style="display: none;"></div>
             </div>
         `,
         'privacy': `
             <div style="line-height: 1.8; color: var(--text-primary);">
+                <div class="policy-version-selector" style="margin-bottom: 20px; padding: 12px 16px; background: var(--bg-color, #f8fafc); border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px;">
+                    <label for="privacyVersionSelect" style="font-weight: 600;">시행일 선택: </label>
+                    <select id="privacyVersionSelect" onchange="switchPrivacyVersion(this.value)" style="padding: 6px 12px; margin-left: 8px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">
+                        <option value="current">현재 (202X년 X월 X일)</option>
+                    </select>
+                </div>
+                <div id="privacyContentCurrent">
                 <p style="margin-bottom: 24px;">
-                    ㈜아이뱅크(이하 "회사")는 「개인정보보호법」 제30조에 따라 이용자(정보주체)의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보처리방침을 수립•공개합니다. 본 개인정보처리방침은 톡벨(TalkBell) 서비스(이하 "서비스")를 이용하는 이용자에게 적용됩니다.
+                    ㈜아이뱅크(이하 "회사")는 「개인정보보호법」 제30조에 따라 이용자(정보주체)의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보처리방침을 수립•공개합니다. 본 개인정보처리방침은 톡벨(TOKBELL) 서비스(이하 "서비스")를 이용하는 이용자에게 적용됩니다.
                 </p>
-                
+            
                 <p style="margin-bottom: 12px;"><strong>제1조 (개인정보의 처리목적)</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;">회사는 다음의 목적을 위하여 개인정보를 처리합니다.</p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;"><strong>서비스 제공 및 계약 이행</strong>: 회원가입, 본인확인, 메시지(SMS/LMS/MMS, 알림톡, 친구톡 등) 발송 및 결과 제공, 유료 서비스 이용에 따른 요금 정산 및 결제, 발신번호 등록 및 관리</li>
-                    <li style="margin-bottom: 6px;"><strong>회원 관리</strong>: 서비스 이용에 따른 본인확인, 개인식별, 불량회원의 부정 이용 방지와 비인가 사용 방지, 가입의사 확인, 휴면 계정 관리, 분쟁 조정을 위한 기록보존, 민원처리, 고지사항 전달</li>
-                    <li style="margin-bottom: 6px;"><strong>선거문자 서비스 제공</strong>: 공직선거법에 따른 선거 회원 자격 확인, 선거 운동 문자 발송 및 080 수신거부 관리, 선거관리위원회 제출용 증빙서류 발급</li>
-                    <li style="margin-bottom: 6px;"><strong>마케팅 및 광고 활용</strong>: 신규 서비스 개발, 접속 빈도 파악, 회원의 서비스 이용에 대한 통계, 이벤트 정보 및 참여기회 제공, 광고성 정보 제공(동의 시)</li>
-                </ul>
-                
+                <p style="margin-bottom: 8px; padding-left: 16px;">회사는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용하지 않으며, 이용목적이 변경되는 경우 반드시 사전에 이용자로부터 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">① 서비스 제공 및 계약 이행: 가입의사 확인, 회원제 서비스 이용에 따른 본인확인, 개인식별, 회원자격 유지·관리, 불량회원의 부정 이용 방지와 비인가 사용 방지, 중복가입 확인, 가입 및 가입횟수 제한, 분쟁 조정을 위한 기록 보전, 불만처리 등 민원처리, 고지사항 전달, 회원탈퇴 의사의 확인</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">② 회원 관리: 서비스 이용에 따른 본인확인, 개인식별, 불량회원의 부정 이용 방지와 비인가 사용 방지, 가입의사 확인, 휴면 계정 관리, 분쟁 조정을 위한 기록보존, 민원처리, 고지사항 전달</p>
+                <p style="margin-bottom: 16px; padding-left: 16px;">③ 신규 서비스 개발 마케팅 및 광고 활용: 신규 서비스 개발 및 특화, 맞춤형 서비스 제공, 기능 개선, 통계학적 특성에 따른 서비스 제공 및 광고 게재, 접속 빈도 파악, 회원의 서비스 이용에 대한 통계, 서비스의 유효성 확인, 광고성 정보 제공 및 이벤트참여 기회 제공 등</p>
+            
                 <p style="margin-bottom: 12px;"><strong>제2조 (개인정보의 처리 및 보유 기간)</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">회사는 원칙적으로 이용자로부터 별도 동의를 받은 기간 동안 개인정보를 보유 및 이용하며, 이용자가 회원탈퇴를 요청하거나 개인정보의 수집 및 이용 목적이 달성된 경우에는 개인정보를 지체 없이 파기합니다. 단, 관련 법령 및 회사 내부 방침에 따라 일정 기간 보관이 필요한 경우 아래와 같이 보관합니다.</p>
                 <p style="margin-bottom: 8px; padding-left: 16px;"><strong>① 법령에 따른 개인정보 처리 및 보유기간</strong></p>
                 <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;">
                     <tr style="background-color: var(--bg-color, #f8fafc);">
@@ -654,7 +710,7 @@ function openPolicyModal(type) {
                     </tr>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">국세기본법, 법인세법</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">세법상 거래 증빙에 관한 기록</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">세법상 거래 증빙(세금계산서 등)에 관한 기록</td>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">5년</td>
                     </tr>
                     <tr>
@@ -663,8 +719,7 @@ function openPolicyModal(type) {
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">3개월</td>
                     </tr>
                 </table>
-                
-                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>② 서비스 정책에 따른 처리 및 보유 기간</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>② 서비스 정책(회사 내부 방침)에 따른 처리 및 보유 기간</strong></p>
                 <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
                     <tr style="background-color: var(--bg-color, #f8fafc);">
                         <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">보존항목</th>
@@ -672,23 +727,29 @@ function openPolicyModal(type) {
                         <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">보존기간</th>
                     </tr>
                     <tr>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">계정 식별 정보 (아이디, 휴대전화번호, CI/DI)</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">재가입 방지, 부정 이용 방지, 수사 협조</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">탈퇴일로부터 12개월</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">계정 식별 정보 (아이디(이메일), 휴대전화번호, CI/DI)</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">회원 탈퇴 시 재가입 방지, 부정 이용 방지, 수사 협조</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">회원 탈퇴일로부터 12개월</td>
                     </tr>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">휴면 회원 정보</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">개인정보 보호 (별도 분리 보관)</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">서비스 미이용 회원의 개인정보 보호 (별도 분리 보관)</td>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">휴면 전환일로부터 5년</td>
                     </tr>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">발신번호 및 증빙서류</td>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">전기통신사업법에 따른 거짓번호 방지</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">서비스 종료 시까지</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">서비스 종료 시까지 (단, 해지 후 법령에 따름)</td>
                     </tr>
                 </table>
-                
+            
                 <p style="margin-bottom: 12px;"><strong>제3조 (처리하는 개인정보 항목)</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">회사는 서비스 제공을 위한 필요한 최소한의 개인정보를 수집하고 있습니다.</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>① 수집하는 개인정보 항목</strong></p>
+                <ul style="padding-left: 32px; margin-bottom: 8px;">
+                    <li style="margin-bottom: 4px;"><strong>필수정보</strong>: 서비스를 이용하기 위한 최소한의 정보</li>
+                    <li style="margin-bottom: 4px;"><strong>선택정보</strong>: 이용자에게 서비스의 추가 기능을 제공하기 위해 수집하는 정보</li>
+                </ul>
                 <p style="margin-bottom: 8px; padding-left: 16px;"><strong>가) 회원 유형별 수집 항목</strong></p>
                 <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;">
                     <tr style="background-color: var(--bg-color, #f8fafc);">
@@ -697,55 +758,66 @@ function openPolicyModal(type) {
                         <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">수집하는 개인정보 항목</th>
                     </tr>
                     <tr>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;" rowspan="2">개인 회원</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">개인 회원/ 카카오계정 가입 시</td>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">필수</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">이름, 비밀번호, 휴대폰번호, 이메일(ID), CI/DI</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">이름, 비밀번호, 휴대폰번호(발신번호), 휴대폰인증번호, 이메일(ID), 암호화된 이용자 확인값(CI), 중복가입확인정보(DI)</td>
                     </tr>
                     <tr>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">선택</td>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">마케팅/광고 정보 수신동의</td>
                     </tr>
                     <tr>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;" rowspan="2">사업자 회원</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">사업자 회원/ 단체 카카오계정 가입 시</td>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">필수</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">[대표] 이름, 비밀번호, 휴대폰번호, 이메일(ID), 회사명, 사업자등록번호, 대표자명, 사업장주소, 업태/종목, 담당자 정보, 사업자등록증 사본<br>[담당자] 이름, 비밀번호, 휴대폰번호, 이메일(ID)</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">이름, 비밀번호, 휴대폰번호, 휴대폰인증번호, 이메일(ID), 암호화된 이용자 확인값(CI), 중복가입확인정보(DI), 회사명, 사업자 등록번호(고유번호), 사업장주소, 업태, 종목, 계산서 수신 이메일, 담당자(이름, 휴대폰번호, 회사번호)</td>
                     </tr>
                     <tr>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">선택</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">마케팅/광고 정보 수신동의, 세금계산서 담당자 정보</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">선거 회원</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">필수</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">(예비)후보자 등록 증명서, 위임장, 선거사무소 전화번호, 담당자 재직증명서</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">마케팅/광고 정보 수신동의</td>
                     </tr>
                 </table>
-                
                 <p style="margin-bottom: 8px; padding-left: 16px;"><strong>나) 서비스 이용 과정에서 자동 수집되는 정보</strong></p>
-                <p style="margin-bottom: 16px; padding-left: 16px;">IP Address, 쿠키, 방문 일시, 서비스 이용 기록, 접속 로그, 불량 이용 기록, 브라우저 정보, 기기 정보</p>
-                
+                <p style="margin-bottom: 8px; padding-left: 16px;">IP Address, 쿠키, 방문 일시, 서비스 이용 기록, 접속 로그, 불량 이용 기록, 브라우저 정보, 기기 정보</p>
                 <p style="margin-bottom: 8px; padding-left: 16px;"><strong>다) 서비스 이용 및 결제 과정에서 추가 수집되는 정보</strong></p>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
+                    <tr style="background-color: var(--bg-color, #f8fafc);">
+                        <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">구분</th>
+                        <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">수집 항목</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">결제 및 환불</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">신용카드 정보(카드사, 번호 등), 은행 계좌 정보(은행명, 계좌번호, 예금주 - 환불 시), 입금자명</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">고객상담</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">상담 신청 내용(이메일, 연락처), 1:1 문의 내용 및 첨부파일</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">세금계산서</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">법인통장 사본(계좌번호, 계좌명)</td>
+                    </tr>
+                </table>
+                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>③ 개인정보 수집방법</strong></p>
                 <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;"><strong>결제 및 환불</strong>: 신용카드 정보, 은행 계좌 정보, 입금자명</li>
-                    <li style="margin-bottom: 6px;"><strong>발신번호 등록</strong>: 통신서비스이용증명원, 재직증명서, 위임장</li>
-                    <li style="margin-bottom: 6px;"><strong>고객상담</strong>: 상담 신청 내용, 1:1 문의 내용 및 첨부파일</li>
-                    <li style="margin-bottom: 6px;"><strong>세금계산서</strong>: 법인통장 사본</li>
+                    <li style="margin-bottom: 6px;">가) 홈페이지 회원가입, 서비스 이용, 서면양식, 팩스, 전화, 상담게시판, 이메일, 이벤트 응모, 배송요청</li>
+                    <li style="margin-bottom: 6px;">나) 제휴사로부터의 제공</li>
+                    <li style="margin-bottom: 6px;">다) 생성정보수집 툴 등</li>
                 </ul>
-                
+            
                 <p style="margin-bottom: 12px;"><strong>제4조 (개인정보의 제3자 제공)</strong></p>
-                <p style="margin-bottom: 24px; padding-left: 16px;">
-                    회사는 원칙적으로 이용자의 개인정보를 제3자에게 제공하지 않습니다. 다만, 이용자의 별도 동의가 있거나 법령의 규정에 의한 경우(수사기관의 요구 등)는 예외로 합니다.
-                </p>
-                
+                <p style="margin-bottom: 24px; padding-left: 16px;">회사는 원칙적으로 이용자의 개인정보를 제3자에게 제공하지 않습니다. 다만, 이용자의 별도 동의가 있거나 법령의 규정에 의한 경우(수사기관의 요구 등)는 예외로 합니다.</p>
+            
                 <p style="margin-bottom: 12px;"><strong>제5조 (개인정보 처리업무의 위탁에 관한 사항)</strong></p>
                 <p style="margin-bottom: 8px; padding-left: 16px;">회사는 원활한 서비스 제공을 위해 다음과 같이 개인정보 처리업무를 위탁하고 있습니다.</p>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;">
                     <tr style="background-color: var(--bg-color, #f8fafc);">
                         <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">수탁업체명</th>
                         <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">위탁업무 내용</th>
                     </tr>
                     <tr>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">결제대행사 (토스페이먼츠 등)</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">㈜이니시스</td>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">신용카드, 계좌이체, 가상계좌 결제 대행</td>
                     </tr>
                     <tr>
@@ -757,7 +829,7 @@ function openPolicyModal(type) {
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">알림톡, 친구톡(브랜드메시지) 발송 및 템플릿 검수</td>
                     </tr>
                     <tr>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">NICE평가정보 / KCB</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">NICE평가정보 / KCB (예시)</td>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">휴대폰 본인인증 및 실명확인</td>
                     </tr>
                     <tr>
@@ -765,45 +837,73 @@ function openPolicyModal(type) {
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">웹 로그 분석 (Google Analytics)</td>
                     </tr>
                 </table>
-                
+                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>① 개인정보의 국외 이전</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">회사는 서비스 운영을 위해 아래와 같이 개인정보를 국외로 이전하고 있습니다. 「개인정보 보호법」 제28조의8에 따라 이용자의 동의를 받거나, 국제 조약·협정 등 법적 근거에 따라 이전합니다.</p>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
+                    <tr style="background-color: var(--bg-color, #f8fafc);">
+                        <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">이전받는 자</th>
+                        <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">이전 국가</th>
+                        <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">이전 방법</th>
+                        <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">이용목적 및 보유기간</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">Infobip (인포빕)</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">네트워크를 통한 암호화 전송</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">글로벌 메시지 발송 시스템 연동 위탁 목적 달성 시까지</td>
+                    </tr>
+                </table>
+            
                 <p style="margin-bottom: 12px;"><strong>제6조 (개인정보 파기 절차 및 방법에 관한 사항)</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">회사는 원칙적으로 개인정보 처리목적이 달성된 경우에는 지체 없이 해당 개인정보를 파기합니다. 다만, 다른 법령에 따라 개인정보를 계속 보존해야하는 경우에는 "제2조 (개인정보의 처리 및 보유기간)"에 따라 보관한 후 파기합니다.</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>① 파기절차</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">회원이 회원가입 등을 위해 입력한 정보는 목적이 달성된 후 별도의 DB로 옮겨져 내부 방침 및 기타 관계 법령에 의한 정보보호 사유에 따라 일정 기간 저장 후 파기됩니다.</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;"><strong>② 파기방법</strong></p>
                 <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;"><strong>파기절차</strong>: 이용자가 입력한 정보는 목적 달성 후 별도의 DB에 옮겨져 내부 방침 및 기타 관련 법령에 따라 일정 기간 저장된 후 파기됩니다. 휴면 회원의 정보는 별도 분리하여 보관하며 5년 경과 시 파기합니다.</li>
-                    <li style="margin-bottom: 6px;"><strong>파기방법</strong>: 전자적 파일 형태는 복구 및 재생할 수 없는 기술적 방법을 사용하여 삭제, 종이 문서는 분쇄기로 분쇄하거나 소각합니다.</li>
+                    <li style="margin-bottom: 6px;">전자적 파일 형태: 복구 및 재생할 수 없는 기술적 방법을 사용하여 삭제</li>
+                    <li style="margin-bottom: 6px;">종이 문서: 분쇄기로 분쇄하거나 소각</li>
                 </ul>
-                
+            
                 <p style="margin-bottom: 12px;"><strong>제7조 (정보 주체와 법정대리인의 권리•의무 및 행사 방법)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">정보주체는 언제든지 개인정보 열람•정정•삭제•처리 정지 요구 등의 권리를 행사할 수 있습니다.</li>
-                    <li style="margin-bottom: 6px;">권리 행사는 서면, 전자우편, 모사전송(FAX) 등을 통하여 하실 수 있으며 회사는 이에 대해 지체 없이 조치하겠습니다.</li>
-                    <li style="margin-bottom: 6px;">만 14세 미만 아동의 개인정보는 수집하지 않음을 원칙으로 합니다.</li>
-                </ul>
-                
+                <p style="margin-bottom: 8px; padding-left: 16px;">① 정보주체는 언제든지 개인정보 열람•정정•삭제•처리 정지 요구 등의 권리를 행사할 수 있습니다.</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">② 권리 행사는 서면, 전자우편, 모사전송(FAX) 등을 통하여 하실 수 있으며 회사는 이에 대해 지체 없이 조치하겠습니다.</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">③ 권리 행사는 이용자(정보주체)의 법정대리인이나 위임을 받은 자 등 대리인을 통하여 하실 수 있습니다. 이 경우 회사가 안내하는 절차에 따라 위임장 등 필요 서류를 제출하여야 합니다.</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">④ 개인정보 열람 및 처리 정지 요구는 「개인정보 보호법」 제35조 제4항, 제37조 제2항에 의하여 정보주체의 권리가 제한 될 수 있습니다.</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 개인정보의 정정 및 삭제 요구는 다른 법령에서 그 개인정보가 수집 대상으로 명시되어 있는 경우에는 그 삭제를 요구할 수 없습니다.</p>
+                <p style="margin-bottom: 16px; padding-left: 16px;">⑥ 정보주체 권리에 따른 열람의 요구, 정정•삭제의 요구, 처리 정지의 요구 시 열람 등 요구를 한 자가 본인이거나 정당한 대리인인지를 확인합니다.</p>
+            
                 <p style="margin-bottom: 12px;"><strong>제8조 (개인정보의 안전성 확보 조치에 관한 사항)</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">회사는 개인정보의 안전성 확보를 위해 다음과 같은 조치를 취하고 있습니다.</p>
                 <p style="margin-bottom: 8px; padding-left: 16px;"><strong>① 기술적 대책</strong></p>
                 <ul style="padding-left: 32px; margin-bottom: 12px;">
-                    <li style="margin-bottom: 6px;">개인정보의 암호화: 비밀번호는 일방향 암호화, 주요 정보는 안전한 알고리즘으로 암호화 저장</li>
-                    <li style="margin-bottom: 6px;">통신 구간 암호화: SSL/TLS 프로토콜을 통한 전송 구간 암호화 적용</li>
-                    <li style="margin-bottom: 6px;">해킹 방지: 방화벽, 침입 탐지 시스템 운영 및 외부 접근 통제</li>
+                    <li style="margin-bottom: 6px;">이용자의 비밀번호는 암호화되어 있어 이용자 본인 외에는 알 수 없습니다.</li>
+                    <li style="margin-bottom: 6px;">암호화 통신을 통하여 네트워크 상에서 개인정보를 안전하게 전송할 수 있도록 하고 있습니다.</li>
+                    <li style="margin-bottom: 6px;">해킹이나 컴퓨터바이러스 등에 의해 이용자의 개인정보가 유출되거나 훼손되는 것을 막기 위해 최선을 다하고 있습니다.</li>
+                    <li style="margin-bottom: 6px;">개인정보의 훼손에 대비하여 자료를 수시로 백업하고 있고, 최신 백신프로그램을 이용하여 컴퓨터바이러스에 의한 피해를 방지하기 위한 조치를 취하고 있습니다.</li>
+                    <li style="margin-bottom: 6px;">시스템에 대한 접근통제, 권한 관리, 취약점 점검 등의 조치를 통해 보안성이 강화될 수 있도록 지속적으로 노력하고 있습니다.</li>
                 </ul>
                 <p style="margin-bottom: 8px; padding-left: 16px;"><strong>② 관리적 대책</strong></p>
                 <ul style="padding-left: 32px; margin-bottom: 12px;">
-                    <li style="margin-bottom: 6px;">접근 권한 관리: 개인정보 처리 인원을 최소한으로 제한 및 권한 관리</li>
-                    <li style="margin-bottom: 6px;">정기 교육: 개인정보 취급자 대상 정기적인 보호 교육 실시</li>
+                    <li style="margin-bottom: 6px;">위와 같은 노력 이외에 회원 스스로 제3자에게 비밀번호 등이 노출되지 않도록 주의하여야 합니다. 특히 비밀번호 등이 공공장소에 설치한 PC를 통해 유출되지 않도록 항상 유의하여야 합니다. 회원의 ID와 비밀번호는 반드시 본인만 사용하고 비밀번호를 자주 바꾸는 것이 좋습니다.</li>
+                    <li style="margin-bottom: 6px;">회원 본인의 부주의나 회사가 관리하지 않는 영역에서의 사고 등 회사의 귀책에 기인하지 않은 손해에 대해서는 회사는 책임을 지지 않습니다.</li>
+                    <li style="margin-bottom: 6px;">회원이 타인의 개인정보를 도용하여 회원가입 등을 하였음을 알게 된 때에는 지체없이 해당 아이디에 대한 서비스 이용정지 또는 회원탈퇴 등 필요한 조치를 취합니다.</li>
+                    <li style="margin-bottom: 6px;">회사는 회원의 개인정보에 대한 접근권한을 최소한의 인원으로 제한하고 있습니다.</li>
+                    <li style="margin-bottom: 6px;">회사는 개인정보처리자를 대상으로 개인정보 보호 의무 등에 관해 정기적인 교육을 실시하고 있습니다.</li>
+                    <li style="margin-bottom: 6px;">회사는 개인정보보호 업무를 전담하는 부서에서 개인정보처리방침 및 내부 규정 준수여부를 확인하여 문제가 발견될 경우, 즉시 바로 잡을 수 있도록 노력하고 있습니다.</li>
                 </ul>
                 <p style="margin-bottom: 8px; padding-left: 16px;"><strong>③ 물리적 대책</strong></p>
                 <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">전산실 및 자료 보관실 접근 통제</li>
+                    <li style="margin-bottom: 6px;">전산실, 자료보관실 등 개인정보를 보관하고 있는 물리적 보관 장소에 대한 출입통제 절차를 수립, 운영하고 있습니다.</li>
+                    <li style="margin-bottom: 6px;">개인정보가 포함된 서류, 보조저장매체 등을 잠금장치가 있는 안정한 장소에 보관하고 있습니다.</li>
                 </ul>
-                
+            
                 <p style="margin-bottom: 12px;"><strong>제9조 (개인정보의 자동수집 장치의 설치, 운영 및 그 거부에 관한 사항)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">회사는 이용자에게 맞춤화된 서비스를 제공하기 위해 쿠키(Cookie) 및 Google Analytics와 같은 분석 도구를 사용합니다.</li>
-                    <li style="margin-bottom: 6px;">이용자는 웹 브라우저 설정을 통해 쿠키 저장을 거부할 수 있습니다. 단, 쿠키 저장을 거부할 경우 로그인이 필요한 일부 서비스 이용에 어려움이 있을 수 있습니다.</li>
-                    <li style="margin-bottom: 6px;">Google Analytics의 경우, 개인을 식별할 수 없는 형태로 정보를 수집하며 이용자는 Google의 차단 기능을 통해 수집을 거부할 수 있습니다.</li>
-                </ul>
-                
+                <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 이용자에게 맞춤화된 서비스를 제공하기 위해 쿠키(Cookie) 및 Google Analytics와 같은 분석 도구를 사용합니다. 쿠키는 웹사이트가 이용자의 웹브라우저(인터넷익스플로러, 파이어폭스, 크롬 등)로 전송하는 소량의 정보입니다.</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">② 이용자는 웹 브라우저에서 [도구] &gt; [인터넷옵션] &gt; [개인정보] &gt; [설정]을 선택함으로써 모든 쿠키 저장을 거부할 수 있습니다. 단, 쿠키 저장을 거부할 경우 로그인이 필요한 일부 서비스 이용에 어려움이 있을 수 있습니다.</p>
+                <p style="margin-bottom: 24px; padding-left: 16px;">③ Google Analytics의 경우, 개인을 식별할 수 없는 형태로 정보를 수집하며 이용자는 Google의 차단 기능을 통해 수집을 거부할 수 있습니다.</p>
+            
                 <p style="margin-bottom: 12px;"><strong>제10조 (개인정보 보호책임자에 관한 사항)</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">회사는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 불만 처리 및 피해구제 등을 위하여 다음과 같이 개인정보 보호책임자를 지정하고 있습니다.</p>
                 <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
                     <tr style="background-color: var(--bg-color, #f8fafc);">
                         <th style="padding: 10px; border: 1px solid #e2e8f0; text-align: left;">구분</th>
@@ -812,19 +912,26 @@ function openPolicyModal(type) {
                     </tr>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">성명</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">[책임자 성명]</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">[담당자 성명]</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">소속/직위</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
                     </tr>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">전화</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;" colspan="2">1588-5412</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
                     </tr>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #e2e8f0;">이메일</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;" colspan="2">privacy@talkbell.co.kr / support@talkbell.co.kr</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;"></td>
                     </tr>
                 </table>
-                
+            
                 <p style="margin-bottom: 12px;"><strong>제11조 (정보주체의 권익 침해에 대한 구제 방법)</strong></p>
                 <p style="margin-bottom: 8px; padding-left: 16px;">정보주체는 개인정보침해로 인한 구제를 받기 위하여 아래의 기관에 문의할 수 있습니다.</p>
                 <ul style="padding-left: 32px; margin-bottom: 24px;">
@@ -833,99 +940,84 @@ function openPolicyModal(type) {
                     <li style="margin-bottom: 6px;">대검찰청 (www.spo.go.kr / 1301)</li>
                     <li style="margin-bottom: 6px;">경찰청 (ecrm.police.go.kr / 182)</li>
                 </ul>
-                
+            
                 <p style="margin-bottom: 12px;"><strong>제12조 (개인정보 열람청구 접수·처리하는 부서)</strong></p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">이용자는 개인정보보호법 제35조에 따른 개인정보의 열람 청구를 아래의 부서에 할 수 있습니다.</p>
                 <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">부서명: 톡벨 고객서비스팀</li>
-                    <li style="margin-bottom: 6px;">연락처: 1588-5412, support@talkbell.co.kr</li>
+                    <li style="margin-bottom: 6px;">부서명: 톡벨 고객서비스팀 (또는 운영팀)</li>
+                    <li style="margin-bottom: 6px;">연락처: [대표번호], [이메일주소]</li>
                     <li style="margin-bottom: 6px;">운영시간: 평일 09:30 ~ 17:30 (점심시간 11:30~13:00 제외)</li>
                 </ul>
-                
+            
                 <p style="margin-bottom: 12px;"><strong>제13조 (개인정보 처리방침의 변경에 관한 사항)</strong></p>
-                <p style="margin-bottom: 16px; padding-left: 16px;">
-                    본 개인정보처리방침의 내용 추가, 삭제 및 수정이 있을 시에는 최소 7일 전부터 홈페이지 공지사항을 통해 고지할 것입니다.
-                </p>
-                
-                <p style="margin-top: 24px; padding: 16px; background-color: var(--bg-color, #f8fafc); border-radius: 8px;">
-                    이 개인정보처리방침은 202X년 X월 X일부터 적용됩니다.
-                </p>
+                <p style="margin-bottom: 16px; padding-left: 16px;">본 개인정보처리방침의 내용 추가, 삭제 및 수정이 있을 시에는 최소 7일 전부터 홈페이지 공지사항을 통해 고지할 것입니다.</p>
+                <p style="margin-bottom: 8px; padding-left: 16px;">① 이 개인정보처리방침은 202X년 X월 X일부터 적용됩니다.</p>
+                <p style="margin-bottom: 16px; padding-left: 16px;">② 이전의 개인정보 처리방침은 위 시행일 선택에서 확인할 수 있습니다.</p>
+                </div>
+                <div id="privacyContentPrevious" style="display: none;"></div>
             </div>
+            
         `,
         'spam': `
             <div style="line-height: 1.8; color: var(--text-primary);">
-                <p style="margin-bottom: 16px;"><strong>제1조 (목적)</strong></p>
-                <p style="margin-bottom: 24px; padding-left: 16px;">이 정책은 주식회사 아이뱅크(이하 '회사')가 운영하는 톡벨(TalkBell) 서비스(이하 '서비스')의 이용과 관련하여 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」(이하 "정보통신망법") 및 한국인터넷진흥원(KISA)의 불법스팸 방지 가이드라인을 준수하여, 회사와 이용자의 권리∙의무 및 책임사항을 규정함을 목적으로 합니다.</p>
-                
-                <p style="margin-bottom: 12px;"><strong>제2조 (용어의 정의)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">① "스팸"이란 정보통신망을 통해 수신자의 명시적인 사전 동의 없이 일방적으로 전송되는 영리목적의 광고성 정보를 말합니다.</li>
-                    <li style="margin-bottom: 6px;">② "불법스팸"이란 정보통신망법 제50조부터 제50조의8을 위반하여 전송 또는 게시되는 영리목적의 광고성 정보를 말합니다.</li>
-                    <li style="margin-bottom: 6px;">③ "서비스"란 회사가 제공하는 문자메시지(SMS, LMS, MMS), 알림톡, 브랜드 메시지 등 모든 메시지 전송 서비스를 의미하며, 이용약관 제2조의 정의를 따릅니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제3조 (부정송신 방지 관련 개인정보 수집항목 및 이용)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">① 회사는 개인정보의 수집 시 관련법규에 따라 가입신청서 또는 이용약관에 그 수집범위 및 목적을 사전 고지합니다.</li>
-                    <li style="margin-bottom: 6px;">② 회사는 개인정보 처리방침에서 규정하고 있는 수집항목 및 이용목적 외에, 불법스팸 전송 및 발신번호 변작 등으로 서비스 이용정지 또는 계약해지 된 고객의 재가입을 제한하기 위하여 성명, 생년월일(법인등록번호·사업자등록번호), 전화번호, 정지 및 해지사유, IP주소, 접속로그 등의 정보를 해지일로부터 1년간 수집하여 보관할 수 있습니다.</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제4조 (부정송신 방지를 위한 이용신청 승낙의 제한)</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 다음 각 호의 하나에 해당하는 이용신청에 대하여는 승낙을 하지 아니합니다.</p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">1. 가입통신사를 불문하고 스팸 전송 또는 발신번호 변작을 사유로 이용정지 또는 계약해지를 당한 이후 1년이 경과하지 않은 개인 또는 법인(법인대표자 포함)</li>
-                    <li style="margin-bottom: 6px;">2. 방송통신위원회 또는 한국인터넷진흥원으로부터 스팸 또는 불법스팸 전송자로 확인되어 이용정지 또는 계약해지를 요청받았거나 과태료 부과 처분을 받고서 1년이 경과하지 않은 경우</li>
-                    <li style="margin-bottom: 6px;">3. 과학기술정보통신부 또는 한국인터넷진흥원으로부터 발신번호 변작으로 확인되어 이용정지 또는 계약해지를 요청받았거나 과태료 부과 처분을 받고서 1년이 경과하지 않은 경우</li>
-                    <li style="margin-bottom: 6px;">4. 서비스 개설 본래의 목적을 위반하여 대포폰(타인 명의 단말기)을 매개 또는 개통, 이용한 사실이 있거나 처벌받은 경우</li>
-                    <li style="margin-bottom: 6px;">5. 불법스팸 전송 등으로 과태료 처분을 받은 자가 질서위반행위규제법 제53조에 따라 신용정보 집중기관에 과태료 체납자로 등록된 경우</li>
-                    <li style="margin-bottom: 6px;">6. 휴대전화를 개통하여 불법스팸을 전송하는 자에게 이동전화 서비스 또는 이동전화 번호를 임대한 적이 있는 경우</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제5조 (회원의 의무 및 광고성 정보 전송 시 준수사항)</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;">① 회원은 서비스를 이용하여 광고성 정보를 전송함에 있어 정보통신망법 제50조 및 동법 시행령을 준수하여야 하며, 다음 각 호의 의무사항을 반드시 이행해야 합니다.</p>
-                <ul style="padding-left: 32px; margin-bottom: 16px;">
-                    <li style="margin-bottom: 6px;">1. 사전 수신 동의 획득: 광고성 정보를 전송하기 위해 수신자로부터 명시적인 사전 동의를 받아야 합니다.</li>
-                    <li style="margin-bottom: 6px;">2. 야간 광고 전송 제한: 오후 9시부터 그 다음 날 오전 8시까지는 별도의 야간 광고 전송에 대한 사전 동의를 받지 않는 한 광고성 정보를 전송할 수 없습니다.</li>
-                    <li style="margin-bottom: 6px;">3. 표기 의무 준수: 광고성 문자의 본문에는 다음 사항을 반드시 명시해야 합니다.<br>가) 시작되는 부분에 "(광고)" 문구 표시 (변칙 표기 금지: (광/고), (Ad), (광 고) 등 변칙 표기 불가)<br>나) 전송자의 명칭 및 연락처<br>다) 수신의 거부 또는 수신동의의 철회 의사를 쉽게 표시할 수 있는 조치 및 방법 (예: 무료수신거부 080 번호 등)</li>
-                    <li style="margin-bottom: 6px;">4. 비용 부담 금지: 수신자가 수신거부 또는 수신동의 철회를 할 때 발생하는 전화요금 등의 금전적 비용을 수신자가 부담하지 않도록 조치해야 합니다 (080 무료수신거부 서비스 등).</li>
-                    <li style="margin-bottom: 6px;">5. 정기적 수신동의 확인: 수신동의를 받은 날로부터 2년마다 수신자에게 수신동의 여부를 확인하여야 합니다.</li>
-                    <li style="margin-bottom: 6px;">6. 처리결과 통지: 수신자가 수신동의, 수신거부 또는 수신동의 철회 의사를 표시한 경우 14일 이내에 그 처리 결과를 수신자에게 통지해야 합니다.</li>
-                </ul>
-                <p style="margin-bottom: 8px; padding-left: 16px;">② 회원은 서비스를 이용하여 다음 각 호에 해당하는 내용을 발송하여서는 안 됩니다.</p>
-                <ul style="padding-left: 32px; margin-bottom: 16px;">
-                    <li style="margin-bottom: 6px;">1. 법 도박, 불법 대출, 보이스피싱, 스미싱, 불법 의약품, 마약, 성매매 알선 등 법률에서 금지하는 재화나 서비스에 대한 내용</li>
-                    <li style="margin-bottom: 6px;">2. 음란, 청소년 유해 매체물 등 공공질서와 미풍양속을 해치는 내용</li>
-                    <li style="margin-bottom: 6px;">3. 발신번호를 변작하거나(사전 등록된 번호 외 사용), 회신을 유도하기 위해 수신자를 기망하는 내용</li>
-                    <li style="margin-bottom: 6px;">4. 수신거부 또는 수신동의 철회를 회피·방해하는 기술적 조치를 하거나, 수신자의 연락처를 자동으로 생성하여 전송하는 행위</li>
-                </ul>
-                <p style="margin-bottom: 24px; padding-left: 16px;">③ 회원은 전기통신사업법 제84조의2에 따라 발신번호 사전등록 후 등록된 번호로만 문자메시지를 발송하여야 하며, 거짓으로 표시하여서는 안 됩니다.</p>
-                
-                <p style="margin-bottom: 12px;"><strong>제6조 (문자 발송량 제한)</strong></p>
-                <ul style="padding-left: 32px; margin-bottom: 24px;">
-                    <li style="margin-bottom: 6px;">① 회사는 스팸 방지를 위하여 개인 회원의 ID 당 문자 전송량을 1일 500통으로 제한합니다.</li>
-                    <li style="margin-bottom: 6px;">② 다만, 다음 각 호의 경우에는 예외를 인정할 수 있습니다.<br>1. 적법한 업무용 광고 발송, 동창회 연락 등 이용자 불편을 최소화하기 위하여 회사가 요구하는 증빙서류를 제출하고 승인을 얻은 경우</li>
-                </ul>
-                
-                <p style="margin-bottom: 12px;"><strong>제7조 (이용제한 및 계약해지)</strong></p>
-                <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 이용자가 다음 각 호의 어느 하나에 해당하는 경우, 즉시 서비스 이용을 정지하거나 계약을 해지할 수 있습니다.</p>
-                <ul style="padding-left: 32px; margin-bottom: 16px;">
-                    <li style="margin-bottom: 6px;">1. 방송통신위원회, 한국인터넷진흥원, 과학기술정보통신부 등 관계 기관이 불법스팸 전송 또는 발신번호 변작 사실을 확인하여 이용정지 또는 해지를 요청하는 경우</li>
-                    <li style="margin-bottom: 6px;">2. 이용자가 전송한 광고로 인해 회사의 서비스 제공에 장애를 야기하거나, 다수의 수신자로부터 스팸 신고가 접수된 경우</li>
-                    <li style="margin-bottom: 6px;">3. 제5조의 의무사항(표기의무 위반, 변칙 표기, 야간전송 제한 위반 등)을 위반하여 불법스팸을 전송한 사실이 확인된 경우</li>
-                    <li style="margin-bottom: 6px;">4. 타인의 명의를 도용하거나 발신번호를 변작하여 등록한 경우</li>
-                    <li style="margin-bottom: 6px;">5. 계약 시 제출한 자료 및 정보가 허위 또는 누락되었음이 확인 된 경우</li>
-                    <li style="margin-bottom: 6px;">6. 회사의 서비스 제공목적 외의 용도로 서비스를 이용하거나 제3자에게 임의로 서비스를 임대한 경우</li>
-                </ul>
-                <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 제1항에 따라 이용제한 또는 계약해지를 하는 경우 그 사실을 이용자에게 통지합니다. 단, 긴급하게 차단할 필요가 있는 경우 조치 후 통지할 수 있습니다.</p>
-                <p style="margin-bottom: 24px; padding-left: 16px;">③ 본 조에 따라 스팸 발송, 명의 도용 등 부정한 방법으로 이용 계약이 해지되는 경우, 회원이 보유한 잔여 포인트 및 마일리지는 즉시 소멸되며 환불되지 않습니다.</p>
-                
-                <p style="margin-bottom: 12px;"><strong>제8조 (기존거래관계에 따른 예외)</strong></p>
-                <p style="margin-bottom: 24px; padding-left: 16px;">회원은 재화 및 용역의 거래관계를 통하여 수신자로부터 직접 연락처를 수집한 경우, 거래가 종료된 날로부터 6개월 이내에는 해당 수신자의 별도 사전 동의 없이 동종의 재화 및 용역에 대한 영리 목적의 광고성 정보를 전송할 수 있습니다. 다만, 이 경우에도 제5조 제1항 제3호 및 제4호에 따른 표기 의무((광고)표시, 무료수신거부 등)는 반드시 준수하여야 합니다.</p>
-                
-                <p style="margin-bottom: 12px;"><strong>제9조 (면책)</strong></p>
-                <p style="margin-bottom: 24px; padding-left: 16px;">회원이 본 정책 및 정보통신망법을 위반하여 발송한 메시지로 인해 발생하는 모든 민·형사상 책임 및 과태료는 회원이 전적으로 부담하며, 회사는 고의 또는 중대한 과실이 없는 한 이에 대해 책임을 지지 않습니다.</p>
-                
-                <p style="margin-bottom: 12px;"><strong>부칙</strong></p>
-                <p style="margin-bottom: 16px; padding-left: 16px;">본 약관은 2026년 XX월 XX일부터 시행합니다.</p>
+                <div class="policy-version-selector" style="margin-bottom: 20px; padding: 12px 16px; background: var(--bg-color, #f8fafc); border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px;">
+                    <label for="spamVersionSelect" style="font-weight: 600;">시행일 선택: </label>
+                    <select id="spamVersionSelect" onchange="switchSpamVersion(this.value)" style="padding: 6px 12px; margin-left: 8px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">
+                        <option value="current">현재 (2026년 XX월 XX일)</option>
+                    </select>
+                </div>
+                <div id="spamContentCurrent">
+            <p style="margin-bottom: 12px;"><strong>제1조 (목적)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">이 정책은 주식회사 아이뱅크(이하 ‘회사’)가 운영하는 톡벨(TalkBell) 서비스(이하 ‘서비스’)의 이용과 관련하여 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」(이하 “정보통신망법”) 및 한국인터넷진흥원(KISA)의 불법스팸 방지 가이드라인을 준수하여, 회사와 이용자의 권리∙의무 및 책임사항을 규정함을 목적으로 합니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제2조 (용어의 정의)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① “스팸”이란 정보통신망을 통해 수신자의 명시적인 사전 동의 없이 일방적으로 전송되는 영리목적의 광고성 정보를 말합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② “불법스팸”이란 정보통신망법 제50조부터 제50조의8을 위반하여 전송 또는 게시되는 영리목적의 광고성 정보를 말합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ "서비스"란 회사가 제공하는 문자메시지(SMS, LMS, MMS), 알림톡, 브랜드 메시지 등 모든 메시지 전송 서비스를 의미하며, 이용약관 제2조의 정의를 따릅니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제3조 (부정송신 방지 관련 개인정보 수집항목 및 이용)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 개인정보의 수집 시 관련법규에 따라 가입신청서 또는 이용약관에 그 수집범위 및 목적을 사전 고지합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 개인정보 처리방침에서 규정하고 있는 수집항목 및 이용목적 외에, 불법스팸 전송 및 발신번호 변작 등으로 서비스 계약을 해지한 이용자의 서비스 이용신청에 대한 승낙을 유보하기 위하여 성명, 주민 번호(법인,사업자 등록번호), 전화번호, 해지사유 등의 정보를 수집할 수 있습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제4조 (이용신청 승낙의 제한)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 다음 각 호의 하나에 해당하는 이용신청에 대하여는 승낙을 하지 아니합니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">타인의 명의로 신청하는 경우</li>
+            <li style="margin-bottom: 6px;">필수자료 및 정보를 제출하지 않거나 허위로 제출하는 경우</li>
+            <li style="margin-bottom: 6px;">회사가 제공하는 모든서비스 중 어느 하나에 대하여 제6조 제1항에 의하여 회사로부터 계약해지를 당한 경우</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 제1항 각호에 따라 이용신청이 이루어지지 않는지 관리, 감독합니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제5조 (문자 발송량 제한)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 스팸 방지를 위하여 개인 회원의 ID 당 문자 전송량을 1일 500통으로 제한합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 다만, 다음 각 호의 경우에는 예외를 인정할 수 있습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">적법한 업무용 광고 발송, 동창회 연락 등 이용자 불편을 최소화하기 위하여 회사가 요구하는 증빙서류를 제출하고 승인을 얻은 경우</li>
+            </ul>
+            <p style="margin-bottom: 12px;"><strong>제6조 (이용제한 및 계약해지)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 이용자가 다음 각 호의 어느 하나에 해당하는 경우, 즉시 서비스 이용을 정지하거나 계약을 해지할 수 있습니다.</p>
+            <ul style="padding-left: 32px; margin-bottom: 16px;">
+            <li style="margin-bottom: 6px;">방송통신위원회, 한국인터넷진흥원, 과학기술정보통신부 등 관계 기관이 불법스팸 전송 또는 발신번호 변작 사실을 확인하여 이용정지 또는 해지를 요청하는 경우</li>
+            <li style="margin-bottom: 6px;">이용자가 전송한 광고로 인해 회사의 서비스 제공에 장애를 야기하거나, 야기할 우려가 있는 경우</li>
+            <li style="margin-bottom: 6px;">이용자가 전송하는 광고의 수신자가 스팸으로 신고하는 경우</li>
+            <li style="margin-bottom: 6px;">제5조의 의무사항(표기의무 위반, 변칙 표기, 야간전송 제한 위반 등)을 위반하여 불법스팸을 전송한 사실이 확인된 경우</li>
+            <li style="margin-bottom: 6px;">타인의 명의를 도용하거나 발신번호를 변작하여 등록한 경우</li>
+            <li style="margin-bottom: 6px;">계약 시 제출한 자료 및 정보가 허위 또는 누락되었음이 확인된 경우</li>
+            <li style="margin-bottom: 6px;">회사의 서비스 제공목적 외의 용도로 서비스를 이용하거나 제3자에게 임의로 서비스를 임대한 경우</li>
+            </ul>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 제1항에 따라 이용제한 또는 계약해지를 하는 경우 그 사실을 이용자에게 통지합니다. 단, 미리 통지하는 것이 곤란한 경우 이용제한 조치 후 통지할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사는 제1항의 규정에 의하여 서비스 계약을 해지한 이용자의 서비스 이용신청에 대한 승낙을 유보하기 위하여 성명, 주민번호(법인사업자등록번호), 전화번호, 해지사유 등의 정보를 1년간 보관할 수 있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 본 조에 따라 스팸 발송, 명의 도용 등 부정한 방법으로 이용 계약이 해지되는 경우, 회원이 보유한 잔여 포인트 및 마일리지는 즉시 소멸되며 환불되지 않습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제8조 (회사의 의무)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">① 회사는 서비스 제공과 관련하여 알고 있는 이용자의 개인정보를 본인의 승낙 없이 제3자에게 누설, 배포하지 않습니다. 다만, 관계법령에 의한 관계기관으로부터의 요청 등 법률의 규정에 따른 적법한 절차에 의한 경우에는 그러하지 않습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">② 회사는 서비스 제공목적에 맞는 서비스 이용 여부를 확인하기 위하여 상시적으로 모니터링을 실시합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">③ 회사는 스팸을 방지하기 위하여 스팸으로 인지되는 문자에 대해 필터링 또는 차단을 할 수있습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">④ 회사는 스팸 수신거부 처리 등 스팸 관련 민원을 자체적으로 처리하기 위한 고충처리창구를 운영합니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">⑤ 회사는 이용자가 불법 스팸을 전송한 사실을 확인한 경우, 한국인터넷진흥원 불법스팸 대응센터에 관련 자료를 첨부하여 신고할 수 있습니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제7조 (기존거래관계에 따른 예외)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">회원은 재화 및 용역의 거래관계를 통하여 수신자로부터 직접 연락처를 수집한 경우, 거래가 종료된 날로부터 6개월 이내에는 해당 수신자의 별도 사전 동의 없이 동종의 재화 및 용역에 대한 영리 목적의 광고성 정보를 전송할 수 있습니다. 다만, 이 경우에도 제5조 제1항 제3호 및 제4호에 따른 표기 의무((광고)표시, 무료수신거부 등)는 반드시 준수하여야 합니다.</p>
+            <p style="margin-bottom: 12px;"><strong>제8조 (면책)</strong></p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">회원이 본 정책 및 정보통신망법을 위반하여 발송한 메시지로 인해 발생하는 모든 민·형사상 책임 및 과태료는 회원이 전적으로 부담하며, 회사는 고의 또는 중대한 과실이 없는 한 이에 대해 책임을 지지 않습니다.</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">부칙</p>
+            <p style="margin-bottom: 8px; padding-left: 16px;">본 약관은 2026년 XX월 XX일부터 시행합니다.</p>
+                </div>
+                <div id="spamContentPrevious" style="display: none;"></div>
             </div>
         `,
         'refund': `
@@ -1052,7 +1144,23 @@ function openPolicyModal(type) {
     
     document.getElementById('policyModalTitle').textContent = titleMap[type] || '정책';
     document.getElementById('policyModalBody').innerHTML = contentMap[type] || '<p>내용이 없습니다.</p>';
-    
+
+    if (type === 'privacy') {
+        var sel = document.getElementById('privacyVersionSelect');
+        if (sel) { sel.value = 'current'; }
+        switchPrivacyVersion('current');
+    }
+    if (type === 'terms') {
+        var selTerms = document.getElementById('termsVersionSelect');
+        if (selTerms) { selTerms.value = 'current'; }
+        switchTermsVersion('current');
+    }
+    if (type === 'spam') {
+        var selSpam = document.getElementById('spamVersionSelect');
+        if (selSpam) { selSpam.value = 'current'; }
+        switchSpamVersion('current');
+    }
+
     openModal('policyModal');
 }
 
