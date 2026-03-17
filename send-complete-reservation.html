@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
-    <title>발송 완료 - 메시징 서비스</title>
+    <title>예약 발송 완료 - 메시징 서비스</title>
     <link rel="stylesheet" href="css/common.css">
     <script src="js/header.js"></script>
     <style>
@@ -42,28 +42,14 @@
 }
 
 @keyframes scaleIn {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes fadeInUp {
-    0% {
-        transform: translateY(20px);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
 }
 
 .complete-title {
@@ -129,30 +115,19 @@
     color: var(--text-primary);
 }
 
-/* 반응형 */
 @media (max-width: 768px) {
     .complete-container {
         padding: 40px 24px;
         margin: 16px;
     }
-    
     .complete-icon {
         width: 100px;
         height: 100px;
         font-size: 48px;
     }
-    
-    .complete-title {
-        font-size: 24px;
-    }
-    
-    .complete-actions {
-        flex-direction: column;
-    }
-    
-    .complete-actions .btn {
-        width: 100%;
-    }
+    .complete-title { font-size: 24px; }
+    .complete-actions { flex-direction: column; }
+    .complete-actions .btn { width: 100%; }
 }
     </style>
 </head>
@@ -162,70 +137,62 @@
             document.write(createHeader());
         </script>
 
-        <!-- 메인 컨텐츠 -->
         <main class="main-content">
             <div class="complete-container">
                 <div class="complete-icon">✅</div>
-                <h1 class="complete-title">발송이 완료되었습니다</h1>
+                <h1 class="complete-title">예약 발송이 등록되었습니다</h1>
                 <p class="complete-description">
-                    메시지가 성공적으로 발송되었습니다.<br>
-                    발송 결과는 발송결과 페이지에서 확인할 수 있습니다.
+                    예약이 성공적으로 등록되었습니다.<br>
+                    예약내역 페이지에서 발송 예정 일시를 확인하고 수정·취소할 수 있습니다.
                 </p>
-                
-                <!-- 발송 정보 요약 -->
+
                 <div class="send-summary" id="sendSummary">
-                    <div class="send-summary-title">발송 정보</div>
+                    <div class="send-summary-title">예약 정보</div>
                     <div class="send-summary-row">
                         <span class="send-summary-label">발송 유형</span>
-                        <span class="send-summary-value" id="summaryType">일반문자</span>
+                        <span class="send-summary-value" id="summaryType">예약발송</span>
                     </div>
                     <div class="send-summary-row">
                         <span class="send-summary-label">수신자 수</span>
                         <span class="send-summary-value" id="summaryRecipients">0명</span>
                     </div>
                     <div class="send-summary-row">
-                        <span class="send-summary-label">발송 시간</span>
-                        <span class="send-summary-value" id="summarySendTime">즉시 발송</span>
+                        <span class="send-summary-label">예약 발송 시간</span>
+                        <span class="send-summary-value" id="summarySendTime">-</span>
                     </div>
                     <div class="send-summary-row">
                         <span class="send-summary-label">예상 비용</span>
                         <span class="send-summary-value" id="summaryCost">0 P</span>
                     </div>
                 </div>
-                
+
                 <div class="complete-actions">
                     <a href="javascript:history.back()" class="btn btn-outline btn-lg" id="backToSendBtn">발송페이지로 돌아가기</a>
-                    <a href="send-result.html" class="btn btn-primary btn-lg" id="goToResultBtn">발송결과 페이지 이동</a>
+                    <a href="send-reservation.html" class="btn btn-primary btn-lg">예약내역 페이지 이동</a>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        // URL 파라미터에서 발송 정보 가져오기
         document.addEventListener('DOMContentLoaded', function() {
-            // 헤더 드롭다운 메뉴 초기화
             initDropdownMenus();
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            const type = urlParams.get('type') || '일반문자';
-            const recipients = urlParams.get('recipients') || '0';
-            const sendTime = urlParams.get('sendTime') || '즉시 발송';
-            const cost = urlParams.get('cost') || '0';
-            const from = urlParams.get('from') || 'message-send-general.html';
-            
-            // 발송 정보 표시
-            document.getElementById('summaryType').textContent = type;
+
+            var urlParams = new URLSearchParams(window.location.search);
+            var type = urlParams.get('type') || '예약발송';
+            var recipients = urlParams.get('recipients') || '0';
+            var sendTime = urlParams.get('sendTime') || '-';
+            var cost = urlParams.get('cost') || '0';
+            var from = urlParams.get('from') || 'message-send-general.html';
+
+            document.getElementById('summaryType').textContent = decodeURIComponent(type);
             document.getElementById('summaryRecipients').textContent = recipients + '명';
-            document.getElementById('summarySendTime').textContent = sendTime;
-            document.getElementById('summaryCost').textContent = cost + '원';
-            
-            // 돌아가기 버튼 링크 설정
+            document.getElementById('summarySendTime').textContent = decodeURIComponent(sendTime);
+            document.getElementById('summaryCost').textContent = cost + ' P';
+
             document.getElementById('backToSendBtn').href = from;
         });
     </script>
-    
     <script src="js/footer.js"></script>
     <script>
         document.write(createFloatingMenu());

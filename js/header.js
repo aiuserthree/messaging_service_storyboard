@@ -76,6 +76,8 @@ function createHeader(activeMenu = '') {
         'addressbook-reject.html': 'addressbook',
         'send-result.html': 'send',
         'send-reservation.html': 'send',
+        'send-complete.html': 'send',
+        'send-complete-reservation.html': 'send',
         'payment-charge.html': 'payment',
         'payment-deposit-distribution.html': 'payment',
         'payment-history.html': 'payment',

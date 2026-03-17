@@ -2736,21 +2736,23 @@ document.getElementById('confirmRecipientCount').textContent =
             closeModal('sendConfirmModal');
             
             // 발송 정보를 URL 파라미터로 전달
+            const isReserved = document.querySelector('input[name="sendTime"]:checked').value === 'reserved';
             const recipients = document.getElementById('recipientCount').textContent;
-            const sendTime = document.querySelector('input[name="sendTime"]:checked').value === 'reserved' 
-                ? document.getElementById('reservedDateTime').value 
+            const sendTime = isReserved
+                ? (document.getElementById('reservedDateTime')?.value || '예약 일시')
                 : '즉시 발송';
             const cost = document.getElementById('costTotal').textContent;
             
             const params = new URLSearchParams({
-                type: '일반문자',
+                type: isReserved ? '예약발송' : '일반문자',
                 recipients: recipients,
                 sendTime: sendTime,
                 cost: cost,
                 from: 'message-send-general.html'
             });
             
-            window.location.href = 'send-complete.html?' + params.toString();
+            const completePage = isReserved ? 'send-complete-reservation.html' : 'send-complete.html';
+            window.location.href = completePage + '?' + params.toString();
         }
 
         function testSend() {
