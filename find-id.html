@@ -591,18 +591,11 @@ body {
                 <div class="find-header" id="findIdHeader">
                     <div class="find-logo">Tokbell</div>
                     <h2 class="find-title">아이디 찾기</h2>
-                    <p class="find-subtitle">가입 시 등록한 정보로 아이디를 찾을 수 있습니다.</p>
+                    <p class="find-subtitle">가입 시 등록한 휴대폰 번호로 본인 인증 후 아이디를 확인할 수 있습니다.</p>
                 </div>
 
-                <!-- 인증 방법 탭 -->
-                <div class="tab-container" id="tabContainer">
-                    <button class="tab-btn active" data-tab="phone" id="phoneTabBtn" onclick="switchTab('phone')">휴대폰 인증</button>
-                    <button class="tab-btn" data-tab="email" id="emailTabBtn" onclick="switchTab('email')">이메일 인증</button>
-                </div>
-
-                <!-- 입력 폼 영역 -->
+                <!-- 입력 폼 영역 (휴대폰 인증만) -->
                 <div id="formArea">
-                    <!-- 휴대폰 인증 -->
                     <div class="tab-content active" id="phoneTab">
                         <form id="phoneForm" onsubmit="handlePhoneSubmit(event)">
                             <div class="form-group" id="userNameGroup">
@@ -650,54 +643,6 @@ body {
                             <button type="submit" class="btn btn-primary submit-button" id="phoneFindBtn">아이디 찾기</button>
                         </form>
                     </div>
-
-                    <!-- 이메일 인증 -->
-                    <div class="tab-content" id="emailTab">
-                        <form id="emailForm" onsubmit="handleEmailSubmit(event)">
-                            <div class="form-group" id="userNameEmailGroup">
-                                <label class="form-label" for="userNameEmail">이름<span class="required">*</span></label>
-                                <input 
-                                    type="text" 
-                                    id="userNameEmail" 
-                                    class="form-input" 
-                                    placeholder="이름을 입력하세요"
-                                >
-                                <div class="form-error" id="userNameEmailError">이름을 입력해주세요.</div>
-                            </div>
-
-                            <div class="form-group" id="userEmailGroup">
-                                <label class="form-label" for="userEmail">이메일<span class="required">*</span></label>
-                                <div class="input-with-btn">
-                                    <input 
-                                        type="email" 
-                                        id="userEmail" 
-                                        class="form-input" 
-                                        placeholder="가입 시 등록한 이메일"
-                                    >
-                                    <button type="button" class="btn btn-outline" id="sendEmailCodeBtn" onclick="sendEmailCode()">인증번호 발송</button>
-                                </div>
-                                <div class="form-error" id="userEmailError">이메일을 입력해주세요.</div>
-                            </div>
-
-                            <div class="form-group" id="emailVerifyGroup" style="display: none;">
-                                <label class="form-label" for="emailVerifyCode">인증번호<span class="required">*</span></label>
-                                <div class="input-with-btn">
-                                    <input 
-                                        type="text" 
-                                        id="emailVerifyCode" 
-                                        class="form-input" 
-                                        placeholder="인증번호 6자리 입력"
-                                        maxlength="6"
-                                    >
-                                    <button type="button" class="btn btn-outline" id="emailResendBtn" onclick="sendEmailCode()">재발송</button>
-                                </div>
-                                <div class="timer" id="emailTimer">03:00</div>
-                                <div class="form-error" id="emailVerifyError">인증번호를 입력해주세요.</div>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary submit-button" id="emailFindBtn">아이디 찾기</button>
-                        </form>
-                    </div>
                 </div>
 
                 <!-- 결과 화면 -->
@@ -709,7 +654,7 @@ body {
                     </div>
                     <h3 class="result-title" id="resultTitle">아이디를 찾았습니다</h3>
                     <p class="result-message" id="resultMessage">고객님의 아이디는 아래와 같습니다.</p>
-                    <div class="result-id" id="foundId">tok***@example.com</div>
+                    <div class="result-id" id="foundId"></div>
                     <p class="result-message" id="resultDate" style="font-size: 12px; color: var(--text-muted);">가입일: 2024-01-15</p>
                     <div class="result-actions" id="resultActions">
                         <a href="login.html" class="btn btn-primary" id="goLoginBtn">로그인</a>
@@ -730,24 +675,6 @@ body {
 
     <script>
         let phoneTimerInterval = null;
-        let emailTimerInterval = null;
-
-        // 탭 전환
-        function switchTab(tabName) {
-            // 탭 버튼 활성화
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.tab === tabName) {
-                    btn.classList.add('active');
-                }
-            });
-
-            // 탭 컨텐츠 활성화
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(tabName + 'Tab').classList.add('active');
-        }
 
         // 휴대폰 인증번호 발송
         function sendPhoneCode() {
@@ -763,24 +690,6 @@ body {
             
             // 타이머 시작
             startTimer('phoneTimer', phoneTimerInterval);
-            
-            alert('인증번호가 발송되었습니다.');
-        }
-
-        // 이메일 인증번호 발송
-        function sendEmailCode() {
-            const email = document.getElementById('userEmail').value.trim();
-            
-            if (!email) {
-                document.getElementById('userEmailError').classList.add('show');
-                return;
-            }
-            
-            document.getElementById('userEmailError').classList.remove('show');
-            document.getElementById('emailVerifyGroup').style.display = 'block';
-            
-            // 타이머 시작
-            startTimer('emailTimer', emailTimerInterval);
             
             alert('인증번호가 발송되었습니다.');
         }
@@ -804,11 +713,7 @@ body {
                 timeLeft--;
             }, 1000);
             
-            if (timerId === 'phoneTimer') {
-                phoneTimerInterval = interval;
-            } else {
-                emailTimerInterval = interval;
-            }
+            phoneTimerInterval = interval;
         }
 
         // 휴대폰 인증 제출
@@ -843,56 +748,19 @@ body {
             }
             
             if (isValid) {
-                showResult();
+                // 실제 연동 시: API 응답에서 아이디(이메일) 수신 후 비마스킹 표시
+                var foundIdValue = 'member@example.com'; // 예시: API 응답의 아이디(이메일) 전체
+                showResult(foundIdValue);
             }
         }
 
-        // 이메일 인증 제출
-        function handleEmailSubmit(event) {
-            event.preventDefault();
-            
-            const userName = document.getElementById('userNameEmail').value.trim();
-            const email = document.getElementById('userEmail').value.trim();
-            const verifyCode = document.getElementById('emailVerifyCode').value.trim();
-            
-            let isValid = true;
-            
-            if (!userName) {
-                document.getElementById('userNameEmailError').classList.add('show');
-                isValid = false;
-            } else {
-                document.getElementById('userNameEmailError').classList.remove('show');
-            }
-            
-            if (!email) {
-                document.getElementById('userEmailError').classList.add('show');
-                isValid = false;
-            } else {
-                document.getElementById('userEmailError').classList.remove('show');
-            }
-            
-            if (!verifyCode) {
-                document.getElementById('emailVerifyError').classList.add('show');
-                isValid = false;
-            } else {
-                document.getElementById('emailVerifyError').classList.remove('show');
-            }
-            
-            if (isValid) {
-                showResult();
-            }
-        }
-
-        // 결과 화면 표시
-        function showResult() {
-            document.getElementById('tabContainer').style.display = 'none';
+        // 결과 화면 표시 (아이디 비마스킹 표시)
+        function showResult(foundIdValue) {
             document.getElementById('formArea').style.display = 'none';
             document.getElementById('resultArea').classList.add('show');
             document.getElementById('findFooter').style.display = 'none';
-            
-            // 타이머 정리
+            document.getElementById('foundId').textContent = foundIdValue || '';
             if (phoneTimerInterval) clearInterval(phoneTimerInterval);
-            if (emailTimerInterval) clearInterval(emailTimerInterval);
         }
 
         // 드롭다운 메뉴 초기화
@@ -928,41 +796,7 @@ body {
                     '페이지 목적 안내'
                 ]
             },
-            // 3. 인증 방법 탭
-            {
-                selector: '#tabContainer',
-                title: '인증 방법 탭',
-                position: { top: '-5px', left: '-10px' },
-                function: '휴대폰/이메일 인증 방법 선택 탭',
-                behavior: [
-                    '탭 클릭 시 해당 인증 폼으로 전환',
-                    '선택된 탭 하단에 파란색 라인 표시',
-                    '기본값: 휴대폰 인증'
-                ]
-            },
-            // 4. 휴대폰 인증 탭 버튼
-            {
-                selector: '#phoneTabBtn',
-                title: '휴대폰 인증 탭',
-                position: { top: '-5px', left: '-10px' },
-                function: '휴대폰 인증 폼으로 전환',
-                behavior: [
-                    '클릭 시 휴대폰 인증 폼 활성화',
-                    '이메일 인증 폼 숨김'
-                ]
-            },
-            // 5. 이메일 인증 탭 버튼
-            {
-                selector: '#emailTabBtn',
-                title: '이메일 인증 탭',
-                position: { top: '-5px', right: '-10px' },
-                function: '이메일 인증 폼으로 전환',
-                behavior: [
-                    '클릭 시 이메일 인증 폼 활성화',
-                    '휴대폰 인증 폼 숨김'
-                ]
-            },
-            // 6. 휴대폰 인증 폼
+            // 3. 휴대폰 인증 폼
             {
                 selector: '#phoneForm',
                 title: '휴대폰 인증 폼',
@@ -1043,72 +877,7 @@ body {
                 api: 'POST /api/auth/find-id/phone',
                 tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
-            // 12. 이메일 인증 폼
-            {
-                selector: '#emailForm',
-                title: '이메일 인증 폼',
-                position: { top: '10px', right: '10px' },
-                function: '이메일로 아이디 찾기 폼',
-                behavior: [
-                    '이름 + 이메일 + 인증번호 입력',
-                    'Enter 키 입력 시 제출',
-                    '폼 유효성 검증 후 API 호출'
-                ]
-            },
-            // 13. 이메일 입력 그룹
-            {
-                selector: '#userEmailGroup',
-                title: '이메일 입력 그룹',
-                position: { top: '-5px', left: '-10px' },
-                function: '가입 시 등록한 이메일 입력',
-                behavior: [
-                    '이메일 형식 검증',
-                    '빈 값 시 에러 메시지 표시'
-                ],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 14. 인증번호 발송 버튼 (이메일)
-            {
-                selector: '#sendEmailCodeBtn',
-                title: '인증번호 발송 버튼',
-                position: { top: '-5px', right: '-10px' },
-                function: '이메일로 인증번호 발송',
-                behavior: [
-                    '클릭 시 6자리 인증번호 이메일 발송',
-                    '발송 성공 시 인증번호 입력 필드 표시',
-                    '3분 타이머 시작'
-                ],
-                api: 'POST /api/auth/send-email-code',
-                tags: [{ text: 'API', type: 'api' }]
-            },
-            // 15. 인증번호 입력 그룹 (이메일)
-            {
-                selector: '#emailVerifyGroup',
-                title: '인증번호 입력 그룹',
-                position: { top: '-5px', left: '-10px' },
-                function: '수신된 인증번호 입력',
-                behavior: [
-                    '인증번호 발송 후 표시됨',
-                    '6자리 숫자 입력',
-                    '3분 타이머 표시'
-                ],
-                tags: [{ text: '필수', type: 'required' }]
-            },
-            // 16. 아이디 찾기 버튼 (이메일)
-            {
-                selector: '#emailFindBtn',
-                title: '아이디 찾기 버튼',
-                position: { top: '-5px', left: '-10px' },
-                function: '이메일 인증으로 아이디 찾기 실행',
-                behavior: [
-                    '모든 필드 유효성 검증',
-                    '인증번호 일치 여부 확인',
-                    '성공 시 결과 화면으로 전환'
-                ],
-                api: 'POST /api/auth/find-id/email',
-                tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
-            },
-            // 17. 결과 화면
+            // 12. 결과 화면
             {
                 selector: '#resultArea',
                 title: '결과 화면',
@@ -1116,12 +885,12 @@ body {
                 function: '아이디 찾기 성공 결과 표시',
                 behavior: [
                     '인증 성공 후 표시됨',
-                    '탭과 폼 영역 숨김',
-                    '아이디 마스킹 처리하여 표시',
+                    '폼 영역 숨김',
+                    '아이디 비마스킹(전체) 표시',
                     '가입일 정보 표시'
                 ]
             },
-            // 18. 찾은 아이디
+            // 13. 찾은 아이디
             {
                 selector: '#foundId',
                 title: '찾은 아이디',
