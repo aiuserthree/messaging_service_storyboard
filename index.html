@@ -9,12 +9,28 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="main/css/style.css?v=7">
+    <link rel="stylesheet" href="main/css/style.css?v=8">
     <style>
         .main-content { width: 100%; max-width: 100%; padding: 0; margin: 0; }
+
+        /* 랜딩(index)만: 우측 상단 가입 CTA · 히어로 지금 시작하기 — 호버 시 모노톤(그레이) */
+        .page-index .header .btn.btn-primary:hover,
+        .page-index .header .btn.btn-primary:focus-visible {
+            background-color: #2d2d2d !important;
+            color: #f5f5f5 !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12) !important;
+            transform: none !important;
+        }
+
+        .page-index .hero-cta .btn-primary:hover,
+        .page-index .hero-cta .btn-primary:focus-visible {
+            background: #2d2d2d !important;
+            color: #f5f5f5 !important;
+            opacity: 1 !important;
+        }
     </style>
 </head>
-<body>
+<body class="page-index">
     <div class="app-container">
         <script>
             document.write(createHeader(''));
@@ -171,21 +187,18 @@
                     </p>
                     <div class="solution-features">
                         <div class="solution-feature-item">
-                            <span class="sf-icon">⚡</span>
                             <div>
                                 <strong>즉시 발송</strong>
                                 <p>실시간 대량 발송, 최대 5만 건 동시 처리</p>
                             </div>
                         </div>
                         <div class="solution-feature-item">
-                            <span class="sf-icon">🔄</span>
                             <div>
                                 <strong>예약 &amp; 자동화</strong>
                                 <p>스케줄 기반 자동 발송 워크플로우</p>
                             </div>
                         </div>
                         <div class="solution-feature-item">
-                            <span class="sf-icon">📊</span>
                             <div>
                                 <strong>성과 추적</strong>
                                 <p>실시간 도달률, 오픈율, 전환율 대시보드</p>

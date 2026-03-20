@@ -7,12 +7,16 @@
 
 ## 화면에서 바로 전환 (버튼)
 
-`index.html`과 `index.last-commit.html` 모두 **우측 하단 고정 바**에서:
+**우측 하단 고정 바** (`js/index-version-switch.js`):
 
-- **현재 작업본** → `index.html`
-- **이전 커밋** → `index.last-commit.html`
+| 버튼 | 파일 | 설명 |
+|------|------|------|
+| **현재 작업본** | `index.html` | 지금 로컬에서 수정 중인 버전 |
+| **이전 커밋** | `index.last-commit.html` | `save-index-snapshot.ps1`으로 만든 **마지막 커밋(HEAD)** 스냅샷 |
 
-을 눌러 같은 탭에서 바로 이동할 수 있습니다. (`js/index-version-switch.js`)
+### (선택) `index.before-today.html` 오프라인 스냅샷
+
+과거 커밋을 파일로 남기려면 `save-before-today.ps1`으로 `index.before-today.html`을 만들 수 있습니다.
 
 ## 보는 방법
 

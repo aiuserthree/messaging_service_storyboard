@@ -1,64 +1,29 @@
 <!DOCTYPE html>
+<!-- 비교용: 며칠 전 남겨둔 고정 스냅샷(커밋 4944f63). 오늘 적용분 아님. 갱신: .\save-before-today.ps1 -->
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>톡벨 — AI 기반 비즈니스 메시징 플랫폼</title>
+    <title>톡벨 - 비즈니스 메시징 플랫폼</title>
+    <script src="js/header.js?v=3"></script>
+    <link rel="stylesheet" href="css/common.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main/css/style.css?v=7">
+    <style>
+        .main-content { width: 100%; max-width: 100%; padding: 0; margin: 0; }
+    </style>
 </head>
 <body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader(''));
+        </script>
 
-    <!-- ===== TOP ANNOUNCEMENT BAR ===== -->
-    <div class="announcement-bar">
-        <div class="announcement-inner">
-            <span>🏆 톡벨, 2026년 과학기술정보통신부 AI 혁신 파트너십 선정</span>
-            <a href="#" class="announcement-link">자세히 보기 →</a>
-        </div>
-    </div>
-
-    <!-- ===== NAVIGATION ===== -->
-    <header class="nav-header" id="navHeader">
-        <nav class="nav-inner">
-            <a href="index.html" class="nav-logo">
-                <span class="logo-icon">◆</span> 톡벨
-            </a>
-            <ul class="nav-menu">
-                <li><a href="#features">서비스</a></li>
-                <li><a href="#solution">솔루션</a></li>
-                <li><a href="#pricing">요금</a></li>
-                <li><a href="#">리소스</a></li>
-                <li><a href="#">고객사례</a></li>
-            </ul>
-            <div class="nav-actions">
-                <a href="#" class="nav-login">로그인</a>
-                <a href="#contact" class="nav-contact-btn">Contact</a>
-            </div>
-            <button class="nav-mobile-toggle" id="mobileToggle" aria-label="메뉴 열기">
-                <span></span><span></span><span></span>
-            </button>
-        </nav>
-    </header>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <ul>
-            <li><a href="#features">서비스</a></li>
-            <li><a href="#solution">솔루션</a></li>
-            <li><a href="#pricing">요금</a></li>
-            <li><a href="#">리소스</a></li>
-            <li><a href="#">고객사례</a></li>
-            <li><a href="#" class="nav-login">로그인</a></li>
-            <li><a href="#contact" class="nav-contact-btn" style="display:inline-block;margin-top:8px;">Contact</a></li>
-        </ul>
-    </div>
-
-    <main>
-
-        <!-- ===== HERO SECTION ===== -->
-        <section class="hero">
+        <main class="main-content">
+        <!-- ===== HERO SECTION (main/) ===== -->
+        <section class="hero" id="heroSection">
             <div class="hero-text">
                 <p class="hero-overline" data-animate>비즈니스 메시징의 미래</p>
                 <h1 class="hero-headline" data-animate>
@@ -72,12 +37,12 @@
                     초개인화된 메시지를 전달합니다.
                 </p>
                 <div class="hero-cta" data-animate>
-                    <a href="#" class="btn-primary">지금 시작하기</a>
-                    <a href="#" class="btn-outline">견적 문의하기 →</a>
+                    <a href="signup.html" class="btn-primary">지금 시작하기</a>
+                    <a href="quote-inquiry.html" class="btn-outline">견적 문의하기 →</a>
                 </div>
             </div>
             <div class="hero-image" data-animate>
-                <img src="images/hero-dashboard.jpg" alt="톡벨 대시보드 인터페이스" loading="eager">
+                <img src="main/images/hero-dashboard.jpg" alt="톡벨 대시보드 인터페이스" loading="eager">
             </div>
         </section>
 
@@ -88,7 +53,7 @@
                 <div class="trust-logos">
                     <span class="trust-logo">SAMSUNG</span>
                     <span class="trust-logo">amazon</span>
-                    <span class="trust-logo italic">P&G</span>
+                    <span class="trust-logo italic">P&amp;G</span>
                     <span class="trust-logo">Gartner</span>
                     <span class="trust-logo">HYUNDAI</span>
                 </div>
@@ -96,7 +61,7 @@
         </section>
 
         <!-- ===== FEATURES SECTION ===== -->
-        <section class="section-features" id="features">
+        <section class="section-features" id="featuresSection">
             <div class="section-container">
                 <div class="section-label" data-animate>커머스 AI 운영 체제</div>
                 <h2 class="section-title" data-animate>
@@ -109,47 +74,45 @@
                 </p>
             </div>
 
-            <!-- Feature 1: Text Left, Image Right -->
             <div class="feature-row">
                 <div class="feature-content" data-animate>
                     <div class="feature-number">01</div>
                     <h3 class="feature-title">AI 기반<br>타겟팅 전송</h3>
                     <p class="feature-desc">
-                        유사고객 클러스터링으로 직접 설정 타겟팅하여<br>
-                        AI가 가장 효과적인 대상 고객을 자동 선별하고<br>
-                        최적화된 발송 시점을 제안합니다.
+                        유사고객 클러스터링으로 직접 설정 타겟팅하여 AI가 가장 효과적인
+                        대상 고객을 자동 선별하고 최적화된 발송 시점을 제안합니다.
                     </p>
+                    <a href="support-center.html" class="feature-link">자세히 알아보기 →</a>
                 </div>
                 <div class="feature-visual" data-animate>
-                    <img src="images/feature-collaboration.jpg" alt="AI 타겟팅 전송">
+                    <img src="main/images/feature-collaboration.jpg" alt="AI 타겟팅 전송">
                 </div>
             </div>
 
-            <!-- Feature 2: Image Left, Text Right -->
             <div class="feature-row reverse">
                 <div class="feature-content" data-animate>
                     <div class="feature-number">02</div>
                     <h3 class="feature-title">대량 메시지<br>자동화</h3>
                     <p class="feature-desc">
-                        채널에 기업 리포트를 연동하면 보다 더 쉽게<br>
-                        SMS, LMS, 카카오 알림톡 및 브랜드 메시지를<br>
-                        대량으로 자동 발송할 수 있습니다.
+                        채널에 기업 리포트를 연동하면 보다 더 쉽게 SMS, LMS,
+                        카카오 알림톡 및 브랜드 메시지를 대량으로 자동 발송할 수 있습니다.
                     </p>
+                    <a href="support-center.html" class="feature-link">자세히 알아보기 →</a>
                 </div>
                 <div class="feature-visual" data-animate>
-                    <img src="images/feature-mobile.jpg" alt="대량 메시지 자동화">
+                    <img src="main/images/feature-mobile.jpg" alt="대량 메시지 자동화">
                 </div>
             </div>
 
-            <!-- Feature 3: Text Left, Image Right -->
             <div class="feature-row">
                 <div class="feature-content" data-animate>
                     <div class="feature-number">03</div>
                     <h3 class="feature-title">실시간<br>성과 분석</h3>
                     <p class="feature-desc">
-                        스코어링 AI 기반으로 각 채널별 도달률, 리딩률, 전환율 분석을 
+                        스코어링 AI 기반으로 각 채널별 도달률, 리딩률, 전환율 분석을
                         실시간으로 확인하고 다음 캠페인에 즉시 반영할 수 있습니다.
                     </p>
+                    <a href="support-center.html" class="feature-link">자세히 알아보기 →</a>
                 </div>
                 <div class="feature-visual" data-animate>
                     <div class="analytics-card">
@@ -204,8 +167,8 @@
                         모든 메시지를 관리하세요.
                     </h2>
                     <p class="solution-desc">
-                        SMS, LMS, MMS부터 카카오 알림톡까지 — 톡벨은 모든 비즈니스 메시징 채널을 
-                        하나의 직관적인 인터페이스로 통합합니다. 더 이상 여러 도구를 오가며 
+                        SMS, LMS, MMS부터 카카오 알림톡까지 — 톡벨은 모든 비즈니스 메시징 채널을
+                        하나의 직관적인 인터페이스로 통합합니다. 더 이상 여러 도구를 오가며
                         시간을 낭비하지 마세요.
                     </p>
                     <div class="solution-features">
@@ -217,7 +180,7 @@
                         </div>
                         <div class="solution-feature-item">
                             <div>
-                                <strong>예약 & 자동화</strong>
+                                <strong>예약 &amp; 자동화</strong>
                                 <p>스케줄 기반 자동 발송 워크플로우</p>
                             </div>
                         </div>
@@ -230,7 +193,6 @@
                     </div>
                 </div>
                 <div class="solution-visual" data-animate>
-                    <!-- Messaging UI Mockup -->
                     <div class="mockup-card">
                         <div class="mockup-header">
                             <div class="mockup-dots">
@@ -274,7 +236,7 @@
         </section>
 
         <!-- ===== PRICING SECTION ===== -->
-        <section class="section-pricing" id="pricing">
+        <section class="section-pricing" id="pricingSection">
             <div class="pricing-container">
                 <div class="pricing-header" data-animate>
                     <div class="section-label">요금 안내</div>
@@ -343,7 +305,7 @@
         </section>
 
         <!-- ===== CTA SECTION ===== -->
-        <section class="section-cta" id="contact">
+        <section class="section-cta" id="ctaSection">
             <div class="cta-inner" data-animate>
                 <h2 class="cta-title">
                     비즈니스 커뮤니케이션을<br>
@@ -354,58 +316,94 @@
                     AI 타겟팅과 실시간 성과 분석으로 캠페인을 완성하세요.
                 </p>
                 <div class="cta-buttons">
-                    <a href="#" class="btn-cta-primary">톡벨과 함께하기</a>
-                    <a href="#" class="btn-cta-outline">Contact →</a>
+                    <a href="signup.html" class="btn-cta-primary">톡벨과 함께하기</a>
+                    <a href="quote-inquiry.html" class="btn-cta-outline">Contact →</a>
                 </div>
             </div>
         </section>
 
-    </main>
+        </main>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-top">
-                <div class="footer-brand">
-                    <div class="footer-logo"><span class="logo-icon">◆</span> 톡벨</div>
-                    <p class="footer-tagline">AI 기반 비즈니스 메시징 플랫폼</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-col">
-                        <h4>서비스</h4>
-                        <a href="#">SMS / LMS</a>
-                        <a href="#">MMS</a>
-                        <a href="#">카카오 알림톡</a>
-                        <a href="#">대량 발송</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>솔루션</h4>
-                        <a href="#">AI 타겟팅</a>
-                        <a href="#">자동화</a>
-                        <a href="#">성과 분석</a>
-                        <a href="#">API 연동</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>회사</h4>
-                        <a href="#">소개</a>
-                        <a href="#">채용</a>
-                        <a href="#">블로그</a>
-                        <a href="#">Contact</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>지원</h4>
-                        <a href="#">도움말</a>
-                        <a href="#">이용약관</a>
-                        <a href="#">개인정보처리방침</a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>© 2026 톡벨 (TokBell). All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+        <!-- 푸터 -->
+        <script src="js/footer.js"></script>
+        <script>
+            document.write(createFooter());
+        </script>
+    </div>
 
-    <script src="js/main.js"></script>
+    <script src="main/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initDropdownMenus === 'function') {
+                initDropdownMenus();
+            }
+        });
+    </script>
+
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            {
+                selector: '.header',
+                title: 'GNB 헤더',
+                position: { top: '10px', left: '10px' },
+                function: '서비스 전역 네비게이션 제공',
+                behavior: [
+                    '로고 클릭 시 index.html로 이동',
+                    '스크롤 시 상단 고정 (sticky)',
+                    '반응형: 모바일에서 햄버거 메뉴로 전환'
+                ]
+            },
+            {
+                selector: '#heroSection',
+                title: '히어로 섹션',
+                position: { top: '20px', left: '20px' },
+                function: '서비스 핵심 가치 전달 및 CTA 유도',
+                behavior: [
+                    '타이틀 + 설명 + CTA 버튼 2개 + 대시보드 이미지 (main 디자인)',
+                    '지금 시작하기: signup.html 이동',
+                    '견적 문의하기: quote-inquiry.html 이동'
+                ]
+            },
+            {
+                selector: '#featuresSection',
+                title: '기능 소개 섹션',
+                position: { top: '20px', left: '20px' },
+                function: '주요 기능 3가지 (이미지·텍스트 교차 + 실시간 성과 카드)',
+                behavior: [
+                    'AI 기반 타겟팅 전송',
+                    '대량 메시지 자동화',
+                    '실시간 성과 분석',
+                    '자세히 알아보기: support-center.html'
+                ]
+            },
+            {
+                selector: '#pricingSection',
+                title: '요금 안내 섹션',
+                position: { top: '20px', left: '20px' },
+                function: 'SMS/LMS/MMS/알림톡 요금 카드 그리드',
+                behavior: [
+                    'SMS: 8.3원/건',
+                    'LMS: 26.5원/건',
+                    'MMS: 59원/건',
+                    '알림톡(예정): 6.2원/건',
+                ]
+            },
+            {
+                selector: '#ctaSection',
+                title: 'CTA 섹션',
+                position: { top: '20px', left: '20px' },
+                function: '다크 배경 전환 유도 영역',
+                behavior: [
+                    '헤드라인 + 서브 문구 + 톡벨과 함께하기 + Contact',
+                    '톡벨과 함께하기: signup.html 이동',
+                    'Contact: quote-inquiry.html 이동'
+                ]
+            }
+        ];
+        initSpecOverlay(specData);
+    </script>
+    <script src="js/index-version-switch.js" defer></script>
 </body>
 </html>
