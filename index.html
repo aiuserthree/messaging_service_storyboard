@@ -354,69 +354,6 @@
         });
     </script>
 
-    <!-- 화면설계 오버레이 -->
-    <script src="js/spec-overlay.js"></script>
-    <script>
-        const specData = [
-            {
-                selector: '.header',
-                title: 'GNB 헤더',
-                position: { top: '10px', left: '10px' },
-                function: '서비스 전역 네비게이션 제공',
-                behavior: [
-                    '로고 클릭 시 index.html로 이동',
-                    '스크롤 시 상단 고정 (sticky)',
-                    '반응형: 모바일에서 햄버거 메뉴로 전환'
-                ]
-            },
-            {
-                selector: '#heroSection',
-                title: '히어로 섹션',
-                position: { top: '20px', left: '20px' },
-                function: '서비스 핵심 가치 전달 및 CTA 유도',
-                behavior: [
-                    '타이틀 + 설명 + CTA 버튼 2개 + 대시보드 이미지 (main 디자인)',
-                    '지금 시작하기: signup.html 이동',
-                    '견적 문의하기: quote-inquiry.html 이동'
-                ]
-            },
-            {
-                selector: '#featuresSection',
-                title: '기능 소개 섹션',
-                position: { top: '20px', left: '20px' },
-                function: '주요 기능 3가지 (이미지·텍스트 교차 + 실시간 성과 카드)',
-                behavior: [
-                    'AI 기반 타겟팅 전송',
-                    '대량 메시지 자동화',
-                    '실시간 성과 분석'
-                ]
-            },
-            {
-                selector: '#pricingSection',
-                title: '요금 안내 섹션',
-                position: { top: '20px', left: '20px' },
-                function: 'SMS/LMS/MMS/알림톡 요금 카드 그리드',
-                behavior: [
-                    'SMS: 8.3원/건',
-                    'LMS: 26.5원/건',
-                    'MMS: 59원/건',
-                    '알림톡(예정): 6.2원/건',
-                ]
-            },
-            {
-                selector: '#ctaSection',
-                title: 'CTA 섹션',
-                position: { top: '20px', left: '20px' },
-                function: '다크 배경 전환 유도 영역',
-                behavior: [
-                    '헤드라인 + 서브 문구 + 톡벨과 함께하기 + Contact',
-                    '톡벨과 함께하기: signup.html 이동',
-                    'Contact: quote-inquiry.html 이동'
-                ]
-            }
-        ];
-        initSpecOverlay(specData);
-    </script>
     <script src="js/index-version-switch.js" defer></script>
 </body>
 </html>
