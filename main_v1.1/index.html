@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>톡벨 - 비즈니스 메시징 플랫폼</title>
+    <!-- index.html 과 동일 순서·경로(상위 폴더 spec 기준). <base> 미사용 → GNB/푸터 깨짐 방지 -->
+    <script src="../js/header.js?v=3"></script>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=21">
+    <style>
+        .main-content.landing-v11 {
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* GNB 로그인·톡벨 가입하기 — 디자인 참고(둥근 모서리, 프라이머리 톤 그림자) */
+        .page-index .header .header-actions {
+            gap: 10px;
+        }
+        .page-index .header .btn.btn-outline {
+            background: #ffffff !important;
+            color: #475569 !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 7px !important;
+            padding: 8px 14px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            box-shadow: none !important;
+            transition: background 0.2s, border-color 0.2s, color 0.2s !important;
+        }
+        .page-index .header .btn.btn-outline:hover,
+        .page-index .header .btn.btn-outline:focus-visible {
+            background: #f8fafc !important;
+            border-color: #94a3b8 !important;
+            color: #334155 !important;
+            transform: none !important;
+        }
+        .page-index .header .btn.btn-primary {
+            background-color: #111111 !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 8px !important;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2), 0 3px 14px rgba(37, 99, 235, 0.09) !important;
+            padding: 8px 16px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            letter-spacing: -0.02em !important;
+            transition: background 0.2s, box-shadow 0.2s !important;
+        }
+        .page-index .header .btn.btn-primary:hover,
+        .page-index .header .btn.btn-primary:focus-visible {
+            background-color: #1a1a1a !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.26), 0 4px 18px rgba(37, 99, 235, 0.12) !important;
+            transform: none !important;
+            opacity: 1 !important;
+        }
+
+        .benefits .benefits-inner {
+            max-width: min(1520px, 100%) !important;
+        }
+
+        .benefits-slider-wrap {
+            width: 100%;
+            max-width: min(1520px, 100vw);
+            margin: 40px auto 0;
+            padding: 0 4px;
+            box-sizing: border-box;
+        }
+        .benefits-slider-shell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .benefits-nav {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: #fff;
+            color: #333;
+            font-size: 26px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0 2px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+        .benefits-nav:hover { background: #f5f5f5; border-color: #999; }
+        .benefits-nav:focus-visible { outline: 2px solid #333; outline-offset: 2px; }
+        .benefits-slider-viewport {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            border-radius: 16px;
+            position: relative;
+        }
+        .benefits-slider-track {
+            display: flex;
+            gap: 14px;
+            will-change: transform;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .benefits-slider-track.is-jumping {
+            transition: none !important;
+        }
+        /* 혜택 슬라이드: 배경 이미지 그대로 보이게, 텍스트는 그림자로만 대비(블러·유리 패널 없음) */
+        .benefit-slide {
+            flex-shrink: 0;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            min-height: 260px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0;
+            text-align: center;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background-color: #1a1a1a;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+            transform: scale(0.92);
+            opacity: 0.72;
+            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.45s, box-shadow 0.45s;
+        }
+        .benefit-slide::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            /* 글자 아래만 살짝 어둡게 — 이미지는 그대로 드러남 */
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0) 42%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        /* 첫충전: SALE 일러스트 / 스타벅스: event-banner-1 */
+        .benefit-slide--img1 {
+            background-image: url(img/events/benefit-first-charge-sale.png);
+            background-position: center center;
+        }
+        .benefit-slide--img1::before {
+            background: linear-gradient(
+                100deg,
+                rgba(0, 0, 0, 0.18) 0%,
+                transparent 40%,
+                rgba(0, 0, 0, 0.12) 100%
+            );
+        }
+        .benefit-slide--img1 .benefit-slide-content {
+            text-align: left;
+            padding-left: 22px;
+            padding-right: 24px;
+        }
+        .benefit-slide--img2 { background-image: url(img/events/event-banner-1.png); }
+        .benefit-slide--img3 { background-image: url(img/events/event-banner-3.png); }
+        .benefit-slide--img4 { background-image: url(img/events/benefit-bulk-send-event.png); }
+        .benefit-slide-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            padding: 22px 18px 28px;
+            background: transparent;
+        }
+        .benefit-slide.is-active {
+            transform: scale(1);
+            opacity: 1;
+            z-index: 1;
+            border-color: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+        }
+        .benefit-slide-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+            text-shadow:
+                0 1px 2px rgba(0, 0, 0, 0.92),
+                0 0 14px rgba(0, 0, 0, 0.45);
+        }
+        .benefit-slide-value {
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            text-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.95),
+                0 0 24px rgba(0, 0, 0, 0.4),
+                0 0 1px rgba(0, 0, 0, 1);
+        }
+        .benefit-slide-sub {
+            font-size: 14px;
+            color: #fff;
+            margin-top: 12px;
+            line-height: 1.55;
+            text-shadow:
+                0 1px 3px rgba(0, 0, 0, 0.9),
+                0 0 12px rgba(0, 0, 0, 0.35);
+        }
+        .benefits-slider-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 26px;
+            padding: 4px 0;
+        }
+        /* 슬라이드 도트: 작게 · 미선택만 그레이 배경 · 선택은 기존(다크) 스타일 */
+        .benefits-slider-dots button {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            padding: 0;
+            border: 1px solid #cbd5e1;
+            background: #d1d5db;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        .benefits-slider-dots button:hover {
+            background: #cbd5e1;
+            border-color: #94a3b8;
+        }
+        .benefits-slider-dots button[aria-selected="true"] {
+            background: #111;
+            border-color: #111;
+            transform: scale(1.25);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+        .benefits-slider-dots button:focus-visible {
+            outline: 2px solid #2563eb;
+            outline-offset: 3px;
+        }
+        @media (max-width: 640px) {
+            .benefits-slider-shell { gap: 6px; }
+            .benefits-nav { width: 38px; height: 38px; font-size: 22px; }
+        }
+
+        .hero-card { gap: 0; }
+        .hero-card .hc-text { padding-left: 0; }
+        .pc-header h3 { margin: 0; }
+        .pc-features li { list-style: none; padding-left: 0; }
+
+        .coming-inline { font-size: 12px; font-weight: 600; color: #999; }
+
+        .app-showcase .app-heading { margin-bottom: 56px; }
+
+        body.page-index .app-container { max-width: 100%; overflow-x: hidden; }
+    </style>
+</head>
+<body class="page-index">
+    <div class="app-container">
+        <script>
+            document.write(createHeader(''));
+        </script>
+        <script>
+        (function () {
+            function prefixAssets(scope) {
+                if (!scope) return;
+                var p = '../';
+                scope.querySelectorAll('img[src]').forEach(function (el) {
+                    var s = el.getAttribute('src');
+                    if (!s || /^(https?:|data:)/i.test(s) || s.indexOf('../') === 0) return;
+                    el.src = p + s;
+                });
+                scope.querySelectorAll('a[href]').forEach(function (el) {
+                    var h = el.getAttribute('href');
+                    if (!h || h.charAt(0) === '#' || h.indexOf('javascript:') === 0) return;
+                    if (/^https?:/i.test(h)) return;
+                    if (h.indexOf('../') === 0) return;
+                    el.setAttribute('href', p + h);
+                });
+            }
+            prefixAssets(document.querySelector('.header'));
+        })();
+        </script>
+
+    <main class="main-content landing-v11">
+
+        <!-- ============================================================
+             SECTION 1: HERO
+             ============================================================ -->
+        <section class="hero" id="hero">
+            <div class="hero-inner">
+                <div class="hero-left" data-animate>
+                    <span class="hero-badge">최저 8.3원부터</span>
+                    <h1 class="hero-title">
+                        일반문자, 광고문자, 선거문자<br>
+                        <span class="hero-title-accent">한번에 해결하세요</span>
+                    </h1>
+                    <p class="hero-subtitle">AI 기반 통합 메시징 플랫폼 | 누적 가입자 50만+ | 공공기관 다수 이용</p>
+
+                    <div class="hero-cards">
+                        <div class="hero-card" data-animate>
+                            <div class="hc-text">
+                                <strong>일반문자</strong>
+                                <p>단문 8.3원 / 장문 26.5원 / 포토 59원</p>
+                            </div>
+                        </div>
+                        <div class="hero-card" data-animate>
+                            <div class="hc-text">
+                                <strong>광고문자</strong>
+                                <p>080 수신거부 번호·광고 문구 자동 삽입 등<br>규제 준수 발송</p>
+                            </div>
+                        </div>
+                        <div class="hero-card" data-animate>
+                            <div class="hc-text">
+                                <strong>선거문자</strong>
+                                <p>선거 기간·대상 구분에 맞춘 발송 흐름 지원</p>
+                            </div>
+                        </div>
+                        <div class="hero-card" data-animate>
+                            <div class="hc-text">
+                                <strong>카카오 알림톡 / 브랜드 메시지 <span class="coming-inline">(예정)</span></strong>
+                                <p>카카오톡 채널 기반 알림·프로모션 메시지 연동</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="../signup.html" class="hero-cta-btn">지금 시작하기 →</a>
+                </div>
+
+                <div class="hero-right" data-animate>
+                    <!-- Phone Mockup -->
+                    <div class="phone-mockup">
+                        <div class="phone-frame">
+                            <div class="phone-notch"></div>
+                            <div class="phone-screen">
+                                <div class="phone-header-bar phone-header-bar--preview">
+                                    <span class="phone-preview-title">미리보기</span>
+                                </div>
+                                <div class="phone-chat phone-chat--preview">
+                                    <div class="chat-bubble outgoing">
+                                        (광고) 홍길동님, 안녕하세요.<br>
+                                        스타벅스 리워드 회원을 위한 겨울 시즌 프로모션을 안내드립니다.<br><br>
+                                        <strong>[윈터 페스타]</strong> 스타벅스 오더(App)로 시즌 음료 포함 음료 2잔 이상 결제 시, 별(★)을 추가로 적립해 드립니다. (기간 내 1회, 일부 메뉴·매장 제외)<br><br>
+                                        참여 기간: 12/1(월) 00:00 ~ 12/31(수) 23:59<br>
+                                        응모·혜택 수령은 스타벅스 앱 홈 &gt; 이벤트 메뉴에서 가능합니다.<br><br>
+                                        자세한 유의사항은 앱 내 공지를 확인해 주세요. 즐거운 연말 보내세요!
+                                    </div>
+                                    <div class="phone-preview-media phone-preview-media--sb" aria-hidden="true">
+                                        <div class="phone-preview-sb-brand">STARBUCKS REWARDS</div>
+                                        <p class="phone-preview-sb-line">겨울 시즌 음료 2잔 이상 오더 시</p>
+                                        <p class="phone-preview-sb-em">별 추가 적립 · 앱 전용</p>
+                                    </div>
+                                    <p class="phone-chat-time">오후 3:42</p>
+                                </div>
+                            </div>
+                            <div class="phone-home-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 2: BENEFITS (배너 슬라이드)
+             ============================================================ -->
+        <section class="benefits" id="benefits">
+            <div class="benefits-inner">
+                <p class="section-eyebrow" data-animate>신규 회원을 위한</p>
+                <h2 class="section-heading" data-animate>더욱 다양하고 알찬 혜택</h2>
+
+                <div class="benefits-slider-wrap" data-animate>
+                    <div class="benefits-slider-shell">
+                        <button type="button" class="benefits-nav benefits-nav-prev" id="benefitsPrev" aria-label="이전 혜택">‹</button>
+                        <div class="benefits-slider-viewport" id="benefitsViewport">
+                            <div class="benefits-slider-track" id="benefitsSliderTrack">
+                                <article class="benefit-slide benefit-slide--img1">
+                                    <div class="benefit-slide-content">
+                                        <p class="benefit-slide-label">첫 충전 할인</p>
+                                        <p class="benefit-slide-value">10%</p>
+                                        <p class="benefit-slide-sub">신규 회원 첫 충전 시 보너스 적용</p>
+                                    </div>
+                                </article>
+                                <article class="benefit-slide benefit-slide--img2">
+                                    <div class="benefit-slide-content">
+                                        <p class="benefit-slide-label">신규 가입 선물</p>
+                                        <p class="benefit-slide-value">스타벅스 쿠폰</p>
+                                        <p class="benefit-slide-sub">가입 이벤트 조건 충족 시 제공</p>
+                                    </div>
+                                </article>
+                                <article class="benefit-slide benefit-slide--img3">
+                                    <div class="benefit-slide-content">
+                                        <p class="benefit-slide-label">가입 축하 머니</p>
+                                        <p class="benefit-slide-value">3,000원</p>
+                                        <p class="benefit-slide-sub">가입 완료 후 지급되는 이용 크레딧</p>
+                                    </div>
+                                </article>
+                                <article class="benefit-slide benefit-slide--img4">
+                                    <div class="benefit-slide-content">
+                                        <p class="benefit-slide-label">대량 발송 이벤트</p>
+                                        <p class="benefit-slide-value">최대 50만원</p>
+                                        <p class="benefit-slide-sub">월 발송 조건 충족 시 상품권 등 추첨</p>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                        <button type="button" class="benefits-nav benefits-nav-next" id="benefitsNext" aria-label="다음 혜택">›</button>
+                    </div>
+                    <div class="benefits-slider-dots" id="benefitsSliderDots" role="tablist" aria-label="혜택 배너"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 3: TRUST & FEATURES
+             ============================================================ -->
+        <section class="trust-section" id="features">
+            <div class="trust-inner">
+                <h2 class="section-heading" data-animate>22년의 노하우</h2>
+                <p class="section-subheading" data-animate>고객이 신뢰한 검증된 서비스</p>
+
+                <div class="trust-pills" data-animate>
+                    <button type="button" class="trust-pill">차별화된 서비스</button>
+                    <button type="button" class="trust-pill">독보적인 기술력</button>
+                    <button type="button" class="trust-pill">업계최다 활용분야</button>
+                </div>
+
+                <!-- Logo Marquee -->
+                <div class="marquee-wrap">
+                    <div class="marquee-track">
+                        <div class="marquee-content">
+                            <span class="marquee-logo">서울특별시</span>
+                            <span class="marquee-logo">한국전력공사</span>
+                            <span class="marquee-logo">국민건강보험</span>
+                            <span class="marquee-logo">대한적십자사</span>
+                            <span class="marquee-logo">한국교육방송</span>
+                            <span class="marquee-logo">서울시설공단</span>
+                            <span class="marquee-logo">국립중앙박물관</span>
+                            <span class="marquee-logo">한국도로공사</span>
+                        </div>
+                        <!-- Duplicate for seamless loop -->
+                        <div class="marquee-content">
+                            <span class="marquee-logo">서울특별시</span>
+                            <span class="marquee-logo">한국전력공사</span>
+                            <span class="marquee-logo">국민건강보험</span>
+                            <span class="marquee-logo">대한적십자사</span>
+                            <span class="marquee-logo">한국교육방송</span>
+                            <span class="marquee-logo">서울시설공단</span>
+                            <span class="marquee-logo">국립중앙박물관</span>
+                            <span class="marquee-logo">한국도로공사</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 4: APP SHOWCASE (DARK)
+             ============================================================ -->
+        <section class="app-showcase" id="solution">
+            <div class="app-showcase-glow"></div>
+            <div class="app-inner">
+                <p class="app-eyebrow" data-animate>언제 어디서나 스마트하게</p>
+                <h2 class="app-heading" data-animate>실시간 결과 확인 · 푸시 알림 · 무제한 대량 발송</h2>
+
+                <!-- 4 Phone Fan -->
+                <div class="phones-perspective" data-animate>
+                    <div class="phones-fan">
+                        <div class="fan-phone" style="--rotate: -12deg; --bg: linear-gradient(135deg, #444, #222);">
+                            <div class="fan-screen">
+                                <div class="fan-screen-title">전송결과</div>
+                                <div class="fan-stat-row"><span>SMS</span><span class="fan-bar" style="width:92%"></span></div>
+                                <div class="fan-stat-row"><span>LMS</span><span class="fan-bar" style="width:78%"></span></div>
+                                <div class="fan-stat-row"><span>MMS</span><span class="fan-bar" style="width:64%"></span></div>
+                                <div class="fan-big-num">98.7<small>%</small></div>
+                                <div class="fan-label">도달률</div>
+                            </div>
+                        </div>
+                        <div class="fan-phone" style="--rotate: -4deg; --bg: linear-gradient(135deg, #555, #333);">
+                            <div class="fan-screen">
+                                <div class="fan-screen-title">메시지 작성</div>
+                                <div class="fan-input-mock">발신번호</div>
+                                <div class="fan-input-mock">수신번호</div>
+                                <div class="fan-textarea-mock">메시지 내용을 입력하세요...</div>
+                                <div class="fan-btn-mock">발송하기 →</div>
+                            </div>
+                        </div>
+                        <div class="fan-phone" style="--rotate: 4deg; --bg: linear-gradient(135deg, #666, #444);">
+                            <div class="fan-screen">
+                                <div class="fan-screen-title">주소록</div>
+                                <div class="fan-list-item">홍길동</div>
+                                <div class="fan-list-item">김영희</div>
+                                <div class="fan-list-item">이철수</div>
+                                <div class="fan-list-item">박지민</div>
+                                <div class="fan-list-item">최수진</div>
+                            </div>
+                        </div>
+                        <div class="fan-phone" style="--rotate: 12deg; --bg: linear-gradient(135deg, #777, #555);">
+                            <div class="fan-screen">
+                                <div class="fan-screen-title">충전하기</div>
+                                <div class="fan-balance">잔액</div>
+                                <div class="fan-big-num">15,200<small>원</small></div>
+                                <div class="fan-charge-btns">
+                                    <span>5,000원</span>
+                                    <span>10,000원</span>
+                                </div>
+                                <div class="fan-btn-mock orange">충전하기</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 5: PRICING
+             ============================================================ -->
+        <section class="pricing-section" id="pricing">
+            <div class="pricing-inner">
+                <p class="section-eyebrow" data-animate>요금 안내</p>
+                <h2 class="section-heading" data-animate>비즈니스 규모에 맞춘<br>합리적인 비용 제안</h2>
+                <p class="section-subheading" data-animate>발송량에 따라 자동으로 최적의 단가가 적용됩니다.</p>
+
+                <div class="pricing-grid" data-animate>
+                    <div class="pricing-card">
+                        <div class="pc-header">
+                            <h3>SMS 단문</h3>
+                        </div>
+                        <div class="pc-price">
+                            <span class="pc-number" data-count-decimal="8.3">0</span>
+                            <span class="pc-unit">원 / 건</span>
+                        </div>
+                        <span class="pc-badge">최저가</span>
+                        <p class="pc-desc">90byte 이내 단문 메시지</p>
+                        <ul class="pc-features">
+                            <li>대량 발송 최대 5만건</li>
+                            <li>예약 발송 지원</li>
+                            <li>실시간 전송 결과</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-card featured">
+                        <div class="pc-ribbon">인기</div>
+                        <div class="pc-header">
+                            <h3>LMS 장문</h3>
+                        </div>
+                        <div class="pc-price">
+                            <span class="pc-number" data-count-decimal="26.5">0</span>
+                            <span class="pc-unit">원 / 건</span>
+                        </div>
+                        <span class="pc-badge">최저가</span>
+                        <p class="pc-desc">2,000byte 이내 장문 메시지</p>
+                        <ul class="pc-features">
+                            <li>긴 마케팅 메시지 전송</li>
+                            <li>변수 치환 자동 발송</li>
+                            <li>AI 타겟팅 지원</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-card">
+                        <div class="pc-header">
+                            <h3>MMS 그림문자</h3>
+                        </div>
+                        <div class="pc-price">
+                            <span class="pc-number" data-count-decimal="59">0</span>
+                            <span class="pc-unit">원 / 건</span>
+                        </div>
+                        <span class="pc-badge">최저가</span>
+                        <p class="pc-desc">이미지 포함 멀티미디어 메시지</p>
+                        <ul class="pc-features">
+                            <li>이미지 + 텍스트 동시 전송</li>
+                            <li>마케팅 캠페인 최적화</li>
+                            <li>성과 분석 대시보드</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-card">
+                        <div class="pc-header">
+                            <h3>카카오 알림톡 <small>(예정)</small></h3>
+                        </div>
+                        <div class="pc-price">
+                            <span class="pc-number" data-count-decimal="6.2">0</span>
+                            <span class="pc-unit">원 / 건</span>
+                        </div>
+                        <span class="pc-badge info">정보성</span>
+                        <p class="pc-desc">카카오톡 기반 알림 메시지</p>
+                        <ul class="pc-features">
+                            <li>카카오톡 알림 직접 발송</li>
+                            <li>템플릿 기반 자동화</li>
+                            <li>높은 도달률 보장</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Pricing Feature Cards -->
+                <div class="pricing-extras" data-animate>
+                    <div class="pex-card">
+                        <span class="pex-num">01</span>
+                        <h4>다이내믹 프라이싱</h4>
+                        <p>기존 계약 이후에도 추가 계약에 따라 단가가 즉시 확정되며, 이용 구간·수준에 맞춰 자동으로 조정되어 가장 합리적인 가격을 제공합니다.</p>
+                    </div>
+                    <div class="pex-card">
+                        <span class="pex-num">02</span>
+                        <h4>스마트 볼륨 관리</h4>
+                        <p>발송 건수를 자동으로 집계해 SMS 건당 발송비를 산출하고, 이용 패턴에 맞춰 더욱 합리적인 단가를 보장합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 6: EVENTS
+             ============================================================ -->
+        <section class="events-section" id="events">
+            <div class="events-inner">
+                <p class="section-eyebrow" data-animate>EVENT</p>
+                <h2 class="section-heading" data-animate>알아두고 누려보자</h2>
+
+                <div class="events-grid" data-animate>
+                    <div class="event-card">
+                        <div class="ec-image event-banner-1" role="img" aria-label="첫충전 이벤트 배너">
+                            <div class="ec-image-content">
+                                <span class="ec-badge-text">첫충전 이벤트</span>
+                                <p>10% 적립 + 스타벅스 쿠폰</p>
+                            </div>
+                        </div>
+                        <div class="ec-body">
+                            <h4>첫 충전 시 10% 보너스 적립</h4>
+                            <p>신규 회원 전용 · 충전 금액의 10%를 추가 적립해 드립니다.</p>
+                            <span class="ec-date">2026.01.01 ~ 상시 진행</span>
+                        </div>
+                    </div>
+                    <div class="event-card">
+                        <div class="ec-image event-banner-2" role="img" aria-label="대량 발송 이벤트 배너">
+                            <div class="ec-image-content">
+                                <span class="ec-badge-text">대량 발송 이벤트</span>
+                                <p>최대 50만원 상품권</p>
+                            </div>
+                        </div>
+                        <div class="ec-body">
+                            <h4>대량 발송 고객 특별 보상</h4>
+                            <p>월 10만건 이상 발송 시 최대 50만원 상품권을 드립니다.</p>
+                            <span class="ec-date">2026.03.01 ~ 2026.06.30</span>
+                        </div>
+                    </div>
+                    <div class="event-card">
+                        <div class="ec-image event-banner-3" role="img" aria-label="적립 이벤트 배너">
+                            <div class="ec-image-content">
+                                <span class="ec-badge-text">적립 이벤트</span>
+                                <p>10% 마일리지 적립</p>
+                            </div>
+                        </div>
+                        <div class="ec-body">
+                            <h4>첫 발송 시 적립 보너스</h4>
+                            <p>첫 발송 완료 시 보너스 마일리지가 적립됩니다.</p>
+                            <span class="ec-date">2026.01.01 ~ 상시 진행</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="../support-event.html" class="events-more-btn" data-animate>이벤트 더 보러가기 →</a>
+            </div>
+        </section>
+
+        </main>
+
+        <!-- 푸터 -->
+        <script src="../js/footer.js"></script>
+        <script>
+            document.write(createFooter());
+        </script>
+        <script>
+        (function () {
+            function prefixAssets(scope) {
+                if (!scope) return;
+                var p = '../';
+                scope.querySelectorAll('img[src]').forEach(function (el) {
+                    var s = el.getAttribute('src');
+                    if (!s || /^(https?:|data:)/i.test(s) || s.indexOf('../') === 0) return;
+                    el.src = p + s;
+                });
+                scope.querySelectorAll('a[href]').forEach(function (el) {
+                    var h = el.getAttribute('href');
+                    if (!h || h.charAt(0) === '#' || h.indexOf('javascript:') === 0) return;
+                    if (/^https?:/i.test(h)) return;
+                    if (h.indexOf('../') === 0) return;
+                    el.setAttribute('href', p + h);
+                });
+            }
+            prefixAssets(document.querySelector('.footer'));
+        })();
+        </script>
+    </div>
+
+    <script src="js/main.js?v=2"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof initDropdownMenus === 'function') {
+                initDropdownMenus();
+            }
+        });
+    </script>
+    <script>
+    (function () {
+        function initBenefitsInfinite() {
+            var viewport = document.getElementById('benefitsViewport');
+            var track = document.getElementById('benefitsSliderTrack');
+            var dotsRoot = document.getElementById('benefitsSliderDots');
+            var btnPrev = document.getElementById('benefitsPrev');
+            var btnNext = document.getElementById('benefitsNext');
+            if (!viewport || !track || !dotsRoot) return;
+
+            var originals = Array.prototype.slice.call(track.querySelectorAll('.benefit-slide'));
+            var n = originals.length;
+            if (n < 1) return;
+
+            var lastClone = originals[n - 1].cloneNode(true);
+            var firstClone = originals[0].cloneNode(true);
+            track.insertBefore(lastClone, originals[0]);
+            track.appendChild(firstClone);
+
+            var slides = track.querySelectorAll('.benefit-slide');
+            var total = slides.length;
+            var idx = 1;
+            var gap = 14;
+            var timer;
+            var sw;
+
+            function slideWidthPx() {
+                var w = viewport.offsetWidth;
+                return Math.max(240, w * 0.48);
+            }
+
+            function dotIndex() {
+                if (idx === 0) return n - 1;
+                if (idx === total - 1) return 0;
+                return idx - 1;
+            }
+
+            function layout(skipTransition) {
+                var w = viewport.offsetWidth;
+                sw = slideWidthPx();
+                var i;
+                for (i = 0; i < total; i++) {
+                    slides[i].style.width = sw + 'px';
+                    slides[i].style.flexBasis = sw + 'px';
+                    slides[i].style.minWidth = sw + 'px';
+                }
+                if (skipTransition) track.classList.add('is-jumping');
+                else track.classList.remove('is-jumping');
+
+                var offset = (w - sw) / 2 - idx * (sw + gap);
+                track.style.transform = 'translateX(' + offset + 'px)';
+
+                for (i = 0; i < total; i++) {
+                    slides[i].classList.toggle('is-active', i === idx);
+                }
+                var di = dotIndex();
+                var dotBtns = dotsRoot.querySelectorAll('button');
+                for (i = 0; i < dotBtns.length; i++) {
+                    dotBtns[i].setAttribute('aria-selected', i === di ? 'true' : 'false');
+                }
+
+                if (skipTransition) {
+                    requestAnimationFrame(function () {
+                        requestAnimationFrame(function () {
+                            track.classList.remove('is-jumping');
+                        });
+                    });
+                }
+            }
+
+            function go(delta) {
+                var next = idx + delta;
+                if (next < 0 || next >= total) return;
+                idx = next;
+                layout(false);
+            }
+
+            track.addEventListener('transitionend', function (e) {
+                if (e.propertyName !== 'transform') return;
+                if (idx === total - 1) {
+                    idx = 1;
+                    layout(true);
+                } else if (idx === 0) {
+                    idx = n;
+                    layout(true);
+                }
+            });
+
+            var d;
+            for (d = 0; d < n; d++) {
+                (function (i) {
+                    var b = document.createElement('button');
+                    b.type = 'button';
+                    b.setAttribute('role', 'tab');
+                    b.setAttribute('aria-label', '혜택 ' + (i + 1));
+                    b.addEventListener('click', function () {
+                        idx = i + 1;
+                        layout(false);
+                        resetTimer();
+                    });
+                    dotsRoot.appendChild(b);
+                })(d);
+            }
+
+            if (btnPrev) {
+                btnPrev.addEventListener('click', function () {
+                    go(-1);
+                    resetTimer();
+                });
+            }
+            if (btnNext) {
+                btnNext.addEventListener('click', function () {
+                    go(1);
+                    resetTimer();
+                });
+            }
+
+            function tick() {
+                go(1);
+            }
+            function resetTimer() {
+                clearInterval(timer);
+                timer = setInterval(tick, 4500);
+            }
+
+            layout(true);
+            requestAnimationFrame(function () {
+                layout(false);
+                resetTimer();
+            });
+            window.addEventListener('resize', function () {
+                layout(true);
+                requestAnimationFrame(function () {
+                    layout(false);
+                });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initBenefitsInfinite);
+        } else {
+            initBenefitsInfinite();
+        }
+    })();
+    </script>
+    <script src="../js/index-version-switch.js" defer></script>
+</body>
+</html>

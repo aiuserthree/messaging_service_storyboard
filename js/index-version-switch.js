@@ -1,11 +1,20 @@
 /**
  * index.html · index.last-commit.html 로컬 비교용 하단 바
+ * main_v1.1/ 에서는 ../ 로 spec 루트 HTML로 이동 (<base> 미사용)
  */
 (function () {
     var href = window.location.href || '';
     var isLastCommit = href.indexOf('index.last-commit.html') !== -1;
     var isBeforeToday = href.indexOf('index.before-today.html') !== -1;
-    var isCurrent = !isLastCommit && !isBeforeToday;
+    var isV11Standalone = /main_v1\.1[\/\\]index\.html/i.test(href);
+    var isRootIndex =
+        !isLastCommit &&
+        !isBeforeToday &&
+        !isV11Standalone &&
+        /(^|[\/\\])index\.html(\?|$|#)/i.test(href) &&
+        href.indexOf('index.last-commit') === -1;
+
+    var root = isV11Standalone ? '../' : '';
 
     var style = document.createElement('style');
     style.textContent = [
@@ -38,20 +47,27 @@
     label.textContent = '랜딩 비교';
 
     var aCurrent = document.createElement('a');
-    aCurrent.href = 'index.html';
+    aCurrent.href = root + 'index.html';
     aCurrent.textContent = '현재 작업본';
     aCurrent.title = '지금 워킹 디렉터리';
-    if (isCurrent) aCurrent.className = 'ivb-active';
+    if (isRootIndex) aCurrent.className = 'ivb-active';
 
     var aPrev = document.createElement('a');
-    aPrev.href = 'index.last-commit.html';
+    aPrev.href = root + 'index.last-commit.html';
     aPrev.textContent = '이전 커밋';
     aPrev.title = '마지막 git 커밋(HEAD) 스냅샷';
     if (isLastCommit) aPrev.className = 'ivb-active';
 
+    var aV11 = document.createElement('a');
+    aV11.href = root + 'main_v1.1/index.html';
+    aV11.textContent = '수정 버전';
+    aV11.title = 'v1.1 랜딩 본문 + 사이트 GNB·푸터';
+    if (isV11Standalone) aV11.className = 'ivb-active';
+
     bar.appendChild(label);
     bar.appendChild(aCurrent);
     bar.appendChild(aPrev);
+    bar.appendChild(aV11);
 
     if (document.body) {
         document.body.appendChild(bar);
