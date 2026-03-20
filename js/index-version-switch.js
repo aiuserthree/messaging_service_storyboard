@@ -46,28 +46,29 @@
     label.className = 'ivb-label';
     label.textContent = '랜딩 비교';
 
+    /* 순서: A(수정버전) → B(현재 작업본) → C(이전 커밋) */
+    var aV11 = document.createElement('a');
+    aV11.href = root + 'main_v1.1/index.html';
+    aV11.textContent = 'A';
+    aV11.title = '수정 버전 · main_v1.1 랜딩';
+    if (isV11Standalone) aV11.className = 'ivb-active';
+
     var aCurrent = document.createElement('a');
     aCurrent.href = root + 'index.html';
-    aCurrent.textContent = '현재 작업본';
-    aCurrent.title = '지금 워킹 디렉터리';
+    aCurrent.textContent = 'B';
+    aCurrent.title = '현재 작업본 · index.html';
     if (isRootIndex) aCurrent.className = 'ivb-active';
 
     var aPrev = document.createElement('a');
     aPrev.href = root + 'index.last-commit.html';
-    aPrev.textContent = '이전 커밋';
-    aPrev.title = '마지막 git 커밋(HEAD) 스냅샷';
+    aPrev.textContent = 'C';
+    aPrev.title = '이전 커밋 · index.last-commit.html';
     if (isLastCommit) aPrev.className = 'ivb-active';
 
-    var aV11 = document.createElement('a');
-    aV11.href = root + 'main_v1.1/index.html';
-    aV11.textContent = '수정 버전';
-    aV11.title = 'v1.1 랜딩 본문 + 사이트 GNB·푸터';
-    if (isV11Standalone) aV11.className = 'ivb-active';
-
     bar.appendChild(label);
+    bar.appendChild(aV11);
     bar.appendChild(aCurrent);
     bar.appendChild(aPrev);
-    bar.appendChild(aV11);
 
     if (document.body) {
         document.body.appendChild(bar);
