@@ -221,7 +221,7 @@ html {
    ============================================================ */
 .hero {
     background: var(--bg-white);
-    padding: 160px 24px 100px;
+    padding: 112px 24px 100px;
     min-height: 90vh;
     display: flex;
     flex-direction: column;
@@ -849,32 +849,23 @@ html {
 .fd-block.reverse .fd-image { order: 2; }
 .fd-block.reverse .fd-text { order: 1; }
 
-.fd-illust {
+/* 주요 기능 비주얼 (루트 index.html main/images 참고) */
+.fd-photo {
     width: 100%;
-    aspect-ratio: 36/28;
+    aspect-ratio: 36 / 28;
     border-radius: var(--radius);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 
-.fd-illust.blue-grad { background: linear-gradient(135deg, #f0fdf4, #bbf7d0); }
-.fd-illust.green-grad { background: linear-gradient(135deg, #E6FFFA, #B2F5EA); }
-.fd-illust.orange-grad { background: linear-gradient(135deg, #FFFAF0, #FEFCBF); }
-
-/* Abstract shapes for illustration placeholders */
-.illust-shape {
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0.4;
+.fd-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
 }
-
-.shape-1 { width: 120px; height: 120px; background: rgba(92,184,92,0.2); top: 20%; left: 15%; }
-.shape-2 { width: 80px; height: 80px; background: rgba(92,184,92,0.15); top: 50%; right: 20%; }
-.shape-3 { width: 60px; height: 60px; background: rgba(92,184,92,0.3); bottom: 15%; left: 40%; border-radius: 12px; }
-.shape-4 { width: 100px; height: 100px; background: rgba(72,187,120,0.25); top: 25%; left: 25%; }
-.shape-5 { width: 70px; height: 70px; background: rgba(72,187,120,0.35); bottom: 20%; right: 25%; border-radius: 16px; }
-.shape-6 { width: 110px; height: 110px; background: rgba(246,173,85,0.2); top: 20%; right: 20%; }
-.shape-7 { width: 80px; height: 80px; background: rgba(246,173,85,0.3); bottom: 25%; left: 20%; border-radius: 12px; }
 
 .fd-badge {
     display: inline-block;
@@ -1018,7 +1009,7 @@ html {
    SECTION 8: CTA BANNER
    ============================================================ */
 .cta-banner {
-    background: var(--primary-gradient);
+    background: #000;
     padding: 80px 24px;
     text-align: center;
     position: relative;
@@ -1122,7 +1113,7 @@ html {
         font-size: 14px;
     }
 
-    .hero { padding: 120px 20px 60px; min-height: auto; }
+    .hero { padding: 88px 20px 60px; min-height: auto; }
     .hero-title { font-size: 28px; }
     .hero-desc { font-size: 15px; }
     .hero-cards { grid-template-columns: 1fr; max-width: 400px; }

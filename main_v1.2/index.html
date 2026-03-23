@@ -10,12 +10,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=5">
+    <link rel="stylesheet" href="css/style.css?v=9">
     <style>
+        /* GNB 항상 노출 (스크롤 시에도 상단 고정) */
+        .page-index .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            width: 100%;
+            max-width: 100%;
+        }
         .main-content.landing-v12 {
             width: 100%;
             max-width: 100%;
-            padding: 0;
+            padding: 64px 0 0;
             margin: 0;
         }
         .page-index .header .header-actions {
@@ -129,11 +139,11 @@
                 </div>
                 <div class="hero-card" data-animate>
                     <h4>안정적인 시스템 환경</h4>
-                    <p>유연하고 안정적인 클라우드 서비스, 이중화 구성</p>
+                    <p>유연하고 안정적인<br>클라우드 서비스, 이중화 구성</p>
                 </div>
                 <div class="hero-card" data-animate>
                     <h4>활용도 높은 마케팅 기능</h4>
-                    <p>실시간 통계 등 편리한 기능 제공</p>
+                    <p>실시간 통계 등<br>편리한 기능 제공</p>
                 </div>
             </div>
         </section>
@@ -236,13 +246,11 @@
                 <h2 class="section-title" data-animate>주요 기능</h2>
                 <p class="section-subtitle" data-animate>톡벨의 강력한 기능으로 비즈니스 커뮤니케이션을 완성하세요</p>
 
-                <!-- Block 1 -->
+                <!-- Block 1 (이미지: 루트 index.html — feature-collaboration.jpg) -->
                 <div class="fd-block" data-animate>
                     <div class="fd-image">
-                        <div class="fd-illust blue-grad">
-                            <div class="illust-shape shape-1"></div>
-                            <div class="illust-shape shape-2"></div>
-                            <div class="illust-shape shape-3"></div>
+                        <div class="fd-photo">
+                            <img src="../main/images/feature-collaboration.jpg" alt="AI 타겟팅 전송" width="1200" height="800" loading="lazy">
                         </div>
                     </div>
                     <div class="fd-text">
@@ -252,12 +260,11 @@
                     </div>
                 </div>
 
-                <!-- Block 2 (reversed) -->
+                <!-- Block 2 (이미지: 루트 index.html — feature-mobile.jpg) -->
                 <div class="fd-block reverse" data-animate>
                     <div class="fd-image">
-                        <div class="fd-illust green-grad">
-                            <div class="illust-shape shape-4"></div>
-                            <div class="illust-shape shape-5"></div>
+                        <div class="fd-photo">
+                            <img src="../main/images/feature-mobile.jpg" alt="대량 메시지 자동화" width="1200" height="800" loading="lazy">
                         </div>
                     </div>
                     <div class="fd-text">
@@ -267,12 +274,11 @@
                     </div>
                 </div>
 
-                <!-- Block 3 -->
+                <!-- Block 3 (이미지: 루트 index.html 히어로 — hero-dashboard.jpg, 성과·대시보드 톤) -->
                 <div class="fd-block" data-animate>
                     <div class="fd-image">
-                        <div class="fd-illust orange-grad">
-                            <div class="illust-shape shape-6"></div>
-                            <div class="illust-shape shape-7"></div>
+                        <div class="fd-photo">
+                            <img src="../main/images/hero-dashboard.jpg" alt="실시간 성과·대시보드" width="1200" height="800" loading="lazy">
                         </div>
                     </div>
                     <div class="fd-text">
@@ -291,7 +297,7 @@
             <div class="container">
                 <div class="faq-header">
                     <h2 class="section-title" data-animate>자주 묻는 질문 (FAQ)</h2>
-                    <a href="#" class="faq-more" data-animate>전체 보기 →</a>
+                    <a href="../support-faq.html" class="faq-more" data-animate>전체 보기 →</a>
                 </div>
 
                 <div class="faq-list" data-animate>
