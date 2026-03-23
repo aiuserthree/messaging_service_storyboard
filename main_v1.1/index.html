@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>톡벨 - 비즈니스 메시징 플랫폼</title>
     <!-- index.html 과 동일 순서·경로(상위 폴더 spec 기준). <base> 미사용 → GNB/푸터 깨짐 방지 -->
-    <script src="../js/header.js?v=3"></script>
+    <script src="../js/header.js?v=4"></script>
     <link rel="stylesheet" href="../css/common.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=23">
+    <link rel="stylesheet" href="css/style.css?v=31">
     <style>
         /* GNB 항상 노출 (스크롤 시에도 상단 고정) */
         .page-index .header {
@@ -28,6 +28,10 @@
             max-width: 100%;
             padding: 64px 0 0;
             margin: 0;
+        }
+        /* 빌보드 바로 아래 히어로: 상단 여백만 살짝 줄임 */
+        .main-content.landing-v11 > .hero {
+            padding-top: 88px;
         }
 
         /* GNB 로그인·톡벨 가입하기 — 디자인 참고(둥근 모서리, 프라이머리 톤 그림자) */
@@ -77,6 +81,212 @@
             max-width: min(1520px, 100%) !important;
         }
 
+        /* ── 히어로 빌보드: 풀폭 · 타이틀 없음 ── */
+        .benefits--billboard {
+            padding: 0 !important;
+            margin: 0;
+            width: 100%;
+            max-width: 100%;
+            background: var(--bg-white, #ffffff);
+        }
+        .benefits--billboard .benefits-billboard-inner {
+            max-width: 100% !important;
+            padding: 0;
+            margin: 0;
+        }
+        .benefits--billboard .benefits-slider-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 12px 0 8px;
+        }
+        .benefits--billboard .benefits-slider-shell {
+            position: relative;
+            gap: 0;
+        }
+        .benefits--billboard .benefits-slider-viewport {
+            border-radius: 0;
+            position: relative;
+        }
+        .benefits--billboard .benefit-slide {
+            min-height: clamp(320px, 50vh, 580px);
+            transform: none !important;
+            opacity: 1 !important;
+            border-radius: 14px;
+            border: none;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+            align-items: center;
+            justify-content: center;
+        }
+        .benefits--billboard .benefit-slide.is-active {
+            box-shadow: none;
+            border-color: transparent;
+        }
+        .benefits--billboard .benefit-slide-content {
+            padding: clamp(28px, 5vw, 48px) clamp(20px, 6vw, 64px) clamp(32px, 6vw, 56px);
+            max-width: min(920px, 92%);
+            margin: 0 auto;
+            text-align: center;
+        }
+        .benefits--billboard .benefit-slide--img1 .benefit-slide-content {
+            text-align: center;
+            padding-left: clamp(20px, 6vw, 64px);
+            padding-right: clamp(20px, 6vw, 64px);
+        }
+        .benefits--billboard .benefit-slide-value {
+            font-size: clamp(28px, 5.5vw, 52px);
+        }
+        .benefits--billboard .benefits-slider-dots {
+            display: none;
+        }
+
+        /* 하단 중앙: 진행 바 + 일시정지 (참고 시안) */
+        .benefits-billboard-footer {
+            display: none;
+        }
+        .benefits--billboard .benefits-billboard-footer {
+            position: absolute;
+            left: 50%;
+            bottom: 18px;
+            transform: translateX(-50%);
+            z-index: 7;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+        }
+        .benefits-progress-wrap {
+            width: min(200px, 38vw);
+            height: 3px;
+            position: relative;
+            border-radius: 2px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.38);
+        }
+        .benefits-progress-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            background: #111111;
+            border-radius: 2px;
+            transform-origin: left center;
+            transform: scaleX(0);
+        }
+        .benefits-progress-fill.is-running {
+            animation: bb-banner-progress var(--bb-interval, 5s) linear forwards;
+        }
+        .benefits-progress-wrap.is-paused .benefits-progress-fill {
+            animation-play-state: paused;
+        }
+        @keyframes bb-banner-progress {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        .benefits-autoplay-btn {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: #111;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s, transform 0.15s;
+        }
+        .benefits-autoplay-btn:hover {
+            opacity: 0.75;
+        }
+        .benefits-autoplay-btn:focus-visible {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+        .benefits-autoplay-btn .bb-icon-pause {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            justify-content: center;
+        }
+        .benefits-autoplay-btn .bb-icon-pause span {
+            display: block;
+            width: 4px;
+            height: 14px;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        .benefits-autoplay-btn .bb-icon-play {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 8px 0 8px 12px;
+            border-color: transparent transparent transparent currentColor;
+            margin-left: 3px;
+        }
+        .benefits-autoplay-btn.bb-state--playing .bb-icon-play { display: none; }
+        .benefits-autoplay-btn.bb-state--playing .bb-icon-pause { display: flex; }
+        .benefits-autoplay-btn.bb-state--paused .bb-icon-play { display: block; }
+        .benefits-autoplay-btn.bb-state--paused .bb-icon-pause { display: none; }
+        /* 좌우 이동: 뷰포트 안·가운데 배너(≈86%폭) 안쪽 — JS BILLBOARD_SLIDE_RATIO 와 맞춤 */
+        .benefits--billboard .benefits-nav--overlay {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 6;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            border: 3px solid #5cb85c;
+            background: linear-gradient(165deg, #ffffff 0%, #f0fdf4 55%, #ecfdf5 100%);
+            color: #166534;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1;
+            padding: 0 0 2px 0;
+            box-shadow:
+                0 0 0 1px rgba(22, 101, 52, 0.12),
+                0 6px 22px rgba(22, 101, 52, 0.28),
+                0 6px 22px rgba(0, 0, 0, 0.12);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+        .benefits--billboard .benefits-nav--overlay:hover {
+            background: linear-gradient(165deg, #ffffff 0%, #dcfce7 100%);
+            color: #14532d;
+            border-color: #4a9e4a;
+            box-shadow:
+                0 0 0 1px rgba(22, 101, 52, 0.2),
+                0 10px 32px rgba(22, 101, 52, 0.38),
+                0 8px 32px rgba(0, 0, 0, 0.14);
+            transform: translateY(-50%) scale(1.06);
+        }
+        .benefits--billboard .benefits-nav--overlay:active {
+            transform: translateY(-50%) scale(0.96);
+        }
+        .benefits--billboard .benefits-nav--overlay:focus-visible {
+            outline: 3px solid #2563eb;
+            outline-offset: 3px;
+        }
+        .benefits--billboard .benefits-nav--overlay.benefits-nav-prev {
+            left: calc((100% - 86%) / 2 + 14px);
+            right: auto;
+        }
+        .benefits--billboard .benefits-nav--overlay.benefits-nav-next {
+            right: calc((100% - 86%) / 2 + 14px);
+            left: auto;
+        }
+        .benefits--billboard .benefits-slider-track {
+            position: relative;
+            z-index: 1;
+        }
+
         .benefits-slider-wrap {
             width: 100%;
             max-width: min(1520px, 100vw);
@@ -121,6 +331,10 @@
             gap: 14px;
             will-change: transform;
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Coway식: 인접 배너 살짝 노출 — gap은 JS와 동일(16px) */
+        .benefits--billboard .benefits-slider-track {
+            gap: 16px;
         }
         .benefits-slider-track.is-jumping {
             transition: none !important;
@@ -302,6 +516,62 @@
     <main class="main-content landing-v11">
 
         <!-- ============================================================
+             풀폭 빌보드 (Coway식 메인 비주얼) — 타이틀 없음 · 자동 롤링
+             ============================================================ -->
+        <section class="benefits benefits--billboard" id="benefits" aria-label="프로모션 배너">
+            <div class="benefits-inner benefits-billboard-inner">
+                <div class="benefits-slider-wrap">
+                    <div class="benefits-slider-shell">
+                        <div class="benefits-slider-viewport" id="benefitsViewport">
+                            <button type="button" class="benefits-nav benefits-nav-prev benefits-nav--overlay" id="benefitsPrev" aria-label="이전 배너">‹</button>
+                            <button type="button" class="benefits-nav benefits-nav-next benefits-nav--overlay" id="benefitsNext" aria-label="다음 배너">›</button>
+                            <div class="benefits-slider-track" id="benefitsSliderTrack">
+                                <article class="benefit-slide benefit-slide--img1">
+                                    <div class="benefit-slide-content">
+                                        <p class="benefit-slide-label">첫 충전 할인</p>
+                                        <p class="benefit-slide-value">10%</p>
+                                        <p class="benefit-slide-sub">신규 회원 첫 충전 시 보너스 적용</p>
+                                    </div>
+                                </article>
+                                <article class="benefit-slide benefit-slide--img2">
+                                    <div class="benefit-slide-content">
+                                        <p class="benefit-slide-label">신규 가입 선물</p>
+                                        <p class="benefit-slide-value">스타벅스 쿠폰</p>
+                                        <p class="benefit-slide-sub">가입 이벤트 조건 충족 시 제공</p>
+                                    </div>
+                                </article>
+                                <article class="benefit-slide benefit-slide--img3">
+                                    <div class="benefit-slide-content">
+                                        <p class="benefit-slide-label">가입 축하 머니</p>
+                                        <p class="benefit-slide-value">3,000원</p>
+                                        <p class="benefit-slide-sub">가입 완료 후 지급되는 이용 마일리지</p>
+                                    </div>
+                                </article>
+                                <article class="benefit-slide benefit-slide--img4">
+                                    <div class="benefit-slide-content">
+                                        <p class="benefit-slide-label">대량 발송 이벤트</p>
+                                        <p class="benefit-slide-value">최대 50만원</p>
+                                        <p class="benefit-slide-sub">월 발송 조건 충족 시 상품권 등 추첨</p>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="benefits-billboard-footer" id="benefitsBillboardFooter" aria-hidden="false">
+                                <div class="benefits-progress-wrap" id="benefitsProgressWrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="배너 자동 전환 진행">
+                                    <div class="benefits-progress-fill" id="benefitsProgressFill"></div>
+                                </div>
+                                <button type="button" class="benefits-autoplay-btn bb-state--playing" id="benefitsAutoplayToggle" aria-label="자동 재생 일시정지" aria-pressed="false">
+                                    <span class="bb-icon-pause" aria-hidden="true"><span></span><span></span></span>
+                                    <span class="bb-icon-play" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="benefits-slider-dots" id="benefitsSliderDots" role="tablist" aria-label="배너 위치"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
              SECTION 1: HERO
              ============================================================ -->
         <section class="hero" id="hero">
@@ -373,56 +643,6 @@
                             <div class="phone-home-bar"></div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================================================
-             SECTION 2: BENEFITS (배너 슬라이드)
-             ============================================================ -->
-        <section class="benefits" id="benefits">
-            <div class="benefits-inner">
-                <p class="section-eyebrow" data-animate>신규 회원을 위한</p>
-                <h2 class="section-heading" data-animate>더욱 다양하고 알찬 혜택</h2>
-
-                <div class="benefits-slider-wrap" data-animate>
-                    <div class="benefits-slider-shell">
-                        <button type="button" class="benefits-nav benefits-nav-prev" id="benefitsPrev" aria-label="이전 혜택">‹</button>
-                        <div class="benefits-slider-viewport" id="benefitsViewport">
-                            <div class="benefits-slider-track" id="benefitsSliderTrack">
-                                <article class="benefit-slide benefit-slide--img1">
-                                    <div class="benefit-slide-content">
-                                        <p class="benefit-slide-label">첫 충전 할인</p>
-                                        <p class="benefit-slide-value">10%</p>
-                                        <p class="benefit-slide-sub">신규 회원 첫 충전 시 보너스 적용</p>
-                                    </div>
-                                </article>
-                                <article class="benefit-slide benefit-slide--img2">
-                                    <div class="benefit-slide-content">
-                                        <p class="benefit-slide-label">신규 가입 선물</p>
-                                        <p class="benefit-slide-value">스타벅스 쿠폰</p>
-                                        <p class="benefit-slide-sub">가입 이벤트 조건 충족 시 제공</p>
-                                    </div>
-                                </article>
-                                <article class="benefit-slide benefit-slide--img3">
-                                    <div class="benefit-slide-content">
-                                        <p class="benefit-slide-label">가입 축하 머니</p>
-                                        <p class="benefit-slide-value">3,000원</p>
-                                        <p class="benefit-slide-sub">가입 완료 후 지급되는 이용 마일리지</p>
-                                    </div>
-                                </article>
-                                <article class="benefit-slide benefit-slide--img4">
-                                    <div class="benefit-slide-content">
-                                        <p class="benefit-slide-label">대량 발송 이벤트</p>
-                                        <p class="benefit-slide-value">최대 50만원</p>
-                                        <p class="benefit-slide-sub">월 발송 조건 충족 시 상품권 등 추첨</p>
-                                    </div>
-                                </article>
-                            </div>
-                        </div>
-                        <button type="button" class="benefits-nav benefits-nav-next" id="benefitsNext" aria-label="다음 혜택">›</button>
-                    </div>
-                    <div class="benefits-slider-dots" id="benefitsSliderDots" role="tablist" aria-label="혜택 배너"></div>
                 </div>
             </div>
         </section>
@@ -727,6 +947,12 @@
             var n = originals.length;
             if (n < 1) return;
 
+            var isBillboard = !!viewport.closest('.benefits--billboard');
+            /* 빌보드: 양옆 슬라이드 peek + 카드 간격(Coway 메인 비슷) */
+            var BILLBOARD_GAP = 16;
+            var BILLBOARD_SLIDE_RATIO = 0.86;
+            var gap = isBillboard ? BILLBOARD_GAP : 14;
+
             var lastClone = originals[n - 1].cloneNode(true);
             var firstClone = originals[0].cloneNode(true);
             track.insertBefore(lastClone, originals[0]);
@@ -735,12 +961,47 @@
             var slides = track.querySelectorAll('.benefit-slide');
             var total = slides.length;
             var idx = 1;
-            var gap = 14;
             var timer;
             var sw;
+            /* 배너(슬라이드)당 자동 전환: 5초 */
+            var INTERVAL_MS = 5000;
+            var progressWrap = document.getElementById('benefitsProgressWrap');
+            var progressFill = document.getElementById('benefitsProgressFill');
+            var btnAutoplay = document.getElementById('benefitsAutoplayToggle');
+            var autoplayUserPaused = false;
+            var hoverViewport = false;
+
+            if (isBillboard && progressWrap) {
+                progressWrap.style.setProperty('--bb-interval', INTERVAL_MS + 'ms');
+            }
+
+            function restartProgressAnimation() {
+                if (!isBillboard || !progressFill) return;
+                if (autoplayUserPaused || hoverViewport) return;
+                progressFill.classList.remove('is-running');
+                void progressFill.offsetWidth;
+                progressFill.classList.add('is-running');
+            }
+
+            function syncProgressPaused() {
+                if (!progressWrap) return;
+                progressWrap.classList.toggle('is-paused', autoplayUserPaused || hoverViewport);
+            }
+
+            function updateAutoplayButton() {
+                if (!btnAutoplay) return;
+                var paused = autoplayUserPaused;
+                btnAutoplay.classList.toggle('bb-state--paused', paused);
+                btnAutoplay.classList.toggle('bb-state--playing', !paused);
+                btnAutoplay.setAttribute('aria-pressed', paused ? 'true' : 'false');
+                btnAutoplay.setAttribute('aria-label', paused ? '자동 재생 재개' : '자동 재생 일시정지');
+            }
 
             function slideWidthPx() {
                 var w = viewport.offsetWidth;
+                if (isBillboard) {
+                    return Math.max(260, Math.round(w * BILLBOARD_SLIDE_RATIO));
+                }
                 return Math.max(240, w * 0.48);
             }
 
@@ -795,9 +1056,11 @@
                 if (idx === total - 1) {
                     idx = 1;
                     layout(true);
+                    if (isBillboard) resetTimer();
                 } else if (idx === 0) {
                     idx = n;
                     layout(true);
+                    if (isBillboard) resetTimer();
                 }
             });
 
@@ -830,17 +1093,54 @@
                 });
             }
 
+            if (isBillboard && viewport) {
+                viewport.addEventListener('mouseenter', function () {
+                    hoverViewport = true;
+                    clearInterval(timer);
+                    syncProgressPaused();
+                });
+                viewport.addEventListener('mouseleave', function () {
+                    hoverViewport = false;
+                    syncProgressPaused();
+                    if (!autoplayUserPaused) {
+                        resetTimer();
+                    }
+                });
+            }
+
+            if (btnAutoplay) {
+                btnAutoplay.addEventListener('click', function () {
+                    autoplayUserPaused = !autoplayUserPaused;
+                    updateAutoplayButton();
+                    syncProgressPaused();
+                    if (autoplayUserPaused) {
+                        clearInterval(timer);
+                    } else {
+                        resetTimer();
+                    }
+                });
+            }
+
             function tick() {
                 go(1);
+                /* 자동 전환마다 진행 바 애니메이션 재시작 (최초 resetTimer 이후 tick에서는 기존에 누락됨) */
+                restartProgressAnimation();
             }
             function resetTimer() {
                 clearInterval(timer);
-                timer = setInterval(tick, 4500);
+                syncProgressPaused();
+                if (autoplayUserPaused || hoverViewport) return;
+                restartProgressAnimation();
+                timer = setInterval(tick, INTERVAL_MS);
             }
 
             layout(true);
             requestAnimationFrame(function () {
                 layout(false);
+                if (isBillboard) {
+                    updateAutoplayButton();
+                    syncProgressPaused();
+                }
                 resetTimer();
             });
             window.addEventListener('resize', function () {

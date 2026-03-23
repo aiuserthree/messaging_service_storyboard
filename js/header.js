@@ -343,7 +343,7 @@ function initDropdownMenus() {
                 e.stopPropagation();
                 
                 // 첫 번째 depth 2 페이지로 이동
-                window.location.href = firstItemUrl;
+                window.location.href = resolveSpecPageUrl(firstItemUrl);
             });
         }
     });
@@ -811,10 +811,33 @@ function createFloatingMenu() {
     `;
 }
 
+/**
+ * main_v1.1/ · main_v1.2/ 등 spec 하위 랜딩에서 GNB가 루트 HTML을 가리키도록 ../ 보정
+ */
+function getSpecPageRelativePrefix() {
+    try {
+        var path = (window.location.pathname || '').replace(/\\/g, '/');
+        if (/\/main_v1\.\d+\//.test(path)) {
+            return '../';
+        }
+    } catch (e) {}
+    return '';
+}
+
+function resolveSpecPageUrl(url) {
+    if (url == null || url === '') return url;
+    var u = String(url).trim();
+    if (u === '' || u.charAt(0) === '#') return u;
+    if (/^https?:\/\//i.test(u) || /^mailto:/i.test(u) || /^javascript:/i.test(u)) return u;
+    if (u.indexOf('../') === 0) return u;
+    var prefix = getSpecPageRelativePrefix();
+    return prefix + u.replace(/^\.\//, '');
+}
+
 // 로그아웃 처리 함수
 function handleLogout() {
     localStorage.removeItem('isLoggedIn');
-    window.location.href = 'index.html';
+    window.location.href = resolveSpecPageUrl('index.html');
 }
 
 // 로그인 상태 확인 및 네비게이션 함수 (로그인 체크 제거)
@@ -822,9 +845,7 @@ function checkLoginAndNavigate(url, event) {
     if (event) {
         event.preventDefault();
     }
-    
-    // 로그인 체크 없이 바로 이동
-    window.location.href = url;
+    window.location.href = resolveSpecPageUrl(url);
     return false;
 }
 
