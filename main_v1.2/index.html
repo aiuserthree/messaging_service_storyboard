@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>톡벨 — 비즈니스 메시징 플랫폼</title>
+    <script src="../js/header.js?v=3"></script>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=5">
+    <style>
+        .main-content.landing-v12 {
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        .page-index .header .header-actions {
+            gap: 10px;
+        }
+        .page-index .header .btn.btn-outline {
+            background: #ffffff !important;
+            color: #475569 !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 7px !important;
+            padding: 8px 14px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            box-shadow: none !important;
+            transition: background 0.2s, border-color 0.2s, color 0.2s !important;
+        }
+        .page-index .header .btn.btn-outline:hover,
+        .page-index .header .btn.btn-outline:focus-visible {
+            background: #f8fafc !important;
+            border-color: #94a3b8 !important;
+            color: #334155 !important;
+            transform: none !important;
+        }
+        .page-index .header .btn.btn-primary {
+            background-color: #111111 !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 8px !important;
+            box-shadow: 0 2px 8px rgba(92, 184, 92, 0.22), 0 3px 14px rgba(92, 184, 92, 0.12) !important;
+            padding: 8px 16px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            letter-spacing: -0.02em !important;
+            transition: background 0.2s, box-shadow 0.2s !important;
+        }
+        .page-index .header .btn.btn-primary:hover,
+        .page-index .header .btn.btn-primary:focus-visible {
+            background-color: #1a1a1a !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 10px rgba(92, 184, 92, 0.28), 0 4px 18px rgba(92, 184, 92, 0.14) !important;
+            transform: none !important;
+            opacity: 1 !important;
+        }
+        body.page-index .app-container {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        .landing-v12 .hero-btns .btn-primary {
+            color: #fff !important;
+        }
+        .landing-v12 .hero-btns .btn-primary:hover,
+        .landing-v12 .hero-btns .btn-primary:focus-visible {
+            color: #fff !important;
+        }
+    </style>
+</head>
+<body class="page-index">
+    <div class="app-container">
+        <script>
+            document.write(createHeader(''));
+        </script>
+        <script>
+        (function () {
+            function prefixAssets(scope) {
+                if (!scope) return;
+                var p = '../';
+                scope.querySelectorAll('img[src]').forEach(function (el) {
+                    var s = el.getAttribute('src');
+                    if (!s || /^(https?:|data:)/i.test(s) || s.indexOf('../') === 0) return;
+                    el.src = p + s;
+                });
+                scope.querySelectorAll('a[href]').forEach(function (el) {
+                    var h = el.getAttribute('href');
+                    if (!h || h.charAt(0) === '#' || h.indexOf('javascript:') === 0) return;
+                    if (/^https?:/i.test(h)) return;
+                    if (h.indexOf('../') === 0) return;
+                    el.setAttribute('href', p + h);
+                });
+            }
+            prefixAssets(document.querySelector('.header'));
+        })();
+        </script>
+
+    <main class="main-content landing-v12">
+
+        <!-- ============================================================
+             SECTION 1: HERO
+             ============================================================ -->
+        <section class="hero" id="hero">
+            <div class="hero-center">
+                <span class="hero-badge" data-animate>비즈니스 메시징 플랫폼</span>
+                <h1 class="hero-title" data-animate>
+                    예산에 맞게, 목적에 맞게.<br>
+                    <span class="hero-accent">부담없이 경험해보세요</span>
+                </h1>
+                <p class="hero-desc" data-animate>여기도 좋고 거기도 좋은거 같아 선택하기 어렵다고요? 톡벨이 해답이에요.<br>비즈니스에 필요한 모든 메시지 서비스를 시작해보세요.</p>
+                <div class="hero-btns" data-animate>
+                    <a href="../signup.html" class="btn-primary">지금 시작하기 →</a>
+                    <a href="../quote-inquiry.html" class="btn-outline">견적 문의하기</a>
+                </div>
+            </div>
+
+            <div class="hero-cards">
+                <div class="hero-card" data-animate>
+                    <h4>국내 최저가</h4>
+                    <p>업계 최저가 제안,<br>비용 절감 효과 극대화</p>
+                </div>
+                <div class="hero-card" data-animate>
+                    <h4>카카오톡 비즈메시지 최적화</h4>
+                    <p>알림톡, 브랜드 메시지 등<br>필요에 맞는 서비스</p>
+                </div>
+                <div class="hero-card" data-animate>
+                    <h4>안정적인 시스템 환경</h4>
+                    <p>유연하고 안정적인 클라우드 서비스, 이중화 구성</p>
+                </div>
+                <div class="hero-card" data-animate>
+                    <h4>활용도 높은 마케팅 기능</h4>
+                    <p>실시간 통계 등 편리한 기능 제공</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 2: PRICING
+             ============================================================ -->
+        <section class="pricing-section" id="pricing">
+            <div class="container">
+                <h2 class="section-title" data-animate>합리적인 가격, 최고의 품질</h2>
+                <p class="section-subtitle" data-animate>톡벨은 국내 최저가로 다양한 메시지 채널을 제공합니다</p>
+
+                <!-- 문자 SMS/LMS/MMS -->
+                <div class="pricing-category" data-animate>
+                    <h3 class="pricing-cat-title">문자 (SMS / LMS / MMS)</h3>
+                </div>
+                <div class="pricing-grid" data-animate>
+                    <div class="price-card">
+                        <span class="price-badge best">Best</span>
+                        <h4>단문 메시지 (SMS)</h4>
+                        <div class="price-amount"><strong data-count="8.3">8.3</strong><span>원 / 건</span></div>
+                        <ul class="price-features">
+                            <li>짧고 간결한 텍스트 전송에 최적화</li>
+                            <li>90byte 이내 한글 기준 45자 이내</li>
+                        </ul>
+                    </div>
+                    <div class="price-card featured">
+                        <span class="price-badge new">New</span>
+                        <h4>장문 메시지 (LMS)</h4>
+                        <div class="price-amount"><strong data-count="26.5">26.5</strong><span>원 / 건</span></div>
+                        <ul class="price-features">
+                            <li>긴 문장의 텍스트 전송에 최적화</li>
+                            <li>2,000byte 이내 한글 기준 1,000자 이내</li>
+                        </ul>
+                    </div>
+                    <div class="price-card">
+                        <span class="price-badge sale">Sale</span>
+                        <h4>포토 메시지 (MMS)</h4>
+                        <div class="price-amount"><strong data-count="59">59</strong><span>원 / 건</span></div>
+                        <ul class="price-features">
+                            <li>이미지와 함께 다양한 정보 전달에 최적화</li>
+                            <li>이미지 3장 + 텍스트 2,000byte 이내</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 카카오톡 -->
+                <div class="pricing-category pricing-category--kakao" data-animate>
+                    <h3 class="pricing-cat-title">카카오톡 (알림톡 / 브랜드 메시지) <span class="pricing-cat-note">— 서비스 준비중</span></h3>
+                </div>
+                <div class="pricing-grid pricing-grid--kakao" data-animate>
+                    <article class="price-card price-card--kakao">
+                        <div class="kakao-card-head">
+                            <h4 class="kakao-card-title">알림톡</h4>
+                            <span class="kakao-type-badge kakao-type-badge--info">정보성</span>
+                        </div>
+                        <div class="price-amount price-amount--kakao"><strong data-count="6.2">6.2</strong><span>원 / 건</span></div>
+                        <div class="kakao-char-tag-wrap"><p class="kakao-char-tag">1,000자</p></div>
+                        <div class="kakao-card-divider" aria-hidden="true"></div>
+                        <ul class="price-features price-features--dot">
+                            <li>주문/결제/배송 등 정보성 메시지 발송</li>
+                            <li>스팸 걱정 없이 문자보다 저렴하게 발송</li>
+                        </ul>
+                    </article>
+                    <article class="price-card price-card--kakao">
+                        <div class="kakao-card-head">
+                            <h4 class="kakao-card-title">브랜드 메시지 (친구)</h4>
+                            <span class="kakao-type-badge kakao-type-badge--new">New</span>
+                        </div>
+                        <div class="price-amount price-amount--kakao"><strong data-count="21.5">21.5</strong><span>원 / 건</span></div>
+                        <div class="kakao-char-tag-wrap"><p class="kakao-char-tag">광고성</p></div>
+                        <div class="kakao-card-divider" aria-hidden="true"></div>
+                        <ul class="price-features price-features--dot">
+                            <li>카카오톡 채널 친구에게 광고성 메시지 발송</li>
+                            <li>이미지, 버튼 등 다양한 메시지 형식 지원</li>
+                        </ul>
+                    </article>
+                    <article class="price-card price-card--kakao">
+                        <div class="kakao-card-head">
+                            <h4 class="kakao-card-title">브랜드 메시지 (비친구)</h4>
+                            <span class="kakao-type-badge kakao-type-badge--new">New</span>
+                        </div>
+                        <div class="price-amount price-amount--kakao"><strong data-count="25.8">25.8</strong><span>원 / 건</span></div>
+                        <div class="kakao-char-tag-wrap"><p class="kakao-char-tag">광고성</p></div>
+                        <div class="kakao-card-divider" aria-hidden="true"></div>
+                        <ul class="price-features price-features--dot">
+                            <li>마케팅 수신 동의자에게 광고성 메시지 발송</li>
+                            <li>채널 친구가 아닌 고객에게도 발송 가능</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 3: FEATURES DETAIL
+             ============================================================ -->
+        <section class="features-detail" id="features">
+            <div class="container">
+                <h2 class="section-title" data-animate>주요 기능</h2>
+                <p class="section-subtitle" data-animate>톡벨의 강력한 기능으로 비즈니스 커뮤니케이션을 완성하세요</p>
+
+                <!-- Block 1 -->
+                <div class="fd-block" data-animate>
+                    <div class="fd-image">
+                        <div class="fd-illust blue-grad">
+                            <div class="illust-shape shape-1"></div>
+                            <div class="illust-shape shape-2"></div>
+                            <div class="illust-shape shape-3"></div>
+                        </div>
+                    </div>
+                    <div class="fd-text">
+                        <span class="fd-badge">주소록 관리</span>
+                        <h3>조직 인맥 관리</h3>
+                        <p>체계적인 주소록 관리를 통해 대규모 조직이나 인맥에게<br>한번에 메시지를 보낼 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <!-- Block 2 (reversed) -->
+                <div class="fd-block reverse" data-animate>
+                    <div class="fd-image">
+                        <div class="fd-illust green-grad">
+                            <div class="illust-shape shape-4"></div>
+                            <div class="illust-shape shape-5"></div>
+                        </div>
+                    </div>
+                    <div class="fd-text">
+                        <span class="fd-badge">이벤트 메시지</span>
+                        <h3>비즈니스 이벤트 메시지</h3>
+                        <p>생일, 기념일, 명절 등 다양한 이벤트에 맞춰<br>자동으로 메시지를 발송할 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <!-- Block 3 -->
+                <div class="fd-block" data-animate>
+                    <div class="fd-image">
+                        <div class="fd-illust orange-grad">
+                            <div class="illust-shape shape-6"></div>
+                            <div class="illust-shape shape-7"></div>
+                        </div>
+                    </div>
+                    <div class="fd-text">
+                        <span class="fd-badge">실시간 통계</span>
+                        <h3>나의 발송 통계</h3>
+                        <p>발송 현황과 성과를 실시간으로 확인하고<br>효과적인 마케팅 전략을 수립할 수 있습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 4: FAQ
+             ============================================================ -->
+        <section class="faq-section" id="faq">
+            <div class="container">
+                <div class="faq-header">
+                    <h2 class="section-title" data-animate>자주 묻는 질문 (FAQ)</h2>
+                    <a href="#" class="faq-more" data-animate>전체 보기 →</a>
+                </div>
+
+                <div class="faq-list" data-animate>
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            <span>Q. 톡벨이란 무엇인가요?</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>톡벨은 SMS, LMS, MMS, 카카오 알림톡, 친구톡 등 다양한 비즈니스 메시지를 합리적인 가격으로 발송할 수 있는 통합 메시징 플랫폼입니다.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            <span>Q. 카카오 비즈니스 채널이란?</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>카카오 비즈니스 채널은 카카오톡 내에서 기업이 고객에게 알림톡, 친구톡 등의 메시지를 발송할 수 있는 공식 채널 서비스입니다.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            <span>Q. 대량 발송은 어떻게 하나요?</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>엑셀 파일 업로드를 통해 손쉽게 대량 발송이 가능하며, 발송 현황을 실시간으로 확인할 수 있습니다.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            <span>Q. 요금 결제는 어떻게 하나요?</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>선불 충전 방식으로 운영되며, 신용카드, 계좌이체 등 다양한 결제 수단을 지원합니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-cta" data-animate>
+                    <a href="../login.html" class="btn-outline">1:1 문의 →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECTION 5: CTA BANNER
+             ============================================================ -->
+        <section class="cta-banner">
+            <div class="cta-float c1"></div>
+            <div class="cta-float c2"></div>
+            <div class="cta-float c3"></div>
+            <div class="cta-float c4"></div>
+            <div class="container cta-inner" data-animate>
+                <h2>대량발송 고민이라면<br>견적 상담 받아보세요!</h2>
+                <p>대규모 고객 발송은 고객 만족도가 다릅니다!</p>
+                <div class="cta-btns">
+                    <a href="../quote-inquiry.html" class="btn-white">견적 문의하기</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+        <script src="../js/footer.js"></script>
+        <script>
+            document.write(createFooter());
+        </script>
+        <script>
+        (function () {
+            function prefixAssets(scope) {
+                if (!scope) return;
+                var p = '../';
+                scope.querySelectorAll('img[src]').forEach(function (el) {
+                    var s = el.getAttribute('src');
+                    if (!s || /^(https?:|data:)/i.test(s) || s.indexOf('../') === 0) return;
+                    el.src = p + s;
+                });
+                scope.querySelectorAll('a[href]').forEach(function (el) {
+                    var h = el.getAttribute('href');
+                    if (!h || h.charAt(0) === '#' || h.indexOf('javascript:') === 0) return;
+                    if (/^https?:/i.test(h)) return;
+                    if (h.indexOf('../') === 0) return;
+                    el.setAttribute('href', p + h);
+                });
+            }
+            prefixAssets(document.querySelector('.footer'));
+        })();
+        </script>
+    </div>
+
+    <script src="js/main.js?v=1"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof initDropdownMenus === 'function') {
+                initDropdownMenus();
+            }
+        });
+    </script>
+    <script src="../js/index-version-switch.js" defer></script>
+</body>
+</html>

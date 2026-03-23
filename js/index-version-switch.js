@@ -1,20 +1,23 @@
 /**
  * index.html · index.last-commit.html 로컬 비교용 하단 바
- * main_v1.1/ 에서는 ../ 로 spec 루트 HTML로 이동 (<base> 미사용)
+ * main_v1.1/ · main_v1.2/ 에서는 ../ 로 spec 루트 HTML로 이동 (<base> 미사용)
+ * A: main_v1.1 · B: index.html · C: index.last-commit.html · D: main_v1.2
  */
 (function () {
     var href = window.location.href || '';
     var isLastCommit = href.indexOf('index.last-commit.html') !== -1;
     var isBeforeToday = href.indexOf('index.before-today.html') !== -1;
     var isV11Standalone = /main_v1\.1[\/\\]index\.html/i.test(href);
+    var isV12Standalone = /main_v1\.2[\/\\]index\.html/i.test(href);
     var isRootIndex =
         !isLastCommit &&
         !isBeforeToday &&
         !isV11Standalone &&
+        !isV12Standalone &&
         /(^|[\/\\])index\.html(\?|$|#)/i.test(href) &&
         href.indexOf('index.last-commit') === -1;
 
-    var root = isV11Standalone ? '../' : '';
+    var root = isV11Standalone || isV12Standalone ? '../' : '';
 
     var style = document.createElement('style');
     style.textContent = [
@@ -46,7 +49,7 @@
     label.className = 'ivb-label';
     label.textContent = '랜딩 비교';
 
-    /* 순서: A(수정버전) → B(현재 작업본) → C(이전 커밋) */
+    /* 순서: A(v1.1) → B(현재 작업본) → C(이전 커밋) → D(v1.2) */
     var aV11 = document.createElement('a');
     aV11.href = root + 'main_v1.1/index.html';
     aV11.textContent = 'A';
@@ -65,10 +68,17 @@
     aPrev.title = '이전 커밋 · index.last-commit.html';
     if (isLastCommit) aPrev.className = 'ivb-active';
 
+    var aV12 = document.createElement('a');
+    aV12.href = root + 'main_v1.2/index.html';
+    aV12.textContent = 'D';
+    aV12.title = '랜딩 v1.2 · main_v1.2';
+    if (isV12Standalone) aV12.className = 'ivb-active';
+
     bar.appendChild(label);
     bar.appendChild(aV11);
     bar.appendChild(aCurrent);
     bar.appendChild(aPrev);
+    bar.appendChild(aV12);
 
     if (document.body) {
         document.body.appendChild(bar);
