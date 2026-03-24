@@ -10,11 +10,6 @@ $lines = git show "${Commit}:index.html" 2>&1
 if ($LASTEXITCODE -ne 0) { throw "git show failed for $Commit" }
 $raw = if ($lines -is [array]) { $lines -join "`n" } else { [string]$lines }
 
-$inject = "    <script src=`"js/index-version-switch.js`" defer></script>"
-if ($raw -notmatch 'index-version-switch\.js') {
-    $raw = $raw -replace '(?i)</body>', ($inject + "`n</body>")
-}
-
 $comment = "<!-- 비교용: 커밋 $Commit 시점 index.html. 갱신: .\save-before-today.ps1 -->" + "`n"
 if ($raw -notmatch '비교용: 커밋') {
     $raw = $raw -replace '<!DOCTYPE html>', "<!DOCTYPE html>`n$comment"

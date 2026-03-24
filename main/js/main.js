@@ -1,88 +1,91 @@
 /* ============================================================
-   톡벨 — Main JavaScript
-   Scroll animations, navigation, interactions
+   TOKBELL — Main JavaScript
+   MOASHOT-style interactions: scroll animations, counters,
+   marquee, header scroll, hamburger menu, smooth scroll
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // === Scroll-based animations (Intersection Observer) ===
-    const animatedElements = document.querySelectorAll('[data-animate]');
+    // ─── 1. SCROLL FADE-IN ANIMATIONS ────────────────────────
+    const animEls = document.querySelectorAll('[data-animate]');
 
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px -60px 0px',
-        threshold: 0.15
-    };
-
-    const observer = new IntersectionObserver((entries) => {
+    const animObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
+                // Stagger children within the same parent
+                const parent = entry.target.closest('section') || entry.target.parentElement;
+                const siblings = parent.querySelectorAll('[data-animate]:not(.visible)');
+                
+                let delay = 0;
+                siblings.forEach((sib) => {
+                    if (isInViewport(sib)) {
+                        sib.style.transitionDelay = delay + 'ms';
+                        sib.classList.add('visible');
+                        delay += 150;
+                        animObserver.unobserve(sib);
+                    }
+                });
+
+                // Ensure the current entry is always marked
+                if (!entry.target.classList.contains('visible')) {
+                    entry.target.classList.add('visible');
+                    animObserver.unobserve(entry.target);
+                }
             }
         });
-    }, observerOptions);
-
-    animatedElements.forEach((el, index) => {
-        // Stagger animation delays
-        el.style.transitionDelay = `${index * 0.05}s`;
-        observer.observe(el);
+    }, {
+        root: null,
+        rootMargin: '0px 0px -40px 0px',
+        threshold: 0.1
     });
 
+    animEls.forEach((el) => animObserver.observe(el));
 
-    // === Navbar shadow on scroll (main/index 전용 nav; index.html은 사이트 GNB만 사용 시 없을 수 있음) ===
-    const navHeader = document.getElementById('navHeader');
+    function isInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+    }
 
-    function handleNavScroll() {
-        if (!navHeader) return;
-        if (window.scrollY > 10) {
-            navHeader.classList.add('scrolled');
+
+    // ─── 2. HEADER SCROLL EFFECT ─────────────────────────────
+    const siteHeader = document.getElementById('siteHeader')
+        || document.querySelector('header.header');
+
+    function handleHeaderScroll() {
+        if (!siteHeader) return;
+        if (window.scrollY > 80) {
+            siteHeader.classList.add('scrolled');
         } else {
-            navHeader.classList.remove('scrolled');
+            siteHeader.classList.remove('scrolled');
         }
     }
 
-    if (navHeader) {
-        window.addEventListener('scroll', handleNavScroll, { passive: true });
-        handleNavScroll();
-    }
+    window.addEventListener('scroll', handleHeaderScroll, { passive: true });
+    handleHeaderScroll();
 
 
-    // === Mobile menu toggle ===
-    const mobileToggle = document.getElementById('mobileToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
+    // ─── 3. HAMBURGER MENU ───────────────────────────────────
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileOverlay = document.getElementById('mobileOverlay');
 
-    if (mobileToggle && mobileMenu) {
-        mobileToggle.addEventListener('click', function () {
-            mobileMenu.classList.toggle('active');
-            
-            // Animate hamburger to X
-            const spans = mobileToggle.querySelectorAll('span');
-            if (mobileMenu.classList.contains('active')) {
-                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
-            } else {
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
-            }
+    if (hamburgerBtn && mobileOverlay) {
+        hamburgerBtn.addEventListener('click', function () {
+            hamburgerBtn.classList.toggle('active');
+            mobileOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileOverlay.classList.contains('active') ? 'hidden' : '';
         });
 
-        // Close mobile menu when clicking a link
-        mobileMenu.querySelectorAll('a').forEach(link => {
+        mobileOverlay.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                mobileMenu.classList.remove('active');
-                const spans = mobileToggle.querySelectorAll('span');
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
+                hamburgerBtn.classList.remove('active');
+                mobileOverlay.classList.remove('active');
+                document.body.style.overflow = '';
             });
         });
     }
 
 
-    // === Smooth scroll for anchor links ===
+    // ─── 4. SMOOTH SCROLL FOR ANCHOR LINKS ───────────────────
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
@@ -91,11 +94,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const targetEl = document.querySelector(targetId);
             if (targetEl) {
                 e.preventDefault();
-                const navHeight = navHeader ? navHeader.offsetHeight : 72;
-                const targetPosition = targetEl.getBoundingClientRect().top + window.pageYOffset - navHeight - 20;
+                const headerH = siteHeader ? siteHeader.offsetHeight : 72;
+                const pos = targetEl.getBoundingClientRect().top + window.pageYOffset - headerH - 16;
 
                 window.scrollTo({
-                    top: targetPosition,
+                    top: pos,
                     behavior: 'smooth'
                 });
             }
@@ -103,63 +106,59 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    // === Analytics bar animation on scroll ===
-    const barFills = document.querySelectorAll('.bar-fill');
-    const analyticsCard = document.querySelector('.analytics-card');
+    // ─── 5. NUMBER COUNT-UP ANIMATION ────────────────────────
+    // For integer counts (benefits section)
+    const countEls = document.querySelectorAll('.benefit-value[data-count]');
 
-    if (analyticsCard && barFills.length > 0) {
-        const barObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    barFills.forEach((bar) => {
-                        const width = bar.style.width;
-                        bar.style.width = '0%';
-                        setTimeout(() => {
-                            bar.style.width = width;
-                        }, 200);
-                    });
-                    barObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.3 });
-
-        barObserver.observe(analyticsCard);
-    }
-
-
-    // === Counter animation for pricing numbers ===
-    const priceNumbers = document.querySelectorAll('.price-number');
-
-    const counterObserver = new IntersectionObserver((entries) => {
+    const countObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 const el = entry.target;
-                const finalValue = parseFloat(el.textContent);
-                animateCounter(el, 0, finalValue, 1200);
-                counterObserver.unobserve(el);
+                const target = parseInt(el.getAttribute('data-count'), 10);
+                animateCount(el, 0, target, 1500, false);
+                countObserver.unobserve(el);
             }
         });
     }, { threshold: 0.5 });
 
-    priceNumbers.forEach(el => counterObserver.observe(el));
+    countEls.forEach(el => countObserver.observe(el));
 
-    function animateCounter(element, start, end, duration) {
+
+    // For decimal price counts (pricing section)
+    const priceEls = document.querySelectorAll('.pc-number[data-count-decimal]');
+
+    const priceObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseFloat(el.getAttribute('data-count-decimal'));
+                const isDecimal = target % 1 !== 0;
+                animateCount(el, 0, target, 1200, isDecimal);
+                priceObserver.unobserve(el);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    priceEls.forEach(el => priceObserver.observe(el));
+
+
+    function animateCount(element, start, end, duration, isDecimal) {
         const startTime = performance.now();
-        const isDecimal = end % 1 !== 0;
-        const decimalPlaces = isDecimal ? (end.toString().split('.')[1] || '').length : 0;
+        const decPlaces = isDecimal ? (end.toString().split('.')[1] || '').length : 0;
 
-        function update(currentTime) {
-            const elapsed = currentTime - startTime;
+        function update(now) {
+            const elapsed = now - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Ease out cubic
-            const easeOut = 1 - Math.pow(1 - progress, 3);
-            const current = start + (end - start) * easeOut;
+            // easeOutCubic
+            const ease = 1 - Math.pow(1 - progress, 3);
+            const current = start + (end - start) * ease;
 
             if (isDecimal) {
-                element.textContent = current.toFixed(decimalPlaces);
+                element.textContent = current.toFixed(decPlaces);
             } else {
-                element.textContent = Math.round(current);
+                // Format with comma for thousands
+                element.textContent = Math.round(current).toLocaleString('ko-KR');
             }
 
             if (progress < 1) {
@@ -169,5 +168,86 @@ document.addEventListener('DOMContentLoaded', function () {
 
         requestAnimationFrame(update);
     }
+
+
+    // ─── 6. ANALYTICS BAR ANIMATION (app showcase) ───────────
+    const fanBars = document.querySelectorAll('.fan-bar');
+    const appSection = document.querySelector('.app-showcase');
+
+    if (appSection && fanBars.length > 0) {
+        const barObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    fanBars.forEach((bar) => {
+                        const w = bar.style.width;
+                        bar.style.width = '0%';
+                        bar.style.transition = 'width 1.2s ease';
+                        setTimeout(() => {
+                            bar.style.width = w;
+                        }, 300);
+                    });
+                    barObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        barObserver.observe(appSection);
+    }
+
+
+    // ─── 6b. FAQ ACCORDION (main_v1.2와 동일) ────────────────
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach((item) => {
+        const question = item.querySelector('.faq-question');
+        if (!question) return;
+
+        question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+
+            faqItems.forEach((other) => {
+                if (other !== item) {
+                    other.classList.remove('active');
+                    const btn = other.querySelector('.faq-question');
+                    if (btn) btn.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            if (isActive) {
+                item.classList.remove('active');
+                question.setAttribute('aria-expanded', 'false');
+            } else {
+                item.classList.add('active');
+                question.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+
+
+    // ─── 7. ACTIVE NAV LINK ON SCROLL ────────────────────────
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.header-nav .nav-link');
+
+    function updateActiveNav() {
+        if (!siteHeader || navLinks.length === 0) return;
+        const scrollPos = window.scrollY + siteHeader.offsetHeight + 100;
+
+        sections.forEach((section) => {
+            const top = section.offsetTop;
+            const height = section.offsetHeight;
+            const id = section.getAttribute('id');
+
+            if (scrollPos >= top && scrollPos < top + height) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + id) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }
+
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
 
 });

@@ -812,12 +812,12 @@ function createFloatingMenu() {
 }
 
 /**
- * main_v1.1/ · main_v1.2/ 등 spec 하위 랜딩에서 GNB가 루트 HTML을 가리키도록 ../ 보정
+ * main/ · main_v1.2/ 등 spec 하위 랜딩에서 GNB가 루트 HTML을 가리키도록 ../ 보정
  */
 function getSpecPageRelativePrefix() {
     try {
         var path = (window.location.pathname || '').replace(/\\/g, '/');
-        if (/\/main_v1\.\d+\//.test(path)) {
+        if (/\/main\//.test(path) || /\/main_v1\.\d+\//.test(path)) {
             return '../';
         }
     } catch (e) {}
