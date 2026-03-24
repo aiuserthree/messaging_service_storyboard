@@ -29,14 +29,18 @@
             padding: 64px 0 0;
             margin: 0;
         }
-        /* 빌보드 바로 아래 히어로 · 공지(주요 서비스) 직전 여백 축소 */
+        /* 빌보드 바로 아래 히어로 · 공지(주요 서비스) 직전 여백 축소 · 좌우 패딩 없음 */
         .main-content.landing-v11 > .hero {
             padding-top: 88px;
             padding-bottom: 52px;
+            padding-left: 0;
+            padding-right: 0;
         }
         @media (max-width: 768px) {
             .main-content.landing-v11 > .hero {
                 padding-bottom: 44px;
+                padding-left: 0;
+                padding-right: 0;
             }
         }
 
@@ -110,8 +114,7 @@
             width: 100%;
             max-width: 100%;
             margin: 0;
-            /* .main_new .con_area .main_slide { padding: 0 60px; } 유사 */
-            padding: 12px clamp(16px, 4vw, 60px) 8px;
+            padding: 12px 0 8px;
         }
         .benefits--billboard .benefits-slider-shell {
             position: relative;
@@ -507,7 +510,8 @@
         /* ── 주요 서비스 3카드 (히어로 ~ 신뢰 섹션 사이) ── */
         .svc-cards-section {
             background: linear-gradient(180deg, #fafbfc 0%, #ffffff 55%);
-            padding: clamp(24px, 4vw, 44px) 24px clamp(56px, 8vw, 96px);
+            /* 상·좌우 유지, 하단만 축소(3카드 아래 여백) */
+            padding: clamp(24px, 4vw, 44px) 24px clamp(32px, 5vw, 52px);
             border-top: 1px solid rgba(0, 0, 0, 0.05);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
