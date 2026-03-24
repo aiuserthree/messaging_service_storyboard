@@ -195,6 +195,35 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
+    // ─── 6b. FAQ ACCORDION (main_v1.2와 동일) ────────────────
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach((item) => {
+        const question = item.querySelector('.faq-question');
+        if (!question) return;
+
+        question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+
+            faqItems.forEach((other) => {
+                if (other !== item) {
+                    other.classList.remove('active');
+                    const btn = other.querySelector('.faq-question');
+                    if (btn) btn.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            if (isActive) {
+                item.classList.remove('active');
+                question.setAttribute('aria-expanded', 'false');
+            } else {
+                item.classList.add('active');
+                question.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+
+
     // ─── 7. ACTIVE NAV LINK ON SCROLL ────────────────────────
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.header-nav .nav-link');

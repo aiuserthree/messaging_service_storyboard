@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=31">
+    <link rel="stylesheet" href="css/style.css?v=43">
     <style>
         /* GNB 항상 노출 (스크롤 시에도 상단 고정) */
         .page-index .header {
@@ -29,9 +29,15 @@
             padding: 64px 0 0;
             margin: 0;
         }
-        /* 빌보드 바로 아래 히어로: 상단 여백만 살짝 줄임 */
+        /* 빌보드 바로 아래 히어로 · 공지(주요 서비스) 직전 여백 축소 */
         .main-content.landing-v11 > .hero {
             padding-top: 88px;
+            padding-bottom: 52px;
+        }
+        @media (max-width: 768px) {
+            .main-content.landing-v11 > .hero {
+                padding-bottom: 44px;
+            }
         }
 
         /* GNB 로그인·톡벨 가입하기 — 디자인 참고(둥근 모서리, 프라이머리 톤 그림자) */
@@ -81,61 +87,60 @@
             max-width: min(1520px, 100%) !important;
         }
 
-        /* ── 히어로 빌보드: 풀폭 · 타이틀 없음 ── */
+        /* ── 히어로 빌보드: 코웨이형 — 가운데 배너는 디자인 폭(최대 1348), 양옆은 패딩 구간에 이전·다음 미리보기 ── */
         .benefits--billboard {
+            /* 슬라이드 높이는 폭에 맞춰 1348:421 비율(aspect-ratio)로 자동 */
             padding: 0 !important;
             margin: 0;
             width: 100%;
             max-width: 100%;
             background: var(--bg-white, #ffffff);
         }
+        .benefits--billboard .benefits-inner,
         .benefits--billboard .benefits-billboard-inner {
-            max-width: 100% !important;
-            padding: 0;
-            margin: 0;
+            /* 슬라이드 한 장은 max 1348이지만, 뷰포트는 더 넓어야 양옆 배너가 패딩 영역에 보임 */
+            max-width: min(1920px, 100%) !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            padding-left: 0;
+            padding-right: 0;
         }
         .benefits--billboard .benefits-slider-wrap {
             position: relative;
             width: 100%;
             max-width: 100%;
             margin: 0;
-            padding: 12px 0 8px;
+            /* .main_new .con_area .main_slide { padding: 0 60px; } 유사 */
+            padding: 12px clamp(16px, 4vw, 60px) 8px;
         }
         .benefits--billboard .benefits-slider-shell {
             position: relative;
             gap: 0;
         }
         .benefits--billboard .benefits-slider-viewport {
-            border-radius: 0;
+            border-radius: 8px;
             position: relative;
+            overflow: hidden; /* 가운데 1348px + 양옆 슬라이드 일부(패딩 구간)만 클립 */
         }
+        /* 양옆 패딩 영역: 이전·다음 배너 미리보기(가운데만 메인 강조) */
         .benefits--billboard .benefit-slide {
-            min-height: clamp(320px, 50vh, 580px);
-            transform: none !important;
-            opacity: 1 !important;
-            border-radius: 14px;
+            height: auto;
+            min-height: 0;
+            aspect-ratio: 1348 / 421;
+            transform: scale(0.94);
+            opacity: 0.62;
+            border-radius: 8px;
             border: none;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
             align-items: center;
             justify-content: center;
+            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.45s, box-shadow 0.45s;
         }
         .benefits--billboard .benefit-slide.is-active {
+            transform: scale(1) !important;
+            opacity: 1 !important;
             box-shadow: none;
             border-color: transparent;
-        }
-        .benefits--billboard .benefit-slide-content {
-            padding: clamp(28px, 5vw, 48px) clamp(20px, 6vw, 64px) clamp(32px, 6vw, 56px);
-            max-width: min(920px, 92%);
-            margin: 0 auto;
-            text-align: center;
-        }
-        .benefits--billboard .benefit-slide--img1 .benefit-slide-content {
-            text-align: center;
-            padding-left: clamp(20px, 6vw, 64px);
-            padding-right: clamp(20px, 6vw, 64px);
-        }
-        .benefits--billboard .benefit-slide-value {
-            font-size: clamp(28px, 5.5vw, 52px);
         }
         .benefits--billboard .benefits-slider-dots {
             display: none;
@@ -233,53 +238,60 @@
         .benefits-autoplay-btn.bb-state--playing .bb-icon-pause { display: flex; }
         .benefits-autoplay-btn.bb-state--paused .bb-icon-play { display: block; }
         .benefits-autoplay-btn.bb-state--paused .bb-icon-pause { display: none; }
-        /* 좌우 이동: 뷰포트 안·가운데 배너(≈86%폭) 안쪽 — JS BILLBOARD_SLIDE_RATIO 와 맞춤 */
+        /* 좌우: SVG 꺾쇠만 — 선만, 그림자·3D 없음 */
         .benefits--billboard .benefits-nav--overlay {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
             z-index: 6;
-            width: 54px;
-            height: 54px;
-            border-radius: 50%;
-            border: 3px solid #5cb85c;
-            background: linear-gradient(165deg, #ffffff 0%, #f0fdf4 55%, #ecfdf5 100%);
-            color: #166534;
-            font-size: 28px;
-            font-weight: 700;
-            line-height: 1;
-            padding: 0 0 2px 0;
-            box-shadow:
-                0 0 0 1px rgba(22, 101, 52, 0.12),
-                0 6px 22px rgba(22, 101, 52, 0.28),
-                0 6px 22px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            height: auto;
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: 0;
+            border: none;
+            background: transparent;
+            color: #111827;
+            padding: 6px 8px;
+            box-shadow: none;
+            text-shadow: none;
+            filter: none;
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+            transition: opacity 0.2s ease;
+        }
+        .benefits--billboard .benefits-nav--overlay .bb-nav-chevron {
+            display: block;
+            width: 26px;
+            height: 26px;
+            flex-shrink: 0;
         }
         .benefits--billboard .benefits-nav--overlay:hover {
-            background: linear-gradient(165deg, #ffffff 0%, #dcfce7 100%);
-            color: #14532d;
-            border-color: #4a9e4a;
-            box-shadow:
-                0 0 0 1px rgba(22, 101, 52, 0.2),
-                0 10px 32px rgba(22, 101, 52, 0.38),
-                0 8px 32px rgba(0, 0, 0, 0.14);
-            transform: translateY(-50%) scale(1.06);
+            background: transparent;
+            color: #0f172a;
+            border: none;
+            box-shadow: none;
+            opacity: 0.72;
+            transform: translateY(-50%);
         }
         .benefits--billboard .benefits-nav--overlay:active {
-            transform: translateY(-50%) scale(0.96);
+            transform: translateY(-50%);
+            opacity: 0.55;
         }
         .benefits--billboard .benefits-nav--overlay:focus-visible {
             outline: 3px solid #2563eb;
             outline-offset: 3px;
         }
         .benefits--billboard .benefits-nav--overlay.benefits-nav-prev {
-            left: calc((100% - 86%) / 2 + 14px);
+            /* 뷰포트 기준 가운데 카드 왼쪽 안쪽 */
+            left: calc((100% - min(1348px, 100%)) / 2 + 14px);
             right: auto;
         }
         .benefits--billboard .benefits-nav--overlay.benefits-nav-next {
-            right: calc((100% - 86%) / 2 + 14px);
+            right: calc((100% - min(1348px, 100%)) / 2 + 14px);
             left: auto;
         }
         .benefits--billboard .benefits-slider-track {
@@ -370,27 +382,34 @@
             z-index: 0;
             pointer-events: none;
         }
-        /* 첫충전: SALE 일러스트 / 스타벅스: event-banner-1 */
-        .benefit-slide--img1 {
-            background-image: url(img/events/benefit-first-charge-sale.png);
-            background-position: center center;
+        /* 빌보드 슬라이드: 첨부 배너 이미지 — 코웨이식 중앙 정렬 + cover */
+        .benefit-slide--fullimg {
+            padding: 0;
+            align-items: stretch;
+            justify-content: center;
+            background-color: #0b1020;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .benefit-slide--img1::before {
-            background: linear-gradient(
-                100deg,
-                rgba(0, 0, 0, 0.18) 0%,
-                transparent 40%,
-                rgba(0, 0, 0, 0.12) 100%
-            );
+        .benefits--billboard .benefit-slide--fullimg {
+            align-items: stretch;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+            height: auto;
+            aspect-ratio: 1348 / 421;
         }
-        .benefit-slide--img1 .benefit-slide-content {
-            text-align: left;
-            padding-left: 22px;
-            padding-right: 24px;
+        .benefit-slide--fullimg::before {
+            display: none;
         }
-        .benefit-slide--img2 { background-image: url(img/events/event-banner-1.png); }
-        .benefit-slide--img3 { background-image: url(img/events/event-banner-3.png); }
-        .benefit-slide--img4 { background-image: url(img/events/benefit-bulk-send-event.png); }
+        .benefit-slide--fullimg .billboard-fullimg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
         .benefit-slide-content {
             position: relative;
             z-index: 1;
@@ -484,6 +503,312 @@
         .app-showcase .app-heading { margin-bottom: 56px; }
 
         body.page-index .app-container { max-width: 100%; overflow-x: hidden; }
+
+        /* ── 주요 서비스 3카드 (히어로 ~ 신뢰 섹션 사이) ── */
+        .svc-cards-section {
+            background: linear-gradient(180deg, #fafbfc 0%, #ffffff 55%);
+            padding: clamp(24px, 4vw, 44px) 24px clamp(56px, 8vw, 96px);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .svc-cards-inner {
+            max-width: min(1200px, 100%);
+            margin: 0 auto;
+        }
+        /* 공지 한 줄 (카드 그리드 바로 위) */
+        .landing-notice-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            margin: 0 0 clamp(20px, 3vw, 28px);
+            padding: 12px 16px 12px 14px;
+            box-sizing: border-box;
+            background: #f1f5f9;
+            border-radius: 999px;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+        .landing-notice-bar:hover {
+            background: #e8eef5;
+            box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+        }
+        .landing-notice-bar:focus-visible {
+            outline: 2px solid #5cb85c;
+            outline-offset: 2px;
+        }
+        .landing-notice-bar__left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            flex: 1;
+        }
+        .landing-notice-badge {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 11px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #fff;
+            background: #5cb85c;
+            border-radius: 999px;
+            line-height: 1;
+        }
+        .landing-notice-title {
+            font-size: clamp(13px, 1.35vw, 15px);
+            font-weight: 600;
+            color: #111827;
+            letter-spacing: -0.03em;
+            line-height: 1.35;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+        /* 한 줄 영역: 공지 한 줄씩 멈춤 → 이동(JS) */
+        .landing-notice-roll {
+            flex: 1;
+            min-width: 0;
+            height: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+        .landing-notice-roll__track {
+            will-change: transform;
+        }
+        .landing-notice-roll__item {
+            height: 24px;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .landing-notice-bar__right {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            line-height: 1;
+        }
+        .landing-notice-more {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+        }
+        .landing-notice-bar__chev {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #94a3b8;
+            line-height: 1;
+            height: 1em;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .landing-notice-roll__track {
+                transform: none !important;
+                transition: none !important;
+            }
+        }
+        @media (max-width: 520px) {
+            .landing-notice-bar {
+                padding: 10px 12px 10px 10px;
+                border-radius: 14px;
+            }
+        }
+        .svc-card-icon-img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+            display: block;
+        }
+        .svc-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(16px, 2.5vw, 24px);
+            align-items: stretch;
+        }
+        .svc-card {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 18px;
+            padding: clamp(20px, 3vw, 26px) clamp(18px, 2.5vw, 24px);
+            box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+            transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.2s;
+        }
+        .svc-card:hover {
+            box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
+            border-color: #dce3e8;
+            transform: translateY(-2px);
+        }
+        .svc-card-title {
+            font-size: clamp(16px, 1.6vw, 18px);
+            font-weight: 800;
+            color: #111;
+            margin: 0 0 18px;
+            letter-spacing: -0.04em;
+            line-height: 1.3;
+        }
+        .svc-card-body {
+            display: flex;
+            align-items: center;
+            gap: clamp(14px, 2vw, 20px);
+        }
+        .svc-card-icon {
+            flex-shrink: 0;
+        }
+        .svc-card-copy {
+            flex: 1;
+            min-width: 0;
+            text-align: right;
+        }
+        .svc-card-copy p {
+            margin: 0 0 6px;
+            font-size: clamp(13px, 1.35vw, 14px);
+            font-weight: 500;
+            color: #4b5563;
+            line-height: 1.55;
+            letter-spacing: -0.02em;
+        }
+        .svc-card-copy p:last-child {
+            margin-bottom: 0;
+        }
+        @media (max-width: 960px) {
+            .svc-cards-grid {
+                grid-template-columns: 1fr;
+                max-width: 520px;
+                margin: 0 auto;
+            }
+            .svc-card-body {
+                justify-content: flex-start;
+            }
+            .svc-card-copy {
+                text-align: left;
+            }
+        }
+
+        /* 문자발송 CTA 배너 (이벤트 · 이벤트 더 보러가기 아래) */
+        .sms-cta-wrap {
+            padding: 8px 24px 72px;
+            /* 이벤트 섹션(.events-section)과 동일 배경 */
+            background: var(--bg-light);
+        }
+        .sms-cta-inner {
+            max-width: min(1120px, 100%);
+            margin: 0 auto;
+        }
+        .sms-cta-panel {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: clamp(20px, 4vw, 36px);
+            padding: clamp(22px, 4vw, 34px) clamp(22px, 4vw, 42px);
+            background: linear-gradient(145deg, #f0faf3 0%, #e8f6ec 42%, #dff3e5 100%);
+            border: 1px solid rgba(5, 150, 105, 0.14);
+            border-radius: 18px;
+            box-shadow:
+                0 1px 0 rgba(255, 255, 255, 0.85) inset,
+                0 8px 32px rgba(15, 23, 42, 0.06);
+        }
+        .sms-cta-text {
+            flex: 1 1 280px;
+            min-width: 0;
+        }
+        .sms-cta-label {
+            margin: 0 0 8px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #111827;
+        }
+        .sms-cta-headline {
+            margin: 0 0 10px;
+            font-size: clamp(1.32rem, 3.1vw, 1.78rem);
+            font-weight: 800;
+            letter-spacing: -0.045em;
+            line-height: 1.28;
+            color: #0f172a;
+        }
+        .sms-cta-sub {
+            margin: 0;
+            font-size: clamp(15px, 1.55vw, 17px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: #1e293b;
+        }
+        .sms-cta-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+        .sms-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #fff !important;
+            text-decoration: none !important;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .sms-cta-btn:focus-visible {
+            outline: 2px solid #059669;
+            outline-offset: 3px;
+        }
+        .sms-cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+            filter: brightness(1.03);
+        }
+        .sms-cta-btn--muted {
+            background: linear-gradient(180deg, #738f5e 0%, #5d7348 100%);
+        }
+        .sms-cta-btn--primary {
+            background: linear-gradient(180deg, #14d19a 0%, #0d9f72 45%, #059669 100%);
+        }
+        .sms-cta-btn .sms-cta-ico {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.98;
+        }
+        @media (max-width: 720px) {
+            .sms-cta-actions {
+                width: 100%;
+                justify-content: stretch;
+            }
+            .sms-cta-btn {
+                flex: 1 1 calc(50% - 6px);
+                min-width: 0;
+            }
+        }
+        @media (max-width: 480px) {
+            .sms-cta-btn {
+                flex: 1 1 100%;
+            }
+        }
     </style>
 </head>
 <body class="page-index">
@@ -523,36 +848,21 @@
                 <div class="benefits-slider-wrap">
                     <div class="benefits-slider-shell">
                         <div class="benefits-slider-viewport" id="benefitsViewport">
-                            <button type="button" class="benefits-nav benefits-nav-prev benefits-nav--overlay" id="benefitsPrev" aria-label="이전 배너">‹</button>
-                            <button type="button" class="benefits-nav benefits-nav-next benefits-nav--overlay" id="benefitsNext" aria-label="다음 배너">›</button>
+                            <button type="button" class="benefits-nav benefits-nav-prev benefits-nav--overlay" id="benefitsPrev" aria-label="이전 배너">
+                                <svg class="bb-nav-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>
+                            </button>
+                            <button type="button" class="benefits-nav benefits-nav-next benefits-nav--overlay" id="benefitsNext" aria-label="다음 배너">
+                                <svg class="bb-nav-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>
+                            </button>
                             <div class="benefits-slider-track" id="benefitsSliderTrack">
-                                <article class="benefit-slide benefit-slide--img1">
-                                    <div class="benefit-slide-content">
-                                        <p class="benefit-slide-label">첫 충전 할인</p>
-                                        <p class="benefit-slide-value">10%</p>
-                                        <p class="benefit-slide-sub">신규 회원 첫 충전 시 보너스 적용</p>
-                                    </div>
+                                <article class="benefit-slide benefit-slide--fullimg" aria-label="발송 단가 안내 배너 1">
+                                    <img class="billboard-fullimg" src="img/billboard/image_6613a7a3-5884-4618-b9b3-150b21527e6e.png" alt="발송 단가 안내. 발송 최저가, 문자·카카오톡 단가" width="1348" height="421" loading="eager" decoding="async">
                                 </article>
-                                <article class="benefit-slide benefit-slide--img2">
-                                    <div class="benefit-slide-content">
-                                        <p class="benefit-slide-label">신규 가입 선물</p>
-                                        <p class="benefit-slide-value">스타벅스 쿠폰</p>
-                                        <p class="benefit-slide-sub">가입 이벤트 조건 충족 시 제공</p>
-                                    </div>
+                                <article class="benefit-slide benefit-slide--fullimg" aria-label="발송 단가 안내 배너 2">
+                                    <img class="billboard-fullimg" src="img/billboard/image_6613a7a3-5884-4618-b9b3-150b21527e6e.png" alt="발송 단가 안내. 발송 최저가, 문자·카카오톡 단가" width="1348" height="421" loading="lazy" decoding="async">
                                 </article>
-                                <article class="benefit-slide benefit-slide--img3">
-                                    <div class="benefit-slide-content">
-                                        <p class="benefit-slide-label">가입 축하 머니</p>
-                                        <p class="benefit-slide-value">3,000원</p>
-                                        <p class="benefit-slide-sub">가입 완료 후 지급되는 이용 마일리지</p>
-                                    </div>
-                                </article>
-                                <article class="benefit-slide benefit-slide--img4">
-                                    <div class="benefit-slide-content">
-                                        <p class="benefit-slide-label">대량 발송 이벤트</p>
-                                        <p class="benefit-slide-value">최대 50만원</p>
-                                        <p class="benefit-slide-sub">월 발송 조건 충족 시 상품권 등 추첨</p>
-                                    </div>
+                                <article class="benefit-slide benefit-slide--fullimg" aria-label="발송 단가 안내 배너 3">
+                                    <img class="billboard-fullimg" src="img/billboard/image_6613a7a3-5884-4618-b9b3-150b21527e6e.png" alt="발송 단가 안내. 발송 최저가, 문자·카카오톡 단가" width="1348" height="421" loading="lazy" decoding="async">
                                 </article>
                             </div>
                             <div class="benefits-billboard-footer" id="benefitsBillboardFooter" aria-hidden="false">
@@ -643,6 +953,72 @@
                             <div class="phone-home-bar"></div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             주요 서비스 하이라이트 (3카드)
+             ============================================================ -->
+        <section class="svc-cards-section" id="svc-highlights" aria-label="주요 서비스 안내">
+            <div class="svc-cards-inner">
+                <a href="../support-notice.html" class="landing-notice-bar" aria-label="공지사항 목록 보기">
+                    <span class="landing-notice-bar__left">
+                        <span class="landing-notice-badge">공지</span>
+                        <div class="landing-notice-roll">
+                            <div class="landing-notice-roll__track">
+                                <div class="landing-notice-roll__item"><span class="landing-notice-title">톡벨 사용자 가이드 200% 활용하는 법</span></div>
+                                <div class="landing-notice-roll__item"><span class="landing-notice-title">2월 정기 시스템 점검 일정 안내</span></div>
+                                <div class="landing-notice-roll__item"><span class="landing-notice-title">서비스 이용약관 개정 안내</span></div>
+                                <div class="landing-notice-roll__item"><span class="landing-notice-title">신규 회원 충전 이벤트 안내</span></div>
+                            </div>
+                        </div>
+                    </span>
+                    <span class="landing-notice-bar__right">
+                        <span class="landing-notice-more">더보기</span>
+                        <span class="landing-notice-bar__chev" aria-hidden="true">›</span>
+                    </span>
+                </a>
+                <div class="svc-cards-grid">
+                    <article class="svc-card" data-animate>
+                        <h3 class="svc-card-title">공직선거 문자</h3>
+                        <div class="svc-card-body">
+                            <div class="svc-card-icon" aria-hidden="true">
+                                <img class="svc-card-icon-img" src="img/icon/tokbell_msg_election.svg" alt="" width="64" height="64" loading="lazy" decoding="async">
+                            </div>
+                            <div class="svc-card-copy">
+                                <p>선거는 타이밍입니다.</p>
+                                <p>빠르게. 공직선거법 준수</p>
+                                <p>대량발송 · 신속 처리</p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="svc-card" data-animate>
+                        <h3 class="svc-card-title">카카오 브랜드 메시지</h3>
+                        <div class="svc-card-body">
+                            <div class="svc-card-icon" aria-hidden="true">
+                                <img class="svc-card-icon-img" src="img/icon/tokbell_brand_msg.svg" alt="" width="64" height="64" loading="lazy" decoding="async">
+                            </div>
+                            <div class="svc-card-copy">
+                                <p>채널 친구가 아닌</p>
+                                <p>고객도 한번에</p>
+                                <p>더 많은 고객에게</p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="svc-card" data-animate>
+                        <h3 class="svc-card-title">카카오 알림톡</h3>
+                        <div class="svc-card-body">
+                            <div class="svc-card-icon" aria-hidden="true">
+                                <img class="svc-card-icon-img" src="img/icon/tokbell_alimtalk.svg" alt="" width="64" height="64" loading="lazy" decoding="async">
+                            </div>
+                            <div class="svc-card-copy">
+                                <p>주문·결제·배송 알림</p>
+                                <p>카카오로 보내면</p>
+                                <p>스팸 없이, 저렴하게</p>
+                            </div>
+                        </div>
+                    </article>
                 </div>
             </div>
         </section>
@@ -895,6 +1271,83 @@
             </div>
         </section>
 
+        <section class="sms-cta-wrap" aria-label="문자발송 안내">
+            <div class="sms-cta-inner">
+                <div class="sms-cta-panel" data-animate>
+                    <div class="sms-cta-text">
+                        <p class="sms-cta-label">문자발송 안내</p>
+                        <h2 class="sms-cta-headline">수천 명에게 동시에! 딱 몇 초면 충분</h2>
+                        <p class="sms-cta-sub">견적 상담 받아보세요!</p>
+                    </div>
+                    <div class="sms-cta-actions">
+                        <a href="../support-inquiry.html" class="sms-cta-btn sms-cta-btn--muted">
+                            <svg class="sms-cta-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M14.5 4.5c.83 0 1.5.67 1.5 1.5v2.09l4.25 2.45c.33.19.5.53.5.87v6.18c0 .67-.68 1.15-1.29.87l-4.46-2.3V18c0 .83-.67 1.5-1.5 1.5h-9C4.67 19.5 4 18.83 4 18V6c0-.83.67-1.5 1.5-1.5h9zM6 7v10h7V7H6zm11 1.73v6.54l2.75 1.42V7.31L17 8.73z"/>
+                            </svg>
+                            서비스 소개서 받기
+                        </a>
+                        <a href="../quote-inquiry.html" class="sms-cta-btn sms-cta-btn--primary">
+                            <svg class="sms-cta-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M14.5 4.5c.83 0 1.5.67 1.5 1.5v2.09l4.25 2.45c.33.19.5.53.5.87v6.18c0 .67-.68 1.15-1.29.87l-4.46-2.3V18c0 .83-.67 1.5-1.5 1.5h-9C4.67 19.5 4 18.83 4 18V6c0-.83.67-1.5 1.5-1.5h9zM6 7v10h7V7H6zm11 1.73v6.54l2.75 1.42V7.31L17 8.73z"/>
+                            </svg>
+                            상담 신청서 작성
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             FAQ (main_v1.2와 동일)
+             ============================================================ -->
+        <section class="faq-section" id="faq">
+            <div class="faq-inner">
+                <div class="faq-header">
+                    <h2 class="section-title" data-animate>자주 묻는 질문 (FAQ)</h2>
+                    <a href="../support-faq.html" class="faq-more" data-animate>전체 보기 →</a>
+                </div>
+
+                <div class="faq-list" data-animate>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span>Q. 톡벨이란 무엇인가요?</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>톡벨은 SMS, LMS, MMS, 카카오 알림톡, 친구톡 등 다양한 비즈니스 메시지를 합리적인 가격으로 발송할 수 있는 통합 메시징 플랫폼입니다.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span>Q. 카카오 비즈니스 채널이란?</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>카카오 비즈니스 채널은 카카오톡 내에서 기업이 고객에게 알림톡, 친구톡 등의 메시지를 발송할 수 있는 공식 채널 서비스입니다.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span>Q. 대량 발송은 어떻게 하나요?</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>엑셀 파일 업로드를 통해 손쉽게 대량 발송이 가능하며, 발송 현황을 실시간으로 확인할 수 있습니다.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-question" aria-expanded="false">
+                            <span>Q. 요금 결제는 어떻게 하나요?</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>선불 충전 방식으로 운영되며, 신용카드, 계좌이체 등 다양한 결제 수단을 지원합니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-cta" data-animate>
+                    <a href="../login.html" class="btn-outline">1:1 문의 →</a>
+                </div>
+            </div>
+        </section>
+
         </main>
 
         <!-- 푸터 -->
@@ -925,13 +1378,104 @@
         </script>
     </div>
 
-    <script src="js/main.js?v=2"></script>
+    <script src="js/main.js?v=3"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (typeof initDropdownMenus === 'function') {
                 initDropdownMenus();
             }
+            if (typeof initLandingNoticeStepRoll === 'function') {
+                initLandingNoticeStepRoll();
+            }
         });
+    </script>
+    <script>
+    function initLandingNoticeStepRoll() {
+        var track = document.querySelector('.landing-notice-roll__track');
+        var bar = document.querySelector('.landing-notice-bar');
+        if (!track || !bar) return;
+        var items = track.querySelectorAll('.landing-notice-roll__item');
+        var n = items.length;
+        if (n < 2) return;
+
+        var pauseMs = 3400;
+        var moveMs = 420;
+        var itemH = items[0].offsetHeight || 24;
+        var current = 0;
+        var timeoutId;
+        var hoverPaused = false;
+        var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        function clearSchedule() {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+                timeoutId = null;
+            }
+        }
+
+        function setTransition(enabled) {
+            track.style.transition = enabled
+                ? 'transform ' + moveMs + 'ms cubic-bezier(0.4, 0, 0.2, 1)'
+                : 'none';
+        }
+
+        function afterPause() {
+            clearSchedule();
+            timeoutId = setTimeout(function () {
+                if (hoverPaused) {
+                    afterPause();
+                    return;
+                }
+                moveToNext();
+            }, pauseMs);
+        }
+
+        function moveToNext() {
+            var next = (current + 1) % n;
+            if (next === 0) {
+                setTransition(false);
+                track.style.transform = 'translateY(0)';
+                current = 0;
+                void track.offsetHeight;
+                setTransition(true);
+                afterPause();
+                return;
+            }
+            current = next;
+            track.style.transform = 'translateY(' + (-current * itemH) + 'px)';
+            setTimeout(function () {
+                if (hoverPaused) return;
+                afterPause();
+            }, moveMs + 30);
+        }
+
+        function start() {
+            if (mq.matches) {
+                setTransition(false);
+                track.style.transform = 'translateY(0)';
+                return;
+            }
+            setTransition(true);
+            track.style.transform = 'translateY(0)';
+            current = 0;
+            afterPause();
+        }
+
+        bar.addEventListener('mouseenter', function () {
+            hoverPaused = true;
+            clearSchedule();
+        });
+        bar.addEventListener('mouseleave', function () {
+            hoverPaused = false;
+            afterPause();
+        });
+        mq.addEventListener('change', function () {
+            clearSchedule();
+            start();
+        });
+
+        start();
+    }
     </script>
     <script>
     (function () {
@@ -948,9 +1492,9 @@
             if (n < 1) return;
 
             var isBillboard = !!viewport.closest('.benefits--billboard');
-            /* 빌보드: 양옆 슬라이드 peek + 카드 간격(Coway 메인 비슷) */
+            /* 빌보드: 각 슬라이드 폭 = min(1348px, 뷰포트). 가운데는 실제 디자인 크기, 넓은 화면에서는 양옆이 패딩 구간에 노출 */
             var BILLBOARD_GAP = 16;
-            var BILLBOARD_SLIDE_RATIO = 0.86;
+            var BILLBOARD_SLIDE_MAX = 1348;
             var gap = isBillboard ? BILLBOARD_GAP : 14;
 
             var lastClone = originals[n - 1].cloneNode(true);
@@ -1000,7 +1544,7 @@
             function slideWidthPx() {
                 var w = viewport.offsetWidth;
                 if (isBillboard) {
-                    return Math.max(260, Math.round(w * BILLBOARD_SLIDE_RATIO));
+                    return Math.min(BILLBOARD_SLIDE_MAX, w); /* 디자인 폭 1348px */
                 }
                 return Math.max(240, w * 0.48);
             }
@@ -1070,7 +1614,7 @@
                     var b = document.createElement('button');
                     b.type = 'button';
                     b.setAttribute('role', 'tab');
-                    b.setAttribute('aria-label', '혜택 ' + (i + 1));
+                    b.setAttribute('aria-label', '배너 ' + (i + 1));
                     b.addEventListener('click', function () {
                         idx = i + 1;
                         layout(false);
