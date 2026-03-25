@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="55.94" height="40" viewBox="0 0 56 40" fill="none">
+    <defs>
+        <linearGradient id="bg-grad-bubble" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#C5E86E" />
+            <stop offset="100%" stop-color="#9ACD32" />
+        </linearGradient>
+        <filter id="shadow-bubble" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+            <feOffset dx="1" dy="2" result="offsetblur"/>
+            <feComponentTransfer><feFuncA type="linear" slope="0.15"/></feComponentTransfer>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    <path d="M 10 2 C 4 2 0 6 0 12 C 0 18 4 22 10 22 H 12 L 6 30 L 18 22 H 36 C 42 22 46 18 46 12 C 46 6 42 2 36 2 Z" fill="url(#bg-grad-bubble)"/>
+    <g filter="url(#shadow-bubble)">
+        <path d="M 24 10 C 18 10 14 14 14 20 C 14 26 18 30 24 30 H 38 L 48 38 L 44 30 H 46 C 52 30 56 26 56 20 C 56 14 52 10 46 10 Z" fill="rgba(255, 255, 255, 0.85)" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="28" cy="20" r="2" fill="#9ACD32"/>
+        <circle cx="35" cy="20" r="2" fill="#9ACD32"/>
+        <circle cx="42" cy="20" r="2" fill="#9ACD32"/>
+    </g>
+</svg>

@@ -257,7 +257,8 @@
             background-color: var(--surface-color);
             border-radius: var(--radius-xl);
             border: 1px solid var(--border-color);
-            overflow: hidden;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .table {
@@ -288,6 +289,102 @@
             text-align: center;
             padding: 60px 20px;
             color: var(--text-secondary);
+        }
+
+        /* 1:1 문의내역 — 목록 + 상세(관리자 답변) */
+        .inquiry-history-hint {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .table .inquiry-col-title {
+            text-align: left;
+        }
+        .inquiry-summary-row {
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+        .inquiry-summary-row:hover {
+            background-color: #f1f5f9;
+        }
+        .inquiry-summary-row[aria-expanded="true"] {
+            background-color: #eff6ff;
+        }
+        .inquiry-detail-row {
+            display: none;
+        }
+        .inquiry-detail-row.is-open {
+            display: table-row;
+        }
+        .inquiry-detail-row td {
+            padding: 0 !important;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        .inquiry-detail-inner {
+            padding: 20px 20px 22px;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            text-align: left;
+        }
+        .inquiry-detail-block {
+            margin-bottom: 18px;
+        }
+        .inquiry-detail-block:last-child {
+            margin-bottom: 0;
+        }
+        .inquiry-detail-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 8px;
+        }
+        .inquiry-detail-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.65;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .inquiry-detail-admin {
+            border-left: 4px solid var(--primary-color);
+            padding: 14px 16px;
+            background: #fff;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+        }
+        .inquiry-detail-admin .inquiry-detail-label {
+            color: var(--primary-color);
+        }
+        .inquiry-detail-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+        .inquiry-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .inquiry-badge--done {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .inquiry-badge--wait {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .inquiry-pending-note {
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 12px 14px;
+            background: #fffbeb;
+            border-radius: var(--radius-md);
+            border: 1px solid #fde68a;
         }
         /* 환불신청/환불신청내역 패널 */
         .balance-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
@@ -467,21 +564,82 @@
 
             <!-- 1:1 문의내역 -->
             <div id="inquiryHistory" class="inquiry-tab-content" style="display: none;">
+                <p class="inquiry-history-hint">목록에서 행을 클릭하면 <strong>문의 내용</strong>과 <strong>관리자 답변</strong>을 확인할 수 있습니다. (연동 시 어드민에서 등록한 답변이 이곳에 표시됩니다.)</p>
                 <div class="inquiry-table-container">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th style="width: 80px;">번호</th>
-                                <th style="width: 150px;">문의유형</th>
+                                <th style="width: 120px;">문의유형</th>
                                 <th>제목</th>
                                 <th style="width: 100px;">답변여부</th>
                                 <th style="width: 120px;">등록일</th>
+                                <th style="width: 120px;">답변일</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
+                        <tbody id="inquiryHistoryBody">
+                            <tr class="inquiry-summary-row" data-id="1" onclick="toggleInquiryDetail(1)" onkeydown="inquiryRowKey(event, 1)" tabindex="0" role="button" aria-expanded="false" aria-controls="inquiry-detail-1">
+                                <td>서비스 문의</td>
+                                <td class="inquiry-col-title">REST API 연동 시 인증·토큰 갱신 문의</td>
+                                <td><span class="inquiry-badge inquiry-badge--done">답변완료</span></td>
+                                <td>2025-03-18</td>
+                                <td>2025-03-19</td>
+                            </tr>
+                            <tr class="inquiry-detail-row" id="inquiry-detail-1">
                                 <td colspan="5">
-                                    <div class="empty-state">문의하신 내역이 없습니다.</div>
+                                    <div class="inquiry-detail-inner">
+                                        <div class="inquiry-detail-block">
+                                            <div class="inquiry-detail-label">문의 내용</div>
+                                            <div class="inquiry-detail-text">안녕하세요. REST API 연동 중인데 OAuth2 클라이언트 등록 후 액세스 토큰 만료 시 갱신 주기와 리프레시 토큰 사용 방법을 알고 싶습니다. 샘플 코드는 확인했습니다.</div>
+                                        </div>
+                                        <div class="inquiry-detail-block inquiry-detail-admin">
+                                            <div class="inquiry-detail-label">관리자 답변</div>
+                                            <div class="inquiry-detail-text">안녕하세요, 톡벨 고객센터입니다. API 액세스 토큰은 발급 시점으로부터 24시간 유효하며, 만료 전 리프레시 토큰으로 갱신해 주시면 됩니다. 상세 흐름은 개발자 가이드 「API 인증」 섹션을 참고해 주세요. 추가 문의는 본 건에 이어서 답변 드리겠습니다. 감사합니다.</div>
+                                            <div class="inquiry-detail-meta">답변 등록일 2025-03-19 14:22 · 톡벨 고객지원</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="inquiry-summary-row" data-id="2" onclick="toggleInquiryDetail(2)" onkeydown="inquiryRowKey(event, 2)" tabindex="0" role="button" aria-expanded="false" aria-controls="inquiry-detail-2">
+                                <td>가격 문의</td>
+                                <td class="inquiry-col-title">월 10만 건 이상 대량 발송 단가 문의</td>
+                                <td><span class="inquiry-badge inquiry-badge--done">답변완료</span></td>
+                                <td>2025-03-10</td>
+                                <td>2025-03-11</td>
+                            </tr>
+                            <tr class="inquiry-detail-row" id="inquiry-detail-2">
+                                <td colspan="5">
+                                    <div class="inquiry-detail-inner">
+                                        <div class="inquiry-detail-block">
+                                            <div class="inquiry-detail-label">문의 내용</div>
+                                            <div class="inquiry-detail-text">월 약 10만 건 규모로 SMS·알림톡 혼합 발송 예정입니다. 건별 단가와 약정 조건이 궁금합니다.</div>
+                                        </div>
+                                        <div class="inquiry-detail-block inquiry-detail-admin">
+                                            <div class="inquiry-detail-label">관리자 답변</div>
+                                            <div class="inquiry-detail-text">안녕하세요, 톡벨 영업지원입니다. 대량 발송 견적은 채널별 단가와 월 예상 건수를 기준으로 산정합니다. 담당자가 영업일 기준 1~2일 내 연락드려 맞춤 견적·할인 조건을 안내해 드리겠습니다. 감사합니다.</div>
+                                            <div class="inquiry-detail-meta">답변 등록일 2025-03-11 10:05 · 톡벨 영업지원</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="inquiry-summary-row" data-id="3" onclick="toggleInquiryDetail(3)" onkeydown="inquiryRowKey(event, 3)" tabindex="0" role="button" aria-expanded="false" aria-controls="inquiry-detail-3">
+                                <td>기술 문의</td>
+                                <td class="inquiry-col-title">장문 발송 일부 실패 — 로그 확인 요청</td>
+                                <td><span class="inquiry-badge inquiry-badge--wait">답변대기</span></td>
+                                <td>2025-03-22</td>
+                                <td>—</td>
+                            </tr>
+                            <tr class="inquiry-detail-row" id="inquiry-detail-3">
+                                <td colspan="5">
+                                    <div class="inquiry-detail-inner">
+                                        <div class="inquiry-detail-block">
+                                            <div class="inquiry-detail-label">문의 내용</div>
+                                            <div class="inquiry-detail-text">어제 발송한 장문(LMS)에서 일부 수신자에게 실패가 났습니다. 로그 ID LM-20250321-88421 기준으로 원인 확인 부탁드립니다.</div>
+                                        </div>
+                                        <div class="inquiry-detail-block">
+                                            <div class="inquiry-detail-label">관리자 답변</div>
+                                            <p class="inquiry-pending-note">아직 답변이 등록되지 않았습니다. 어드민에서 답변을 등록하면 이 영역에 표시됩니다. (영업일 기준 1~2일 내 처리)</p>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -627,6 +785,31 @@
                 var el = document.getElementById(id);
                 if (el) el.style.display = (id === 'inquiryForm' && tab === 'form') || (id === 'inquiryHistory' && tab === 'history') || (id === 'inquiryRefund' && tab === 'refund') || (id === 'inquiryRefundHistory' && tab === 'refundHistory') ? 'block' : 'none';
             });
+        }
+
+        /** 1:1 문의내역: 행 클릭 시 문의·관리자 답변 영역 토글 */
+        function toggleInquiryDetail(id) {
+            var detail = document.getElementById('inquiry-detail-' + id);
+            var summary = document.querySelector('.inquiry-summary-row[data-id="' + id + '"]');
+            if (!detail || !summary) return;
+            var willOpen = !detail.classList.contains('is-open');
+            document.querySelectorAll('.inquiry-detail-row.is-open').forEach(function(r) {
+                r.classList.remove('is-open');
+            });
+            document.querySelectorAll('.inquiry-summary-row').forEach(function(s) {
+                s.setAttribute('aria-expanded', 'false');
+            });
+            if (willOpen) {
+                detail.classList.add('is-open');
+                summary.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        function inquiryRowKey(e, id) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleInquiryDetail(id);
+            }
         }
 
         function handleEmailDomainChange() {
@@ -834,7 +1017,7 @@
             // 22. 문의 내역 영역
             { selector: '#inquiryHistory', title: '문의 내역 영역', position: { top: '10px', left: '10px' }, description: '이전 문의 목록', function: '문의 내역 테이블 표시', api: 'GET /api/inquiries' },
             // 23. 문의 내역 테이블
-            { selector: '#inquiryHistory .table', title: '문의 내역 테이블', position: { top: '10px', left: '10px' }, description: '문의 목록 표시', function: '번호/문의유형/제목/답변여부/등록일 표시', behavior: ['행 클릭 시 상세 내용 확인 가능'] },
+            { selector: '#inquiryHistory .table', title: '문의 내역 테이블', position: { top: '10px', left: '10px' }, description: '문의 목록 표시', function: '문의유형/제목/답변여부/등록일/답변일 표시', behavior: ['행 클릭 시 문의 내용·관리자 답변(어드민 등록) 영역 토글', '답변대기 건은 안내 문구 표시'] },
 
             // ===== 환불신청 =====
             // 24. 환불신청 패널
