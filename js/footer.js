@@ -50,11 +50,11 @@ function createFooter() {
                 background-color: #fff;
                 color: var(--text-primary, #1e293b);
                 padding: 40px 24px 24px;
-                margin-top: 64px;
+                margin: 0;
             }
             .footer-top-row {
                 max-width: 1400px;
-                margin: 0 auto 32px;
+                margin: 0 auto;
                 display: flex;
                 flex-wrap: wrap;
                 gap: 8px 24px;
@@ -75,7 +75,6 @@ function createFooter() {
             .footer-content {
                 max-width: 1400px;
                 margin: 0 auto;
-                margin-bottom: 32px;
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 48px;
@@ -155,7 +154,6 @@ function createFooter() {
                     padding: 28px 16px 20px;
                 }
                 .footer-top-row {
-                    margin-bottom: 24px;
                     padding-bottom: 20px;
                 }
                 .footer-content {

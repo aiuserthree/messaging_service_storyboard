@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>메시지 발송 시스템</title>
+    <meta name="description" content="문자 및 카카오톡 메시지 대량 발송 시스템">
+    <style>
+        @page { size: A4; margin: 18mm 16mm; }
+        * { box-sizing: border-box; }
+        body {
+            font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+            font-size: 11pt;
+            line-height: 1.55;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+        .doc {
+            max-width: 100%;
+        }
+        header.gnb {
+            min-height: 48px;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20pt;
+            padding-bottom: 12pt;
+        }
+        .gnb-title {
+            font-size: 18pt;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin: 0;
+            color: #0f172a;
+        }
+        .gnb-sub {
+            margin: 6pt 0 0;
+            font-size: 10pt;
+            color: #64748b;
+        }
+        h2 {
+            font-size: 13pt;
+            font-weight: 700;
+            margin: 22pt 0 10pt;
+            padding-bottom: 6pt;
+            border-bottom: 2px solid #0ea5e9;
+            color: #0c4a6e;
+        }
+        h3 {
+            font-size: 11pt;
+            font-weight: 700;
+            margin: 14pt 0 6pt;
+            color: #334155;
+        }
+        p, li { margin: 0 0 8pt; }
+        ul { margin: 0 0 12pt; padding-left: 18pt; }
+        .muted { color: #64748b; font-size: 10pt; }
+        .box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12pt 14pt;
+            margin: 12pt 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10pt;
+            margin: 10pt 0 16pt;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 8pt 10pt;
+            text-align: left;
+            vertical-align: top;
+        }
+        th { background: #f1f5f9; font-weight: 600; }
+        footer {
+            margin-top: 28pt;
+            padding-top: 12pt;
+            border-top: 1px solid #e2e8f0;
+            font-size: 9pt;
+            color: #94a3b8;
+        }
+        @media print {
+            header.gnb { page-break-after: avoid; }
+            h2 { page-break-after: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="doc">
+        <header class="gnb">
+            <h1 class="gnb-title">메시지 발송 시스템</h1>
+            <p class="gnb-sub">문자 및 카카오톡 메시지 대량 발송 시스템 · 문서 버전 1.0</p>
+        </header>
+
+        <p>본 문서는 웹 애플리케이션 <strong>메시지 발송 시스템</strong>의 개요와 주요 기능을 PDF로 정리한 자료입니다. (참고: Next.js 기반 페이지의 초기 HTML 구조·메타 정보를 반영)</p>
+
+        <h2>1. 목적</h2>
+        <p>SMS·LMS·MMS 등 문자 메시지와 카카오톡 비즈메시지(알림톡·브랜드 메시지 등)를 <strong>대량·예약 발송</strong>할 수 있도록 지원하는 통합 발송 환경을 제공합니다.</p>
+
+        <h2>2. 주요 기능 영역</h2>
+        <div class="box">
+            <ul>
+                <li><strong>대량 발송</strong> — 수신자 목록(엑셀 등) 기반 일괄 전송</li>
+                <li><strong>채널 연동</strong> — 문자(SMS/LMS/MMS) 및 카카오톡 메시지 채널</li>
+                <li><strong>템플릿·변수</strong> — 반복 발송을 위한 메시지 템플릿 및 치환</li>
+                <li><strong>발송 결과</strong> — 전송 상태·실패 사유 조회</li>
+                <li><strong>인증·권한</strong> — 로그인 기반 접근 제어(앱 구조상 AuthProvider·Layout 사용)</li>
+            </ul>
+        </div>
+
+        <h2>3. 시스템 구성(참고)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>구분</th>
+                    <th>설명</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>프론트엔드</td>
+                    <td>Next.js(App Router), 클라이언트 렌더링 구간 포함</td>
+                </tr>
+                <tr>
+                    <td>UI</td>
+                    <td>전역 레이아웃(GNB), 알림 모달 컨테이너 등</td>
+                </tr>
+                <tr>
+                    <td>문서 메타</td>
+                    <td>제목: 메시지 발송 시스템 / 설명: 문자 및 카카오톡 메시지 대량 발송 시스템</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>4. 유의사항</h2>
+        <p class="muted">실제 화면은 JavaScript 로딩 후 표시됩니다. PDF는 인쇄용 정적 요약본이며, 운영 정책·약관·요금은 서비스 최신 공지를 따릅니다.</p>
+
+        <footer>
+            생성일: <span id="gen"></span> · 메시지 발송 시스템 문서
+        </footer>
+    </div>
+    <script>
+        document.getElementById('gen').textContent = new Date().toISOString().slice(0, 10);
+    </script>
+</body>
+</html>
