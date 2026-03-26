@@ -75,6 +75,8 @@ function createFooter() {
             .footer-content {
                 max-width: 1400px;
                 margin: 0 auto;
+                padding-top: 32px;
+                padding-bottom: 28px;
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 48px;
@@ -159,6 +161,8 @@ function createFooter() {
                 .footer-content {
                     grid-template-columns: 1fr;
                     gap: 28px;
+                    padding-top: 24px;
+                    padding-bottom: 24px;
                 }
                 .footer-company { grid-column: auto; }
                 .footer-contact { grid-column: auto; }
