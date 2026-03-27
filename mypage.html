@@ -565,8 +565,10 @@
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                                         <div style="flex: 1;">
                                             <div style="font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">회원유형 전환 신청이 반려되었습니다</div>
-                                            <p id="memberTypeRejectedReason" style="font-size: 13px; color: var(--text-secondary); margin: 0 0 8px 0; line-height: 1.5;">제출하신 사업자등록증과 회원 정보가 일치하지 않습니다. 사업자등록증 사본을 다시 확인하여 수정 후 재신청해 주세요.</p>
-                                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">문의사항이 있으시면 고객센터(1588-0000)로 연락해 주세요.</p>
+                                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0 0 10px 0; line-height: 1.5;">재신청을 위해 반려 사유를 확인해 주세요.</p>
+                                            <button type="button" class="btn btn-outline btn-sm" onclick="openMemberTypeRejectReasonModal()">반려사유 보기</button>
+                                            <p style="font-size: 13px; color: var(--text-secondary); margin: 10px 0 0 0;">문의사항이 있으시면 고객센터(1588-0000)로 연락해 주세요.</p>
+                                            <span id="memberTypeRejectedReason" style="display:none" aria-hidden="true">제출하신 사업자등록증과 회원 정보가 일치하지 않습니다. 사업자등록증 사본을 다시 확인하여 수정 후 재신청해 주세요.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -825,6 +827,21 @@
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('phoneVerifyModal')">취소</button>
                 <button class="btn btn-primary" onclick="verifyPhoneMypage()">확인</button>
+            </div>
+        </div>
+    </div>
+    <!-- 회원유형 전환 신청 반려 사유 -->
+    <div class="modal-overlay" id="memberTypeRejectReasonModal" style="display: none;">
+        <div class="modal" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3 class="modal-title">반려 사유</h3>
+                <button type="button" class="modal-close" onclick="closeModal('memberTypeRejectReasonModal')" aria-label="닫기">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="memberTypeRejectReasonModalBody" style="font-size: 14px; color: var(--text-secondary, #64748b); line-height: 1.6; margin: 0; white-space: pre-wrap;"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeModal('memberTypeRejectReasonModal')">확인</button>
             </div>
         </div>
     </div>
@@ -1087,6 +1104,13 @@
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('modal-overlay')) { e.target.style.display = 'none'; document.body.style.overflow = ''; }
         });
+        function openMemberTypeRejectReasonModal() {
+            var src = document.getElementById('memberTypeRejectedReason');
+            var body = document.getElementById('memberTypeRejectReasonModalBody');
+            var text = src ? (src.textContent || '').trim() : '';
+            if (body) body.textContent = text || '등록된 반려 사유가 없습니다.';
+            openModal('memberTypeRejectReasonModal');
+        }
         // 내정보수정: 회원유형 테스트·표시
         function setTestMemberType(type) {
             try { localStorage.setItem('memberType', type); } catch (e) {}
@@ -1108,6 +1132,25 @@
             if (callerPanelDisplay) callerPanelDisplay.textContent = typeText;
             if (businessCard) businessCard.style.display = type === 'business' ? 'block' : 'none';
             if (memberTypeCard) memberTypeCard.style.display = type === 'business' ? 'none' : 'block';
+            syncMemberTypeConversionNotices();
+        }
+        /** 전환신청 대기/반려 안내 — API 연동 시 동일 키로 치환 가능 (memberTypeConversionStatus, memberTypeConversionRejectReason) */
+        function syncMemberTypeConversionNotices() {
+            try {
+                var status = localStorage.getItem('memberTypeConversionStatus') || '';
+                var reasonEl = document.getElementById('memberTypeRejectedReason');
+                var reason = localStorage.getItem('memberTypeConversionRejectReason');
+                if (reasonEl && reason) reasonEl.textContent = reason;
+                var pending = document.getElementById('memberTypePendingNotice');
+                var rejected = document.getElementById('memberTypeRejectedNotice');
+                if (status === 'pending' && pending && rejected) {
+                    pending.style.display = 'block';
+                    rejected.style.display = 'none';
+                } else if (status === 'rejected' && pending && rejected) {
+                    pending.style.display = 'none';
+                    rejected.style.display = 'block';
+                }
+            } catch (e) {}
         }
         // 회원유형 전환 신청 대기 상태 표시 토글 (테스트/화면설계용. 실제 서비스에서는 API 응답에 따라 표시)
         function toggleMemberTypePending() {
@@ -1140,6 +1183,7 @@
             var btn = document.getElementById('togglePendingBtn');
             if (notice) notice.style.display = 'none';
             if (btn) btn.textContent = '대기 상태 보기';
+            try { localStorage.removeItem('memberTypeConversionStatus'); } catch (e) {}
             if (typeof showToast === 'function') showToast('전환 신청이 취소되었습니다.', 'success');
         }
         function checkEmail() { if (typeof showToast === 'function') showToast('사용 가능한 이메일입니다.', 'success'); }
@@ -1564,7 +1608,7 @@
             { selector: '#currentMemberTypeText', title: '27. 현재 회원유형 표시', position: { top: '-5px', right: '-10px' }, function: '현재 회원유형 표시(개인회원 등).' },
             { selector: '#memberTypePendingNotice', title: '27-1. 회원유형 전환 신청 대기 안내', position: { top: '-5px', left: '-10px' }, function: '전환 신청 접수 후 검토 중일 때 동일 영역에 노출. 신청 취소 버튼으로 취소 가능.', behavior: ['실제 서비스에서는 API/전환 신청 상태에 따라 표시', '검토 기간 안내(영업일 1~3일)'] },
             { selector: '#cancelMemberTypeApplyBtn', title: '27-2. 신청 취소', position: { top: '-5px', right: '-10px' }, function: '전환 신청 취소. 확인 후 취소 처리.', behavior: ['클릭 시 확인 다이얼로그', '취소 완료 시 대기 안내 숨김 및 토스트'] },
-            { selector: '#memberTypeRejectedNotice', title: '27-3. 회원유형 전환 신청 반려 안내', position: { top: '-5px', left: '-10px' }, function: '전환 신청이 반려된 경우 동일 영역에 노출. 반려 사유 안내. 아래 전환 신청 버튼으로 재신청 가능.', behavior: ['실제 서비스에서는 API/전환 신청 상태에 따라 표시', '반려 사유 문구 표시(#memberTypeRejectedReason)'] },
+            { selector: '#memberTypeRejectedNotice', title: '27-3. 회원유형 전환 신청 반려 안내', position: { top: '-5px', left: '-10px' }, function: '전환 신청이 반려된 경우 동일 영역에 노출. 반려사유 보기 클릭 시 모달에 사유 표시.', behavior: ['실제 서비스에서는 API/전환 신청 상태에 따라 표시', '사유 텍스트는 숨김(#memberTypeRejectedReason) → 모달(#memberTypeRejectReasonModalBody)'] },
             { selector: '#memberTypeCard a[href="mypage-convert-business.html"]', title: '28. 개인사업자 전환 신청', position: { top: '-5px', right: '-10px' }, function: '개인→개인사업자 전환. 클릭 시 mypage-convert-business.html 이동.' },
             { selector: '#memberTypeCard a[href="mypage-convert-corporate.html"]', title: '29. 법인사업자 전환 신청', position: { top: '-5px', right: '-10px' }, function: '개인/개인사업자→법인사업자 전환. 클릭 시 mypage-convert-corporate.html 이동.' },
             { selector: '#panel-profile .alert-info', title: '30. 대행업체 안내', position: { top: '10px', left: '-10px' }, function: '대행업체 회원 시 계정 분리 안내. 고객센터 문의 유도.' },
