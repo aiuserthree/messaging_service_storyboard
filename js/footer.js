@@ -8,7 +8,7 @@ function createFooter() {
                 <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('terms')">이용약관</a>
                 <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('privacy')">개인정보처리방침</a>
                 <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('spam')">스팸방지정책</a>
-                <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('company')">회사소개</a>
+                <a href="https://www.ibank.co.kr/main/index.dg?lang=ko" class="footer-top-link" target="_blank" rel="noopener noreferrer">회사소개</a>
             </div>
             <div class="footer-content">
                 <div class="footer-section footer-company">
@@ -21,7 +21,7 @@ function createFooter() {
                         <p class="footer-text">대표자: 정용관</p>
                         <p class="footer-text">사업자등록번호: 116-81-68774</p>
                         <p class="footer-text">통신판매업신고번호: 제2025-서울강서-0365호</p>
-                        <p class="footer-text">특수부가통신사업등록번호: 제 3-01-25-0037 호</p>
+                        <p class="footer-text">특수부가통신사업등록번호: 제 3-01-25-0037 호 <a href="javascript:void(0)" class="footer-inline-link" onclick="event.preventDefault(); openPolicyModal('company')">사업자 정보 확인</a></p>
                         <p class="footer-text">사업장 주소: 서울 강서구 마곡동 779번지 보타닉게이트 10층</p>
                         <p class="footer-text">호스팅제공사: iwinv</p>
                     </div>
@@ -29,13 +29,16 @@ function createFooter() {
                 <div class="footer-section footer-contact">
                     <h4 class="footer-title">고객지원</h4>
                     <div class="footer-info">
-                        <p class="footer-text"><a href="support-faq.html" class="footer-inline-link">FAQ</a> · <a href="support-inquiry.html" class="footer-inline-link">1:1문의</a> · <span>실시간채팅(카카오상담톡)</span></p>
+                        <p class="footer-text"><a href="support-faq.html" class="footer-inline-link">FAQ</a> · <a href="support-inquiry.html" class="footer-inline-link">1:1문의</a></p>
                         <p class="footer-text">전화번호: 02-6951-0035</p>
                         <p class="footer-text">상담시간: 평일 10시~17시 / 점심 11시30분~13시</p>
-                        <p class="footer-text">대표이메일: <a href="mailto:tokbell@ibank.co.kr" class="footer-inline-link">tokbell@ibank.co.kr</a></p>
-                        <p class="footer-text">기업견적문의 담당이메일: <a href="mailto:msg@ibank.co.kr" class="footer-inline-link">msg@ibank.co.kr</a></p>
+                        <p class="footer-text">대표이메일: <a href="mailto:tokbell@tokbell.com" class="footer-inline-link">tokbell@tokbell.com</a></p>
+                        <p class="footer-text">기업견적문의 담당이메일: <a href="mailto:msg@tokbell.com" class="footer-inline-link">msg@tokbell.com</a></p>
                     </div>
                     <div class="footer-cert-logos">
+                        <button type="button" class="footer-kcup-btn" onclick="openKcupCertModal()" aria-label="대량문자 전송자격 인증서 보기" title="대량문자 전송자격 인증">
+                            <img src="img/logo/mark_KCUP_ibank_s%201.png" alt="대량문자 전송자격인증" class="footer-cert-logo footer-cert-logo--wide" />
+                        </button>
                         <img src="img/logo/vntr_mark_signature02%201-Photoroom.png" alt="벤처확인기업" class="footer-cert-logo" />
                         <img src="img/logo/기술혁신형중소기업_국문로고%201.png" alt="기술혁신형중소기업" class="footer-cert-logo" />
                     </div>
@@ -146,6 +149,25 @@ function createFooter() {
                 object-fit: contain;
                 opacity: 0.9;
             }
+            .footer-cert-logo--wide {
+                max-width: 200px;
+            }
+            .footer-kcup-btn {
+                background: none;
+                border: none;
+                padding: 0;
+                margin: 0;
+                cursor: pointer;
+                line-height: 0;
+                border-radius: 4px;
+            }
+            .footer-kcup-btn:focus-visible {
+                outline: 2px solid var(--primary-color, #2563eb);
+                outline-offset: 2px;
+            }
+            .footer-kcup-btn img {
+                display: block;
+            }
             .footer-copyright {
                 font-size: 12px;
                 color: var(--text-muted, #94a3b8);
@@ -189,6 +211,47 @@ function closeModal(modalId) {
         modal.style.display = 'none';
         document.body.style.overflow = '';
     }
+}
+
+/** 대량문자 전송자격인증 모달 — 인증서 이미지 */
+function getKcupCertImageUrl() {
+    return 'img/docs/kcup-cert-ibank.png';
+}
+
+function openKcupCertModal() {
+    var modal = document.getElementById('kcupCertModal');
+    if (modal && (modal.querySelector('.kcup-cert-iframe') || modal.querySelector('.kcup-cert-fallback'))) {
+        modal.remove();
+        modal = null;
+    }
+    var imgUrl = getKcupCertImageUrl();
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'kcupCertModal';
+        modal.className = 'modal-overlay';
+        modal.innerHTML =
+            '<div class="modal modal--kcup-cert" role="dialog" aria-modal="true" aria-labelledby="kcupCertModalTitle">' +
+            '<div class="modal-header modal-header--kcup-cert">' +
+            '<h3 class="modal-title" id="kcupCertModalTitle">대량문자 전송자격 인증</h3>' +
+            '<button type="button" class="modal-close" onclick="closeModal(\'kcupCertModal\')" aria-label="닫기">&times;</button>' +
+            '</div>' +
+            '<div class="modal-body modal-body--kcup-cert">' +
+            '<img class="kcup-cert-img" src="' + imgUrl + '" alt="대량문자 전송자격인증서. (주)아이뱅크 사업자명, 대표자 정용관, 사업자등록번호 116-81-68774, 서울 강서구 마곡동로 166 보타닉게이트 10층, 2025년 8월 13일 발급." />' +
+            '</div>' +
+            '</div>';
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                closeModal('kcupCertModal');
+            }
+        });
+        document.body.appendChild(modal);
+    } else {
+        var imgEl = modal.querySelector('.kcup-cert-img');
+        if (imgEl) {
+            imgEl.setAttribute('src', imgUrl);
+        }
+    }
+    openModal('kcupCertModal');
 }
 
 // 개인정보처리방침 시행일(이전 버전) 전환
@@ -267,7 +330,7 @@ function openPolicyModal(type) {
     }
     
     const titleMap = {
-        'company': '회사소개',
+        'company': '사업자 정보',
         'service': '서비스 소개',
         'terms': '이용약관',
         'privacy': '개인정보처리방침',
@@ -1267,6 +1330,38 @@ function openPolicyModal(type) {
             }
             .btn-outline:hover {
                 background-color: var(--bg-color, #f8fafc);
+            }
+            /* 기본 .modal 의 overflow-y:auto 가 스크롤을 만들 수 있어 KCUP 전용으로 덮어씀 */
+            .modal.modal--kcup-cert {
+                width: fit-content;
+                max-width: calc(100vw - 32px);
+                max-height: 90vh;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                margin: auto;
+            }
+            .modal-header--kcup-cert {
+                flex-shrink: 0;
+            }
+            .modal-body.modal-body--kcup-cert {
+                padding: 0;
+                margin: 0;
+                overflow: visible;
+                flex: 0 0 auto;
+                min-height: 0;
+                display: block;
+                background: var(--surface-color, #ffffff);
+                border-radius: 0 0 12px 12px;
+            }
+            .kcup-cert-img {
+                display: block;
+                width: auto;
+                height: auto;
+                max-width: calc(100vw - 32px);
+                /* 헤더(패딩+타이틀)+border 여유 */
+                max-height: calc(90vh - 88px);
+                object-fit: contain;
             }
         `;
         document.head.appendChild(style);
