@@ -1063,6 +1063,10 @@ body {
     </style>
 </head>
 <body>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({ event: 'charge_start' });
+    </script>
     <div class="app-container">
         <script>
             document.write(createHeader());
@@ -1829,9 +1833,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 실시간 계좌이체 - PG사 연동하여 즉시 이체 처리
                 showToast('실시간 계좌이체 결제를 진행합니다.', 'info');
                 // PG사 실시간 계좌이체 모듈 호출
-                // 이체 완료 시 즉시 충전 처리
+                // 이체 완료 시: window.dataLayer.push({ event: 'charge_finish' });
             } else {
                 showToast('결제가 완료되었습니다. 디파짓에 충전되었습니다.', 'success');
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({ event: 'charge_finish' });
                 // 실제 결제 처리
                 // 충전 금액을 디파짓에 저장
             }

@@ -1,3 +1,55 @@
+/**
+ * Meta Pixel + Google Tag Manager (전역, header.js 로드 시 1회)
+ */
+(function installMarketingTags() {
+    if (window.__TOKBELL_MARKETING_TAGS__) {
+        return;
+    }
+    window.__TOKBELL_MARKETING_TAGS__ = true;
+
+    // Meta Pixel
+    !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) {
+            return;
+        }
+        n = f.fbq = function () {
+            n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq) {
+            f._fbq = n;
+        }
+        n.push = n;
+        n.loaded = !0;
+        n.version = '2.0';
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+    })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1241122798212443');
+    fbq('track', 'PageView');
+
+    // Google Tag Manager
+    (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0];
+        var j = d.createElement(s);
+        var dl = l !== 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WH48X3XQ');
+})();
+
+/** GTM dataLayer 커스텀 이벤트 (페이지별 호출용) */
+function pushDataLayerEvent(eventName) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: eventName });
+}
+
 // 공통 헤더 생성 함수
 function createHeader(activeMenu = '') {
     // GNB 대메뉴 구조: 문자발송 | 선거문자 | 카카오톡 | 주소록 | 발송현황 (5개)
@@ -216,6 +268,10 @@ function createHeader(activeMenu = '') {
     }
     
     return `
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WH48X3XQ" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
+        <!-- Meta Pixel (noscript) -->
+        <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1241122798212443&amp;ev=PageView&amp;noscript=1" alt="" /></noscript>
         <style>
             /* 헤더 드롭다운 스타일 */
             .header-dropdown-wrapper {
