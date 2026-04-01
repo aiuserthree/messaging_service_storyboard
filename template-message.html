@@ -1417,7 +1417,7 @@ body {
                             </div>
                             <div class="form-group" id="titleGroup" style="display: none;">
                                 <label class="form-label">제목</label>
-                                <input type="text" class="form-input" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40">
+                                <input type="text" class="form-input" id="messageTitle" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40" oninput="updateByteCounter(); updatePreview();">
                             </div>
                             <div class="form-group">
                                 <label class="form-label required">메시지 내용</label>
@@ -1833,7 +1833,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function updatePreview() {
             const content = document.getElementById('templateContent').value;
-            const title = document.querySelector('#titleGroup input')?.value || '';
+            const title = document.getElementById('messageTitle')?.value || '';
             
             document.getElementById('previewContent').textContent = content || '메시지 내용을 입력하세요';
             
@@ -1973,6 +1973,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function saveTemplate() {
+            const nameInput = document.querySelector('#templateForm input[placeholder*="템플릿명"]');
+            if (!nameInput || !nameInput.value.trim()) {
+                alert('템플릿명을 입력해 주세요.');
+                return;
+            }
+            const contentEl = document.getElementById('templateContent');
+            const content = contentEl.value;
+            if (!content.trim()) {
+                alert('메시지 내용을 입력해 주세요.');
+                return;
+            }
+            const type = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
+            const maxContent = type === 'SMS' ? 90 : 2000;
+            const contentBytes = calculateByteLength(content);
+            if (contentBytes > maxContent) {
+                alert(
+                    type +
+                        ' 메시지 내용은 최대 ' +
+                        maxContent +
+                        '바이트까지 입력할 수 있습니다.\n\n내용을 줄인 뒤 다시 저장해 주세요.'
+                );
+                return;
+            }
+            if (type === 'LMS' || type === 'MMS') {
+                const titleVal = document.getElementById('messageTitle')?.value || '';
+                if (calculateByteLength(titleVal) > 40) {
+                    alert('제목은 최대 40바이트까지 입력할 수 있습니다.\n\n제목을 줄인 뒤 다시 저장해 주세요.');
+                    return;
+                }
+            }
             showToast('템플릿이 저장되었습니다.', 'success');
             closeModal('addTemplateModal');
         }

@@ -1847,10 +1847,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updateAdPrefixPreview() {
-            updatePreview();
+            updateByteCounter();
         }
 
-        function updateByteCounter() {
+        function getAdTemplateTotalBytes() {
+            const type = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
             const content = document.getElementById('templateContent').value;
             const title = document.getElementById('messageTitle')?.value || '';
             const adPrefixText = document.getElementById('adPrefixText').value;
@@ -1859,12 +1860,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const adPrefix = '(광고)';
             const fullText = adPrefix + (adPrefixText ? ' ' + adPrefixText : '') + ' ' + content + ' ' + rejectText;
             let totalBytes = calculateByteLength(fullText);
-            if (title) {
+            if (title && (type === 'LMS' || type === 'MMS')) {
                 totalBytes += calculateByteLength(title);
             }
-            
+            return totalBytes;
+        }
+
+        function updateByteCounter() {
             const type = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
             const maxBytes = type === 'SMS' ? 90 : 2000;
+            const totalBytes = getAdTemplateTotalBytes();
             
             const counter = document.getElementById('byteCounter');
             counter.textContent = `${totalBytes} / ${maxBytes} 바이트`;
@@ -2028,6 +2033,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function saveTemplate() {
+            const nameInput = document.querySelector('#templateForm input[placeholder*="템플릿명"]');
+            if (!nameInput || !nameInput.value.trim()) {
+                alert('템플릿명을 입력해 주세요.');
+                return;
+            }
+            const adPrefixEl = document.getElementById('adPrefixText');
+            if (!adPrefixEl || !adPrefixEl.value.trim()) {
+                alert('(광고) 옆 문구를 입력해 주세요.');
+                return;
+            }
+            const content = document.getElementById('templateContent').value;
+            if (!content.trim()) {
+                alert('메시지 내용을 입력해 주세요.');
+                return;
+            }
+            const type = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
+            const maxBytes = type === 'SMS' ? 90 : 2000;
+            const totalBytes = getAdTemplateTotalBytes();
+            if (totalBytes > maxBytes) {
+                alert(
+                    '(광고) 표기, 옆 문구, 본문, 수신거부 안내' +
+                        (type === 'LMS' || type === 'MMS' ? ', 제목' : '') +
+                        '을 합친 길이가 ' +
+                        type +
+                        ' 최대 ' +
+                        maxBytes +
+                        '바이트를 초과합니다.\n\n내용을 줄인 뒤 다시 저장해 주세요.'
+                );
+                return;
+            }
+            if (type === 'LMS' || type === 'MMS') {
+                const titleVal = document.getElementById('messageTitle')?.value || '';
+                if (calculateByteLength(titleVal) > 40) {
+                    alert('제목은 최대 40바이트까지 입력할 수 있습니다.\n\n제목을 줄인 뒤 다시 저장해 주세요.');
+                    return;
+                }
+            }
             showToast('템플릿이 저장되었습니다.', 'success');
             closeModal('addTemplateModal');
         }
