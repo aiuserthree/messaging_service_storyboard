@@ -1419,7 +1419,8 @@ body {
                             </div>
                             <div class="form-group" id="titleGroup" style="display: none;">
                                 <label class="form-label">제목</label>
-                                <input type="text" class="form-input" id="messageTitle" placeholder="제목을 입력하세요 (최대 40자)" maxlength="40" oninput="updateByteCounter()">
+                                <input type="text" class="form-input" id="messageTitle" placeholder="" maxlength="40" disabled oninput="updateByteCounter()">
+                                <div class="form-help" style="margin-top: 6px; font-size: 12px; color: var(--danger-color);">* 제목 입력은 메시지 내용 90바이트 초과 입력 시 가능합니다.</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label required">선거운동정보</label>
@@ -1814,6 +1815,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
     <script>
+        function syncAddTemplateModalTitleInput() {
+            const modal = document.getElementById('addTemplateModal');
+            const type = (modal?.querySelector('input[name="messageType"]:checked') || document.querySelector('input[name="messageType"]:checked'))?.value || 'SMS';
+            const titleInput = document.getElementById('messageTitle');
+            const contentEl = document.getElementById('templateContent');
+            if (!titleInput || !contentEl) return;
+            const contentBytes = calculateByteLength(contentEl.value);
+            if (type === 'LMS' || type === 'MMS') {
+                titleInput.disabled = contentBytes <= 90;
+                titleInput.placeholder = contentBytes > 90 ? '제목을 입력하세요 (최대 40자)' : '';
+                if (contentBytes <= 90) {
+                    titleInput.value = '';
+                }
+            } else {
+                titleInput.disabled = true;
+                titleInput.placeholder = '';
+                titleInput.value = '';
+            }
+        }
+
         function updateMessageType(type) {
             const titleGroup = document.getElementById('titleGroup');
             const imageGroup = document.getElementById('imageGroup');
@@ -1869,6 +1890,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updateByteCounter() {
+            syncAddTemplateModalTitleInput();
             const type = document.querySelector('input[name="messageType"]:checked').value;
             const maxBytes = type === 'SMS' ? 90 : 2000;
             const totalBytes = getElectionTemplateTotalBytes();
@@ -2037,6 +2059,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function saveTemplate() {
+            syncAddTemplateModalTitleInput();
             const nameInput = document.querySelector('#templateForm input[placeholder*="템플릿명"]');
             if (!nameInput || !nameInput.value.trim()) {
                 alert('템플릿명을 입력해 주세요.');
