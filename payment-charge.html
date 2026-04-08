@@ -1065,7 +1065,9 @@ body {
 <body>
     <script>
         window.dataLayer = window.dataLayer || [];
-        dataLayer.push({ event: 'charge_start' });
+        dataLayer.push({
+            event: 'charge_start',
+        });
     </script>
     <div class="app-container">
         <script>
@@ -1821,11 +1823,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            showToast('결제가 완료되었습니다. 디파짓에 충전되었습니다.', 'success');
-            window.dataLayer = window.dataLayer || [];
-            dataLayer.push({ event: 'charge_finish' });
-            // 실제 결제 처리
-            // 충전 금액을 디파짓에 저장
+            // 실제 PG 연동 시 return URL로 충전 완료 페이지 진입 → charge_finish 는 해당 페이지에서만 전송
+            window.location.href = 'payment-charge-complete.html';
         });
     </script>
     <script src="js/footer.js"></script>

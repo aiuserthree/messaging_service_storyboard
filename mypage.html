@@ -1271,6 +1271,12 @@
             document.querySelectorAll('.mypage-content-panel').forEach(function(el) {
                 el.classList.toggle('active', el.id === 'panel-' + panelId);
             });
+            if (panelId === 'caller') {
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
+                    event: 'number_register',
+                });
+            }
             if (panelId === 'history') {
                 renderTable('charge');
             }

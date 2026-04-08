@@ -1,5 +1,8 @@
 /**
  * Meta Pixel + Google Tag Manager (전역, header.js 로드 시 1회)
+ *
+ * Meta Pixel은 이 스크립트를 포함하는 모든 HTML에서 동작합니다.
+ * (header.js 미포함 페이지: 리다이렉트 전용, 이메일 템플릿, TEST 보고서 등은 제외)
  */
 (function installMarketingTags() {
     if (window.__TOKBELL_MARKETING_TAGS__) {
