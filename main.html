@@ -853,6 +853,15 @@ body {
     opacity: 0.9;
 }
 
+.usage-stat-hint {
+    font-size: 11px;
+    line-height: 1.4;
+    color: #94a3b8;
+    margin-top: 8px;
+    font-weight: 400;
+    max-width: 100%;
+}
+
 /* 상담 카드 - 새 디자인 */
 .consultation-card {
     background: #ffffff;
@@ -2147,8 +2156,9 @@ body {
                             <div class="usage-stat-label" style="color: #64748b;">단문(SMS) 발송 가능 메시지 수</div>
                         </div>
                         <div class="usage-stat-card white no-arrow">
-                            <div class="usage-stat-value" style="color: #1e293b;">연 1 회</div>
+                            <div class="usage-stat-value" style="color: #1e293b;">월 24회</div>
                             <div class="usage-stat-label" style="color: #64748b;">발송 주기</div>
+                            <div class="usage-stat-hint">가입일부터 전월까지 월평균 발송 건수</div>
                         </div>
                         <div class="usage-stat-card white clickable" onclick="window.location.href='addressbook.html'">
                             <div class="usage-stat-value" style="color: #1e293b;">0</div>
@@ -2840,7 +2850,7 @@ body {
                 behavior: [
                     '누적 발송 요청 건수 표시',
                     '현재 잔액으로 발송 가능한 SMS 건수',
-                    '평균 발송 주기 (일/주/월)',
+                    '발송 주기: 월 N회 (가입일~전월 월평균 발송 건수)',
                     '관리 고객(주소록) 수',
                     '각 항목 클릭 시 상세 페이지 이동'
                 ],
