@@ -447,6 +447,75 @@ body {
     cursor: pointer;
 }
 
+/* 영구정지 계정 로그인 시 안내 모달 */
+.ban-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(15, 23, 42, 0.55);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+.ban-modal-overlay.is-open {
+    display: flex;
+}
+.ban-modal-box {
+    background: var(--surface-color);
+    border-radius: var(--radius-lg);
+    max-width: 440px;
+    width: 100%;
+    padding: 28px 24px;
+    box-shadow: var(--shadow-lg);
+}
+.ban-modal-box h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    line-height: 1.45;
+}
+.ban-modal-box .ban-modal-body {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 18px;
+}
+.ban-modal-box .ban-modal-contact {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.85;
+    padding: 16px 18px;
+    background: var(--bg-color);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    margin-bottom: 22px;
+}
+.ban-modal-box .ban-modal-contact strong {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+}
+.ban-modal-box .ban-modal-contact p {
+    margin: 6px 0;
+}
+.ban-modal-box .ban-modal-contact a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    word-break: break-all;
+}
+.ban-modal-box .ban-modal-contact a:hover {
+    text-decoration: underline;
+}
+.ban-modal-box .ban-modal-ok {
+    width: 100%;
+}
+
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
@@ -554,15 +623,64 @@ body {
                 </div>
             </div>
         </main>
+
+        <!-- 영구정지 계정 로그인 시 안내 (데모 아이디: permanent_ban_demo) -->
+        <div id="permanentBanModal" class="ban-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="permanentBanTitle">
+            <div class="ban-modal-box">
+                <h2 id="permanentBanTitle">이용 제한 안내</h2>
+                <p class="ban-modal-body">
+                    본 계정은 서비스 이용약관 및 운영정책에 따라 <strong style="color: var(--text-primary);">영구 이용 정지</strong>된 상태입니다.
+                    로그인 및 서비스 이용이 제한됩니다.
+                </p>
+                <div class="ban-modal-contact">
+                    <strong>문의 안내</strong>
+                    <p>이용 제한 사유 확인, 사실관계 문의, 이의신청 등은 아래로 연락해 주시기 바랍니다.</p>
+                    <p>고객센터: <a href="tel:15885412">1588-5412</a> <span style="color: var(--text-muted); font-size: 13px;">(평일 09:00~18:00)</span></p>
+                    <p>이메일: <a href="mailto:tokbell@tokbell.com">tokbell@tokbell.com</a></p>
+                </div>
+                <button type="button" class="btn btn-primary ban-modal-ok" id="permanentBanOkBtn">확인</button>
+            </div>
+        </div>
     </div>
 
     <script>
+        /** 영구정지: 데모 아이디 또는 localStorage tokbell_account_status_&lt;아이디&gt; = permanent_ban */
+        function isPermanentBannedAccount(userId) {
+            if (!userId || !String(userId).trim()) return false;
+            var id = String(userId).trim();
+            var lower = id.toLowerCase();
+            if (lower === 'permanent_ban_demo') return true;
+            try {
+                return localStorage.getItem('tokbell_account_status_' + id) === 'permanent_ban';
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function showPermanentBanModal() {
+            var el = document.getElementById('permanentBanModal');
+            if (!el) return;
+            el.classList.add('is-open');
+            var btn = document.getElementById('permanentBanOkBtn');
+            if (btn) setTimeout(function () { btn.focus(); }, 50);
+        }
+
+        function closePermanentBanModal() {
+            var el = document.getElementById('permanentBanModal');
+            if (el) el.classList.remove('is-open');
+        }
+
         // 로그인 처리
         function handleLogin(event) {
             event.preventDefault();
             
             const userId = document.getElementById('userId').value.trim();
             const rememberId = document.getElementById('rememberId').checked;
+
+            if (isPermanentBannedAccount(userId)) {
+                showPermanentBanModal();
+                return;
+            }
             
             // 아이디 저장 처리
             if (rememberId && userId) {
@@ -591,8 +709,22 @@ body {
                 document.getElementById('rememberId').checked = true;
             }
 
-// 드롭다운 메뉴 초기화
-    initDropdownMenus();
+            // 드롭다운 메뉴 초기화
+            initDropdownMenus();
+
+            var banModal = document.getElementById('permanentBanModal');
+            var banOk = document.getElementById('permanentBanOkBtn');
+            if (banOk) banOk.addEventListener('click', closePermanentBanModal);
+            if (banModal) {
+                banModal.addEventListener('click', function (e) {
+                    if (e.target === banModal) closePermanentBanModal();
+                });
+            }
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && banModal && banModal.classList.contains('is-open')) {
+                    closePermanentBanModal();
+                }
+            });
 });
     </script>
     <!-- 화면설계 오버레이 -->
