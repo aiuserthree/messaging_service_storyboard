@@ -972,7 +972,7 @@ body {
         }
         .payment-methods {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
             margin-bottom: 16px;
         }
@@ -1118,14 +1118,6 @@ body {
                                     </div>
                                     <div style="font-weight: 600;">가상계좌</div>
                                 </div>
-                                <div class="payment-method" onclick="selectPayment('realtime')">
-                                    <div class="payment-icon" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M21 12h-8M3 12h8M12 3v18M21 5l-9-2-9 2M21 19l-9 2-9-2"></path>
-                                        </svg>
-                                    </div>
-                                    <div style="font-weight: 600;">실시간 계좌이체</div>
-                                </div>
                                 <div class="payment-method" onclick="selectPayment('transfer')">
                                     <div class="payment-icon" style="background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1163,7 +1155,7 @@ body {
                             </div>
                         </div>
 
-                        <!-- 직접 입력 (가상계좌·실시간 계좌이체 선택 시 노출) -->
+                        <!-- 직접 입력 (가상계좌 선택 시 노출) -->
                         <div class="form-group" id="directAmountGroup" style="display: none;">
                             <label class="form-label required">충전 포인트 (P)</label>
                             <input type="number" class="form-input" id="directAmountInput" placeholder="충전할 포인트를 입력하세요" min="10000" step="1000" oninput="updatePriceFromInput()">
@@ -1715,9 +1707,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 신용카드: 금액 버튼(5만~200만)만 노출
             if (chargePointGroup) chargePointGroup.style.display = method === 'card' ? 'block' : 'none';
-            if (directAmountGroup) directAmountGroup.style.display = (method === 'virtual' || method === 'realtime') ? 'block' : 'none';
+            if (directAmountGroup) directAmountGroup.style.display = method === 'virtual' ? 'block' : 'none';
             if (directAmountInput) {
-                if (method !== 'virtual' && method !== 'realtime') directAmountInput.value = '';
+                if (method !== 'virtual') directAmountInput.value = '';
                 else updatePriceFromInput();
             }
             if (method === 'card') {
@@ -1829,18 +1821,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            if (selectedPayment === 'realtime') {
-                // 실시간 계좌이체 - PG사 연동하여 즉시 이체 처리
-                showToast('실시간 계좌이체 결제를 진행합니다.', 'info');
-                // PG사 실시간 계좌이체 모듈 호출
-                // 이체 완료 시: window.dataLayer.push({ event: 'charge_finish' });
-            } else {
-                showToast('결제가 완료되었습니다. 디파짓에 충전되었습니다.', 'success');
-                window.dataLayer = window.dataLayer || [];
-                dataLayer.push({ event: 'charge_finish' });
-                // 실제 결제 처리
-                // 충전 금액을 디파짓에 저장
-            }
+            showToast('결제가 완료되었습니다. 디파짓에 충전되었습니다.', 'success');
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({ event: 'charge_finish' });
+            // 실제 결제 처리
+            // 충전 금액을 디파짓에 저장
         });
     </script>
     <script src="js/footer.js"></script>
@@ -1920,7 +1905,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             // 10. 신용카드 선택
             {
-                selector: 'input[name="paymentMethod"][value="card"]',
+                selector: '.payment-method[onclick*="card"]',
                 title: '신용카드',
                 position: { top: '-5px', left: '-10px' },
                 function: '신용카드 결제',
@@ -1928,22 +1913,15 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             // 11. 가상계좌 선택
             {
-                selector: 'input[name="paymentMethod"][value="virtual"]',
+                selector: '.payment-method[onclick*="virtual"]',
                 title: '가상계좌',
                 position: { top: '-5px', left: '-10px' },
                 function: '가상계좌 발급',
                 behavior: ['입금 후 자동 충전']
             },
-            // 12. 실시간 계좌이체 선택
+            // 12. 전용계좌 선택
             {
-                selector: 'input[name="paymentMethod"][value="realtime"]',
-                title: '실시간 계좌이체',
-                position: { top: '-5px', left: '-10px' },
-                function: '실시간 이체 결제'
-            },
-            // 13. 전용계좌 선택
-            {
-                selector: 'input[name="paymentMethod"][value="dedicated"]',
+                selector: '.payment-method[onclick*="transfer"]',
                 title: '전용계좌',
                 position: { top: '-5px', right: '-10px' },
                 function: '전용계좌 발급/사용',
