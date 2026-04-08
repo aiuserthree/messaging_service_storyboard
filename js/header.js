@@ -28,7 +28,7 @@
         s = b.getElementsByTagName(e)[0];
         s.parentNode.insertBefore(t, s);
     })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1241122798212443');
+    fbq('init', '1502252701521740');
     fbq('track', 'PageView');
 
     // Google Tag Manager
@@ -271,7 +271,7 @@ function createHeader(activeMenu = '') {
         <!-- Google Tag Manager (noscript) -->
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WH48X3XQ" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
         <!-- Meta Pixel (noscript) -->
-        <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1241122798212443&amp;ev=PageView&amp;noscript=1" alt="" /></noscript>
+        <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1502252701521740&amp;ev=PageView&amp;noscript=1" alt="" /></noscript>
         <style>
             /* 헤더 드롭다운 스타일 */
             .header-dropdown-wrapper {
