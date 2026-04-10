@@ -1136,13 +1136,6 @@ body {
             }
         }
         
-        /* 변수 사용 안내 툴팁 */
-        .variable-tooltip-wrapper:hover .variable-tooltip {
-            display: block !important;
-        }
-        .variable-info-icon:hover {
-            background-color: var(--primary-color) !important;
-        }
     </style>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -1239,15 +1232,9 @@ body {
                         <!-- 수신번호 설정 -->
                         <div class="form-group" id="recipientGroup">
                             <label class="form-label required">수신번호</label>
-                            <div class="form-help" style="margin-bottom: 12px; color: var(--text-secondary);">
-                                <span style="display: inline-flex; align-items: center; gap: 6px;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                    </svg>
-                                    주소록, 엑셀 업로드, 직접 입력 모두 가능합니다.
-                                </span>
+                            <div class="form-help" style="margin-bottom: 12px; color: var(--text-secondary); font-size: 13px; line-height: 1.65;">
+                                - 변수 사용 안내: 이름은 100바이트까지 입력됩니다.<br>
+                                - 변수 길이로 인해 90바이트를 초과하는 SMS 메시지는 LMS로 변경 후 발송하시기 바랍니다.
                             </div>
                             <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
                                 <!-- 표 상단: 주소록에 저장 / 총 N명 / (공백) / 샘플 다운로드 / 엑셀 업로드 / 주소록 / 전화번호만 입력 -->
@@ -1342,12 +1329,6 @@ body {
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{이름}')">#{이름}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{전화번호}')">#{전화번호}</button>
                                 <button type="button" class="btn btn-sm btn-outline" id="templateSelectBtn" onclick="openModal('templateSelectModal')">템플릿 선택</button>
-                                <span class="variable-tooltip-wrapper" style="position: relative; display: inline-flex; align-items: center; margin-left: 4px;">
-                                    <span class="variable-info-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background-color: var(--text-secondary); color: white; font-size: 12px; font-weight: bold; cursor: help;">?</span>
-                                    <span class="variable-tooltip" style="display: none; position: absolute; left: 24px; top: 50%; transform: translateY(-50%); background-color: #333; color: white; padding: 8px 12px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.2); line-height: 1.6;">
-                                        변수 사용 안내: 이름은 100바이트까지 입력됩니다.<br>변수 길이로 인해 90바이트를 초과하는 SMS 메시지는 LMS로 변경 후 발송하시기 바랍니다.
-                                    </span>
-                                </span>
                             </div>
                             <textarea class="form-textarea" id="messageContent" rows="6" placeholder="메시지 내용을 입력하세요" required oninput="updatePreview(); checkForbiddenWords(); updateByteCounter();"></textarea>
                             <div class="byte-counter" id="byteCounter">0 / 90 바이트</div>
