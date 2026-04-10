@@ -2,10 +2,6 @@
         let selectedMemberType = ''; // 'personal' or 'business'
         let selectedOwnershipType = '';
         let numberType = null; // 'MOBILE' or 'LANDLINE'
-        let requiresAuth = false;
-        let authCompleted = false;
-        let authInfo = null;
-
         // 현재 회원 유형 확인 함수 (실제로는 API 호출)
         function getCurrentMemberType() {
             // 실제로는 API 호출 또는 localStorage에서 가져옴
@@ -84,16 +80,14 @@
             
             if (number.startsWith('010')) {
                 numberType = 'MOBILE';
-                requiresAuth = true;
                 if (badgeDiv) badgeDiv.style.display = 'block';
                 if (badgeText) { badgeText.className = 'number-type-badge number-type-mobile'; badgeText.textContent = '휴대폰 번호'; }
-                if (authText) authText.textContent = '본인인증이 필요합니다';
+                if (authText) authText.textContent = '연락처 입력 후 제출합니다';
             } else if (/^(02|0[3-6][1-5])/.test(number)) {
                 numberType = 'LANDLINE';
-                requiresAuth = false;
                 if (badgeDiv) badgeDiv.style.display = 'block';
                 if (badgeText) { badgeText.className = 'number-type-badge number-type-landline'; badgeText.textContent = '유선번호'; }
-                if (authText) authText.textContent = '본인인증이 필요하지 않습니다';
+                if (authText) authText.textContent = '서류 심사 후 등록됩니다';
             } else if (number.length > 0) {
                 numberType = null;
                 if (badgeDiv) badgeDiv.style.display = 'none';
@@ -105,33 +99,6 @@
             // 개인 회원 - 본인 명의 또는 기업 회원 - 본인(자사) 명의인 경우 서류 섹션 업데이트
             if (selectedOwnershipType === 'self') {
                 updateDocumentSection();
-            }
-            
-            // 본인인증 섹션 업데이트
-            const authSection = document.getElementById('authSection');
-            if (authSection) {
-                // 본인(자사) 명의이고 휴대폰 번호일 때만 본인인증 필요
-                if (requiresAuth && numberType === 'MOBILE' && selectedOwnershipType === 'self') {
-                    authSection.style.display = 'block';
-                    const authHelpText = document.getElementById('authHelpText');
-                    if (authHelpText) {
-                        authHelpText.textContent = selectedMemberType === 'personal' 
-                            ? '발신번호 명의자 본인인증이 필요합니다' 
-                            : '서류 제출자 본인인증이 필요합니다';
-                    }
-                    
-                    // 본인인증 버튼 표시 및 상태 초기화
-                    if (!authCompleted) {
-                        authCompleted = false;
-                        const authStatus = document.getElementById('authStatus');
-                        if (authStatus) {
-                            authStatus.innerHTML = '<button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>';
-                        }
-                    }
-                } else {
-                    authSection.style.display = 'none';
-                    authCompleted = false;
-                }
             }
         }
 
@@ -148,8 +115,6 @@
         // STEP 3에서 명의 구분 선택 및 서류 섹션 업데이트
         function updateOwnershipSection() {
             const ownershipSection = document.getElementById('ownershipTypeSection');
-            const authSection = document.getElementById('authSection');
-            const docSection = document.getElementById('documentSection');
             
             if (selectedMemberType === 'personal') {
                 // 개인 회원 명의 구분
@@ -199,96 +164,32 @@
                     </div>
                 `;
             }
-            
-            // 본인인증 섹션 표시/숨김
-            // 본인(자사) 명의이고 휴대폰 번호일 때만 본인인증 필요
-            if (requiresAuth && numberType === 'MOBILE' && selectedOwnershipType === 'self') {
-                authSection.style.display = 'block';
-                document.getElementById('authHelpText').textContent = selectedMemberType === 'personal' 
-                    ? '발신번호 명의자 본인인증이 필요합니다' 
-                    : '서류 제출자 본인인증이 필요합니다';
-                
-                // 본인인증 버튼 표시 및 상태 초기화
-                authCompleted = false;
-                const authStatus = document.getElementById('authStatus');
-                if (authStatus) {
-                    authStatus.innerHTML = '<button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>';
-                }
-            } else {
-                authSection.style.display = 'none';
-                // 본인인증 상태 초기화
-                authCompleted = false;
-            }
         }
 
         function selectOwnershipType(type) {
             selectedOwnershipType = type;
             updateDocumentSection();
-            
-            // 본인인증 섹션 업데이트
-            const authSection = document.getElementById('authSection');
-            if (authSection) {
-                // 본인(자사) 명의이고 휴대폰 번호일 때만 본인인증 필요
-                if (requiresAuth && numberType === 'MOBILE' && selectedOwnershipType === 'self') {
-                    authSection.style.display = 'block';
-                    document.getElementById('authHelpText').textContent = selectedMemberType === 'personal' 
-                        ? '발신번호 명의자 본인인증이 필요합니다' 
-                        : '서류 제출자 본인인증이 필요합니다';
-                    
-                    // 본인인증 버튼 표시 및 상태 초기화
-                    authCompleted = false;
-                    const authStatus = document.getElementById('authStatus');
-                    if (authStatus) {
-                        authStatus.innerHTML = '<button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>';
-                    }
-                } else {
-                    authSection.style.display = 'none';
-                    // 본인인증 상태 초기화
-                    authCompleted = false;
-                    const authStatus = document.getElementById('authStatus');
-                    if (authStatus) {
-                        authStatus.innerHTML = '<span style="color: var(--text-secondary);">본인인증이 필요하지 않습니다</span>';
-                    }
-                    const authButton = document.getElementById('authButton');
-                    if (authButton) {
-                        authButton.style.display = 'none';
-                    }
-                }
-            }
-            // 휴대폰+본인 명의 선택 순간 스텝 바에서 3·4단계 숨김
             updateStepIndicatorVisibility();
-            // 2단계 푸터: 휴대폰+본인 명의+인증완료 시 등록 버튼 표시
             updateStep2FooterButton();
         }
 
-        // 2단계에서 휴대폰+본인 명의+인증 완료면 '등록' 버튼, 아니면 '다음' 버튼
         function updateStep2FooterButton() {
             const nextBtn = document.getElementById('nextBtn');
             const submitBtn = document.getElementById('submitBtn');
             if (!nextBtn || !submitBtn) return;
-            if (currentStep === 2 && numberType === 'MOBILE' && selectedOwnershipType === 'self' && authCompleted) {
-                nextBtn.style.display = 'none';
-                submitBtn.style.display = 'block';
-                submitBtn.textContent = '등록';
-            } else if (currentStep === 2) {
+            if (currentStep === 2) {
                 nextBtn.style.display = 'block';
                 submitBtn.style.display = 'none';
                 submitBtn.textContent = '승인요청';
             }
         }
 
-        // 휴대폰+본인 명의일 때 스텝 인디케이터에서 3·4단계 숨김
         function updateStepIndicatorVisibility() {
             const step3El = document.getElementById('step3');
             const step4El = document.getElementById('step4');
             if (!step3El || !step4El) return;
-            if (numberType === 'MOBILE' && selectedOwnershipType === 'self') {
-                step3El.style.display = 'none';
-                step4El.style.display = 'none';
-            } else {
-                step3El.style.display = '';
-                step4El.style.display = '';
-            }
+            step3El.style.display = '';
+            step4El.style.display = '';
         }
 
         // 명의 구분별 서류 섹션 업데이트
@@ -307,13 +208,10 @@
             if (selectedMemberType === 'personal') {
                 if (selectedOwnershipType === 'self') {
                     // 개인 - 본인 명의
-                    // 휴대폰 번호인 경우 본인인증만 필요 (통신서비스이용증명원 불필요)
-                    // 유선번호인 경우 통신서비스이용증명원 필요
                     if (numberType === 'MOBILE') {
-                        // 휴대폰 번호: 서류 불필요
                         html = `
                             <div style="margin-top: 20px;">
-                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">휴대폰 번호는 본인인증만으로 등록 가능합니다.</p>
+                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">휴대폰 번호는 추가 서류 없이 다음 단계(연락처)로 진행할 수 있습니다.</p>
                             </div>
                         `;
                     } else if (numberType === 'LANDLINE') {
@@ -394,13 +292,22 @@
                 // 기업 회원
                 if (selectedOwnershipType === 'self') {
                     // 기업 - 본인(자사) 명의
-                    // 휴대폰 번호인 경우 본인인증 완료 여부와 관계없이 통신서비스이용증명원 불필요
-                    // 유선번호인 경우 통신서비스이용증명원 필요
                     if (numberType === 'MOBILE') {
-                        // 휴대폰 번호: 서류 불필요
                         html = `
                             <div style="margin-top: 20px;">
-                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">휴대폰 번호는 추가 서류 제출이 필요하지 않습니다.</p>
+                                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">발신번호와 발신번호 소유자(기업)간의 관계를 입증할 수 있는 서류 제출이 필요합니다. 아래 서류를 첨부해 주세요.</p>
+                                <label class="form-label required">통신서비스 이용증명원 또는 통신사 가입증명서</label>
+                                <div class="file-upload-area" onclick="document.getElementById('certFile2').click()">
+                                    <p>파일을 선택하거나 드래그하여 놓으세요</p>
+                                    <input type="file" id="certFile2" style="display: none;" accept="${fileAccept}" onchange="handleFileUpload(this, 'certFile2', ${maxSize})">
+                                </div>
+                                <div class="form-help">
+                                    통신사(SKT, KT, LG U+ 등)에서 발급한 최근 3개월 이내 서류를 제출해 주세요<br>
+                                    법인 명의 발신번호의 경우 법인 가입증명서를 제출해 주세요<br>
+                                    * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB<br>
+                                    * 서류가 여러 장일 경우 zip 파일로 압축하여 첨부하세요
+                                </div>
+                                <div id="certFile2Display"></div>
                             </div>
                         `;
                     } else if (numberType === 'LANDLINE') {
@@ -416,7 +323,8 @@
                                 <div class="form-help">
                                     통신사(SKT, KT, LG U+ 등)에서 발급한 최근 3개월 이내 서류를 제출해 주세요<br>
                                     법인 명의 발신번호의 경우 법인 가입증명서를 제출해 주세요<br>
-                                    * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB
+                                    * jpg, jpeg, gif, png, pdf, tif, tiff, zip 첨부 가능 / 최대 10MB<br>
+                                    * 서류가 여러 장일 경우 zip 파일로 압축하여 첨부하세요
                                 </div>
                                 <div id="certFile2Display"></div>
                             </div>
@@ -552,14 +460,12 @@
                     showToast('명의 구분을 선택해주세요.', 'warning');
                     return;
                 }
-                if (requiresAuth && !authCompleted) {
-                    showToast('본인인증을 완료해주세요.', 'warning');
-                    return;
-                }
-                // 휴대폰+본인 명의+인증 완료: 3·4단계 생략, 등록 버튼만 표시하고 여기서 종료
-                if (numberType === 'MOBILE' && selectedOwnershipType === 'self' && authCompleted) {
-                    updateStep2FooterButton();
-                    return;
+                if (selectedMemberType === 'business' && selectedOwnershipType === 'self' && numberType === 'MOBILE') {
+                    const cert2 = document.getElementById('certFile2');
+                    if (!cert2 || !cert2.files || cert2.files.length === 0) {
+                        showToast('통신서비스 이용증명원 또는 통신사 가입증명서를 첨부해 주세요.', 'warning');
+                        return;
+                    }
                 }
             }
             if (currentStep === 3) {
@@ -595,7 +501,6 @@
                     document.getElementById('nextBtn').style.display = 'block';
                     document.getElementById('submitBtn').style.display = 'none';
                     document.getElementById('submitBtn').textContent = '승인요청';
-                    // 휴대폰 번호 + 본인 명의: 2단계에서 인증 완료 시 등록 버튼 표시 (3·4단계 생략)
                     updateStep2FooterButton();
                 }
             }
@@ -670,55 +575,6 @@
             }
         }
 
-        function openPhoneAuth() {
-            // 본인인증 팝업 호출 (실제로는 본인인증 서비스 연동)
-            showToast('본인인증 팝업이 열립니다.', 'info');
-            
-            // 시뮬레이션: 인증 완료 처리
-            setTimeout(() => {
-                authCompleted = true;
-                authInfo = {
-                    name: '홍길동',
-                    birthDate: '1990-01-01',
-                    carrier: 'SKT'
-                };
-                
-                const authStatus = document.getElementById('authStatus');
-                authStatus.innerHTML = `
-                    <div class="auth-completed">
-                        <span>인증 완료</span>
-                        <span style="font-size: 12px; color: var(--text-secondary);">(${authInfo.name})</span>
-                    </div>
-                `;
-                document.getElementById('authButton').style.display = 'none';
-                showToast('본인인증이 완료되었습니다.', 'success');
-                
-                // 본인인증 완료 후 서류 섹션 업데이트 (본인(자사) 명의인 경우)
-                if (selectedOwnershipType === 'self') {
-                    updateDocumentSection();
-                }
-                // 휴대폰 + 본인 명의: 2단계에서 즉시 다음 → 등록 버튼으로 전환
-                function showRegisterButton() {
-                    if (currentStep !== 2 || numberType !== 'MOBILE' || selectedOwnershipType !== 'self' || !authCompleted) return;
-                    const nextBtn = document.getElementById('nextBtn');
-                    const submitBtn = document.getElementById('submitBtn');
-                    if (nextBtn) {
-                        nextBtn.style.setProperty('display', 'none', 'important');
-                        nextBtn.style.visibility = 'hidden';
-                    }
-                    if (submitBtn) {
-                        submitBtn.style.setProperty('display', 'block', 'important');
-                        submitBtn.style.visibility = 'visible';
-                        submitBtn.textContent = '등록';
-                    }
-                }
-                showRegisterButton();
-                updateStep2FooterButton();
-                setTimeout(showRegisterButton, 0);
-                setTimeout(showRegisterButton, 100);
-            }, 1000);
-        }
-
         function submitRegister() {
             // 최종 검증
             if (!selectedMemberType || !selectedOwnershipType || !numberType) {
@@ -726,10 +582,12 @@
                 return;
             }
             
-            // 본인(자사) 명의이고 휴대폰 번호일 때만 본인인증 필수
-            if (selectedOwnershipType === 'self' && requiresAuth && !authCompleted) {
-                showToast('본인인증을 완료해주세요.', 'warning');
-                return;
+            if (selectedMemberType === 'business' && selectedOwnershipType === 'self' && numberType === 'MOBILE') {
+                const cert2 = document.getElementById('certFile2');
+                if (!cert2 || !cert2.files || cert2.files.length === 0) {
+                    showToast('통신서비스 이용증명원 또는 통신사 가입증명서를 첨부해 주세요.', 'warning');
+                    return;
+                }
             }
             
             showToast('발신번호 등록 신청이 완료되었습니다. 영업일 기준 1~3일 이내 승인 처리됩니다.', 'success');
@@ -745,9 +603,6 @@
             selectedMemberType = getCurrentMemberType();
             selectedOwnershipType = '';
             numberType = null;
-            requiresAuth = false;
-            authCompleted = false;
-            authInfo = null;
             
             // STEP 표시 초기화
             for (let i = 1; i <= 4; i++) {

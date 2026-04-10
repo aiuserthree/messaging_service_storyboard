@@ -936,7 +936,7 @@
                     </div>
                     <div class="step-item" id="step2">
                         <div class="step-circle">2</div>
-                        <div class="step-label">인증 및 서류</div>
+                        <div class="step-label">명의 및 서류</div>
                     </div>
                     <div class="step-item" id="step3">
                         <div class="step-circle">3</div>
@@ -967,13 +967,6 @@
                         <div class="form-group">
                             <label class="form-label required">명의 구분</label>
                             <div id="ownershipTypeSection"></div>
-                        </div>
-                        <div class="form-group" id="authSection" style="display: none;">
-                            <label class="form-label required">본인인증</label>
-                            <div id="authStatus" style="margin-bottom: 8px;">
-                                <button type="button" class="btn btn-primary" id="authButton" onclick="openPhoneAuth()">휴대폰 본인인증</button>
-                            </div>
-                            <div class="form-help" id="authHelpText">발신번호 명의자 본인인증이 필요합니다</div>
                         </div>
                         <div class="form-group" id="documentSection"></div>
                     </div>
@@ -1647,7 +1640,6 @@
             { selector: '#step1Content .btn-outline', title: '48-6. 확인 버튼', position: { top: '-5px', right: '-10px' }, description: '발신번호 중복 확인', function: 'checkDuplicateNumber() 호출', api: 'GET /api/caller-numbers/check' },
             { selector: '#purposeInput', title: '48-7. 발신번호 용도', position: { top: '-5px', left: '-10px' }, description: '발신번호 사용 용도', function: '용도 입력', behavior: ['예: 마케팅팀, 고객센터'] },
             { selector: '#step2Content', title: '48-8. STEP 2: 인증 및 서류', position: { top: '10px', left: '10px' }, description: '명의 구분 및 서류 제출', function: '본인인증 및 서류 업로드' },
-            { selector: '#authButton', title: '48-9. 휴대폰 본인인증 버튼', position: { top: '-5px', left: '-10px' }, description: '본인인증 수행', function: 'openPhoneAuth() 호출', behavior: ['PASS 등 본인인증 서비스 연동', '인증 완료 시 표시 변경'] },
             { selector: '#documentSection', title: '48-10. 서류 업로드 영역', position: { top: '10px', left: '10px' }, description: '필수 서류 업로드', function: '서류 파일 업로드', behavior: ['명의 구분에 따라 필요 서류 변경', '10MB 이하 파일만 가능'] },
             { selector: '#step3Content', title: '48-11. STEP 3: 연락처', position: { top: '10px', left: '10px' }, description: '연락처 정보 입력', function: '담당자 연락처 입력' },
             { selector: '#contactPhoneInput', title: '48-12. 휴대폰번호 입력', position: { top: '-5px', left: '-10px' }, description: '결과 알림 연락처', function: '휴대폰번호 입력', tags: [{ text: '필수', type: 'required' }] },
