@@ -743,7 +743,7 @@
                             <div class="history-tabs" id="historyTabs">
                                 <button type="button" class="history-tab active" onclick="switchHistoryTab('charge')" title="포인트 충전 내역 탭 선택. 날짜·결제수단·금액·잔액 등 표시.">포인트 충전 내역</button>
                                 <button type="button" class="history-tab" onclick="switchHistoryTab('use')" title="포인트 사용 내역 탭 선택. 날짜·서비스·발송 건수·금액·잔액 등 표시.">포인트 사용 내역</button>
-                                <button type="button" class="history-tab" onclick="switchHistoryTab('mileage')" title="마일리지 적립·사용 내역 탭 선택.">마일리지 적립/사용 내역</button>
+                                <button type="button" class="history-tab" onclick="switchHistoryTab('mileage')" title="마일리지 적립·사용 내역 탭 선택. 적립 시 서비스=적립 경로, 사용 시 서비스=발송 유형·발송 건수 표시.">마일리지 적립/사용 내역</button>
                                 <div class="history-tabs-right">
                                     <button type="button" class="btn btn-outline btn-sm" onclick="openMileageExpiryByMonthModal()" title="클릭 시 소멸 예정 마일리지 모달 오픈. 당월 포함 3개월 소멸 예정 내역 표시.">소멸 예정 마일리지</button>
                                 </div>
@@ -766,12 +766,12 @@
                             </div>
                             <div class="history-content" id="historyMileage">
                                 <div class="table-container">
-                                    <table class="table" title="일시·구분·내용·금액·잔액 목록. 페이지네이션 포함.">
+                                    <table class="table" title="일시·서비스(적립 경로 또는 발송 유형)·발송 건수·금액·잔액. 페이지네이션 포함.">
                                         <thead>
                                             <tr>
                                                 <th>날짜</th>
-                                                <th>구분</th>
-                                                <th>내용</th>
+                                                <th>서비스</th>
+                                                <th>발송 건수</th>
                                                 <th>금액</th>
                                                 <th>잔액</th>
                                             </tr>
@@ -1295,33 +1295,33 @@
         var ITEMS_PER_PAGE = 20;
         var currentPages = { all: 1, charge: 1, mileage: 1, use: 1 };
         var allHistoryData = [
-            { date: '2024-03-05 11:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+15.5', balance: '99.5' },
-            { date: '2024-03-18 16:30', type: 'mileage', typeLabel: '마일리지', content: '이벤트 마일리지 적립', amount: '+10.0', balance: '84.0' },
-            { date: '2024-04-01 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+20.0', balance: '74.0' },
-            { date: '2024-04-12 09:15', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+7.0', balance: '54.0' },
+            { date: '2024-03-05 11:00', type: 'mileage', typeLabel: '마일리지', content: '회원가입 축하 마일리지', earnPath: '회원가입', amount: '+15.5', balance: '99.5' },
+            { date: '2024-03-18 16:30', type: 'mileage', typeLabel: '마일리지', content: '이벤트 마일리지 적립', earnPath: '이벤트', amount: '+10.0', balance: '84.0' },
+            { date: '2024-04-01 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', earnPath: '발송 적립', amount: '+20.0', balance: '74.0' },
+            { date: '2024-04-12 09:15', type: 'mileage', typeLabel: '마일리지', content: '첫 충전 보너스 마일리지', earnPath: '첫 충전', amount: '+7.0', balance: '54.0' },
             { date: '2024-11-19 14:30', type: 'charge', typeLabel: '충전', content: '포인트 충전 (신용카드)', amount: '+100,000', balance: '1,000,000' },
             { date: '2024-11-18 16:20', type: 'use', typeLabel: '사용', content: 'SMS 발송 (500건)', amount: '-10,000', balance: '900,000' },
-            { date: '2024-11-18 10:15', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+12.6', balance: '92.6' },
-            { date: '2024-11-18 09:00', type: 'mileage_use', typeLabel: '마일리지 사용', content: 'SMS 발송 마일리지 사용', amount: '-2.0', balance: '80.0' },
+            { date: '2024-11-18 10:15', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', earnPath: '발송 적립', amount: '+12.6', balance: '92.6' },
+            { date: '2024-11-18 09:00', type: 'mileage_use', typeLabel: '마일리지 사용', content: 'SMS 발송 마일리지 사용', sendCount: '80건', amount: '-664', balance: '80.0' },
             { date: '2024-11-17 15:00', type: 'use', typeLabel: '사용', content: 'LMS 발송 (300건)', amount: '-15,000', balance: '910,000' },
-            { date: '2024-11-17 14:30', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+15.0', balance: '82.0' },
+            { date: '2024-11-17 14:30', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', earnPath: '발송 적립', amount: '+15.0', balance: '82.0' },
             { date: '2024-11-16 11:00', type: 'use', typeLabel: '사용', content: 'SMS 발송 (800건)', amount: '-16,000', balance: '925,000' },
-            { date: '2024-11-16 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+16.0', balance: '67.0' },
-            { date: '2024-11-16 08:30', type: 'mileage_use', typeLabel: '마일리지 사용', content: 'LMS 발송 마일리지 사용', amount: '-5.0', balance: '51.0' },
+            { date: '2024-11-16 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', earnPath: '발송 적립', amount: '+16.0', balance: '67.0' },
+            { date: '2024-11-16 08:30', type: 'mileage_use', typeLabel: '마일리지 사용', content: 'LMS 발송 마일리지 사용', sendCount: '12건', amount: '-318', balance: '51.0' },
             { date: '2024-11-15 09:15', type: 'charge', typeLabel: '충전', content: '포인트 충전 (실시간계좌이체)', amount: '+200,000', balance: '941,000' },
             { date: '2024-11-14 11:30', type: 'use', typeLabel: '사용', content: '알림톡 발송 (1,000건)', amount: '-30,000', balance: '741,000' },
-            { date: '2024-11-14 11:30', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+30.0', balance: '56.0' },
+            { date: '2024-11-14 11:30', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', earnPath: '발송 적립', amount: '+30.0', balance: '56.0' },
             { date: '2024-11-13 16:00', type: 'use', typeLabel: '사용', content: 'SMS 발송 (200건)', amount: '-4,000', balance: '771,000' },
             { date: '2024-11-13 15:00', type: 'use', typeLabel: '사용', content: 'LMS 발송 (150건)', amount: '-7,500', balance: '775,000' },
-            { date: '2024-11-13 11:00', type: 'mileage_use', typeLabel: '마일리지 사용', content: 'SMS 발송 마일리지 사용', amount: '-3.0', balance: '26.0' },
-            { date: '2024-11-12 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+4.0', balance: '29.0' },
+            { date: '2024-11-13 11:00', type: 'mileage_use', typeLabel: '마일리지 사용', content: 'SMS 발송 마일리지 사용', sendCount: '50건', amount: '-415', balance: '26.0' },
+            { date: '2024-11-12 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', earnPath: '발송 적립', amount: '+4.0', balance: '29.0' },
             { date: '2024-11-12 09:00', type: 'use', typeLabel: '사용', content: 'MMS 발송 (50건)', amount: '-5,000', balance: '782,500' },
             { date: '2024-11-11 14:30', type: 'use', typeLabel: '사용', content: 'SMS 발송 (250건)', amount: '-5,000', balance: '787,500' },
-            { date: '2024-11-11 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+5.0', balance: '28.0' },
+            { date: '2024-11-11 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', earnPath: '발송 적립', amount: '+5.0', balance: '28.0' },
             { date: '2024-11-10 16:45', type: 'charge', typeLabel: '충전', content: '포인트 충전 (가상계좌)', amount: '+300,000', balance: '792,500' },
             { date: '2024-11-10 11:00', type: 'use', typeLabel: '사용', content: '알림톡 발송 (300건)', amount: '-9,000', balance: '492,500' },
             { date: '2024-11-09 14:20', type: 'use', typeLabel: '사용', content: 'MMS 발송 (100건)', amount: '-10,000', balance: '501,500' },
-            { date: '2024-11-09 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', amount: '+10.0', balance: '23.0' },
+            { date: '2024-11-09 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', earnPath: '발송 적립', amount: '+10.0', balance: '23.0' },
         ];
         var chargeHistoryData = allHistoryData.filter(function(item) { return item.type === 'charge'; });
         var mileageHistoryData = allHistoryData.filter(function(item) { return item.type === 'mileage' || item.type === 'mileage_use'; });
@@ -1362,7 +1362,8 @@
             var usages = [];
             mileageHistoryData.forEach(function(item) {
                 if (item.type !== 'mileage_use') return;
-                var amt = Math.abs(parseFloat(String(item.amount).replace(/[+,]/g, '')) || 0);
+                var amtStr = getMileageDeductionAmount(item);
+                var amt = Math.abs(parseFloat(String(amtStr).replace(/[+,]/g, '')) || 0);
                 usages.push({ date: item.date, amount: amt, content: item.content });
             });
             usages.sort(function(a, b) { return a.date < b.date ? -1 : 1; });
@@ -1458,6 +1459,90 @@
             if (modal) modal.style.display = 'none';
         }
 
+        /** 마일리지 행: 적립은 서비스=적립 경로, 사용은 서비스=발송 채널·발송 건수=건수 */
+        function getMileageServiceAndCount(item) {
+            if (item.type === 'mileage_use') {
+                var service = item.serviceChannel;
+                if (!service && item.content) {
+                    var um = item.content.match(/^(.+?) 발송 마일리지 사용$/);
+                    if (um) service = um[1].trim() + ' 발송';
+                    else service = item.content.replace(/\s*마일리지 사용\s*$/, '').trim() || item.content;
+                }
+                var count = item.sendCount;
+                if (count == null || count === '') {
+                    var pm = item.content && item.content.match(/\(([\d,]+)건\)/);
+                    count = pm ? pm[1].replace(/,/g, '') + '건' : '-';
+                } else {
+                    count = String(count).indexOf('건') >= 0 ? String(count) : String(count).replace(/,/g, '') + '건';
+                }
+                return { service: service || '-', count: count };
+            }
+            if (item.type === 'mileage') {
+                var path = item.earnPath;
+                if (!path && item.content) {
+                    if (item.content.indexOf('발송 마일리지 적립') !== -1) path = '발송 적립';
+                    else if (item.content.indexOf('이벤트') !== -1) path = '이벤트';
+                    else if (item.content.indexOf('첫 충전') !== -1 || item.content.indexOf('첫충전') !== -1) path = '첫 충전';
+                    else if (item.content.indexOf('회원가입') !== -1 || item.content.indexOf('가입 축하') !== -1) path = '회원가입';
+                    else path = item.content.replace(/\s*적립\s*$/, '').trim();
+                }
+                return { service: path || '-', count: '-' };
+            }
+            return { service: '-', count: '-' };
+        }
+
+        /** 요금 안내(문자/카카오) 단가(P/건) — 마일리지 차감 계산에 동일 적용 */
+        var MILEAGE_FEE_PER_UNIT = {
+            SMS: 8.3,
+            LMS: 26.5,
+            MMS: 59,
+            ALIMTALK: 6.2,
+            BRAND_FRIEND: 21.5,
+            BRAND_NONFRIEND: 25.8
+        };
+
+        function getMileageUnitPricePerMessage(text) {
+            var c = text || '';
+            if (c.indexOf('MMS') !== -1) return MILEAGE_FEE_PER_UNIT.MMS;
+            if (c.indexOf('LMS') !== -1) return MILEAGE_FEE_PER_UNIT.LMS;
+            if (c.indexOf('SMS') !== -1) return MILEAGE_FEE_PER_UNIT.SMS;
+            if (c.indexOf('알림톡') !== -1) return MILEAGE_FEE_PER_UNIT.ALIMTALK;
+            if (c.indexOf('브랜드') !== -1) {
+                if (c.indexOf('비친구') !== -1) return MILEAGE_FEE_PER_UNIT.BRAND_NONFRIEND;
+                return MILEAGE_FEE_PER_UNIT.BRAND_FRIEND;
+            }
+            return MILEAGE_FEE_PER_UNIT.SMS;
+        }
+
+        /**
+         * 마일리지 사용 차감액: 발송 건수 × 요금 안내 단가(P/건).
+         * item.unitPrice 가 있으면 API 단가 우선.
+         */
+        function getMileageDeductionAmount(item) {
+            if (item.type !== 'mileage_use') return item.amount;
+            var n = parseInt(String(item.sendCount || '').replace(/[^\d]/g, ''), 10);
+            if (!n && item.content) {
+                var pm = item.content.match(/\((\d+)건\)/);
+                if (pm) n = parseInt(pm[1], 10);
+            }
+            if (!n) return item.amount;
+            var rate = item.unitPrice != null && item.unitPrice !== ''
+                ? parseFloat(String(item.unitPrice).replace(/,/g, ''), 10)
+                : getMileageUnitPricePerMessage(item.content || item.serviceChannel || '');
+            if (isNaN(rate)) rate = MILEAGE_FEE_PER_UNIT.SMS;
+            var total = Math.round(n * rate * 10) / 10;
+            return '-' + total;
+        }
+
+        /** 표시용(천 단위 콤마, 마일리지 사용 차감) */
+        function formatMileageDeductionDisplay(rawStr) {
+            var n = parseFloat(String(rawStr).replace(/,/g, ''), 10);
+            if (isNaN(n)) return rawStr;
+            var abs = Math.abs(n);
+            var formatted = abs.toLocaleString('ko-KR', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+            return (n < 0 ? '-' : '') + formatted;
+        }
+
         function renderTable(tabType) {
             var data, tbody, pagination;
             switch(tabType) {
@@ -1474,14 +1559,18 @@
 
             var html = '';
             pageData.forEach(function(item) {
-                var amountClass = item.amount.indexOf('+') === 0 ? 'amount-plus' : 'amount-minus';
                 if (tabType === 'charge') {
+                    var amountClass = item.amount.indexOf('+') === 0 ? 'amount-plus' : 'amount-minus';
                     var method = item.content.replace('포인트 충전 (', '').replace(')', '');
                     html += '<tr><td>' + item.date + '</td><td>' + method + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
                 } else if (tabType === 'mileage') {
-                    var mileageKind = item.type === 'mileage_use' ? '사용' : '적립';
-                    html += '<tr><td>' + item.date + '</td><td><span class="status-badge status-' + item.type + '">' + mileageKind + '</span></td><td>' + item.content + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
+                    var mc = getMileageServiceAndCount(item);
+                    var amtRaw = item.type === 'mileage_use' ? getMileageDeductionAmount(item) : item.amount;
+                    var amtDisplay = item.type === 'mileage_use' ? formatMileageDeductionDisplay(amtRaw) : item.amount;
+                    var amountClass = amtRaw.indexOf('+') === 0 ? 'amount-plus' : 'amount-minus';
+                    html += '<tr><td>' + item.date + '</td><td>' + mc.service + '</td><td>' + mc.count + '</td><td class="' + amountClass + '">' + amtDisplay + '</td><td>' + item.balance + '</td></tr>';
                 } else if (tabType === 'use') {
+                    var amountClass = item.amount.indexOf('+') === 0 ? 'amount-plus' : 'amount-minus';
                     var serviceParts = item.content.split(' (');
                     var service = serviceParts[0];
                     var count = serviceParts[1] ? serviceParts[1].replace(')', '') : '-';
@@ -1659,11 +1748,11 @@
             { selector: '#historySearchBtn', title: '56. 검색 버튼', position: { top: '-5px', right: '-10px' }, function: '달력으로 선택한 시작일·종료일(과거 구간, 최대 1년)로 내역 조회.' },
             { selector: '#historyTabs .history-tab:nth-child(1)', title: '57. 포인트 충전 내역 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 충전 내역 탭 선택. 날짜·결제수단·금액·잔액 등 표시.' },
             { selector: '#historyTabs .history-tab:nth-child(2)', title: '58. 포인트 사용 내역 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 사용 내역 탭 선택. 날짜·서비스·발송 건수·금액·잔액 등 표시.' },
-            { selector: '#historyTabs .history-tab:nth-child(3)', title: '59. 마일리지 적립/사용 내역 탭', position: { top: '-5px', left: '-10px' }, function: '마일리지 적립·사용 내역 탭 선택.' },
+            { selector: '#historyTabs .history-tab:nth-child(3)', title: '59. 마일리지 적립/사용 내역 탭', position: { top: '-5px', left: '-10px' }, function: '마일리지 적립·사용 내역 탭 선택. 적립 시 서비스 열에 적립 경로, 사용 시 발송 유형·발송 건수 표시.' },
             { selector: 'button[onclick="openMileageExpiryByMonthModal()"]', title: '60. 소멸 예정 마일리지', position: { top: '-5px', right: '-10px' }, function: '클릭 시 소멸 예정 마일리지 모달 오픈. 당월 포함 3개월 소멸 예정 내역 표시.' },
             { selector: '#historyCharge .table-container .table', title: '61. 포인트 충전 내역 테이블', position: { top: '10px', left: '10px' }, function: '충전 일시·결제수단·금액·잔액 목록. 페이지네이션 포함.' },
             { selector: '#historyUse .table-container .table', title: '62. 포인트 사용 내역 테이블', position: { top: '10px', left: '10px' }, function: '사용 일시·서비스·발송 건수·금액·잔액 목록. 페이지네이션 포함.' },
-            { selector: '#historyMileage .table-container .table', title: '63. 마일리지 적립/사용 내역 테이블', position: { top: '10px', left: '10px' }, function: '일시·구분·내용·금액·잔액 목록. 페이지네이션 포함.' },
+            { selector: '#historyMileage .table-container .table', title: '63. 마일리지 적립/사용 내역 테이블', position: { top: '10px', left: '10px' }, function: '일시·서비스(적립 경로/발송 유형)·발송 건수·금액·잔액. 페이지네이션 포함.' },
             { selector: '#phoneVerifyModal .modal-title', title: '64. 휴대폰 인증 모달', position: { top: '-5px', left: '-10px' }, function: '휴대폰번호 확인·인증번호 입력·재전송·확인. 인증 완료 시 내정보 수정 폼에 반영.' },
             { selector: '#mileageExpiryByMonthModal .modal-title', title: '65. 소멸 예정 마일리지 모달', position: { top: '-5px', left: '-10px' }, function: '당월 포함 이후 3개월 소멸 예정 마일리지 내역. 확인 버튼으로 닫기.' },
             { selector: '#businessInfoCard .form-section', title: '66. 세금계산서 정보 영역', position: { top: '-5px', left: '-10px' }, function: '사업장 주소 아래 담당자 이름·연락처·수신 이메일 수정 가능. 저장하기로 기업정보와 함께 저장.' },
