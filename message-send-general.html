@@ -1452,16 +1452,12 @@ body {
                                 <span id="costUnitPrice">8.3P</span>
                             </div>
                             <div class="cost-row cost-total">
-                                <span>예상 발송 마일리지</span>
-                                <span id="costMileage">0</span>
-                            </div>
-                            <div class="cost-row cost-total">
-                                <span>예상 발송 포인트</span>
+                                <span>예상 발송 비용</span>
                                 <span id="costTotal">0</span>
                             </div>
                             <div class="cost-row">
-                                <span>발송 후 예상 잔여 포인트</span>
-                                <span id="expectedBalance">1,000,000</span>
+                                <span>발송 후 예상 잔액</span>
+                                <span id="expectedBalance">1,000,092.6</span>
                             </div>
                         </div>
 
@@ -1690,7 +1686,7 @@ body {
                         <span id="confirmSendTime">즉시 발송</span>
                     </div>
                     <div class="cost-row cost-total" style="display: flex; justify-content: space-between; gap: 24px;">
-                        <span>예상 발송 포인트</span>
+                        <span>예상 발송 비용</span>
                         <span id="confirmCost">0</span>
                     </div>
                 </div>
@@ -2614,14 +2610,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const type = document.querySelector('input[name="messageType"]:checked').value;
             const unitPrice = type === 'SMS' ? 8.3 : type === 'LMS' ? 26.5 : 59;
             const total = Math.round(count * unitPrice * 10) / 10;
-            const currentBalance = 1000000; // 실제로는 API에서 가져와야 함
-            const expectedBalance = currentBalance - total;
+            const currentPointBalance = 1000000; // 실제로는 API
+            const currentMileageBalance = 92.6; // 실제로는 API
+            const currentCombinedBalance = currentPointBalance + currentMileageBalance;
+            const expectedBalance = currentCombinedBalance - total;
             
             document.getElementById('costRecipientCount').textContent = `${count}명`;
             document.getElementById('costMessageType').textContent = type;
             document.getElementById('costUnitPrice').textContent = `${unitPrice}P`;
-            document.getElementById('costTotal').textContent = formatNumber(total);
-            document.getElementById('expectedBalance').textContent = formatNumber(expectedBalance);
+            document.getElementById('costTotal').textContent = total.toLocaleString('ko-KR');
+            document.getElementById('expectedBalance').textContent = expectedBalance.toLocaleString('ko-KR');
         }
 
         function showSendConfirm() {
@@ -4874,7 +4872,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 수신번호 건수 표시',
                     '• 메시지 타입 표시 (SMS/LMS/MMS)',
                     '• 발송 시간 표시 (즉시/예약)',
-                    '• 예상 발송 포인트 표시',
+                    '• 예상 발송 비용 표시',
                     '• 경고 문구: "발송 후에는 취소할 수 없습니다."',
                     '• 취소/발송하기 버튼',
                     '【동작】',
@@ -5324,7 +5322,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 behavior: [
                     '발신번호, 수신번호 개수 표시',
                     '메시지 타입, 발송 시간 표시',
-                    '예상 발송 포인트 표시'
+                    '예상 발송 비용 표시'
                 ]
             },
             // 66. 경고 메시지

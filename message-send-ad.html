@@ -1498,16 +1498,12 @@ body {
                                 <span id="costUnitPrice">8.3P</span>
                             </div>
                             <div class="cost-row cost-total">
-                                <span>예상 발송 마일리지</span>
-                                <span id="costMileage">0</span>
-                            </div>
-                            <div class="cost-row cost-total">
-                                <span>예상 발송 포인트</span>
+                                <span>예상 발송 비용</span>
                                 <span id="costTotal">0</span>
                             </div>
                             <div class="cost-row">
-                                <span>발송 후 예상 잔여 포인트</span>
-                                <span id="expectedBalance">1,000,000</span>
+                                <span>발송 후 예상 잔액</span>
+                                <span id="expectedBalance">1,000,092.6</span>
                             </div>
                         </div>
 
@@ -1733,7 +1729,7 @@ body {
                                 <td id="confirmSendTime">-</td>
                             </tr>
                             <tr>
-                                <th style="width: 110px;">예상 비용</th>
+                                <th style="width: 110px;">예상 발송 비용</th>
                                 <td id="confirmCost">-</td>
                             </tr>
                         </table>
@@ -2656,14 +2652,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const type = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
             const unitPrice = type === 'SMS' ? 8.3 : type === 'LMS' ? 26.5 : 59;
             const total = Math.round(count * unitPrice * 10) / 10;
-            const currentBalance = 1000000; // 실제로는 API에서 가져와야 함
-            const expectedBalance = currentBalance - total;
+            const currentPointBalance = 1000000; // 실제로는 API
+            const currentMileageBalance = 92.6; // 실제로는 API
+            const currentCombinedBalance = currentPointBalance + currentMileageBalance;
+            const expectedBalance = currentCombinedBalance - total;
             
             document.getElementById('costRecipientCount').textContent = count + '명';
             document.getElementById('costMessageType').textContent = type;
             document.getElementById('costUnitPrice').textContent = unitPrice + 'P';
-            document.getElementById('costTotal').textContent = total.toLocaleString();
-            document.getElementById('expectedBalance').textContent = expectedBalance.toLocaleString();
+            document.getElementById('costTotal').textContent = total.toLocaleString('ko-KR');
+            document.getElementById('expectedBalance').textContent = expectedBalance.toLocaleString('ko-KR');
         }
 
         function selectTemplate(name, content) {
@@ -5069,7 +5067,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 behavior: ['"발송하기" 버튼 클릭 + 유효성 검증 통과 시 노출', '발송 정보 요약 표시'],
                 tags: [{ text: '모달', type: 'info' }]
             },
-            { selector: '#sendConfirmInfo', title: '발송 정보', position: { top: '10px', left: '10px' }, function: '발송 상세 정보 표시', behavior: ['발신번호, 수신번호 개수 표시', '메시지 타입, 발송 시간 표시', '예상 발송 포인트 표시'] },
+            { selector: '#sendConfirmInfo', title: '발송 정보', position: { top: '10px', left: '10px' }, function: '발송 상세 정보 표시', behavior: ['발신번호, 수신번호 개수 표시', '메시지 타입, 발송 시간 표시', '예상 발송 비용 표시'] },
             { selector: '#sendConfirmWarning', title: '경고 안내', position: { top: '10px', right: '10px' }, function: '발송 취소 불가 안내' },
             { selector: '#sendConfirmCancelBtn', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '모달 닫기' },
             { selector: '#sendConfirmSubmitBtn', title: '발송하기 버튼', position: { top: '-5px', right: '-10px' }, function: '최종 발송 실행', behavior: ['클릭 시 API 호출', '[ 발송 결과 ]', '발송 성공: "발송이 완료되었습니다" 토스트', '발송 실패: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"'], api: 'POST /api/messages/ad/send', tags: [{ text: 'API', type: 'api' }] },
