@@ -190,42 +190,6 @@
             border-color: #cbd5e1;
         }
 
-        /* 참여하기 버튼 */
-        .event-cta {
-            text-align: center;
-            padding: 32px;
-            border-top: 1px solid var(--border-color);
-            background-color: #f8fafc;
-        }
-
-        .event-cta-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 16px 48px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #1d4ed8 100%);
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-            border: none;
-            border-radius: var(--radius-lg);
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
-        }
-
-        .event-cta-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
-        }
-
-        .event-cta-btn:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
         @media (max-width: 768px) {
             .event-detail-header {
                 padding: 20px 16px;
@@ -285,22 +249,6 @@
                             decoding="async">
                     </picture>
                 </div>
-
-                <div class="event-cta">
-                    <button class="event-cta-btn" type="button" onclick="participateEvent()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2v4"></path>
-                            <path d="m16.24 7.76-2.83 2.83"></path>
-                            <path d="M22 12h-4"></path>
-                            <path d="m16.24 16.24-2.83-2.83"></path>
-                            <path d="M12 22v-4"></path>
-                            <path d="m7.76 16.24 2.83-2.83"></path>
-                            <path d="M2 12h4"></path>
-                            <path d="m7.76 7.76 2.83 2.83"></path>
-                        </svg>
-                        가입하고 혜택 받기
-                    </button>
-                </div>
             </div>
 
             <div class="event-actions">
@@ -320,10 +268,6 @@
     </div>
 
     <script>
-        function participateEvent() {
-            window.location.href = 'signup.html';
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof initDropdownMenus === 'function') {
                 initDropdownMenus();
