@@ -71,17 +71,11 @@ html {
     max-width: 100%;
 }
 
-.landing-v11 button:not(.trust-pill) {
+.landing-v11 button {
     border: none;
     background: none;
     cursor: pointer;
     font-family: inherit;
-}
-
-.landing-v11 button.trust-pill {
-    border: 2px solid #d0d0d0;
-    background: #fff;
-    color: var(--text-body);
 }
 
 
@@ -517,95 +511,7 @@ html {
 
 
 /* ============================================================
-   SECTION 3: TRUST
-   ============================================================ */
-.trust-section {
-    background: var(--bg-white);
-    padding: var(--section-padding);
-}
-
-.trust-inner {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: 0 24px;
-    text-align: center;
-}
-
-.trust-pills {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin: 40px 0 56px;
-    flex-wrap: wrap;
-}
-
-.trust-pill {
-    padding: 16px 36px;
-    border: 2px solid #e0e0e0;
-    border-radius: var(--radius-pill);
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text-body);
-    transition: all var(--transition);
-    cursor: pointer;
-}
-
-.trust-pill:hover,
-.landing-v11 button.trust-pill:hover {
-    border-color: #333;
-    color: #333;
-    background: #f5f5f5;
-}
-
-/* Logo Marquee */
-.marquee-wrap {
-    overflow: hidden;
-    padding: 20px 0;
-    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-}
-
-.marquee-track {
-    display: flex;
-    width: max-content;
-    animation: marqueeScroll 40s linear infinite;
-}
-
-@keyframes marqueeScroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-}
-
-.marquee-content {
-    display: flex;
-    gap: 24px;
-    padding: 0 12px;
-}
-
-.marquee-logo {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 140px;
-    height: 52px;
-    background: #f0f0f0;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #999;
-    filter: grayscale(100%);
-    transition: filter var(--transition);
-}
-
-.marquee-logo:hover {
-    filter: grayscale(0%);
-    color: var(--text-dark);
-}
-
-
-/* ============================================================
-   SECTION 4: APP SHOWCASE (DARK)
+   APP SHOWCASE (DARK)
    ============================================================ */
 .app-showcase {
     background: var(--bg-dark);
@@ -1257,10 +1163,6 @@ html {
         animation: none;
     }
 
-    .marquee-track {
-        animation: none;
-    }
-
     [data-animate] {
         opacity: 1;
         transform: none;
@@ -1361,11 +1263,6 @@ html {
         max-width: 400px;
         margin-left: auto;
         margin-right: auto;
-    }
-
-    .trust-pills {
-        flex-direction: column;
-        align-items: center;
     }
 
     .phones-fan {
