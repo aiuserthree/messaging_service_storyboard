@@ -307,6 +307,49 @@
             right: calc((100% - min(1348px, 100%)) / 2 + 14px);
             left: auto;
         }
+        /* 어두운 배너일 때: 좌우 꺾쇠 · 진행바 · 재생 버튼 · 도트(표시 시) 화이트 계열 */
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-nav--overlay {
+            color: #ffffff;
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-nav--overlay:hover {
+            color: #ffffff;
+            opacity: 0.88;
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-nav--overlay:active {
+            opacity: 0.65;
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-nav--overlay:focus-visible {
+            outline-color: rgba(147, 197, 253, 0.95);
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-billboard-footer {
+            filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45));
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-progress-wrap {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-progress-fill {
+            background: #ffffff;
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-autoplay-btn {
+            color: #ffffff;
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-autoplay-btn:focus-visible {
+            outline-color: rgba(147, 197, 253, 0.95);
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-slider-dots button {
+            border-color: rgba(255, 255, 255, 0.55);
+            background: rgba(255, 255, 255, 0.38);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-slider-dots button:hover {
+            background: rgba(255, 255, 255, 0.55);
+            border-color: rgba(255, 255, 255, 0.75);
+        }
+        .benefits--billboard.benefits--billboard-dark-ui .benefits-slider-dots button[aria-selected="true"] {
+            background: #ffffff;
+            border-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
         .benefits--billboard .benefits-slider-track {
             position: relative;
             z-index: 1;
@@ -869,6 +912,10 @@
                                 <article class="benefit-slide benefit-slide--fullimg" aria-label="발송 단가 안내 배너">
                                     <img class="billboard-fullimg" src="main/img/billboard/2.png" alt="발송 단가 안내. 발송 최저가, 합리적 가격 최고의 품질. 문자 SMS·LMS·MMS, 카카오톡 알림톡·브랜드 메시지 단가" width="1348" height="421" loading="lazy" decoding="async">
                                 </article>
+                                <!-- 어두운 배경 샘플 · 자동 감지 실패 시에도 화이트 컨트롤 유지 -->
+                                <article class="benefit-slide benefit-slide--fullimg" data-billboard-chrome="dark" aria-label="발송 단가·최저가 안내 배너(다크 히어로)">
+                                    <img class="billboard-fullimg" src="main/img/billboard/hero-dark-sample.png" alt="대량 문자 전송 국내 최저가. SMS, LMS, MMS 요금 안내" width="1348" height="421" loading="lazy" decoding="async">
+                                </article>
                             </div>
                             <div class="benefits-billboard-footer" id="benefitsBillboardFooter" aria-hidden="false">
                                 <div class="benefits-progress-wrap" id="benefitsProgressWrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="배너 자동 전환 진행">
@@ -962,16 +1009,16 @@
                                 <div class="phone-chat phone-chat--preview">
                                     <div class="chat-bubble outgoing">
                                         (광고) 홍길동님, 안녕하세요.<br>
-                                        스타벅스 리워드 회원을 위한 겨울 시즌 프로모션을 안내드립니다.<br><br>
-                                        <strong>[윈터 페스타]</strong> 스타벅스 오더(App)로 시즌 음료 포함 음료 2잔 이상 결제 시, 별(★)을 추가로 적립해 드립니다. (기간 내 1회, 일부 메뉴·매장 제외)<br><br>
+                                        톡벨커피 리워드 회원을 위한 겨울 시즌 프로모션을 안내드립니다.<br><br>
+                                        <strong>[윈터 페스타]</strong> 톡벨커피 오더(App)로 시즌 음료 포함 음료 2잔 이상 결제 시, 벨<img class="phone-preview-bell-icon" src="main/img/icon/bell-reward.png" alt="" width="13" height="13" decoding="async">을 추가로 적립해 드립니다. (기간 내 1회, 일부 메뉴·매장 제외)<br><br>
                                         참여 기간: 12/1(월) 00:00 ~ 12/31(수) 23:59<br>
-                                        응모·혜택 수령은 스타벅스 앱 홈 &gt; 이벤트 메뉴에서 가능합니다.<br><br>
+                                        응모·혜택 수령은 톡벨커피 앱 홈 &gt; 이벤트 메뉴에서 가능합니다.<br><br>
                                         자세한 유의사항은 앱 내 공지를 확인해 주세요. 즐거운 연말 보내세요!
                                     </div>
                                     <div class="phone-preview-media phone-preview-media--sb" aria-hidden="true">
-                                        <div class="phone-preview-sb-brand">STARBUCKS REWARDS</div>
+                                        <div class="phone-preview-sb-brand">TOKBELL COFFEE</div>
                                         <p class="phone-preview-sb-line">겨울 시즌 음료 2잔 이상 오더 시</p>
-                                        <p class="phone-preview-sb-em">별 추가 적립 · 앱 전용</p>
+                                        <p class="phone-preview-sb-em"><img class="phone-preview-bell-lead" src="main/img/icon/bell-reward.png" alt="" width="12" height="12" decoding="async"> 벨 추가 적립 · 앱 전용</p>
                                     </div>
                                     <p class="phone-chat-time">오후 3:42</p>
                                 </div>
@@ -1196,7 +1243,7 @@
                         <div class="ec-image event-banner-1" role="img" aria-label="첫충전 이벤트 배너">
                             <div class="ec-image-content">
                                 <span class="ec-badge-text">첫충전 이벤트</span>
-                                <p>10% 적립 + 스타벅스 쿠폰</p>
+                                <p>10% 적립 + 톡벨커피 쿠폰</p>
                             </div>
                         </div>
                         <div class="ec-body">
@@ -1564,6 +1611,127 @@
                 return idx - 1;
             }
 
+            var billboardSection = viewport && viewport.closest ? viewport.closest('section.benefits--billboard') : null;
+
+            function measureBillboardImageDark(imgEl, cb) {
+                try {
+                    var iw = imgEl.naturalWidth;
+                    var ih = imgEl.naturalHeight;
+                    if (!iw || !ih) {
+                        cb(false);
+                        return;
+                    }
+                    /* 축소 샘플을 조금 크게 해 좌·우·하단 띠에서 명도 구분 */
+                    var tw = 128;
+                    var th = Math.max(1, Math.round(tw * ih / iw));
+                    var c = document.createElement('canvas');
+                    c.width = tw;
+                    c.height = th;
+                    var ctx = c.getContext('2d', { willReadFrequently: true });
+                    ctx.drawImage(imgEl, 0, 0, tw, th);
+                    var d = ctx.getImageData(0, 0, tw, th).data;
+
+                    function lumaAt(p) {
+                        return 0.2126 * d[p] + 0.7152 * d[p + 1] + 0.0722 * d[p + 2];
+                    }
+
+                    function regionStats(x0, y0, x1, y1) {
+                        var sum = 0;
+                        var n = 0;
+                        var minLm = 255;
+                        var x;
+                        var y;
+                        var xi;
+                        var yi;
+                        var p;
+                        for (y = y0; y < y1; y++) {
+                            for (x = x0; x < x1; x++) {
+                                xi = x < 0 ? 0 : x >= tw ? tw - 1 : x;
+                                yi = y < 0 ? 0 : y >= th ? th - 1 : y;
+                                p = (yi * tw + xi) * 4;
+                                var L = lumaAt(p);
+                                sum += L;
+                                n++;
+                                if (L < minLm) {
+                                    minLm = L;
+                                }
+                            }
+                        }
+                        return n ? { mean: sum / n, min: minLm } : { mean: 255, min: 255 };
+                    }
+
+                    /* 꺽쇠: 이미지 좌·우 약 1/4 폭 × 세로 중앙띠 — 흰 글씨만 잡히는 한가운데는 제외 */
+                    var xBand = Math.max(2, Math.floor(tw * 0.26));
+                    var y0 = Math.floor(th * 0.2);
+                    var y1 = Math.floor(th * 0.8);
+                    var left = regionStats(0, y0, xBand, y1);
+                    var right = regionStats(tw - xBand, y0, tw, y1);
+                    /* 진행바: 하단 약 20% */
+                    var yBottom = Math.floor(th * 0.8);
+                    var bottom = regionStats(0, yBottom, tw, th);
+
+                    var meanTri = (left.mean + right.mean + bottom.mean) / 3;
+                    var minTri = Math.min(left.min, right.min, bottom.min);
+
+                    /*
+                     * 전체 평균만 쓰면 검은 배경 + 중앙 밝은 카드/흰 텍스트에서 평균이 올라가 화이트 UI가 안 붙음.
+                     * 구간 최소·평균·양쪽 모두 어두움을 함께 본다.
+                     */
+                    var isDark =
+                        minTri < 68 ||
+                        meanTri < 128 ||
+                        (left.mean < 120 && right.mean < 120) ||
+                        bottom.mean < 118;
+
+                    cb(isDark);
+                } catch (e) {
+                    cb(false);
+                }
+            }
+
+            function syncBillboardChromeTheme() {
+                if (!isBillboard || !billboardSection) return;
+                var di = dotIndex();
+                var srcSlide = originals[di];
+                if (!srcSlide) return;
+                var forced = srcSlide.getAttribute('data-billboard-chrome');
+                if (forced === 'dark') {
+                    billboardSection.classList.add('benefits--billboard-dark-ui');
+                    return;
+                }
+                if (forced === 'light') {
+                    billboardSection.classList.remove('benefits--billboard-dark-ui');
+                    return;
+                }
+                var cur = slides[idx];
+                var imgEl = cur ? cur.querySelector('.billboard-fullimg') : null;
+                if (!imgEl) return;
+                function apply(isDark) {
+                    billboardSection.classList.toggle('benefits--billboard-dark-ui', !!isDark);
+                }
+                function runMeasure() {
+                    if (!imgEl.naturalWidth) return;
+                    measureBillboardImageDark(imgEl, apply);
+                }
+                if (imgEl.decode) {
+                    imgEl
+                        .decode()
+                        .then(runMeasure)
+                        .catch(runMeasure);
+                } else if (imgEl.complete && imgEl.naturalWidth) {
+                    runMeasure();
+                } else {
+                    imgEl.addEventListener(
+                        'load',
+                        function onImgLoad() {
+                            imgEl.removeEventListener('load', onImgLoad);
+                            runMeasure();
+                        },
+                        { once: true }
+                    );
+                }
+            }
+
             function layout(skipTransition) {
                 var w = viewport.offsetWidth;
                 sw = slideWidthPx();
@@ -1594,6 +1762,10 @@
                             track.classList.remove('is-jumping');
                         });
                     });
+                }
+
+                if (isBillboard) {
+                    syncBillboardChromeTheme();
                 }
             }
 
