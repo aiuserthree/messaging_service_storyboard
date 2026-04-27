@@ -382,11 +382,11 @@ function openPolicyModal(type) {
                     </tr>
                     <tr style="border-bottom: 1px solid #e2e8f0;">
                         <td style="padding: 12px 0; font-weight: 600;">대표전화</td>
-                        <td style="padding: 12px 0;">02-6951-0035</td>
+                        <td style="padding: 12px 0;">070-7588-0263</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #e2e8f0;">
                         <td style="padding: 12px 0; font-weight: 600;">대표이메일</td>
-                        <td style="padding: 12px 0;">tokbell@ibank.co.kr</td>
+                        <td style="padding: 12px 0;">webmaster@tokbell.com</td>
                     </tr>
                 </table>
                 
