@@ -140,6 +140,11 @@
         .history-tab.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         .history-content { display: none; }
         .history-content.active { display: block; }
+        .history-kind-filter { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-bottom: 14px; }
+        .history-kind-filter-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+        .history-kind-filter-btns .history-kind-btn.active {
+            background: var(--primary-color); color: white; border-color: var(--primary-color);
+        }
         .mileage-expiry-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         .mileage-expiry-row:last-child { border-bottom: none; }
         .mileage-expiry-month { font-weight: 600; min-width: 80px; }
@@ -790,35 +795,44 @@
                             </div>
                             <p class="form-help" style="margin: -8px 0 12px 0; font-size: 12px; color: var(--text-secondary);">※ 최대 1년 간의 포인트/마일리지 이용 내역을 조회할 수 있습니다.</p>
                             <div class="history-tabs" id="historyTabs">
-                                <button type="button" class="history-tab active" onclick="switchHistoryTab('charge')" title="포인트 충전 내역 탭 선택. 날짜·결제수단·금액·잔액 등 표시.">포인트 충전 내역</button>
-                                <button type="button" class="history-tab" onclick="switchHistoryTab('use')" title="포인트 사용 내역 탭 선택. 날짜·서비스·발송 건수·금액·잔액 등 표시.">포인트 사용 내역</button>
+                                <button type="button" class="history-tab active" onclick="switchHistoryTab('point')" title="포인트 충전·사용 통합 내역. 날짜·구분·결제수단·서비스·발송 건수·금액·잔액 표시.">포인트 충전·사용 내역</button>
                                 <button type="button" class="history-tab" onclick="switchHistoryTab('mileage')" title="마일리지 적립·사용 내역 탭 선택. 적립 시 서비스=적립 경로, 사용 시 서비스=발송 유형·발송 건수 표시.">마일리지 적립/사용 내역</button>
                                 <div class="history-tabs-right">
                                     <button type="button" class="btn btn-outline btn-sm" onclick="openMileageExpiryByMonthModal()" title="클릭 시 소멸 예정 마일리지 모달 오픈. 당월 포함 3개월 소멸 예정 내역 표시.">소멸 예정 마일리지</button>
                                 </div>
                             </div>
-                            <div class="history-content active" id="historyCharge">
+                            <div class="history-content active" id="historyPoint">
+                                <div class="history-kind-filter" id="pointKindFilter" aria-label="포인트 내역 구분 필터">
+                                    <div class="history-kind-filter-btns" id="pointKindFilterBtns"></div>
+                                </div>
                                 <div class="table-container">
-                                    <table class="table" title="충전 일시·결제수단·금액·잔액 목록. 페이지네이션 포함.">
+                                    <table class="table" title="포인트 일시·구분·결제수단·서비스·발송 건수·금액·잔액. 페이지네이션 포함.">
                                         <thead>
                                             <tr>
                                                 <th>날짜</th>
+                                                <th>구분</th>
                                                 <th>결제수단</th>
+                                                <th>서비스</th>
+                                                <th>발송 건수</th>
                                                 <th>금액</th>
                                                 <th>잔액</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="historyChargeBody"></tbody>
+                                        <tbody id="historyPointBody"></tbody>
                                     </table>
                                 </div>
-                                <div class="pagination" id="paginationCharge"></div>
+                                <div class="pagination" id="paginationPoint"></div>
                             </div>
                             <div class="history-content" id="historyMileage">
+                                <div class="history-kind-filter" id="mileageKindFilter" aria-label="마일리지 내역 구분 필터">
+                                    <div class="history-kind-filter-btns" id="mileageKindFilterBtns"></div>
+                                </div>
                                 <div class="table-container">
-                                    <table class="table" title="일시·서비스(적립 경로 또는 발송 유형)·발송 건수·금액·잔액. 페이지네이션 포함.">
+                                    <table class="table" title="일시·구분·서비스·발송 건수·금액·잔액. 페이지네이션 포함.">
                                         <thead>
                                             <tr>
                                                 <th>날짜</th>
+                                                <th>구분</th>
                                                 <th>서비스</th>
                                                 <th>발송 건수</th>
                                                 <th>금액</th>
@@ -829,23 +843,6 @@
                                     </table>
                                 </div>
                                 <div class="pagination" id="paginationMileage"></div>
-                            </div>
-                            <div class="history-content" id="historyUse">
-                                <div class="table-container">
-                                    <table class="table" title="사용 일시·서비스·발송 건수·금액·잔액 목록. 페이지네이션 포함.">
-                                        <thead>
-                                            <tr>
-                                                <th>날짜</th>
-                                                <th>서비스</th>
-                                                <th>발송 건수</th>
-                                                <th>금액</th>
-                                                <th>잔액</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="historyUseBody"></tbody>
-                                    </table>
-                                </div>
-                                <div class="pagination" id="paginationUse"></div>
                             </div>
                         </div>
                     </div>
@@ -1363,7 +1360,9 @@
                 });
             }
             if (panelId === 'history') {
-                renderTable('charge');
+                refreshPointKindFilterButtons();
+                refreshMileageKindFilterButtons();
+                renderTable('point');
             }
             // URL 해시를 패널과 동기화 (mypage.html#profile, #password, #caller, #history)
             try {
@@ -1385,7 +1384,11 @@
 
         // 이용내역: payment-refund와 동일 데이터·렌더링
         var ITEMS_PER_PAGE = 20;
-        var currentPages = { all: 1, charge: 1, mileage: 1, use: 1 };
+        var currentPages = { all: 1, point: 1, mileage: 1 };
+        /** 포인트 충전·사용 내역 — 구분 필터 ('all' 또는 getPointKindLabel 과 일치하는 문자열) */
+        var pointKindFilter = 'all';
+        /** 마일리지 적립/사용 내역 — 구분 필터 ('all', '적립', '사용') */
+        var mileageKindFilter = 'all';
         var allHistoryData = [
             { date: '2024-03-05 11:00', type: 'mileage', typeLabel: '마일리지', content: '회원가입 축하 마일리지', earnPath: '회원가입', amount: '+15.5', balance: '99.5' },
             { date: '2024-03-18 16:30', type: 'mileage', typeLabel: '마일리지', content: '이벤트 마일리지 적립', earnPath: '이벤트', amount: '+10.0', balance: '84.0' },
@@ -1414,10 +1417,16 @@
             { date: '2024-11-10 11:00', type: 'use', typeLabel: '사용', content: '알림톡 발송 (300건)', amount: '-9,000', balance: '492,500' },
             { date: '2024-11-09 14:20', type: 'use', typeLabel: '사용', content: 'MMS 발송 (100건)', amount: '-10,000', balance: '501,500' },
             { date: '2024-11-09 10:00', type: 'mileage', typeLabel: '마일리지', content: '발송 마일리지 적립', earnPath: '발송 적립', amount: '+10.0', balance: '23.0' },
+            { date: '2024-11-08 11:20', type: 'refund', typeLabel: '환불', content: '포인트 환불 (무통장입금)', amount: '+45,000', balance: '511,500' },
+            { date: '2024-11-07 15:40', type: 'charge_cancel', typeLabel: '취소', content: '포인트 충전 (신용카드)', amount: '-100,000', balance: '466,500' },
         ];
-        var chargeHistoryData = allHistoryData.filter(function(item) { return item.type === 'charge'; });
         var mileageHistoryData = allHistoryData.filter(function(item) { return item.type === 'mileage' || item.type === 'mileage_use'; });
-        var useHistoryData = allHistoryData.filter(function(item) { return item.type === 'use' || item.type === 'refund'; });
+        var pointHistoryData = allHistoryData.filter(function(item) {
+            return ['charge', 'use', 'refund', 'charge_cancel'].indexOf(item.type) !== -1;
+        }).sort(function(a, b) {
+            if (a.date === b.date) return 0;
+            return a.date < b.date ? 1 : -1;
+        });
 
         function getMileageExpiryMonthKey(dateStr) {
             var d = new Date(dateStr.replace(' ', 'T'));
@@ -1552,6 +1561,12 @@
         }
 
         /** 마일리지 행: 적립은 서비스=적립 경로, 사용은 서비스=발송 채널·발송 건수=건수 */
+        function getMileageKindLabel(item) {
+            if (item.mileageKind) return item.mileageKind;
+            if (item.type === 'mileage_use') return '사용';
+            if (item.type === 'mileage') return '적립';
+            return '-';
+        }
         function getMileageServiceAndCount(item) {
             if (item.type === 'mileage_use') {
                 var service = item.serviceChannel;
@@ -1635,38 +1650,182 @@
             return (n < 0 ? '-' : '') + formatted;
         }
 
+        /** 포인트 통합 행: 구분(결제/취소/환불/사용), 결제수단, 서비스, 발송 건수 */
+        function getPointKindLabel(item) {
+            if (item.pointKind) return item.pointKind;
+            if (item.type === 'charge') return '결제';
+            if (item.type === 'charge_cancel') return '취소';
+            if (item.type === 'refund') return '환불';
+            if (item.type === 'use') return '사용';
+            return item.typeLabel || '-';
+        }
+        function getPointPaymentMethod(item) {
+            if (item.type === 'use') return '-';
+            if (item.content && item.content.indexOf('포인트 충전 (') === 0) {
+                return item.content.replace('포인트 충전 (', '').replace(')', '');
+            }
+            if (item.type === 'refund') {
+                var rm = item.content && item.content.match(/포인트 환불\s*\(([^)]+)\)/);
+                if (rm) return rm[1];
+            }
+            return '-';
+        }
+        function getPointServiceAndCount(item) {
+            if (item.type === 'use') {
+                var serviceParts = item.content.split(' (');
+                var service = serviceParts[0];
+                var count = serviceParts[1] ? serviceParts[1].replace(')', '') : '-';
+                return { service: service, count: count };
+            }
+            return { service: '-', count: '-' };
+        }
+
+        /** 데이터에 실제로 있는 구분값만, 표시 순서: 결제 → 취소 → 환불 → 사용 → 기타 */
+        function getPointFilterKindsOrder() {
+            var preferred = ['결제', '취소', '환불', '사용'];
+            var seen = {};
+            var fromData = [];
+            pointHistoryData.forEach(function(item) {
+                var k = getPointKindLabel(item);
+                if (!k || k === '-') return;
+                if (!seen[k]) { seen[k] = true; fromData.push(k); }
+            });
+            var ordered = [];
+            preferred.forEach(function(p) {
+                if (fromData.indexOf(p) !== -1) ordered.push(p);
+            });
+            fromData.forEach(function(k) {
+                if (ordered.indexOf(k) === -1) ordered.push(k);
+            });
+            return ordered;
+        }
+
+        function getFilteredPointHistoryData() {
+            if (pointKindFilter === 'all') return pointHistoryData;
+            return pointHistoryData.filter(function(item) {
+                return getPointKindLabel(item) === pointKindFilter;
+            });
+        }
+
+        function refreshPointKindFilterButtons() {
+            var wrap = document.getElementById('pointKindFilterBtns');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+            var kinds = getPointFilterKindsOrder();
+            function mkBtn(label, kindVal) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'btn btn-outline btn-sm history-kind-btn' + (pointKindFilter === kindVal ? ' active' : '');
+                b.textContent = label;
+                b.title = kindVal === 'all' ? '구분 전체 보기' : ('구분: ' + kindVal + '만 보기');
+                b.onclick = function() { setPointKindFilter(kindVal); };
+                return b;
+            }
+            wrap.appendChild(mkBtn('전체', 'all'));
+            kinds.forEach(function(k) {
+                wrap.appendChild(mkBtn(k, k));
+            });
+        }
+
+        function setPointKindFilter(kind) {
+            pointKindFilter = kind === 'all' || kind === '' ? 'all' : kind;
+            currentPages.point = 1;
+            refreshPointKindFilterButtons();
+            if (document.getElementById('historyPoint') && document.getElementById('historyPoint').classList.contains('active')) {
+                renderTable('point');
+            }
+        }
+        window.setPointKindFilter = setPointKindFilter;
+
+        function getMileageFilterKindsOrder() {
+            var preferred = ['적립', '사용'];
+            var seen = {};
+            var fromData = [];
+            mileageHistoryData.forEach(function(item) {
+                var k = getMileageKindLabel(item);
+                if (!k || k === '-') return;
+                if (!seen[k]) { seen[k] = true; fromData.push(k); }
+            });
+            var ordered = [];
+            preferred.forEach(function(p) {
+                if (fromData.indexOf(p) !== -1) ordered.push(p);
+            });
+            fromData.forEach(function(k) {
+                if (ordered.indexOf(k) === -1) ordered.push(k);
+            });
+            return ordered;
+        }
+
+        function getFilteredMileageHistoryData() {
+            if (mileageKindFilter === 'all') return mileageHistoryData;
+            return mileageHistoryData.filter(function(item) {
+                return getMileageKindLabel(item) === mileageKindFilter;
+            });
+        }
+
+        function refreshMileageKindFilterButtons() {
+            var wrap = document.getElementById('mileageKindFilterBtns');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+            var kinds = getMileageFilterKindsOrder();
+            function mkBtn(label, kindVal) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'btn btn-outline btn-sm history-kind-btn' + (mileageKindFilter === kindVal ? ' active' : '');
+                b.textContent = label;
+                b.title = kindVal === 'all' ? '구분 전체 보기' : ('구분: ' + kindVal + '만 보기');
+                b.onclick = function() { setMileageKindFilter(kindVal); };
+                return b;
+            }
+            wrap.appendChild(mkBtn('전체', 'all'));
+            kinds.forEach(function(k) {
+                wrap.appendChild(mkBtn(k, k));
+            });
+        }
+
+        function setMileageKindFilter(kind) {
+            mileageKindFilter = kind === 'all' || kind === '' ? 'all' : kind;
+            currentPages.mileage = 1;
+            refreshMileageKindFilterButtons();
+            if (document.getElementById('historyMileage') && document.getElementById('historyMileage').classList.contains('active')) {
+                renderTable('mileage');
+            }
+        }
+        window.setMileageKindFilter = setMileageKindFilter;
+
         function renderTable(tabType) {
             var data, tbody, pagination;
             switch(tabType) {
-                case 'charge': data = chargeHistoryData; tbody = document.getElementById('historyChargeBody'); pagination = document.getElementById('paginationCharge'); break;
-                case 'mileage': data = mileageHistoryData; tbody = document.getElementById('historyMileageBody'); pagination = document.getElementById('paginationMileage'); break;
-                case 'use': data = useHistoryData; tbody = document.getElementById('historyUseBody'); pagination = document.getElementById('paginationUse'); break;
-                default: data = chargeHistoryData; tbody = document.getElementById('historyChargeBody'); pagination = document.getElementById('paginationCharge'); break;
+                case 'point': data = getFilteredPointHistoryData(); tbody = document.getElementById('historyPointBody'); pagination = document.getElementById('paginationPoint'); break;
+                case 'mileage': data = getFilteredMileageHistoryData(); tbody = document.getElementById('historyMileageBody'); pagination = document.getElementById('paginationMileage'); break;
+                default: data = getFilteredPointHistoryData(); tbody = document.getElementById('historyPointBody'); pagination = document.getElementById('paginationPoint'); tabType = 'point'; break;
             }
-            var currentPage = currentPages[tabType];
+            var pageKey = tabType === 'mileage' ? 'mileage' : 'point';
+            var currentPage = currentPages[pageKey] || 1;
             var totalPages = Math.ceil(data.length / ITEMS_PER_PAGE) || 1;
+            if (currentPage > totalPages) {
+                currentPage = Math.max(1, totalPages);
+                currentPages[pageKey] = currentPage;
+            }
             var startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
             var endIndex = startIndex + ITEMS_PER_PAGE;
             var pageData = data.slice(startIndex, endIndex);
 
             var html = '';
             pageData.forEach(function(item) {
-                if (tabType === 'charge') {
+                if (tabType === 'point') {
                     var amountClass = item.amount.indexOf('+') === 0 ? 'amount-plus' : 'amount-minus';
-                    var method = item.content.replace('포인트 충전 (', '').replace(')', '');
-                    html += '<tr><td>' + item.date + '</td><td>' + method + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
+                    var kind = getPointKindLabel(item);
+                    var method = getPointPaymentMethod(item);
+                    var sc = getPointServiceAndCount(item);
+                    html += '<tr><td>' + item.date + '</td><td>' + kind + '</td><td>' + method + '</td><td>' + sc.service + '</td><td>' + sc.count + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
                 } else if (tabType === 'mileage') {
                     var mc = getMileageServiceAndCount(item);
+                    var mk = getMileageKindLabel(item);
                     var amtRaw = item.type === 'mileage_use' ? getMileageDeductionAmount(item) : item.amount;
                     var amtDisplay = item.type === 'mileage_use' ? formatMileageDeductionDisplay(amtRaw) : item.amount;
                     var amountClass = amtRaw.indexOf('+') === 0 ? 'amount-plus' : 'amount-minus';
-                    html += '<tr><td>' + item.date + '</td><td>' + mc.service + '</td><td>' + mc.count + '</td><td class="' + amountClass + '">' + amtDisplay + '</td><td>' + item.balance + '</td></tr>';
-                } else if (tabType === 'use') {
-                    var amountClass = item.amount.indexOf('+') === 0 ? 'amount-plus' : 'amount-minus';
-                    var serviceParts = item.content.split(' (');
-                    var service = serviceParts[0];
-                    var count = serviceParts[1] ? serviceParts[1].replace(')', '') : '-';
-                    html += '<tr><td>' + item.date + '</td><td>' + service + '</td><td>' + count + '</td><td class="' + amountClass + '">' + item.amount + '</td><td>' + item.balance + '</td></tr>';
+                    html += '<tr><td>' + item.date + '</td><td>' + mk + '</td><td>' + mc.service + '</td><td>' + mc.count + '</td><td class="' + amountClass + '">' + amtDisplay + '</td><td>' + item.balance + '</td></tr>';
                 }
             });
             tbody.innerHTML = html;
@@ -1697,9 +1856,8 @@
             document.querySelectorAll('.history-tab').forEach(function(t) { t.classList.remove('active'); });
             document.querySelectorAll('.history-content').forEach(function(c) { c.classList.remove('active'); });
             var tabs = document.querySelectorAll('.history-tab');
-            if (tab === 'charge') { tabs[0].classList.add('active'); document.getElementById('historyCharge').classList.add('active'); }
-            else if (tab === 'use') { tabs[1].classList.add('active'); document.getElementById('historyUse').classList.add('active'); }
-            else if (tab === 'mileage') { tabs[2].classList.add('active'); document.getElementById('historyMileage').classList.add('active'); }
+            if (tab === 'point') { tabs[0].classList.add('active'); document.getElementById('historyPoint').classList.add('active'); refreshPointKindFilterButtons(); }
+            else if (tab === 'mileage') { tabs[1].classList.add('active'); document.getElementById('historyMileage').classList.add('active'); refreshMileageKindFilterButtons(); }
             renderTable(tab);
         }
         function applyHistoryPeriod(period) {
@@ -1787,6 +1945,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof initDropdownMenus === 'function') initDropdownMenus();
             updateMemberTypeDisplay();
+            refreshPointKindFilterButtons();
+            refreshMileageKindFilterButtons();
             applyMypagePanelFromHash();
             initMarketingConsentMeta();
         });
@@ -1883,13 +2043,11 @@
             { selector: '.history-period-btns button[onclick="applyHistoryPeriod(\'6\')"]', title: '54. 6개월', position: { top: '-5px', left: '-10px' }, function: '최근 기준: 오늘부터 과거 6개월 구간 자동 설정 후 내역 조회.' },
             { selector: '.history-period-btns button[onclick="applyHistoryPeriod(\'12\')"]', title: '55. 1년', position: { top: '-5px', left: '-10px' }, function: '최근 기준: 오늘부터 과거 1년 구간 자동 설정 후 내역 조회.' },
             { selector: '#historySearchBtn', title: '56. 검색 버튼', position: { top: '-5px', right: '-10px' }, function: '달력으로 선택한 시작일·종료일(과거 구간, 최대 1년)로 내역 조회.' },
-            { selector: '#historyTabs .history-tab:nth-child(1)', title: '57. 포인트 충전 내역 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 충전 내역 탭 선택. 날짜·결제수단·금액·잔액 등 표시.' },
-            { selector: '#historyTabs .history-tab:nth-child(2)', title: '58. 포인트 사용 내역 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 사용 내역 탭 선택. 날짜·서비스·발송 건수·금액·잔액 등 표시.' },
-            { selector: '#historyTabs .history-tab:nth-child(3)', title: '59. 마일리지 적립/사용 내역 탭', position: { top: '-5px', left: '-10px' }, function: '마일리지 적립·사용 내역 탭 선택. 적립 시 서비스 열에 적립 경로, 사용 시 발송 유형·발송 건수 표시.' },
-            { selector: 'button[onclick="openMileageExpiryByMonthModal()"]', title: '60. 소멸 예정 마일리지', position: { top: '-5px', right: '-10px' }, function: '클릭 시 소멸 예정 마일리지 모달 오픈. 당월 포함 3개월 소멸 예정 내역 표시.' },
-            { selector: '#historyCharge .table-container .table', title: '61. 포인트 충전 내역 테이블', position: { top: '10px', left: '10px' }, function: '충전 일시·결제수단·금액·잔액 목록. 페이지네이션 포함.' },
-            { selector: '#historyUse .table-container .table', title: '62. 포인트 사용 내역 테이블', position: { top: '10px', left: '10px' }, function: '사용 일시·서비스·발송 건수·금액·잔액 목록. 페이지네이션 포함.' },
-            { selector: '#historyMileage .table-container .table', title: '63. 마일리지 적립/사용 내역 테이블', position: { top: '10px', left: '10px' }, function: '일시·서비스(적립 경로/발송 유형)·발송 건수·금액·잔액. 페이지네이션 포함.' },
+            { selector: '#historyTabs .history-tab:nth-child(1)', title: '57. 포인트 충전·사용 내역 탭', position: { top: '-5px', left: '-10px' }, function: '포인트 충전·사용 통합 탭. 날짜·구분(결제/취소/환불/사용)·결제수단·서비스·발송 건수·금액·잔액.' },
+            { selector: '#historyTabs .history-tab:nth-child(2)', title: '58. 마일리지 적립/사용 내역 탭', position: { top: '-5px', left: '-10px' }, function: '마일리지 적립·사용 내역 탭. 적립 시 서비스 열에 적립 경로, 사용 시 발송 유형·발송 건수 표시.' },
+            { selector: 'button[onclick="openMileageExpiryByMonthModal()"]', title: '59. 소멸 예정 마일리지', position: { top: '-5px', right: '-10px' }, function: '클릭 시 소멸 예정 마일리지 모달 오픈. 당월 포함 3개월 소멸 예정 내역 표시.' },
+            { selector: '#historyPoint .table-container .table', title: '60. 포인트 충전·사용 통합 테이블', position: { top: '10px', left: '10px' }, function: '일시·구분·결제수단·서비스·발송 건수·금액·잔액. 페이지네이션 포함.' },
+            { selector: '#historyMileage .table-container .table', title: '61. 마일리지 적립/사용 내역 테이블', position: { top: '10px', left: '10px' }, function: '일시·구분(적립/사용)·서비스·발송 건수·금액·잔액. 상단 구분 필터·페이지네이션 포함.' },
             { selector: '#phoneVerifyModal .modal-title', title: '64. 휴대폰 인증 모달', position: { top: '-5px', left: '-10px' }, function: '휴대폰번호 확인·인증번호 입력·재전송·확인. 인증 완료 시 내정보 수정 폼에 반영.' },
             { selector: '#mileageExpiryByMonthModal .modal-title', title: '65. 소멸 예정 마일리지 모달', position: { top: '-5px', left: '-10px' }, function: '당월 포함 이후 3개월 소멸 예정 마일리지 내역. 확인 버튼으로 닫기.' },
             { selector: '#businessInfoCard .form-section', title: '66. 세금계산서 정보 영역', position: { top: '-5px', left: '-10px' }, function: '사업장 주소 아래 담당자 이름·연락처·수신 이메일 수정 가능. 저장하기로 기업정보와 함께 저장.' },
