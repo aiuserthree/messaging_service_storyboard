@@ -70,9 +70,8 @@ function wrapWithVersionSelector(innerHtml, selectId, currentId, previousId, swi
     var html = [
         '<div style="line-height: 1.8; color: var(--text-primary);">',
         '    <div class="policy-version-selector" style="margin-bottom: 20px; padding: 12px 16px; background: var(--bg-color, #f8fafc); border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px;">',
-        '        <label for="' + selectId + '" style="font-weight: 600;">시행일 선택: </label>',
-        '        <select id="' + selectId + '" onchange="' + switchFn + '(this.value)" style="padding: 6px 12px; margin-left: 8px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">',
-        '            <option value="current">현재 (2026년 XX월 XX일)</option>',
+        '        <select id="' + selectId + '" aria-label="시행일 선택" onchange="' + switchFn + '(this.value)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">',
+        '            <option value="current">2026년 XX월 XX일</option>',
         '        </select>',
         '    </div>',
         '    <div id="' + currentId + '">',

@@ -476,9 +476,8 @@ function openPolicyModal(type) {
         'terms': `
             <div style="line-height: 1.8; color: var(--text-primary);">
                 <div class="policy-version-selector" style="margin-bottom: 20px; padding: 12px 16px; background: var(--bg-color, #f8fafc); border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px;">
-                    <label for="termsVersionSelect" style="font-weight: 600;">시행일 선택: </label>
-                    <select id="termsVersionSelect" onchange="switchTermsVersion(this.value)" style="padding: 6px 12px; margin-left: 8px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">
-                        <option value="current">현재 (2026년 XX월 XX일)</option>
+                    <select id="termsVersionSelect" aria-label="시행일 선택" onchange="switchTermsVersion(this.value)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">
+                        <option value="current">2026년 XX월 XX일</option>
                     </select>
                 </div>
                 <div id="termsContentCurrent">
@@ -731,9 +730,8 @@ function openPolicyModal(type) {
         'privacy': `
             <div style="line-height: 1.8; color: var(--text-primary);">
                 <div class="policy-version-selector" style="margin-bottom: 20px; padding: 12px 16px; background: var(--bg-color, #f8fafc); border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px;">
-                    <label for="privacyVersionSelect" style="font-weight: 600;">시행일 선택: </label>
-                    <select id="privacyVersionSelect" onchange="switchPrivacyVersion(this.value)" style="padding: 6px 12px; margin-left: 8px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">
-                        <option value="current">현재 (202X년 X월 X일)</option>
+                    <select id="privacyVersionSelect" aria-label="시행일 선택" onchange="switchPrivacyVersion(this.value)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">
+                        <option value="current">202X년 X월 X일</option>
                     </select>
                 </div>
                 <div id="privacyContentCurrent">
@@ -1026,9 +1024,8 @@ function openPolicyModal(type) {
         'spam': `
             <div style="line-height: 1.8; color: var(--text-primary);">
                 <div class="policy-version-selector" style="margin-bottom: 20px; padding: 12px 16px; background: var(--bg-color, #f8fafc); border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px;">
-                    <label for="spamVersionSelect" style="font-weight: 600;">시행일 선택: </label>
-                    <select id="spamVersionSelect" onchange="switchSpamVersion(this.value)" style="padding: 6px 12px; margin-left: 8px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">
-                        <option value="current">현재 (2026년 XX월 XX일)</option>
+                    <select id="spamVersionSelect" aria-label="시행일 선택" onchange="switchSpamVersion(this.value)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color, #e2e8f0);">
+                        <option value="current">2026년 XX월 XX일</option>
                     </select>
                 </div>
                 <div id="spamContentCurrent">
