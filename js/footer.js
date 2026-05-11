@@ -386,7 +386,7 @@ function openPolicyModal(type) {
                     </tr>
                     <tr style="border-bottom: 1px solid #e2e8f0;">
                         <td style="padding: 12px 0; font-weight: 600;">대표이메일</td>
-                        <td style="padding: 12px 0;">webmaster@tokbell.com</td>
+                        <td style="padding: 12px 0;">support@tokbell.com</td>
                     </tr>
                 </table>
                 
