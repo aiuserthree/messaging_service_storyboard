@@ -1825,6 +1825,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function selectPayment(method) {
+            if (method === 'transfer') {
+                var mt = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
+                var allowDedicated = mt === 'business' || mt === 'corporate' || mt === 'election';
+                if (!allowDedicated) {
+                    alert('사업자 및 선거회원 전용 결제 수단입니다.');
+                    return;
+                }
+            }
             selectedPayment = method;
             document.querySelectorAll('.payment-method').forEach(btn => {
                 btn.classList.remove('selected');
