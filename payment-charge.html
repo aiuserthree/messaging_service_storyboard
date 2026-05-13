@@ -1117,6 +1117,14 @@ body {
         .charge-promo-banner {
             width: 100%;
             margin: 24px auto 0;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        .charge-promo-banner:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 3px;
+            border-radius: var(--radius-lg);
         }
         .charge-promo-banner img {
             display: block;
@@ -1311,9 +1319,9 @@ body {
 
                         <!-- 충전하기 버튼 -->
                         <button type="submit" class="btn btn-primary btn-lg" id="chargeButton" style="width: 100%; margin-top: 24px;">충전하기</button>
-                        <div class="charge-promo-banner" id="chargePromoBanner">
+                        <a class="charge-promo-banner" id="chargePromoBanner" href="https://tokbell.com/support/event/3" target="_blank" rel="noopener noreferrer" title="첫 결제 혜택 이벤트 페이지(새 창)">
                             <img src="main/img/payment-charge-first-pay-banner.png" alt="톡벨 첫 결제 시 압도적인 추가 혜택 이벤트. 국내 최저가 8.3원(건당), 무료 문자 600통 메시지 발송" decoding="async">
-                        </div>
+                        </a>
                     </form>
                 </div>
 
