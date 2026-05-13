@@ -202,8 +202,8 @@ function createHeader(activeMenu = '') {
     
     // 헤더 액션 HTML 생성
     let headerActionsHTML = '';
-    if (isIndexPage) {
-        // index.html에서는 항상 로그인/가입 버튼 표시
+    if (isIndexPage && !isLoggedIn) {
+        // 랜딩: 비로그인만 로그인/가입 CTA
         headerActionsHTML = `
             <a href="login.html" class="btn btn-outline">로그인</a>
             <a href="signup.html" class="btn btn-primary">톡벨 가입하기</a>
@@ -254,6 +254,7 @@ function createHeader(activeMenu = '') {
                 <div class="header-dropdown-menu">
                     <a href="mypage.html#profile" class="header-dropdown-item" data-mypage-panel="profile">내 정보 수정</a>
                     <a href="mypage.html#password" class="header-dropdown-item" data-mypage-panel="password">비밀번호 변경</a>
+                    <a href="mypage.html#business" class="header-dropdown-item" id="headerNavBusinessConvert" data-mypage-panel="business" style="display: none;">사업자 전환</a>
                     <a href="mypage.html#caller" class="header-dropdown-item" data-mypage-panel="caller">발신번호 관리</a>
                     <a href="mypage.html#history" class="header-dropdown-item" data-mypage-panel="history">포인트/마일리지 내역</a>
                     <a href="support-inquiry.html#history" class="header-dropdown-item">내 문의 내역</a>
@@ -506,6 +507,8 @@ function initHeaderDropdowns() {
             wrapper.classList.remove('force-close');
         });
     });
+
+    syncHeaderMemberPersonalization();
 }
 
 // 플로팅 메뉴 생성 함수
@@ -889,6 +892,20 @@ function resolveSpecPageUrl(url) {
     var prefix = getSpecPageRelativePrefix();
     return prefix + u.replace(/^\.\//, '');
 }
+
+/** 마이페이지 드롭다운: '사업자 전환' 항목 — 개인회원일 때만 노출 */
+function syncHeaderMemberPersonalization() {
+    try {
+        var mt = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
+        var showBiz = mt === 'personal';
+        var dd = document.getElementById('headerNavBusinessConvert');
+        if (dd) {
+            dd.style.display = showBiz ? 'block' : 'none';
+            dd.setAttribute('href', resolveSpecPageUrl('mypage.html') + '#business');
+        }
+    } catch (e) {}
+}
+window.syncHeaderMemberPersonalization = syncHeaderMemberPersonalization;
 
 // 로그아웃 처리 함수
 function handleLogout() {

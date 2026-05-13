@@ -425,7 +425,10 @@
                 <div class="dashboard-summary-grid">
                     <div class="dashboard-summary-item">
                         <span class="dashboard-summary-label">회원유형</span>
-                        <span class="dashboard-summary-value" id="dashboardMemberType">개인회원</span>
+                        <div class="dashboard-summary-value-row" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <span class="dashboard-summary-value" id="dashboardMemberType" style="margin: 0;">개인회원</span>
+                            <a href="mypage.html#business" id="dashboardBusinessConvertBtn" class="btn btn-sm btn-outline" style="padding: 4px 12px; font-size: 12px; display: none;">사업자 전환</a>
+                        </div>
                     </div>
                     <div class="dashboard-summary-item">
                         <span class="dashboard-summary-label">회원등급</span>
@@ -464,6 +467,7 @@
                 <nav class="mypage-lnb" id="mypageLnb">
                     <button type="button" class="mypage-lnb-item active" data-panel="profile" onclick="switchMypagePanel('profile')">내 정보 수정</button>
                     <button type="button" class="mypage-lnb-item" data-panel="password" onclick="switchMypagePanel('password')">비밀번호 변경</button>
+                    <button type="button" class="mypage-lnb-item" id="lnbBusinessConvert" data-panel="business" onclick="switchMypagePanel('business')" style="display: none;">사업자 전환</button>
                     <button type="button" class="mypage-lnb-item" data-panel="caller" onclick="switchMypagePanel('caller')">발신번호 관리</button>
                     <button type="button" class="mypage-lnb-item" data-panel="history" onclick="switchMypagePanel('history')">포인트/마일리지 내역</button>
                     <a href="support-inquiry.html#history" class="mypage-lnb-item">내 문의 내역</a>
@@ -598,7 +602,48 @@
                                 <button type="button" class="btn btn-primary" id="saveBusinessInfoBtn" onclick="saveBusinessInfo()" title="기업 정보(회사명·사업자번호·대표자·사업장 주소·세금계산서 정보) 수정 사항 저장">저장하기</button>
                             </div>
                         </div>
-                        <div class="card" id="memberTypeCard" style="margin-top: 24px;">
+                        <div class="alert alert-info" style="margin-top: 24px;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                <div style="font-size: 13px; line-height: 1.6;"><strong>메시지 발송 대행업체에 해당하는 회원일 경우</strong><br>충전 및 정산(세금계산서) 등의 분리를 위해서 위임하는 고객사별로 사업자 계정을 각각 생성하여야 합니다. 계정 생성을 원하시면 고객센터(<strong>1588-0000</strong>)로 문의 부탁 드립니다.</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+                            <a href="javascript:void(0)" onclick="openWithdrawalModal()" style="font-size: 14px; color: var(--text-secondary); text-decoration: underline;" title="회원 탈퇴(해지) 절차 진입. 클릭 시 탈퇴 확인 모달 또는 탈퇴 페이지 이동.">회원 해지</a>
+                            <span style="font-size: 12px; color: var(--text-muted); margin-left: 12px;">|</span>
+                            <a href="javascript:void(0)" onclick="openWithdrawalModal(true)" style="font-size: 12px; color: var(--text-muted); text-decoration: underline;" title="1만 포인트 미만일 때 회원해지 팝업 예시 보기">1만 포인트 미만 회원해지 예시</a>
+                        </p>
+                    </div>
+
+                    <!-- 비밀번호변경 (폼 바로 표시) -->
+                    <div class="mypage-content-panel" id="panel-password">
+                        <div class="card" id="passwordCard">
+                            <h3 class="form-section-title">비밀번호 변경</h3>
+                            <form id="passwordForm">
+                                <div class="form-group" id="currentPasswordGroup">
+                                    <label class="form-label required">현재 비밀번호</label>
+                                    <input type="password" class="form-input" required id="currentPassword">
+                                </div>
+                                <div class="form-group" id="newPasswordGroup">
+                                    <label class="form-label required">새 비밀번호</label>
+                                    <input type="password" class="form-input" required id="newPassword">
+                                    <div class="form-help">8~16자 이내, 영문 대소문자, 숫자, 특수문자 중 3가지 이상 조합</div>
+                                </div>
+                                <div class="form-group" id="confirmPasswordGroup">
+                                    <label class="form-label required">새 비밀번호 확인</label>
+                                    <input type="password" class="form-input" required id="confirmPassword">
+                                </div>
+                                <div class="flex gap-2 mt-3" id="passwordActions">
+                                    <button type="submit" class="btn btn-primary" id="changePasswordBtn" title="검증 후 비밀번호 변경 API 호출. 성공 시 완료 메시지 및 로그인 페이지 이동 등.">변경하기</button>
+                                    <button type="button" class="btn btn-outline" onclick="resetPasswordForm()" id="cancelBtn" title="입력 초기화 또는 이전 패널/페이지로 이동.">취소</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 사업자 전환 (회원유형 전환 — 내 정보 수정 패널과 동일 블록) -->
+                    <div class="mypage-content-panel" id="panel-business">
+                        <div class="card" id="memberTypeCard" style="margin-top: 0;">
                             <div class="form-section" style="margin-bottom: 0;">
                                 <h3 class="form-section-title">회원유형 전환</h3>
                                 <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">현재 회원유형: <strong style="color: var(--primary-color);" id="currentMemberTypeText">개인회원</strong></p>
@@ -645,43 +690,6 @@
                                     <button type="button" class="btn btn-sm btn-outline" onclick="toggleMemberTypeRejected()" id="toggleRejectedBtn" style="padding: 4px 10px; font-size: 12px;">반려 상태 보기</button>
                                 </div>
                             </div>
-                        </div>
-                        <div class="alert alert-info" style="margin-top: 24px;">
-                            <div style="display: flex; align-items: flex-start; gap: 12px;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                                <div style="font-size: 13px; line-height: 1.6;"><strong>메시지 발송 대행업체에 해당하는 회원일 경우</strong><br>충전 및 정산(세금계산서) 등의 분리를 위해서 위임하는 고객사별로 사업자 계정을 각각 생성하여야 합니다. 계정 생성을 원하시면 고객센터(<strong>1588-0000</strong>)로 문의 부탁 드립니다.</div>
-                            </div>
-                        </div>
-                        <p style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
-                            <a href="javascript:void(0)" onclick="openWithdrawalModal()" style="font-size: 14px; color: var(--text-secondary); text-decoration: underline;" title="회원 탈퇴(해지) 절차 진입. 클릭 시 탈퇴 확인 모달 또는 탈퇴 페이지 이동.">회원 해지</a>
-                            <span style="font-size: 12px; color: var(--text-muted); margin-left: 12px;">|</span>
-                            <a href="javascript:void(0)" onclick="openWithdrawalModal(true)" style="font-size: 12px; color: var(--text-muted); text-decoration: underline;" title="1만 포인트 미만일 때 회원해지 팝업 예시 보기">1만 포인트 미만 회원해지 예시</a>
-                        </p>
-                    </div>
-
-                    <!-- 비밀번호변경 (폼 바로 표시) -->
-                    <div class="mypage-content-panel" id="panel-password">
-                        <div class="card" id="passwordCard">
-                            <h3 class="form-section-title">비밀번호 변경</h3>
-                            <form id="passwordForm">
-                                <div class="form-group" id="currentPasswordGroup">
-                                    <label class="form-label required">현재 비밀번호</label>
-                                    <input type="password" class="form-input" required id="currentPassword">
-                                </div>
-                                <div class="form-group" id="newPasswordGroup">
-                                    <label class="form-label required">새 비밀번호</label>
-                                    <input type="password" class="form-input" required id="newPassword">
-                                    <div class="form-help">8~16자 이내, 영문 대소문자, 숫자, 특수문자 중 3가지 이상 조합</div>
-                                </div>
-                                <div class="form-group" id="confirmPasswordGroup">
-                                    <label class="form-label required">새 비밀번호 확인</label>
-                                    <input type="password" class="form-input" required id="confirmPassword">
-                                </div>
-                                <div class="flex gap-2 mt-3" id="passwordActions">
-                                    <button type="submit" class="btn btn-primary" id="changePasswordBtn" title="검증 후 비밀번호 변경 API 호출. 성공 시 완료 메시지 및 로그인 페이지 이동 등.">변경하기</button>
-                                    <button type="button" class="btn btn-outline" onclick="resetPasswordForm()" id="cancelBtn" title="입력 초기화 또는 이전 패널/페이지로 이동.">취소</button>
-                                </div>
-                            </form>
                         </div>
                     </div>
 
@@ -1197,24 +1205,34 @@
         function setTestMemberType(type) {
             try { localStorage.setItem('memberType', type); } catch (e) {}
             updateMemberTypeDisplay();
-            if (typeof showToast === 'function') showToast('회원 유형이 ' + (type === 'business' ? '기업회원' : '개인회원') + '으로 설정되었습니다.', 'success');
+            var typeMap = { personal: '개인회원', business: '기업회원', election: '선거회원', corporate: '기업회원' };
+            var label = typeMap[type] || '개인회원';
+            if (typeof showToast === 'function') showToast('회원 유형이 ' + label + '으로 설정되었습니다.', 'success');
         }
         function updateMemberTypeDisplay() {
             var type = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
-            var typeText = type === 'business' ? '기업회원' : '개인회원';
+            var typeMap = { personal: '개인회원', business: '기업회원', election: '선거회원', corporate: '기업회원' };
+            var typeText = typeMap[type] || '개인회원';
             var display = document.getElementById('currentMemberTypeDisplay');
             var textEl = document.getElementById('currentMemberTypeText');
             var dashboardMemberTypeEl = document.getElementById('dashboardMemberType');
+            var dashboardBizBtn = document.getElementById('dashboardBusinessConvertBtn');
             var callerPanelDisplay = document.getElementById('callerPanelMemberTypeDisplay');
             var businessCard = document.getElementById('businessInfoCard');
             var memberTypeCard = document.getElementById('memberTypeCard');
+            var lnbBiz = document.getElementById('lnbBusinessConvert');
             if (display) display.textContent = typeText;
             if (textEl) textEl.textContent = typeText;
             if (dashboardMemberTypeEl) dashboardMemberTypeEl.textContent = typeText;
             if (callerPanelDisplay) callerPanelDisplay.textContent = typeText;
-            if (businessCard) businessCard.style.display = type === 'business' ? 'block' : 'none';
-            if (memberTypeCard) memberTypeCard.style.display = type === 'business' ? 'none' : 'block';
+            var isEnterprise = type === 'business' || type === 'corporate';
+            if (businessCard) businessCard.style.display = isEnterprise ? 'block' : 'none';
+            if (memberTypeCard) memberTypeCard.style.display = type === 'personal' ? 'block' : 'none';
+            var showBizNav = type === 'personal';
+            if (lnbBiz) lnbBiz.style.display = showBizNav ? '' : 'none';
+            if (dashboardBizBtn) dashboardBizBtn.style.display = showBizNav ? 'inline-flex' : 'none';
             syncMemberTypeConversionNotices();
+            if (typeof window.syncHeaderMemberPersonalization === 'function') window.syncHeaderMemberPersonalization();
         }
         /** 전환신청 대기/반려 안내 — API 연동 시 동일 키로 치환 가능 (memberTypeConversionStatus, memberTypeConversionRejectReason) */
         function syncMemberTypeConversionNotices() {
@@ -1364,23 +1382,13 @@
                 refreshMileageKindFilterButtons();
                 renderTable('point');
             }
-            // URL 해시를 패널과 동기화 (mypage.html#profile, #password, #caller, #history)
+            // URL 해시를 패널과 동기화 (mypage.html#profile, #password, #business, #caller, #history)
             try {
                 history.replaceState(null, '', '#' + panelId);
             } catch (e) {
                 location.hash = panelId;
             }
         }
-
-        // 대시보드 요약: 회원유형 (localStorage와 동기화)
-        (function syncDashboardSummary() {
-            var memberTypeEl = document.getElementById('dashboardMemberType');
-            if (memberTypeEl) {
-                var memberType = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
-                var typeText = { personal: '개인회원', business: '기업회원', election: '선거회원' }[memberType] || '개인회원';
-                memberTypeEl.textContent = typeText;
-            }
-        })();
 
         // 이용내역: payment-refund와 동일 데이터·렌더링
         var ITEMS_PER_PAGE = 20;
@@ -1905,10 +1913,15 @@
 
         function applyMypagePanelFromHash() {
             var hash = (location.hash || '').replace(/^#/, '');
-            if (hash && ['profile', 'password', 'caller', 'history'].indexOf(hash) !== -1) {
+            var mt = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
+            if (hash === 'business' && mt !== 'personal') {
+                try { history.replaceState(null, '', '#profile'); } catch (e) { location.hash = 'profile'; }
+                switchMypagePanel('profile');
+                return;
+            }
+            if (hash && ['profile', 'password', 'business', 'caller', 'history'].indexOf(hash) !== -1) {
                 switchMypagePanel(hash);
             } else {
-                // 해시 없거나 잘못된 해시면 내정보수정(profile) 표시
                 switchMypagePanel('profile');
             }
         }
@@ -1980,13 +1993,14 @@
             { selector: '#pageHeader h2', title: '1. 페이지 제목', position: { top: '-5px', left: '-10px' }, function: '마이페이지 메인 타이틀. 회원정보·설정·이용내역 관리 진입점.' },
             { selector: '#pageHeader .page-description', title: '2. 페이지 설명', position: { top: '-5px', left: '-10px' }, function: '회원정보를 확인하고 내 정보, 비밀번호, 발신번호, 이용내역을 관리합니다 안내.' },
             { selector: '#dashboardMemberType', title: '3. 회원유형', position: { top: '-5px', right: '-10px' }, function: '로그인 회원의 유형 표시(개인회원/기업회원). 대시보드와 동일한 요약 영역.' },
-            { selector: '#dashboardMemberGrade', title: '4. 회원등급', position: { top: '-5px', right: '-10px' }, function: '회원등급 표시(일반 등).' },
+            { selector: '#dashboardBusinessConvertBtn', title: '3-1. 사업자 전환(요약)', position: { top: '-5px', right: '-10px' }, function: '개인회원일 때만 노출. 클릭 시 마이페이지 사업자 전환 패널(#business)로 이동.' },
             { selector: '#dashboardBalance', title: '5. 잔액', position: { top: '-5px', right: '-10px' }, function: '포인트·마일리지 등 잔액 정보. 전용계좌 안내 포함.' },
             { selector: '#dashboardSendCounts', title: '6. 발송 가능 건수', position: { top: '-5px', right: '-10px' }, function: '일반/광고/선거 등 발송 가능 건수 뱃지 표시.' },
-            { selector: '#mypageLnb .mypage-lnb-item:nth-child(1)', title: '7. 내정보수정', position: { top: '-5px', left: '-10px' }, function: '클릭 시 내정보수정 패널로 전환. 기본 정보·주소·회원유형 전환·세금계산서 신청 등.' },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(1)', title: '7. 내정보수정', position: { top: '-5px', left: '-10px' }, function: '클릭 시 내정보수정 패널로 전환. 기본 정보·주소·마케팅 동의·기업정보(기업회원) 등.' },
             { selector: '#mypageLnb .mypage-lnb-item:nth-child(2)', title: '8. 비밀번호변경', position: { top: '-5px', left: '-10px' }, function: '클릭 시 비밀번호 변경 패널로 전환.' },
-            { selector: '#mypageLnb .mypage-lnb-item:nth-child(3)', title: '9. 발신번호관리', position: { top: '-5px', left: '-10px' }, function: '클릭 시 발신번호 목록·등록·상태 필터 패널로 전환.' },
-            { selector: '#mypageLnb .mypage-lnb-item:nth-child(4)', title: '10. 포인트/마일리지 내역', position: { top: '-5px', left: '-10px' }, function: '클릭 시 포인트/마일리지 이용내역 패널로 전환. 기간 조회·탭별 내역 제공.' },
+            { selector: '#lnbBusinessConvert', title: '9. 사업자 전환', position: { top: '-5px', left: '-10px' }, function: '개인회원일 때만 노출. 클릭 시 회원유형 전환(개인사업자·법인) 패널로 전환.' },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(4)', title: '10. 발신번호관리', position: { top: '-5px', left: '-10px' }, function: '클릭 시 발신번호 목록·등록·상태 필터 패널로 전환.' },
+            { selector: '#mypageLnb .mypage-lnb-item:nth-child(5)', title: '11. 포인트/마일리지 내역', position: { top: '-5px', left: '-10px' }, function: '클릭 시 포인트/마일리지 이용내역 패널로 전환. 기간 조회·탭별 내역 제공.' },
             { selector: '#mypageLnb a[href="support-inquiry.html#history"]', title: '10-1. 내 문의 내역', position: { top: '-5px', left: '-10px' }, function: '클릭 시 1:1문의내역 페이지(support-inquiry.html#history)로 이동.', behavior: ['마이페이지 좌측 메뉴에서 클릭 시 support-inquiry.html의 문의내역 탭(#history)으로 이동'] },
             { selector: '#basicInfoSection .form-section-title', title: '11. 기본 정보 섹션', position: { top: '-5px', left: '-10px' }, function: '기본 정보 구역 구분.' },
             { selector: '#basicInfoSection .form-group input[disabled]', title: '12. 아이디', position: { top: '-5px', right: '-10px' }, function: '로그인 아이디 조회 전용. 수정 불가(disabled), 회색 배경.' },

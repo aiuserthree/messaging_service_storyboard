@@ -1,14 +1,45 @@
 // 공통 푸터 생성 함수
-function createFooter() {
+// options.footerNoticeStrip — true일 때 랜딩과 동일한 공지 롤링 바를 상단 메뉴 행 최우측에 배치
+function createFooter(options) {
+    options = options || {};
+    var showFooterNotice = !!options.footerNoticeStrip;
+    var noticeHtml = '';
+    if (showFooterNotice) {
+        noticeHtml = `
+            <div class="footer-top-notice">
+                <div id="footerLandingNoticeStrip" class="landing-notice-strip footer-landing-notice-embed" aria-label="공지">
+                    <div class="svc-cards-inner">
+                        <a href="support-notice.html" class="landing-notice-bar" aria-label="공지사항 목록 보기">
+                            <span class="landing-notice-bar__left">
+                                <span class="landing-notice-badge">공지</span>
+                                <div class="landing-notice-roll">
+                                    <div class="landing-notice-roll__track">
+                                        <div class="landing-notice-roll__item"><span class="landing-notice-title">톡벨 사용자 가이드 200% 활용하는 법</span></div>
+                                        <div class="landing-notice-roll__item"><span class="landing-notice-title">2월 정기 시스템 점검 일정 안내</span></div>
+                                        <div class="landing-notice-roll__item"><span class="landing-notice-title">서비스 이용약관 개정 안내</span></div>
+                                        <div class="landing-notice-roll__item"><span class="landing-notice-title">신규 회원 충전 이벤트 안내</span></div>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="landing-notice-bar__right">
+                                <span class="landing-notice-more">더보기</span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>`;
+    }
     return `
         <footer class="footer">
             <div class="footer-top-row">
-                <a href="support-center.html" class="footer-top-link">고객센터</a>
-                <a href="support-notice.html" class="footer-top-link">공지사항</a>
-                <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('terms')">이용약관</a>
-                <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('privacy')">개인정보처리방침</a>
-                <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('spam')">스팸방지정책</a>
-                <a href="https://www.ibank.co.kr/main/index.dg?lang=ko" class="footer-top-link" target="_blank" rel="noopener noreferrer">회사소개</a>
+                <div class="footer-top-links">
+                    <a href="support-center.html" class="footer-top-link">고객센터</a>
+                    <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('terms')">이용약관</a>
+                    <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('privacy')">개인정보처리방침</a>
+                    <a href="javascript:void(0)" class="footer-top-link" onclick="event.preventDefault(); openPolicyModal('spam')">스팸방지정책</a>
+                    <a href="https://www.ibank.co.kr/main/index.dg?lang=ko" class="footer-top-link" target="_blank" rel="noopener noreferrer">회사소개</a>
+                </div>
+                ${noticeHtml}
             </div>
             <div class="footer-content">
                 <div class="footer-section footer-company">
@@ -60,9 +91,130 @@ function createFooter() {
                 margin: 0 auto;
                 display: flex;
                 flex-wrap: wrap;
-                gap: 8px 24px;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px 24px;
                 padding-bottom: 24px;
                 border-bottom: 1px solid var(--border-color, #e2e8f0);
+            }
+            .footer-top-links {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px 24px;
+                align-items: center;
+            }
+            .footer-top-notice {
+                flex: 1 1 auto;
+                min-width: min(100%, 300px);
+                display: flex;
+                justify-content: flex-end;
+                margin-left: auto;
+            }
+            .footer-landing-notice-embed {
+                width: 100%;
+                max-width: min(680px, 100%);
+                padding: 0;
+                margin: 0;
+                background: transparent;
+                border: none;
+            }
+            .footer-landing-notice-embed .svc-cards-inner {
+                max-width: none;
+                width: 100%;
+                margin: 0;
+            }
+            .footer-landing-notice-embed .landing-notice-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                width: 100%;
+                margin: 0;
+                padding: 10px 14px 10px 12px;
+                box-sizing: border-box;
+                background: #f1f5f9;
+                border-radius: 999px;
+                border: 1px solid rgba(15, 23, 42, 0.06);
+                text-decoration: none;
+                color: inherit;
+                transition: background 0.2s ease, box-shadow 0.2s ease;
+            }
+            .footer-landing-notice-embed .landing-notice-bar:hover {
+                background: #e8eef5;
+                box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+            }
+            .footer-landing-notice-embed .landing-notice-bar:focus-visible {
+                outline: 2px solid #5cb85c;
+                outline-offset: 2px;
+            }
+            .footer-landing-notice-embed .landing-notice-bar__left {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                min-width: 0;
+                flex: 1;
+            }
+            .footer-landing-notice-embed .landing-notice-badge {
+                flex-shrink: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px 11px;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: -0.02em;
+                color: #fff;
+                background: #5cb85c;
+                border-radius: 999px;
+                line-height: 1;
+            }
+            .footer-landing-notice-embed .landing-notice-title {
+                font-size: clamp(12px, 1.2vw, 14px);
+                font-weight: 600;
+                color: #111827;
+                letter-spacing: -0.03em;
+                line-height: 1.35;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: block;
+            }
+            .footer-landing-notice-embed .landing-notice-roll {
+                flex: 1;
+                min-width: 0;
+                height: 24px;
+                overflow: hidden;
+                position: relative;
+            }
+            .footer-landing-notice-embed .landing-notice-roll__track {
+                will-change: transform;
+            }
+            .footer-landing-notice-embed .landing-notice-roll__item {
+                height: 24px;
+                display: flex;
+                align-items: center;
+                box-sizing: border-box;
+            }
+            .footer-landing-notice-embed .landing-notice-bar__right {
+                flex-shrink: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 6px;
+                line-height: 1;
+            }
+            .footer-landing-notice-embed .landing-notice-more {
+                font-size: 12px;
+                font-weight: 600;
+                color: #64748b;
+                letter-spacing: -0.02em;
+                white-space: nowrap;
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .footer-landing-notice-embed .landing-notice-roll__track {
+                    transform: none !important;
+                    transition: none !important;
+                }
             }
             .footer-top-link {
                 font-size: 14px;
@@ -180,6 +332,14 @@ function createFooter() {
                 .footer-top-row {
                     padding-bottom: 20px;
                 }
+                .footer-top-notice {
+                    width: 100%;
+                    margin-left: 0;
+                    justify-content: flex-end;
+                }
+                .footer-landing-notice-embed {
+                    max-width: 100%;
+                }
                 .footer-content {
                     grid-template-columns: 1fr;
                     gap: 28px;
@@ -192,6 +352,101 @@ function createFooter() {
         </style>
     `;
 }
+
+/** 랜딩/푸터 공통 — 공지 한 줄 롤링 (root: .landing-notice-strip 요소) */
+function initLandingNoticeStepRoll(root) {
+    if (!root) return;
+    var track = root.querySelector('.landing-notice-roll__track');
+    var bar = root.querySelector('.landing-notice-bar');
+    if (!track || !bar) return;
+    var items = track.querySelectorAll('.landing-notice-roll__item');
+    var n = items.length;
+    if (n < 2) return;
+
+    var pauseMs = 3400;
+    var moveMs = 420;
+    var itemH = items[0].offsetHeight || 24;
+    var current = 0;
+    var timeoutId;
+    var hoverPaused = false;
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function clearSchedule() {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+    }
+
+    function setTransition(enabled) {
+        track.style.transition = enabled
+            ? 'transform ' + moveMs + 'ms cubic-bezier(0.4, 0, 0.2, 1)'
+            : 'none';
+    }
+
+    function afterPause() {
+        clearSchedule();
+        timeoutId = setTimeout(function () {
+            if (hoverPaused) {
+                afterPause();
+                return;
+            }
+            moveToNext();
+        }, pauseMs);
+    }
+
+    function moveToNext() {
+        var next = (current + 1) % n;
+        if (next === 0) {
+            setTransition(false);
+            track.style.transform = 'translateY(0)';
+            current = 0;
+            void track.offsetHeight;
+            setTransition(true);
+            afterPause();
+            return;
+        }
+        current = next;
+        track.style.transform = 'translateY(' + (-current * itemH) + 'px)';
+        setTimeout(function () {
+            if (hoverPaused) return;
+            afterPause();
+        }, moveMs + 30);
+    }
+
+    function start() {
+        if (mq.matches) {
+            setTransition(false);
+            track.style.transform = 'translateY(0)';
+            return;
+        }
+        setTransition(true);
+        track.style.transform = 'translateY(0)';
+        current = 0;
+        afterPause();
+    }
+
+    bar.addEventListener('mouseenter', function () {
+        hoverPaused = true;
+        clearSchedule();
+    });
+    bar.addEventListener('mouseleave', function () {
+        hoverPaused = false;
+        afterPause();
+    });
+    mq.addEventListener('change', function () {
+        clearSchedule();
+        start();
+    });
+
+    start();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.landing-notice-strip').forEach(function (el) {
+        initLandingNoticeStepRoll(el);
+    });
+});
 
 // 모달 열기 함수
 function openModal(modalId) {

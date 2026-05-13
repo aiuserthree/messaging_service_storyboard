@@ -283,6 +283,16 @@ body {
 .quick-actions-header {
     display: flex;
     gap: 12px;
+    align-items: center;
+}
+.quick-actions-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.quick-actions-row[hidden] {
+    display: none !important;
 }
 
 .quick-action-link {
@@ -311,7 +321,65 @@ body {
     font-size: 16px;
 }
 
-/* 대시보드 요약 (회원유형·등급·잔액·발송가능건수) */
+.welcome-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+.welcome-dashboard-toggle {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: #475569;
+}
+.welcome-dashboard-toggle a {
+    color: #1d4ed8;
+    text-decoration: none;
+}
+.welcome-dashboard-toggle a:hover {
+    text-decoration: underline;
+}
+.election-preview-banner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: #ecfdf5;
+    border: 1px solid #6ee7b7;
+    border-radius: 12px;
+    font-size: 13px;
+    color: #065f46;
+    line-height: 1.5;
+}
+.election-preview-banner[hidden] {
+    display: none !important;
+}
+.election-preview-banner code {
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.election-preview-banner-dismiss {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #047857;
+    background: #fff;
+    border: 1px solid #34d399;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.election-preview-banner-dismiss:hover {
+    background: #d1fae5;
+}
+
+/* 대시보드 요약 (회원유형·등급·잔액·프로모 롤링) */
 .dashboard-summary {
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border: 1px solid #e2e8f0;
@@ -322,10 +390,10 @@ body {
 }
 .dashboard-summary-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1.4fr 2fr;
+    grid-template-columns: 1fr 1fr 1.12fr 2.35fr;
     gap: 0;
-    align-items: center;
-    min-height: 56px;
+    align-items: stretch;
+    min-height: 0;
 }
 .dashboard-summary-item {
     display: flex;
@@ -333,6 +401,59 @@ body {
     gap: 8px;
     padding-left: 24px;
     border-left: 1px solid #e2e8f0;
+    justify-content: center;
+}
+.dashboard-summary-item--promo {
+    min-width: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    gap: 0;
+    justify-content: stretch;
+}
+.dashboard-summary .banner-carousel {
+    min-height: 176px;
+    height: 100%;
+    border-radius: 16px;
+}
+.dashboard-summary .insight-card {
+    padding: 16px 20px;
+    gap: 14px;
+    border-radius: 16px;
+}
+.dashboard-summary .insight-main-text {
+    font-size: 17px;
+    line-height: 1.35;
+}
+.dashboard-summary .insight-subtitle {
+    font-size: 13px;
+}
+.dashboard-summary .insight-link {
+    font-size: 12px;
+}
+.dashboard-summary .insight-illustration {
+    width: 88px;
+    height: 88px;
+}
+.dashboard-summary .insight-book,
+.dashboard-summary .insight-bulb {
+    font-size: 56px;
+}
+.dashboard-summary .insight-money {
+    font-size: 64px;
+}
+.dashboard-summary .insight-stars .star {
+    font-size: 14px;
+}
+.dashboard-summary .banner-nav {
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+}
+.dashboard-summary .banner-nav.prev {
+    left: 8px;
+}
+.dashboard-summary .banner-nav.next {
+    right: 8px;
 }
 .dashboard-summary-item:first-child {
     padding-left: 0;
@@ -434,6 +555,11 @@ body {
         border-left: none;
         padding-top: 16px;
         padding-bottom: 16px;
+        border-top: 1px solid #e2e8f0;
+    }
+    .dashboard-summary-item--promo {
+        grid-column: 1 / -1;
+        padding-top: 20px;
         border-top: 1px solid #e2e8f0;
     }
     .dashboard-summary-item:nth-child(1),
@@ -1790,7 +1916,17 @@ body {
         text-align: center;
     }
 
+    .welcome-header-left {
+        align-items: center;
+    }
+
     .quick-actions-header {
+        flex-direction: column;
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .quick-actions-row {
         flex-direction: column;
         width: 100%;
     }
@@ -1979,34 +2115,75 @@ body {
         <main class="main-content">
             <!-- 환영 헤더 -->
             <div class="welcome-header" id="welcomeHeader">
-                <div class="welcome-message" id="welcomeMessage">
-                    안녕하세요, 조준형님! 메시지 발송을 시작해 보세요
+                <div class="welcome-header-left">
+                    <div class="welcome-message" id="welcomeMessage">
+                        안녕하세요, 조준형님! 메시지 발송을 시작해 보세요
+                    </div>
+                    <p class="welcome-dashboard-toggle">
+                        <a href="?memberType=election">선거회원 화면 보기</a>
+                        <span aria-hidden="true"> · </span>
+                        <a href="main.html">저장된 유형으로(초기화)</a>
+                    </p>
                 </div>
                 <div class="quick-actions-header" id="quickActions">
-                    <a href="message-send-general.html" class="quick-action-link" id="quickSms">
-                        <span>📧</span>
-                        <span>문자</span>
-                        <span>↗</span>
-                    </a>
-                    <a href="kakao-send-alimtalk.html" class="quick-action-link" id="quickAlimtalk">
-                        <span>💬</span>
-                        <span>알림톡</span>
-                        <span>↗</span>
-                    </a>
-                    <a href="kakao-send-brandtalk.html" class="quick-action-link" id="quickBrandtalk">
-                        <span>🏷️</span>
-                        <span>브랜드 메시지</span>
-                        <span>↗</span>
-                    </a>
+                    <div class="quick-actions-row" id="quickActionsStandard" data-quick-set="standard">
+                        <a href="message-send-general.html" class="quick-action-link" id="quickGeneral">
+                            <span>📧</span>
+                            <span>일반문자</span>
+                            <span>↗</span>
+                        </a>
+                        <a href="message-send-ad.html" class="quick-action-link" id="quickAd">
+                            <span>📢</span>
+                            <span>광고문자</span>
+                            <span>↗</span>
+                        </a>
+                        <a href="kakao-send-alimtalk.html" class="quick-action-link" id="quickAlimtalk">
+                            <span>💬</span>
+                            <span>알림톡</span>
+                            <span>↗</span>
+                        </a>
+                        <a href="kakao-send-brandtalk.html" class="quick-action-link" id="quickBrandtalk">
+                            <span>🏷️</span>
+                            <span>브랜드 메시지</span>
+                            <span>↗</span>
+                        </a>
+                    </div>
+                    <div class="quick-actions-row" id="quickActionsElection" data-quick-set="election" hidden>
+                        <a href="message-send-election.html" class="quick-action-link" id="quickElectionSms">
+                            <span>📧</span>
+                            <span>문자</span>
+                            <span>↗</span>
+                        </a>
+                        <a href="kakao-send-alimtalk.html" class="quick-action-link" id="quickElectionAlimtalk">
+                            <span>💬</span>
+                            <span>알림톡</span>
+                            <span>↗</span>
+                        </a>
+                        <a href="kakao-send-brandtalk.html" class="quick-action-link" id="quickElectionBrandtalk">
+                            <span>🏷️</span>
+                            <span>브랜드 메시지</span>
+                            <span>↗</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <!-- 대시보드 요약: 회원유형·등급·잔액·발송가능건수 -->
+            <div id="electionPreviewBanner" class="election-preview-banner" hidden role="status">
+                <div>
+                    <strong>선거회원 화면 미리보기</strong> — 주소에 <code>?memberType=election</code> 또는 <code>?election=1</code>이 적용된 상태입니다. 실제 회원 구분은 바뀌지 않으며, 주소에서 해당 부분을 지우거나 아래 버튼을 누르면 저장된 회원 유형으로 표시됩니다.
+                </div>
+                <button type="button" class="election-preview-banner-dismiss" id="electionPreviewDismiss">미리보기 끄기</button>
+            </div>
+
+            <!-- 대시보드 요약: 회원유형·등급·잔액·이벤트 롤링 -->
             <div class="dashboard-summary" id="dashboardSummary">
                 <div class="dashboard-summary-grid">
                     <div class="dashboard-summary-item">
                         <span class="dashboard-summary-label">회원유형</span>
-                        <span class="dashboard-summary-value" id="dashboardMemberType">개인회원</span>
+                        <div class="dashboard-summary-value-row" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <span class="dashboard-summary-value" id="dashboardMemberType" style="margin: 0;">개인회원</span>
+                            <a href="mypage.html#business" id="dashboardBusinessConvertBtn" class="btn btn-sm btn-outline" style="padding: 4px 12px; font-size: 12px; display: none;">사업자 전환</a>
+                        </div>
                     </div>
                     <div class="dashboard-summary-item">
                         <span class="dashboard-summary-label">회원등급</span>
@@ -2027,14 +2204,45 @@ body {
                             </div>
                         </div>
                     </div>
-                    <div class="dashboard-summary-item">
-                        <span class="dashboard-summary-label">발송 가능 건수</span>
-                        <div class="dashboard-summary-send-counts" id="dashboardSendCounts">
-                            <span class="dashboard-summary-send-badge">SMS 발송 시 <span id="sendCountSms">0</span></span>
-                            <span class="dashboard-summary-send-badge">LMS 발송 시 <span id="sendCountLms">0</span></span>
-                            <span class="dashboard-summary-send-badge">MMS 발송 시 <span id="sendCountMms">0</span></span>
-                            <span class="dashboard-summary-send-badge">알림톡 발송 시 <span id="sendCountAlimtalk">0</span></span>
-                            <span class="dashboard-summary-send-badge">브랜드메시지 발송 시 <span id="sendCountBrandtalk">0</span></span>
+                    <div class="dashboard-summary-item dashboard-summary-item--promo">
+                        <div class="banner-carousel" id="bannerCarousel">
+                            <div class="banner-slides">
+                                <div class="banner-slide active">
+                                    <div class="insight-card banner-guide">
+                                        <div class="insight-content">
+                                            <div class="insight-subtitle">사용법이 더 궁금하다면?</div>
+                                            <div class="insight-main-text">지금 사용자 가이드를 확인해보세요</div>
+                                            <a href="#" class="insight-link">가이드 바로가기 ></a>
+                                        </div>
+                                        <div class="insight-illustration">
+                                            <div class="insight-book">📖</div>
+                                            <div class="insight-bulb">💡</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="banner-slide">
+                                    <div class="insight-card banner-event">
+                                        <div class="insight-content">
+                                            <div class="insight-main-text">발송만 해도 무조건</div>
+                                            <div class="insight-subtitle">
+                                                <span class="insight-gift-icon">🎁</span>
+                                                포인트 최대 50만원 증정
+                                            </div>
+                                            <a href="#" class="insight-link">이벤트 자세히 보기 ></a>
+                                        </div>
+                                        <div class="insight-illustration">
+                                            <div class="insight-money">💰</div>
+                                            <div class="insight-stars">
+                                                <span class="star">✨</span>
+                                                <span class="star">⭐</span>
+                                                <span class="star">✨</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="banner-nav prev" onclick="changeBanner(-1)">‹</button>
+                            <button type="button" class="banner-nav next" onclick="changeBanner(1)">›</button>
                         </div>
                     </div>
                 </div>
@@ -2177,81 +2385,6 @@ body {
                         <img class="consultation-subtitle-icon" src="main/img/icon/consultation-form-write.png" alt="상담 신청서 작성" width="512" height="512" decoding="async">
                     </div>
                     <a href="support-inquiry.html" class="consultation-btn" id="consultationBtn">상담 신청서 작성하기</a>
-                </div>
-            </div>
-
-            <!-- 마케팅 인사이트 & 공지사항 -->
-            <div class="dashboard-grid" style="align-items: stretch;">
-                <!-- 마케팅 인사이트 롤링 배너 -->
-                <div class="banner-carousel" id="bannerCarousel">
-                    <div class="banner-slides">
-                        <!-- 배너 1: 사용자 가이드 -->
-                        <div class="banner-slide active">
-                            <div class="insight-card banner-guide">
-                                <div class="insight-content">
-                                    <div class="insight-subtitle">사용법이 더 궁금하다면?</div>
-                                    <div class="insight-main-text">지금 사용자 가이드를 확인해보세요</div>
-                                    <a href="#" class="insight-link">가이드 바로가기 ></a>
-                                </div>
-                                <div class="insight-illustration">
-                                    <div class="insight-book">📖</div>
-                                    <div class="insight-bulb">💡</div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- 배너 2: 이벤트 -->
-                        <div class="banner-slide">
-                            <div class="insight-card banner-event">
-                                <div class="insight-content">
-                                    <div class="insight-main-text">발송만 해도 무조건</div>
-                                    <div class="insight-subtitle">
-                                        <span class="insight-gift-icon">🎁</span>
-                                        포인트 최대 50만원 증정
-                                    </div>
-                                    <a href="#" class="insight-link">이벤트 자세히 보기 ></a>
-                                </div>
-                                <div class="insight-illustration">
-                                    <div class="insight-money">💰</div>
-                                    <div class="insight-stars">
-                                        <span class="star">✨</span>
-                                        <span class="star">⭐</span>
-                                        <span class="star">✨</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 네비게이션 버튼 -->
-                    <button class="banner-nav prev" onclick="changeBanner(-1)">‹</button>
-                    <button class="banner-nav next" onclick="changeBanner(1)">›</button>
-                </div>
-
-                <!-- 공지사항 카드 -->
-                <div class="notice-card" id="noticeCard">
-                    <div class="card-header">
-                        <h3 class="card-title">공지사항</h3>
-                        <a href="support-notice.html" class="more-link" id="noticeMoreLink">더보기 ></a>
-                    </div>
-                    <ul class="notice-list">
-                        <li class="notice-item">
-                            <a href="#" class="notice-link">
-                                <span class="notice-title">2025년 신년 이벤트 안내</span>
-                                <span class="notice-date">2025-01-15</span>
-                            </a>
-                        </li>
-                        <li class="notice-item">
-                            <a href="#" class="notice-link">
-                                <span class="notice-title">시스템 점검 안내 (1월 20일)</span>
-                                <span class="notice-date">2025-01-10</span>
-                            </a>
-                        </li>
-                        <li class="notice-item">
-                            <a href="#" class="notice-link">
-                                <span class="notice-title">새로운 기능 업데이트 안내</span>
-                                <span class="notice-date">2025-01-05</span>
-                            </a>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
@@ -2467,12 +2600,53 @@ body {
                 });
             }
 
-            // 대시보드 요약: 회원유형 (localStorage와 동기화, 내정보수정 테스트 버튼과 동일)
+            // 대시보드 요약: 회원 유형 — URL 미리보기 우선 (?memberType=election 또는 ?election=1)
+            var sp = new URLSearchParams(window.location.search);
+            var electionPreviewByUrl = sp.get('memberType') === 'election' || sp.get('election') === '1';
+            var storedMember = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
+            var memberType = electionPreviewByUrl ? 'election' : storedMember;
+
             var memberTypeEl = document.getElementById('dashboardMemberType');
             if (memberTypeEl) {
-                var memberType = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
-                var typeText = { personal: '개인회원', business: '기업회원', election: '선거회원' }[memberType] || '개인회원';
+                var typeText = { personal: '개인회원', business: '기업회원', election: '선거회원', corporate: '기업회원' }[memberType] || '개인회원';
                 memberTypeEl.textContent = typeText;
+            }
+
+            var dashBizBtn = document.getElementById('dashboardBusinessConvertBtn');
+            if (dashBizBtn) {
+                var showDashBiz = !electionPreviewByUrl && storedMember === 'personal';
+                dashBizBtn.style.display = showDashBiz ? 'inline-flex' : 'none';
+            }
+
+            if (typeof window.syncHeaderMemberPersonalization === 'function') {
+                window.syncHeaderMemberPersonalization();
+            }
+
+            var quickStd = document.getElementById('quickActionsStandard');
+            var quickElc = document.getElementById('quickActionsElection');
+            if (quickStd && quickElc) {
+                if (memberType === 'election') {
+                    quickStd.hidden = true;
+                    quickElc.hidden = false;
+                } else {
+                    quickStd.hidden = false;
+                    quickElc.hidden = true;
+                }
+            }
+
+            var previewBanner = document.getElementById('electionPreviewBanner');
+            if (previewBanner) {
+                previewBanner.hidden = !electionPreviewByUrl;
+            }
+            var previewDismiss = document.getElementById('electionPreviewDismiss');
+            if (previewDismiss) {
+                previewDismiss.addEventListener('click', function () {
+                    var u = new URL(window.location.href);
+                    u.searchParams.delete('memberType');
+                    u.searchParams.delete('election');
+                    var qs = u.searchParams.toString();
+                    window.location.href = u.pathname + (qs ? '?' + qs : '') + u.hash;
+                });
             }
 
             // 드롭다운 메뉴 초기화
@@ -2672,7 +2846,7 @@ body {
     <script src="js/footer.js"></script>
     <script>
         document.write(createFloatingMenu());
-        document.write(createFooter());
+        document.write(createFooter({ footerNoticeStrip: true }));
     </script>
 
     <!-- 화면설계 오버레이 -->
@@ -2778,42 +2952,56 @@ body {
                 behavior: [
                     '사용자 이름 동적 표시 (예: "홍길동님, 안녕하세요!")',
                     '오늘 날짜 및 요일 표시',
-                    '빠른 발송 버튼 그룹 제공'
+                    '빠른 발송 버튼 그룹 제공',
+                    '선거회원 화면: main.html?memberType=election 또는 ?election=1'
                 ],
                 api: 'GET /api/users/me'
             },
-            // 2. 문자 발송 바로가기
+            // 7. 퀵 발송 버튼 (회원 유형별)
             {
-                selector: '#quickSms',
-                title: '문자 발송 바로가기',
-                position: { top: '-10px', left: '-15px' },
-                function: 'SMS/LMS/MMS 발송 페이지 빠른 이동',
+                selector: '#quickActions',
+                title: '퀵 발송 버튼',
+                position: { top: '10px', right: '10px' },
+                function: '일반·기업: 일반문자·광고문자·알림톡·브랜드 메시지 4종 / 선거회원: 문자·알림톡·브랜드 메시지 3종',
                 behavior: [
-                    '클릭 시 message-send-general.html 이동',
-                    '아이콘 + 텍스트 버튼'
+                    'localStorage memberType이 election이면 선거용 3버튼(message-send-election.html 등) 표시',
+                    '그 외에는 일반문자(message-send-general.html)·광고문자(message-send-ad.html)·알림톡·브랜드 메시지 표시'
                 ]
             },
-            // 3. 알림톡 발송 바로가기
+            {
+                selector: '#quickGeneral',
+                title: '일반문자 바로가기',
+                position: { top: '-10px', left: '-15px' },
+                function: 'message-send-general.html 이동 (선거회원 시 숨김)',
+                behavior: ['standard 세트에만 노출']
+            },
+            {
+                selector: '#quickAd',
+                title: '광고문자 바로가기',
+                position: { top: '-10px', left: '-15px' },
+                function: 'message-send-ad.html 이동 (선거회원 시 숨김)',
+                behavior: ['standard 세트에만 노출']
+            },
+            {
+                selector: '#quickElectionSms',
+                title: '문자 바로가기 (선거)',
+                position: { top: '-10px', left: '-15px' },
+                function: 'message-send-election.html 이동 (선거회원일 때만 노출)',
+                behavior: ['election 세트에만 노출']
+            },
             {
                 selector: '#quickAlimtalk',
-                title: '알림톡 발송 바로가기',
+                title: '알림톡 바로가기',
                 position: { top: '-10px', left: '-15px' },
-                function: '카카오 알림톡 발송 페이지 빠른 이동',
-                behavior: [
-                    '클릭 시 kakao-send-alimtalk.html 이동',
-                    '발신프로필 등록 필요 안내'
-                ]
+                function: 'kakao-send-alimtalk.html 이동 (standard 세트)',
+                behavior: ['선거 세트에는 #quickElectionAlimtalk 동일 역할']
             },
-            // 4. 브랜드메시지 발송 바로가기
             {
                 selector: '#quickBrandtalk',
                 title: '브랜드 메시지 바로가기',
                 position: { top: '-10px', left: '-15px' },
-                function: '카카오 브랜드 메시지 발송 페이지 빠른 이동',
-                behavior: [
-                    '클릭 시 kakao-send-brandtalk.html 이동',
-                    '브랜드 메시지 신청 완료 회원만 사용 가능'
-                ]
+                function: 'kakao-send-brandtalk.html 이동 (standard 세트)',
+                behavior: ['선거 세트에는 #quickElectionBrandtalk 동일 역할']
             },
             // ===== 발송 현황 카드 =====
             // 5. 발송 성공률 카드
@@ -2879,47 +3067,33 @@ body {
                     '기업 정보 입력 후 상담 요청'
                 ]
             },
-            // ===== 배너 및 공지 =====
-            // 10. 마케팅 배너
+            // ===== 배너 및 푸터 공지 =====
+            // 10. 대시보드 상단 이벤트 롤링
             {
                 selector: '#bannerCarousel',
-                title: '마케팅 배너',
+                title: '이벤트·프로모션 롤링 배너',
                 position: { top: '20px', left: '20px' },
-                function: '이벤트, 프로모션, 가이드 안내 롤링 배너',
+                function: '대시보드 요약 영역 내 가이드·이벤트 안내 롤링',
                 behavior: [
                     '5초 간격 자동 롤링',
                     '좌우 화살표 버튼으로 수동 전환',
-                    '인디케이터로 현재 슬라이드 위치 표시',
                     '마우스 오버 시 자동 롤링 정지',
                     '배너 클릭 시 해당 이벤트/가이드 페이지 이동'
                 ]
             },
-            // 11. 공지사항 카드
+            // 11. 푸터 공지 롤링 (랜딩 공지 스트립과 동일)
             {
-                selector: '#noticeCard',
-                title: '공지사항 카드',
-                position: { top: '10px', left: '10px' },
-                function: '최신 서비스 공지사항 빠른 확인',
+                selector: '#footerLandingNoticeStrip',
+                title: '푸터 공지 롤링',
+                position: { top: '10px', right: '10px' },
+                function: '푸터 상단 행 최우측 정렬 — 공지 한 줄 롤링',
                 behavior: [
-                    '최신 3개 공지 목록 표시',
-                    '제목 클릭 시 상세 페이지 이동',
-                    '날짜 및 중요도 표시'
-                ],
-                api: 'GET /api/notices?limit=3'
-            },
-            // 12. 공지사항 더보기 링크
-            {
-                selector: '#noticeMoreLink',
-                title: '더보기 링크',
-                position: { top: '-10px', left: '-15px' },
-                function: '공지사항 전체 목록 페이지로 이동',
-                behavior: [
-                    '클릭 시 support-notice.html 이동',
-                    '검색 및 카테고리 필터링 가능'
+                    'index.html 히어로 상단 공지와 동일 마크업',
+                    '클릭 시 공지 목록(support-notice.html) 이동'
                 ]
             },
             // ===== 잔액 및 통계 =====
-            // 13. 잔액 카드
+            // 12. 잔액 카드
             {
                 selector: '#pointsCard',
                 title: '잔액 카드',
@@ -2933,7 +3107,7 @@ body {
                 ],
                 api: 'GET /api/users/me/balance'
             },
-            // 14. 충전하기 버튼
+            // 13. 충전하기 버튼
             {
                 selector: '#chargeBtn',
                 title: '충전하기 버튼',
@@ -2944,7 +3118,7 @@ body {
                     '신용카드, 실시간계좌이체, 가상계좌 결제 지원'
                 ]
             },
-            // 15. 메시지 통계 카드
+            // 14. 메시지 통계 카드
             {
                 selector: '#messageStatsCard',
                 title: '메시지 통계 카드',
@@ -2958,7 +3132,7 @@ body {
                 api: 'GET /api/statistics/messages?days=30'
             },
             // ===== 상담 신청서 모달 =====
-            // 16. 상담 신청서 모달
+            // 15. 상담 신청서 모달
             {
                 selector: '#consultationModal',
                 title: '상담 신청서 모달',
@@ -2973,7 +3147,7 @@ body {
                 ],
                 api: 'POST /api/consultation'
             },
-            // 17. 모달 닫기 버튼
+            // 16. 모달 닫기 버튼
             {
                 selector: '#consultationModal .modal-close',
                 title: '모달 닫기',
@@ -2984,7 +3158,7 @@ body {
                     '입력 내용 초기화'
                 ]
             },
-            // 18. 회사명 입력
+            // 17. 회사명 입력
             {
                 selector: '#companyName',
                 title: '회사명 입력',
@@ -2996,7 +3170,7 @@ body {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 19. 담당자명 입력
+            // 18. 담당자명 입력
             {
                 selector: '#contactName',
                 title: '담당자명 입력',
@@ -3008,7 +3182,7 @@ body {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 20. 연락처 입력
+            // 19. 연락처 입력
             {
                 selector: '#contactPhone',
                 title: '연락처 입력',
@@ -3021,7 +3195,7 @@ body {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 21. 이메일 입력
+            // 20. 이메일 입력
             {
                 selector: '#contactEmail',
                 title: '이메일 입력',
@@ -3034,7 +3208,7 @@ body {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 22. 메시지 유형 선택
+            // 21. 메시지 유형 선택
             {
                 selector: '#consultationForm input[name="messageType"]',
                 title: '메시지 유형 선택',
@@ -3048,7 +3222,7 @@ body {
                     '카카오 브랜드메시지'
                 ]
             },
-            // 23. 예상 발송량 선택
+            // 22. 예상 발송량 선택
             {
                 selector: '#consultationForm select',
                 title: '예상 발송량 선택',
@@ -3062,7 +3236,7 @@ body {
                     '대량 할인 견적 산정 기준'
                 ]
             },
-            // 24. 추가 문의사항
+            // 23. 추가 문의사항
             {
                 selector: '#consultationForm textarea',
                 title: '추가 문의사항',
@@ -3073,7 +3247,7 @@ body {
                     '궁금한 점 자유롭게 입력'
                 ]
             },
-            // 25. 취소 버튼
+            // 24. 취소 버튼
             {
                 selector: '#consultationModal .modal-footer .btn-outline',
                 title: '취소 버튼',
@@ -3084,7 +3258,7 @@ body {
                     '입력 내용 초기화'
                 ]
             },
-            // 26. 신청하기 버튼
+            // 25. 신청하기 버튼
             {
                 selector: '#consultationModal .modal-footer .btn-primary',
                 title: '신청하기 버튼',
