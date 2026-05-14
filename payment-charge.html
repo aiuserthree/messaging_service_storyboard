@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
     <title>충전하기 - 메시징 서비스</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="js/header.js"></script>
     <style>/* 공통 스타일 */
 * {
@@ -1114,26 +1117,240 @@ body {
             background: var(--bg-color);
             font-weight: 600;
         }
-        .charge-promo-banner {
-            width: 100%;
-            margin: 24px auto 0;
+        .fee-guide .charge-events-footnote {
+            margin-top: 16px;
+            text-align: left;
+        }
+        /* 충전 폼 하단 FAQ (3열, 펼침) */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        .charge-form-faq {
+            margin-top: 20px;
+        }
+        .charge-form-faq-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            align-items: stretch;
+        }
+        .charge-form-faq-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 18px 18px 20px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+            text-align: left;
+            min-height: 0;
+        }
+        .charge-form-faq-q {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 12px;
+            line-height: 1.45;
+            letter-spacing: -0.02em;
+        }
+        .charge-form-faq-a {
+            font-size: 13px;
+            line-height: 1.65;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .charge-form-faq-a p {
+            margin: 0 0 10px;
+        }
+        .charge-form-faq-a p:last-child {
+            margin-bottom: 0;
+        }
+        @media (max-width: 1024px) {
+            .charge-form-faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .charge-events-banner-v2 {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
             display: block;
+            width: 100%;
+            color: inherit;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(226, 232, 240, 0.95);
+        }
+        .charge-events-banner-v2 .ceb-wrap {
+            width: 100%;
+            background: linear-gradient(160deg, #e8f4fd 0%, #ede8ff 50%, #e8f8f2 100%);
+            border-radius: 28px;
+            padding: 32px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+            box-sizing: border-box;
+        }
+        .charge-events-banner-v2 .ceb-wrap::before {
+            content: '';
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(124, 92, 252, 0.08), transparent 70%);
+            top: -60px;
+            right: -60px;
+            pointer-events: none;
+        }
+        .charge-events-banner-v2 .ceb-wrap::after {
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 196, 125, 0.08), transparent 70%);
+            bottom: -40px;
+            left: -40px;
+            pointer-events: none;
+        }
+        .charge-events-banner-v2 .ceb-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex: 1;
+            margin-top: 0;
+            position: relative;
+            z-index: 1;
+        }
+        .charge-events-banner-v2 .ceb-item {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px 20px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .charge-events-banner-v2 .ceb-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0;
+        }
+        .charge-events-banner-v2 a.ceb-item {
             text-decoration: none;
             color: inherit;
         }
-        .charge-promo-banner:focus-visible {
+        .charge-events-banner-v2 a.ceb-item:focus-visible {
             outline: 2px solid var(--primary-color);
-            outline-offset: 3px;
-            border-radius: var(--radius-lg);
+            outline-offset: 2px;
         }
-        .charge-promo-banner img {
-            display: block;
-            width: 100%;
-            height: auto;
-            aspect-ratio: 664 / 262;
-            object-fit: contain;
-            vertical-align: top;
-            border-radius: var(--radius-lg);
+        .charge-events-banner-v2 .ceb-item:nth-child(1)::before {
+            background: linear-gradient(90deg, #a78bfa, #6c3ef5);
+        }
+        .charge-events-banner-v2 .ceb-item:nth-child(2)::before {
+            background: linear-gradient(90deg, #ffb347, #ff6d00);
+        }
+        .charge-events-banner-v2 .ceb-item:nth-child(3)::before {
+            background: linear-gradient(90deg, #00d98b, #00a86b);
+        }
+        .charge-events-banner-v2 .ceb-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.11);
+        }
+        .charge-events-banner-v2 .ceb-badge {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 900;
+            color: white;
+            flex-shrink: 0;
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+        .charge-events-banner-v2 .ceb-badge--green {
+            background: linear-gradient(145deg, #00d98b, #00a86b);
+            box-shadow: 0 6px 16px rgba(0, 180, 100, 0.35);
+        }
+        .charge-events-banner-v2 .ceb-badge--orange {
+            background: linear-gradient(145deg, #ffb347, #ff6d00);
+            box-shadow: 0 6px 16px rgba(255, 120, 0, 0.35);
+        }
+        .charge-events-banner-v2 .ceb-badge--purple {
+            background: linear-gradient(145deg, #a78bfa, #6c3ef5);
+            box-shadow: 0 6px 16px rgba(108, 62, 245, 0.35);
+        }
+        .charge-events-banner-v2 .ceb-badge-plus {
+            font-size: 11px;
+            font-weight: 700;
+            margin-right: 1px;
+        }
+        .charge-events-banner-v2 .ceb-item-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .charge-events-banner-v2 .ceb-item-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+            line-height: 1.3;
+        }
+        .charge-events-banner-v2 .ceb-hl-green { color: #00a86b; }
+        .charge-events-banner-v2 .ceb-hl-orange { color: #ff6d00; }
+        .charge-events-banner-v2 .ceb-hl-purple { color: #6c3ef5; }
+        .charge-events-banner-v2 .ceb-item-desc {
+            font-size: 11.5px;
+            color: #888;
+            line-height: 1.7;
+            font-weight: 400;
+            margin: 0;
+        }
+        .charge-events-banner-v2 .ceb-item-desc strong {
+            color: #555;
+            font-weight: 700;
+        }
+        .charge-events-banner-v2 .ceb-footer {
+            text-align: left;
+            margin-top: 16px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #64748b;
+            position: relative;
+            z-index: 1;
+        }
+        .charge-events-footnote {
+            margin: 18px 0 0;
+            padding: 0 4px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #64748b;
+            text-align: center;
+        }
+        @media (max-width: 960px) {
+            .charge-events-banner-v2 .ceb-item {
+                min-height: 0;
+            }
         }
         @media (max-width: 1024px) {
             .charge-layout {
@@ -1319,15 +1536,68 @@ body {
 
                         <!-- 충전하기 버튼 -->
                         <button type="submit" class="btn btn-primary btn-lg" id="chargeButton" style="width: 100%; margin-top: 24px;">충전하기</button>
-                        <a class="charge-promo-banner" id="chargePromoBanner" href="https://tokbell.com/support/event/3" target="_blank" rel="noopener noreferrer" title="첫 결제 혜택 이벤트 페이지(새 창)">
-                            <img src="main/img/payment-charge-first-pay-banner.png" alt="톡벨 첫 결제 시 압도적인 추가 혜택 이벤트. 국내 최저가 8.3원(건당), 무료 문자 600통 메시지 발송" decoding="async">
-                        </a>
+
+                        <div class="charge-form-faq" role="region" aria-labelledby="chargeFormFaqHeading">
+                            <h3 id="chargeFormFaqHeading" class="visually-hidden">자주 묻는 질문</h3>
+                            <div class="charge-form-faq-grid">
+                                <article class="charge-form-faq-card">
+                                    <h4 class="charge-form-faq-q">포인트 환불은 어떻게 받을 수 있나요?</h4>
+                                    <div class="charge-form-faq-a">
+                                        <p>유료로 충전하신 <strong>포인트</strong>는 잔여 금액이 10,000포인트 이상이고, 예약·대기 중인 발송이 없는 등 조건을 충족하면 <strong>결제 관리 &gt; 환불</strong>에서 신청할 수 있습니다.</p>
+                                        <p>충전 후 7일 이내에 미사용한 경우에는 결제 취소(전액)가 가능할 수 있으며, 그 외에는 약관에 따라 잔여 금액의 10% 등 환불 수수료가 공제될 수 있습니다. 승인 후 영업일 기준 7일 이내 등록하신 계좌로 지급됩니다.</p>
+                                    </div>
+                                </article>
+                                <article class="charge-form-faq-card">
+                                    <h4 class="charge-form-faq-q">포인트와 마일리지는 무엇이 다른가요?</h4>
+                                    <div class="charge-form-faq-a">
+                                        <p><strong>포인트</strong>는 유료 충전으로 적립되는 선불 이용료이며, 이용약관이 정한 조건에서 환불을 신청할 수 있습니다.</p>
+                                        <p><strong>마일리지</strong>는 이벤트·프로모션 등으로 무상 지급되는 혜택으로, 메시지 발송 시 사용할 수 있으나 <strong>현금 환불 대상이 아닙니다.</strong> 각각 유효기간·소멸 규정이 있으니 마이페이지에서 잔액을 확인해 주세요.</p>
+                                    </div>
+                                </article>
+                                <article class="charge-form-faq-card">
+                                    <h4 class="charge-form-faq-q">발송 실패 시 차감된 포인트는 어떻게 되나요?</h4>
+                                    <div class="charge-form-faq-a">
+                                        <p>원칙적으로 <strong>발송이 실패</strong>로 처리된 건에 대해 차감된 포인트는 <strong>자동으로 복구(재적립)</strong>됩니다.</p>
+                                        <p>다만 스팸 등으로 통신사가 발송을 강제 차단한 경우, 또는 발송 결과가 <strong>성공(Success)</strong>으로 남는 경우 등 약관에서 정한 예외에는 복구되지 않을 수 있습니다.</p>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
                     </form>
                 </div>
 
-                <!-- 요금 안내 -->
+                <!-- 우측 영역: 이벤트 배너 + 요금 안내 -->
                 <div>
-                    <div class="fee-guide" id="feeGuide">
+                    <div class="charge-events-banner-v2" id="chargeEventsBanner" role="region" aria-label="톡벨 이벤트 안내. 각 카드를 누르면 해당 이벤트 페이지가 새 창에서 열립니다.">
+                        <div class="ceb-wrap">
+                            <div class="ceb-list">
+                                <a class="ceb-item" href="https://tokbell.com/support/event/3" target="_blank" rel="noopener noreferrer" title="첫 결제 시 무료문자 이벤트(새 창)">
+                                    <div class="ceb-badge ceb-badge--purple" aria-hidden="true"><span class="ceb-badge-plus">+</span>600</div>
+                                    <div class="ceb-item-body">
+                                        <div class="ceb-item-title">첫 결제 시 무료문자 <span class="ceb-hl-purple">600건</span> 추가</div>
+                                        <p class="ceb-item-desc">최초 충전 완료 시 단문(SMS) <strong>600건</strong>을<br>추가로 적립해 드립니다.</p>
+                                    </div>
+                                </a>
+                                <a class="ceb-item" href="https://tokbell.com/support/event/2" target="_blank" rel="noopener noreferrer" title="신규가입 무료문자 이벤트(새 창)">
+                                    <div class="ceb-badge ceb-badge--orange" aria-hidden="true"><span class="ceb-badge-plus">+</span>120</div>
+                                    <div class="ceb-item-body">
+                                        <div class="ceb-item-title">신규가입 무료문자 <span class="ceb-hl-orange">120건</span></div>
+                                        <p class="ceb-item-desc">회원가입 즉시 단문(SMS) <strong>120건</strong>을<br>무료로 드립니다.</p>
+                                    </div>
+                                </a>
+                                <a class="ceb-item" href="https://tokbell.com/support/event/1" target="_blank" rel="noopener noreferrer" title="국내 최저가 문자 요금(새 창)">
+                                    <div class="ceb-badge ceb-badge--green" aria-hidden="true">8.3</div>
+                                    <div class="ceb-item-body">
+                                        <div class="ceb-item-title">국내 최저가 <span class="ceb-hl-green">8.3원</span></div>
+                                        <p class="ceb-item-desc">단문(SMS) 건당 <strong>8.3P</strong>, 합리적인 단가로<br>발송 비용을 줄여 보세요.</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="ceb-footer">모든 비용(건수)은 부가세 별도입니다.</div>
+                        </div>
+                    </div>
+
+                    <div class="fee-guide" id="feeGuide" style="margin-top: 24px;">
                         <h3 class="card-title">요금 안내</h3>
                         <table class="fee-table" id="feeTable">
                             <thead>
@@ -1366,41 +1636,7 @@ body {
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-
-                    <!-- 충전 금액 계산기 -->
-                    <div class="fee-guide" style="margin-top: 24px;" id="chargeCalculator">
-                        <h3 class="card-title">충전 금액 계산기</h3>
-                        <div class="form-group">
-                            <label class="form-label">단문(SMS) 건수</label>
-                            <input type="number" class="form-input" id="calcSMS" value="0" min="0" oninput="calculateCharge()">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">장문(LMS) 건수</label>
-                            <input type="number" class="form-input" id="calcLMS" value="0" min="0" oninput="calculateCharge()">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">포토(MMS) 건수</label>
-                            <input type="number" class="form-input" id="calcMMS" value="0" min="0" oninput="calculateCharge()">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">알림톡 건수</label>
-                            <input type="number" class="form-input" id="calcAlimtalk" value="0" min="0" oninput="calculateCharge()">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">브랜드 메시지(친구) 건수</label>
-                            <input type="number" class="form-input" id="calcBrandtalkFriend" value="0" min="0" oninput="calculateCharge()">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">브랜드 메시지(비친구) 건수</label>
-                            <input type="number" class="form-input" id="calcBrandtalkNonFriend" value="0" min="0" oninput="calculateCharge()">
-                        </div>
-                        <div class="price-info">
-                            <div class="price-row price-total">
-                                <span>합계</span>
-                                <span id="recommendedAmount">0 P</span>
-                            </div>
-                        </div>
+                        <p class="charge-events-footnote">모든 비용(건수)은 부가세 별도입니다.</p>
                     </div>
                 </div>
             </div>
@@ -1925,31 +2161,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (totalEl) totalEl.textContent = formatNumber(totalAmount) + '원';
         }
 
-        function calculateCharge() {
-            const r = FEE_UNIT_RATES;
-            const sms = parseInt(document.getElementById('calcSMS').value) || 0;
-            const lms = parseInt(document.getElementById('calcLMS').value) || 0;
-            const mms = parseInt(document.getElementById('calcMMS').value) || 0;
-            const alimtalk = parseInt(document.getElementById('calcAlimtalk').value) || 0;
-            const brandtalkFriend = parseInt(document.getElementById('calcBrandtalkFriend').value) || 0;
-            const brandtalkNonFriend = parseInt(document.getElementById('calcBrandtalkNonFriend').value) || 0;
-
-            const total = (sms * r.sms) + (lms * r.lms) + (mms * r.mms) + (alimtalk * r.alimtalk) + (brandtalkFriend * r.brandFriend) + (brandtalkNonFriend * r.brandNonFriend);
-            document.getElementById('recommendedAmount').textContent = formatNumber(Math.ceil(total)) + ' P';
-        }
-
-        function applyRecommended() {
-            const recommended = document.getElementById('recommendedAmount').textContent.replace(/[^0-9]/g, '');
-            selectedAmount = parseInt(recommended);
-            document.querySelectorAll('.amount-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            document.getElementById('customAmount').value = recommended;
-            document.getElementById('customAmount').style.display = 'block';
-            updatePrice();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
         function submitEstimate() {
             showToast('견적 문의가 접수되었습니다. 영업일 기준 1~2일 내 답변 드리겠습니다.', 'success');
             closeModal('estimateModal');
@@ -2111,12 +2322,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 api: 'POST /api/payment/charge',
                 tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
-            {
-                selector: '#chargePromoBanner',
-                title: '첫 결제 혜택 배너',
-                position: { top: '8px', left: '0' },
-                function: '충전 유도 프로모션 이미지 (충전 버튼과 동일 폭)'
-            },
             // 17. 요금 안내 테이블
             {
                 selector: '#feeGuide',
@@ -2131,13 +2336,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 position: { top: '-5px', left: '0' },
                 function: '금액 버튼에 마우스를 올리면 유형별 발송 가능 건수(여건) 표시'
             },
-            // 18. 충전 금액 계산기
+            // 18. 이벤트 배너 (요금 안내 위)
             {
-                selector: '#chargeCalculator',
-                title: '충전 금액 계산기',
+                selector: '#chargeEventsBanner',
+                title: '이벤트 배너 (3카드)',
                 position: { top: '10px', left: '10px' },
-                function: '예상 발송량 기반 필요 금액 계산',
-                behavior: ['메시지 타입별 건수 입력', '실시간 합계 표시']
+                function: '카드별 링크(새 창): 첫 결제 → event/3, 신규가입 → event/2, 국내 최저가 → event/1. 하단 부가세 안내는 비링크.',
+                behavior: ['target=_blank, rel=noopener noreferrer']
             },
             // 19. 견적문의 버튼
             {

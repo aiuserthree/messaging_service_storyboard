@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>충전 페이지 이벤트 배너 (PNG용 소스)</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        /* 내보내기 캔버스 폭 (우측 열과 유사하게) */
+        #exportRoot {
+            width: 664px;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .charge-events-banner {
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(155deg, #ecfdf5 0%, #e0f2fe 38%, #f1f5f9 100%);
+            padding: 22px 20px 18px;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+            border: 1px solid rgba(226, 232, 240, 0.95);
+        }
+        .charge-events-stack {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-auto-rows: minmax(0, auto);
+            gap: 14px;
+            align-items: stretch;
+            width: 100%;
+            min-height: 0;
+        }
+        .charge-events-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px 16px 20px 18px;
+            min-height: 148px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+            text-align: left;
+        }
+        .charge-events-card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .charge-events-card-icon--price {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .charge-events-card-icon--signup {
+            background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+        }
+        .charge-events-card-icon--first {
+            background: linear-gradient(135deg, #8b5cf6 0%, #2563eb 100%);
+        }
+        .charge-events-card-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .charge-events-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.35;
+            margin: 0 0 6px 0;
+            letter-spacing: -0.02em;
+        }
+        .charge-events-card-desc {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.55;
+            color: #64748b;
+        }
+        .charge-events-card-mono {
+            font-variant-numeric: tabular-nums;
+        }
+        .charge-events-footnote {
+            margin: 18px 0 0;
+            padding: 0 4px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #64748b;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div id="exportRoot">
+        <div class="charge-events-banner" role="img" aria-label="톡벨 이벤트: 국내 최저가 8.3원, 신규가입 무료문자 120건, 첫 결제 시 무료문자 600건. 모든 비용(건수)은 부가세 별도입니다.">
+            <div class="charge-events-stack">
+                <div class="charge-events-card">
+                    <div class="charge-events-card-icon charge-events-card-icon--price" aria-hidden="true"><span class="charge-events-card-mono">8.3</span></div>
+                    <div class="charge-events-card-body">
+                        <h4 class="charge-events-card-title">국내 최저가 8.3원</h4>
+                        <p class="charge-events-card-desc">단문(SMS) 건당 <strong class="charge-events-card-mono">8.3P</strong>, 합리적인 단가로<br>발송 비용을 줄여 보세요.</p>
+                    </div>
+                </div>
+                <div class="charge-events-card">
+                    <div class="charge-events-card-icon charge-events-card-icon--signup" aria-hidden="true"><span class="charge-events-card-mono">+120</span></div>
+                    <div class="charge-events-card-body">
+                        <h4 class="charge-events-card-title">신규가입 무료문자 120건</h4>
+                        <p class="charge-events-card-desc">회원가입 즉시 단문(SMS) <strong class="charge-events-card-mono">120건</strong>을<br>무료로 드립니다.</p>
+                    </div>
+                </div>
+                <div class="charge-events-card">
+                    <div class="charge-events-card-icon charge-events-card-icon--first" aria-hidden="true"><span class="charge-events-card-mono">+600</span></div>
+                    <div class="charge-events-card-body">
+                        <h4 class="charge-events-card-title">첫 결제 시 무료문자 600건 추가</h4>
+                        <p class="charge-events-card-desc">최초 충전 완료 시 단문(SMS) <strong class="charge-events-card-mono">600건</strong>을<br>추가로 적립해 드립니다.</p>
+                    </div>
+                </div>
+            </div>
+            <p class="charge-events-footnote">모든 비용(건수)은 부가세 별도입니다.</p>
+        </div>
+    </div>
+</body>
+</html>
