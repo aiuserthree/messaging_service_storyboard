@@ -2190,7 +2190,7 @@ body {
                     <div class="quick-actions-row" id="quickActionsElection" data-quick-set="election" hidden>
                         <a href="message-send-election.html" class="quick-action-link" id="quickElectionSms">
                             <span>📧</span>
-                            <span>문자</span>
+                            <span>선거문자</span>
                             <span>↗</span>
                         </a>
                         <a href="kakao-send-alimtalk.html" class="quick-action-link" id="quickElectionAlimtalk">
@@ -3022,7 +3022,7 @@ body {
                 selector: '#quickActions',
                 title: '퀵 발송 버튼',
                 position: { top: '10px', right: '10px' },
-                function: '일반·기업: 일반문자·광고문자·알림톡·브랜드 메시지 4종 / 선거회원: 문자·알림톡·브랜드 메시지 3종',
+                function: '일반·기업: 일반문자·광고문자·알림톡·브랜드 메시지 4종 / 선거회원: 선거문자·알림톡·브랜드 메시지 3종',
                 behavior: [
                     'localStorage memberType이 election이면 선거용 3버튼(message-send-election.html 등) 표시',
                     '그 외에는 일반문자(message-send-general.html)·광고문자(message-send-ad.html)·알림톡·브랜드 메시지 표시'
@@ -3044,7 +3044,7 @@ body {
             },
             {
                 selector: '#quickElectionSms',
-                title: '문자 바로가기 (선거)',
+                title: '선거문자 바로가기',
                 position: { top: '-10px', left: '-15px' },
                 function: 'message-send-election.html 이동 (선거회원일 때만 노출)',
                 behavior: ['election 세트에만 노출']
