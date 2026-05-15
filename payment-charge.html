@@ -1389,7 +1389,7 @@ body {
             <div class="charge-layout">
                 <!-- 충전 폼 -->
                 <div class="card">
-                    <form id="chargeForm">
+                    <form id="chargeForm" novalidate>
                         <!-- 현재 잔액 -->
                         <div class="alert alert-info" id="currentPointsAlert">
                             <strong>현재 보유 포인트: 1,000,000 P</strong>
@@ -1399,7 +1399,7 @@ body {
                         <div class="form-group" id="paymentMethodGroup">
                             <label class="form-label required">결제 수단</label>
                             <div class="payment-methods" id="paymentMethods">
-                                <div class="payment-method selected" onclick="selectPayment('card')">
+                                <div class="payment-method selected" onclick="selectPayment('card', event)">
                                     <div class="payment-icon" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
@@ -1408,7 +1408,7 @@ body {
                                     </div>
                                     <div style="font-weight: 600;">신용카드</div>
                                 </div>
-                                <div class="payment-method" onclick="selectPayment('virtual')">
+                                <div class="payment-method" onclick="selectPayment('virtual', event)">
                                     <div class="payment-icon" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
@@ -1417,7 +1417,7 @@ body {
                                     </div>
                                     <div style="font-weight: 600;">가상계좌</div>
                                 </div>
-                                <div class="payment-method" onclick="selectPayment('transfer')">
+                                <div class="payment-method" onclick="selectPayment('transfer', event)">
                                     <div class="payment-icon" style="background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <line x1="12" y1="1" x2="12" y2="23"></line>
@@ -1433,22 +1433,22 @@ body {
                         <div class="form-group" id="chargePointGroup" style="display: none;">
                             <label class="form-label required">충전 포인트</label>
                             <div class="amount-buttons" id="amountButtons">
-                                <div class="amount-btn" data-points="50000" onclick="selectAmount(50000)">
+                                <div class="amount-btn" data-points="50000" onclick="selectAmount(50000, event)">
                                     <div class="amount-btn-value">5만</div>
                                 </div>
-                                <div class="amount-btn" data-points="100000" onclick="selectAmount(100000)">
+                                <div class="amount-btn" data-points="100000" onclick="selectAmount(100000, event)">
                                     <div class="amount-btn-value">10만</div>
                                 </div>
-                                <div class="amount-btn" data-points="300000" onclick="selectAmount(300000)">
+                                <div class="amount-btn" data-points="300000" onclick="selectAmount(300000, event)">
                                     <div class="amount-btn-value">30만</div>
                                 </div>
-                                <div class="amount-btn" data-points="500000" onclick="selectAmount(500000)">
+                                <div class="amount-btn" data-points="500000" onclick="selectAmount(500000, event)">
                                     <div class="amount-btn-value">50만</div>
                                 </div>
-                                <div class="amount-btn" data-points="1000000" onclick="selectAmount(1000000)">
+                                <div class="amount-btn" data-points="1000000" onclick="selectAmount(1000000, event)">
                                     <div class="amount-btn-value">100만</div>
                                 </div>
-                                <div class="amount-btn" data-points="2000000" onclick="selectAmount(2000000)">
+                                <div class="amount-btn" data-points="2000000" onclick="selectAmount(2000000, event)">
                                     <div class="amount-btn-value">200만</div>
                                 </div>
                             </div>
@@ -1498,7 +1498,7 @@ body {
                                     <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 20px; color: var(--text-primary);">전용계좌 발급하기</h3>
                                     <div class="form-group" style="margin-bottom: 20px;">
                                         <label class="form-label required">은행 선택</label>
-                                        <select class="form-select" id="bankSelect" required>
+                                        <select class="form-select" id="bankSelect">
                                             <option value="">은행을 선택하세요</option>
                                             <option value="kb">KB국민은행</option>
                                             <option value="shinhan">신한은행</option>
@@ -2042,12 +2042,13 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        function selectAmount(amount) {
+        function selectAmount(amount, evt) {
             selectedAmount = amount;
             document.querySelectorAll('.amount-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
-            if (event && event.currentTarget) event.currentTarget.classList.add('selected');
+            var t = evt && evt.currentTarget;
+            if (t) t.classList.add('selected');
             updatePrice();
         }
         
@@ -2060,7 +2061,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePrice();
         }
 
-        function selectPayment(method) {
+        function selectPayment(method, evt) {
             if (method === 'transfer') {
                 var mt = (typeof localStorage !== 'undefined' && localStorage.getItem('memberType')) || 'personal';
                 var allowDedicated = mt === 'business' || mt === 'corporate' || mt === 'election';
@@ -2073,7 +2074,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.payment-method').forEach(btn => {
                 btn.classList.remove('selected');
             });
-            event.currentTarget.classList.add('selected');
+            var target = evt && evt.currentTarget;
+            if (target) target.classList.add('selected');
             
             const chargePointGroup = document.getElementById('chargePointGroup');
             const directAmountGroup = document.getElementById('directAmountGroup');
@@ -2166,17 +2168,57 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal('estimateModal');
         }
 
-        // 폼 제출
-        document.getElementById('chargeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (selectedAmount < 10000) {
+        /** 충전하기: HTML5 검증 때문에 submit 이벤트가 발생하지 않던 문제 방지 위해 form 에 novalidate 사용 */
+        function runChargeSubmitFromForm(e) {
+            if (e) e.preventDefault();
+            var pt = typeof selectedPayment !== 'undefined' ? selectedPayment : 'card';
+            var amtRaw = typeof selectedAmount !== 'undefined' ? selectedAmount : 0;
+            if (pt === 'virtual') {
+                var dirIn = document.getElementById('directAmountInput');
+                if (dirIn) {
+                    var v = parseInt(dirIn.value, 10);
+                    if (!isNaN(v) && v > 0) amtRaw = v;
+                }
+            }
+            if (amtRaw < 10000) {
                 showToast('최소 충전 금액은 10,000원입니다.', 'warning');
                 return;
             }
-            
-            // 실제 PG 연동 시 return URL로 충전 완료 페이지 진입 → charge_finish 는 해당 페이지에서만 전송
+
+            if (pt === 'virtual') {
+                var vatAmountVa = Math.floor(amtRaw * 0.1);
+                var totalWonVa = amtRaw + vatAmountVa;
+                try {
+                    sessionStorage.setItem('virtualAccountCharge', JSON.stringify({
+                        chargePoints: amtRaw,
+                        totalWon: totalWonVa,
+                        depositorName: '조준형',
+                        issuedAt: Date.now()
+                    }));
+                } catch (err2) {}
+                var qp = new URLSearchParams({
+                    points: String(amtRaw),
+                    total: String(totalWonVa)
+                });
+                window.location.href = 'payment-virtual-account-issued.html?' + qp.toString();
+                return;
+            }
+
             window.location.href = 'payment-charge-complete.html';
-        });
+        }
+
+        function bindChargeFormSubmitOnce() {
+            var chargeFormEl = document.getElementById('chargeForm');
+            if (!chargeFormEl || chargeFormEl.getAttribute('data-charge-submit-bound') === '1') return;
+            chargeFormEl.setAttribute('data-charge-submit-bound', '1');
+            chargeFormEl.addEventListener('submit', runChargeSubmitFromForm);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bindChargeFormSubmitOnce);
+        } else {
+            bindChargeFormSubmitOnce();
+        }
     </script>
     <script src="js/footer.js"></script>
     <script>

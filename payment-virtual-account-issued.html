@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>가상계좌 발급 완료 - 메시징 서비스</title>
+    <script src="js/header.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <style>
+        .va-wrap {
+            max-width: 460px;
+            margin: 0 auto;
+            padding: 36px 20px 64px;
+        }
+        .va-card {
+            background: var(--surface-color);
+            border-radius: var(--radius-2xl);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            padding: 36px 28px 28px;
+            text-align: center;
+        }
+        .va-icon-wrap {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #fde68a 0%, #fcd34d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+        }
+        .va-icon-wrap svg {
+            width: 36px;
+            height: 36px;
+            color: #6b7280;
+        }
+        .va-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .va-sub {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-bottom: 24px;
+        }
+        .va-info {
+            background: #f4f6f9;
+            border-radius: var(--radius-lg);
+            padding: 20px 18px;
+            text-align: left;
+        }
+        .va-row {
+            margin-bottom: 16px;
+        }
+        .va-row:last-of-type {
+            margin-bottom: 0;
+        }
+        .va-label {
+            display: block;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+        .va-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .va-value--mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            letter-spacing: 0.02em;
+        }
+        .va-value--blue {
+            color: var(--primary-color);
+        }
+        .va-value--red {
+            color: var(--danger-color);
+        }
+        .va-helper {
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+        .va-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 20px 0;
+        }
+        .va-sms-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        .va-sms-row {
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+        }
+        .va-sms-input {
+            flex: 1;
+            min-width: 0;
+            padding: 11px 12px;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--surface-color);
+        }
+        .va-sms-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+        .va-sms-btn {
+            flex-shrink: 0;
+            padding: 0 14px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            border: none;
+            border-radius: var(--radius-md);
+            background: var(--primary-color);
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .va-sms-btn:hover {
+            background: var(--primary-hover);
+        }
+        @media (max-width: 480px) {
+            .va-sms-row {
+                flex-direction: column;
+            }
+            .va-sms-btn {
+                width: 100%;
+                padding: 11px;
+            }
+        }
+        .va-notice {
+            margin-top: 18px;
+            padding: 16px 16px 14px;
+            background: #fffbeb;
+            border: 1px solid #fbbf24;
+            border-radius: var(--radius-lg);
+            text-align: left;
+        }
+        .va-notice ul {
+            margin: 0;
+            padding-left: 18px;
+            color: #92400e;
+            font-size: 12.5px;
+            line-height: 1.65;
+        }
+        .va-notice li + li {
+            margin-top: 6px;
+        }
+        .va-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+        .va-actions .btn {
+            flex: 1;
+            justify-content: center;
+            padding: 12px 10px;
+            font-size: 14px;
+        }
+        .va-actions .btn-outline {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .va-actions .btn-outline:hover {
+            background: var(--bg-color);
+        }
+        .va-actions .btn-primary {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        }
+        .toast-msg {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 14px 20px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            z-index: 2500;
+            font-size: 14px;
+        }
+        .toast-msg.warning {
+            border-color: #fcd34d;
+            color: #92400e;
+        }
+        .toast-msg.success {
+            border-color: #6ee7b7;
+            color: #065f46;
+        }
+        @keyframes vaToastIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>document.write(createHeader());</script>
+        <main class="main-content">
+            <div class="page-header">
+                <h2>결제 관리</h2>
+                <p class="page-description">가상계좌 입금 정보를 확인해 주세요</p>
+            </div>
+            <div class="tabs" id="paymentTabs">
+                <div class="tab-list">
+                    <button class="tab-item active" type="button" onclick="window.location.href='payment-charge.html'">충전하기</button>
+                    <button class="tab-item" type="button" onclick="window.location.href='payment-history.html'">충전 내역</button>
+                </div>
+            </div>
+            <div class="va-wrap">
+                <div class="va-card">
+                    <div class="va-icon-wrap" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 21h18"/>
+                            <path d="M5 21V7l8-4v18"/>
+                            <path d="M19 21V11l-6-4"/>
+                            <circle cx="9" cy="9" r="1.5"/>
+                        </svg>
+                    </div>
+                    <h1 class="va-title">가상계좌가 발급되었습니다</h1>
+                    <p class="va-sub">아래 계좌로 입금하시면 자동으로 충전됩니다</p>
+
+                    <div class="va-info">
+                        <div class="va-row">
+                            <span class="va-label">입금은행</span>
+                            <span class="va-value" id="vaBank">하나은행</span>
+                        </div>
+                        <div class="va-row">
+                            <span class="va-label">계좌번호</span>
+                            <span class="va-value va-value--mono" id="vaAccount">20894358002537</span>
+                        </div>
+                        <div class="va-row">
+                            <span class="va-label">예금주</span>
+                            <span class="va-value" id="vaHolder">아이뱅크</span>
+                        </div>
+                        <div class="va-row">
+                            <span class="va-label">입금자명</span>
+                            <span class="va-value" id="vaDepositor">조준형</span>
+                            <p class="va-helper">ATM·인터넷뱅킹 입금 시 위 이름으로 입력해 주세요.</p>
+                        </div>
+                        <div class="va-row">
+                            <span class="va-label">입금금액</span>
+                            <span class="va-value va-value--blue" id="vaDepositWon">0원</span>
+                        </div>
+                        <div class="va-row">
+                            <span class="va-label">입금기한</span>
+                            <span class="va-value va-value--red" id="vaDeadline">–</span>
+                        </div>
+
+                        <div class="va-divider" aria-hidden="true"></div>
+
+                        <div class="va-sms-block">
+                            <div class="va-sms-title">계좌번호 문자로 받기</div>
+                            <div class="va-sms-row">
+                                <input type="tel" class="va-sms-input" id="vaPhoneInput" placeholder="휴대폰 번호 (- 없이 입력)" inputmode="numeric" autocomplete="tel" maxlength="13" aria-label="휴대폰 번호">
+                                <button type="button" class="va-sms-btn" id="vaSendSmsBtn">계좌번호 문자 발송</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="va-notice">
+                        <ul>
+                            <li>입금기한 내에 정확한 금액을 입금해주세요.</li>
+                            <li>입금 확인 후 자동으로 크레딧(P)이 충전됩니다.</li>
+                            <li>입금기한이 지나면 주문이 자동 취소됩니다.</li>
+                            <li id="vaNoticeDepositor">입금자명은 반드시 『조준형』과(와) 동일하게 입력해 주세요. 다르면 충전이 지연될 수 있습니다.</li>
+                        </ul>
+                    </div>
+
+                    <div class="va-actions">
+                        <a href="payment-charge.html" class="btn btn-outline btn-lg">충전하기로 돌아가기</a>
+                        <a href="payment-history.html" class="btn btn-primary btn-lg">충전 내역 확인</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+    <script>
+        function formatComma(n) {
+            return String(Math.max(0, Math.floor(Number(n)) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function showVaToast(text, cls) {
+            var el = document.createElement('div');
+            el.className = 'toast-msg ' + (cls || '');
+            el.textContent = text;
+            el.style.animation = 'vaToastIn 0.25s ease';
+            document.body.appendChild(el);
+            setTimeout(function () {
+                el.remove();
+            }, 2800);
+        }
+
+        function parseStored() {
+            try {
+                var raw = sessionStorage.getItem('virtualAccountCharge');
+                if (!raw) return null;
+                return JSON.parse(raw);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function addDepositDays(date, days) {
+            var d = new Date(date.getTime());
+            d.setDate(d.getDate() + days);
+            return d;
+        }
+
+        function formatYMD(d) {
+            var y = d.getFullYear();
+            var m = String(d.getMonth() + 1).padStart(2, '0');
+            var day = String(d.getDate()).padStart(2, '0');
+            return y + '-' + m + '-' + day;
+        }
+
+        (function init() {
+            var params = new URLSearchParams(window.location.search);
+            var pPoints = parseInt(params.get('points'), 10);
+            var pTotal = parseInt(params.get('total'), 10);
+            var stored = parseStored();
+
+            var chargePoints = !isNaN(pPoints) && pPoints > 0 ? pPoints : (stored && stored.chargePoints) || 10000;
+            var totalWon;
+            if (!isNaN(pTotal) && pTotal > 0) {
+                totalWon = pTotal;
+            } else if (stored && stored.totalWon) {
+                totalWon = stored.totalWon;
+            } else {
+                totalWon = chargePoints + Math.floor(chargePoints * 0.1);
+            }
+            var depositor = (stored && stored.depositorName) || params.get('depositor') || '조준형';
+
+            document.getElementById('vaDepositWon').textContent = formatComma(totalWon) + '원';
+            document.getElementById('vaDepositor').textContent = depositor;
+            document.getElementById('vaNoticeDepositor').textContent =
+                '입금자명은 반드시 『' + depositor + '』과(와) 동일하게 입력해 주세요. 다르면 충전이 지연될 수 있습니다.';
+
+            var deadlineBase = stored && stored.issuedAt ? new Date(stored.issuedAt) : new Date();
+            var deadlineDate = addDepositDays(deadlineBase, 30);
+            document.getElementById('vaDeadline').textContent = formatYMD(deadlineDate);
+
+            document.getElementById('vaSendSmsBtn').addEventListener('click', function () {
+                var raw = document.getElementById('vaPhoneInput').value.replace(/\D/g, '');
+                if (raw.length < 10 || raw.length > 11) {
+                    showVaToast('휴대폰 번호를 올바르게 입력해 주세요.', 'warning');
+                    return;
+                }
+                showVaToast('계좌번호 안내 문자를 발송했습니다.', 'success');
+            });
+        })();
+    </script>
+</body>
+</html>
