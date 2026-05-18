@@ -211,11 +211,13 @@ function createHeader(activeMenu = '') {
     } else if (isLoggedIn) {
         // 로그인 후
         headerActionsHTML = `
-            <a href="payment-charge.html" class="balance-tooltip-wrapper balance-clickable" title="충전하기">
-                <div class="balance-info">
-                    <span class="balance-label">잔액</span>
-                    <span class="balance-amount">1,000,000 P</span>
-                </div>
+            <div class="balance-tooltip-wrapper">
+                <a href="${resolveSpecPageUrl('payment-charge.html')}" class="balance-clickable" title="충전하기">
+                    <div class="balance-info">
+                        <span class="balance-label">잔액</span>
+                        <span class="balance-amount">1,000,000 P</span>
+                    </div>
+                </a>
                 <div class="balance-tooltip-content">
                     <div style="margin-bottom: 8px;">
                         <span style="color: #fbbf24; font-weight: 600;">포인트</span>
@@ -226,12 +228,23 @@ function createHeader(activeMenu = '') {
                             <span style="color: #fbbf24; font-weight: 600;">마일리지</span>
                             <span style="float: right; font-weight: 600;">92.6 M</span>
                         </div>
-                        <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; text-align: left;">
+                        <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; text-align: left; clear: both;">
                             └ 문자발송 시 사용가능 (환불불가)
                         </div>
                     </div>
+                    <div class="balance-tooltip-vip-block">
+                        <div class="balance-tooltip-vip-title">
+                            <svg class="balance-tooltip-vip-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+                                <path d="M3 7l4.2 2.4L12 3l4.8 6.4L21 7l-2 10H5L3 7z"/>
+                                <path d="M5 19h14v2H5z" fill="#fbbf24" stroke="none"/>
+                            </svg>
+                            <span>VIP 등급 혜택</span>
+                        </div>
+                        <p class="balance-tooltip-vip-desc">: 전월 기준 충전 및 포인트 사용 금액 10만원 이상 고객 대상, 충전 시 마일리지 추가 제공(충전 금액의 5%)</p>
+                        <a href="${resolveSpecPageUrl('support-faq.html')}" class="balance-tooltip-faq-link">자세히 보러가기</a>
+                    </div>
                 </div>
-            </a>
+            </div>
             <div class="header-dropdown-wrapper" id="chargeDropdown">
                 <button class="btn btn-sm btn-primary header-dropdown-btn" style="padding: 6px 12px; font-size: 12px;">
                     충전/관리
@@ -763,12 +776,62 @@ function createFloatingMenu() {
                 font-size: 13px;
                 line-height: 1.6;
                 white-space: normal;
-                width: 200px;
+                width: 260px;
+                box-sizing: border-box;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                 opacity: 0;
                 visibility: hidden;
                 transition: all 0.2s;
                 z-index: 1000;
+            }
+
+            .balance-tooltip-vip-block {
+                clear: both;
+                margin-top: 12px;
+                padding-top: 12px;
+                border-top: 1px solid rgba(148, 163, 184, 0.35);
+            }
+
+            .balance-tooltip-vip-title {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+                font-weight: 600;
+                color: #fbbf24;
+                margin-bottom: 4px;
+            }
+
+            .balance-tooltip-vip-icon {
+                flex-shrink: 0;
+                display: block;
+            }
+
+            .balance-tooltip-vip-desc {
+                font-size: 11px;
+                color: #e2e8f0;
+                line-height: 1.5;
+                margin: 0;
+            }
+
+            .balance-tooltip-faq-link {
+                display: block;
+                margin-top: 10px;
+                padding: 8px 10px;
+                text-align: center;
+                font-size: 12px;
+                font-weight: 600;
+                color: #fff;
+                text-decoration: none;
+                background: rgba(255, 255, 255, 0.12);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 6px;
+                transition: background 0.2s ease;
+            }
+
+            .balance-tooltip-faq-link:hover {
+                background: rgba(255, 255, 255, 0.22);
+                color: #fff;
             }
             
             .balance-tooltip-wrapper:hover .balance-tooltip-content {

@@ -269,7 +269,7 @@ body {
     font-size: 13px;
     line-height: 1.6;
     white-space: normal;
-    width: 220px;
+    width: 260px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     opacity: 0;
     visibility: hidden;
@@ -293,6 +293,55 @@ body {
     transform: translateX(-50%);
     border: 8px solid transparent;
     border-bottom-color: #1e293b;
+}
+
+.balance-tooltip-vip-block {
+    clear: both;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.balance-tooltip-vip-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fbbf24;
+    margin-bottom: 4px;
+}
+
+.balance-tooltip-vip-icon {
+    flex-shrink: 0;
+    display: block;
+}
+
+.balance-tooltip-vip-desc {
+    font-size: 11px;
+    color: #e2e8f0;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.balance-tooltip-faq-link {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.balance-tooltip-faq-link:hover {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
 }
 
 /* 메인 컨텐츠 */
