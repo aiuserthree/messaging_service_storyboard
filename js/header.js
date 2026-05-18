@@ -240,7 +240,7 @@ function createHeader(activeMenu = '') {
                             </svg>
                             <span>VIP 등급 혜택</span>
                         </div>
-                        <p class="balance-tooltip-vip-desc">: 전월 기준 충전 및 포인트 사용 금액 10만원 이상 고객 대상, 충전 시 마일리지 추가 제공(충전 금액의 5%)</p>
+                        <p class="balance-tooltip-vip-desc">: 충전 금액의 5% 마일리지 추가 제공</p>
                         <a href="${resolveSpecPageUrl('support-faq.html')}" class="balance-tooltip-faq-link">자세히 보러가기</a>
                     </div>
                 </div>

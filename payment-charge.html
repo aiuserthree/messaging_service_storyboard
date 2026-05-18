@@ -1174,7 +1174,7 @@ body {
             margin-top: 16px;
             text-align: left;
         }
-        /* 충전 폼 하단 FAQ (3열, 펼침) */
+        /* 충전 폼 하단 FAQ (3단 레이아웃, 아코디언) */
         .visually-hidden {
             position: absolute;
             width: 1px;
@@ -1187,46 +1187,124 @@ body {
             border: 0;
         }
         .charge-form-faq {
-            margin-top: 20px;
+            margin-top: 32px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 28px;
         }
-        .charge-form-faq-grid {
+        .charge-faq-layout {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            align-items: stretch;
+            grid-template-columns: 148px 1px 1fr;
+            gap: 0 28px;
+            align-items: start;
         }
-        .charge-form-faq-card {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 18px 18px 20px;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
-            text-align: left;
-            min-height: 0;
+        .charge-faq-title-col {
+            padding-top: 2px;
         }
-        .charge-form-faq-q {
-            font-size: 15px;
-            font-weight: 700;
+        .charge-faq-heading {
+            font-size: 17px;
+            font-weight: 800;
             color: var(--text-primary);
-            margin: 0 0 12px;
-            line-height: 1.45;
-            letter-spacing: -0.02em;
+            line-height: 1.4;
+            margin: 0 0 10px;
+            letter-spacing: -0.03em;
         }
-        .charge-form-faq-a {
-            font-size: 13px;
-            line-height: 1.65;
-            color: var(--text-secondary);
+        .charge-faq-subtext {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.7;
             margin: 0;
         }
-        .charge-form-faq-a p {
+        .charge-faq-divider {
+            background: var(--border-color);
+            width: 1px;
+            align-self: stretch;
+        }
+        .charge-faq-content-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .charge-faq-item {
+            border-bottom: 1px solid var(--border-color);
+        }
+        .charge-faq-item:first-child {
+            border-top: 1px solid var(--border-color);
+        }
+        .charge-faq-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 15px 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            gap: 12px;
+            transition: color 0.2s;
+            line-height: 1.4;
+        }
+        .charge-faq-btn:hover {
+            color: var(--primary-color);
+        }
+        .charge-faq-btn.open {
+            color: var(--primary-color);
+        }
+        .charge-faq-btn-icon {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            color: var(--text-muted);
+            transition: transform 0.3s ease, color 0.2s;
+        }
+        .charge-faq-btn.open .charge-faq-btn-icon {
+            transform: rotate(180deg);
+            color: var(--primary-color);
+        }
+        .charge-faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+        .charge-faq-answer.open {
+            max-height: 800px;
+        }
+        .charge-faq-answer-inner {
+            padding: 4px 4px 20px;
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        .charge-faq-answer-inner p {
             margin: 0 0 10px;
         }
-        .charge-form-faq-a p:last-child {
+        .charge-faq-answer-inner p:last-child {
             margin-bottom: 0;
         }
+        .charge-faq-answer-inner ul {
+            margin: 8px 0 10px;
+            padding-left: 18px;
+        }
+        .charge-faq-answer-inner li {
+            margin-bottom: 6px;
+        }
+        .charge-faq-answer-inner .faq-note {
+            margin-top: 10px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
         @media (max-width: 1024px) {
-            .charge-form-faq-grid {
+            .charge-faq-layout {
                 grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .charge-faq-title-col {
+                margin-bottom: 20px;
+            }
+            .charge-faq-divider {
+                display: none;
             }
         }
         .charge-events-banner-v2 {
@@ -1444,7 +1522,7 @@ body {
                     <path d="M3 7l4.2 2.4L12 3l4.8 6.4L21 7l-2 10H5L3 7z"/>
                     <path d="M5 19h14v2H5z" fill="#fbbf24" stroke="none"/>
                 </svg>
-                <span class="charge-page-vip-notice-text">VIP 등급 혜택 : 전월 기준 충전 및 포인트 사용 금액 10만원 이상 고객 대상, 충전 시 마일리지 추가 제공(충전 금액의 5%)</span>
+                <span class="charge-page-vip-notice-text">VIP 등급 혜택 : 충전 금액의 5% 마일리지 추가 제공(전월 기준 충전 및 포인트 사용 금액 10만원 이상 고객 대상)</span>
                 <a href="support-faq.html" class="charge-page-vip-notice-link">자세히 보러가기</a>
             </div>
 
@@ -1600,29 +1678,76 @@ body {
                         <button type="submit" class="btn btn-primary btn-lg" id="chargeButton" style="width: 100%; margin-top: 24px;">충전하기</button>
 
                         <div class="charge-form-faq" role="region" aria-labelledby="chargeFormFaqHeading">
-                            <h3 id="chargeFormFaqHeading" class="visually-hidden">자주 묻는 질문</h3>
-                            <div class="charge-form-faq-grid">
-                                <article class="charge-form-faq-card">
-                                    <h4 class="charge-form-faq-q">포인트 환불은 어떻게 받을 수 있나요?</h4>
-                                    <div class="charge-form-faq-a">
-                                        <p>유료로 충전하신 <strong>포인트</strong>는 잔여 금액이 10,000포인트 이상이고, 예약·대기 중인 발송이 없는 등 조건을 충족하면 <strong>결제 관리 &gt; 환불</strong>에서 신청할 수 있습니다.</p>
-                                        <p>충전 후 7일 이내에 미사용한 경우에는 결제 취소(전액)가 가능할 수 있으며, 그 외에는 약관에 따라 잔여 금액의 10% 등 환불 수수료가 공제될 수 있습니다. 승인 후 영업일 기준 7일 이내 등록하신 계좌로 지급됩니다.</p>
+                            <div class="charge-faq-layout">
+                                <!-- 타이틀 -->
+                                <div class="charge-faq-title-col">
+                                    <h3 id="chargeFormFaqHeading" class="charge-faq-heading">충전 및 포인트<br>관련 FAQ</h3>
+                                    <p class="charge-faq-subtext">충전·포인트·환불에 관한 궁금한 점을 확인하세요.</p>
+                                </div>
+                                <!-- 구분선 -->
+                                <div class="charge-faq-divider" aria-hidden="true"></div>
+                                <!-- 본문 (아코디언) -->
+                                <div class="charge-faq-content-col">
+                                    <!-- Q1 -->
+                                    <div class="charge-faq-item">
+                                        <button type="button" class="charge-faq-btn" onclick="toggleChargeFaq(this)" aria-expanded="false">
+                                            <span>포인트와 마일리지는 무엇이 다른가요?</span>
+                                            <svg class="charge-faq-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                        </button>
+                                        <div class="charge-faq-answer">
+                                            <div class="charge-faq-answer-inner">
+                                                <p>포인트와 마일리지는 톡벨에서 사용하는 두 가지 크레딧입니다.</p>
+                                                <p><strong>포인트</strong> : 현금으로 구매하여 충전하는 유료 크레딧으로, 메시지 발송 시 발송 채널 별 요금에 따라 포인트가 차감됩니다. 1원 = 1포인트(p)이며, 마지막 충전일자로부터 5년 이내에 사용이 가능합니다.</p>
+                                                <p><strong>마일리지</strong> : 이벤트나 프로모션, 충전 혜택 등으로 제공되는 무료 크레딧으로, 포인트보다 먼저 사용되며 별도 구매는 불가합니다. 1원 = 1마일리지(m)이며, 지급일자로부터 1년 이내에 사용이 가능합니다.</p>
+                                                <p class="faq-note">마일리지의 경우 환불 대상이 아니므로 환불 신청 시 유의해주시기 바랍니다.</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </article>
-                                <article class="charge-form-faq-card">
-                                    <h4 class="charge-form-faq-q">포인트와 마일리지는 무엇이 다른가요?</h4>
-                                    <div class="charge-form-faq-a">
-                                        <p><strong>포인트</strong>는 유료 충전으로 적립되는 선불 이용료이며, 이용약관이 정한 조건에서 환불을 신청할 수 있습니다.</p>
-                                        <p><strong>마일리지</strong>는 이벤트·프로모션 등으로 무상 지급되는 혜택으로, 메시지 발송 시 사용할 수 있으나 <strong>현금 환불 대상이 아닙니다.</strong> 각각 유효기간·소멸 규정이 있으니 마이페이지에서 잔액을 확인해 주세요.</p>
+                                    <!-- Q2 -->
+                                    <div class="charge-faq-item">
+                                        <button type="button" class="charge-faq-btn" onclick="toggleChargeFaq(this)" aria-expanded="false">
+                                            <span>무료 마일리지는 언제 지급되나요?</span>
+                                            <svg class="charge-faq-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                        </button>
+                                        <div class="charge-faq-answer">
+                                            <div class="charge-faq-answer-inner">
+                                                <p>무료로 지급되는 추가 마일리지는 충전 완료 후 또는 이벤트 참여 완료 후 즉시 계정의 잔여 포인트/마일리지 내역에 추가됩니다.</p>
+                                                <p>마이페이지 &gt; 포인트/마일리지 내역 &gt; 마일리지 적립/사용 내역 메뉴에서 추가 지급된 마일리지를 확인하시고 바로 문자 발송에 사용해보세요.</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </article>
-                                <article class="charge-form-faq-card">
-                                    <h4 class="charge-form-faq-q">발송 실패 시 차감된 포인트는 어떻게 되나요?</h4>
-                                    <div class="charge-form-faq-a">
-                                        <p>원칙적으로 <strong>발송이 실패</strong>로 처리된 건에 대해 차감된 포인트는 <strong>자동으로 복구(재적립)</strong>됩니다.</p>
-                                        <p>다만 스팸 등으로 통신사가 발송을 강제 차단한 경우, 또는 발송 결과가 <strong>성공(Success)</strong>으로 남는 경우 등 약관에서 정한 예외에는 복구되지 않을 수 있습니다.</p>
+                                    <!-- Q3 -->
+                                    <div class="charge-faq-item">
+                                        <button type="button" class="charge-faq-btn" onclick="toggleChargeFaq(this)" aria-expanded="false">
+                                            <span>포인트 환불은 어떻게 받을 수 있나요?</span>
+                                            <svg class="charge-faq-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                        </button>
+                                        <div class="charge-faq-answer">
+                                            <div class="charge-faq-answer-inner">
+                                                <p>사용하고 남은 유상 포인트는 환불 신청을 통해 환불을 진행할 수 있습니다. 잔여 포인트가 10,000포인트 이상일 경우 환불 신청이 가능하며, 환불 수수료를 차감한 금액만큼 환불이 진행됩니다.</p>
+                                                <p>톡벨 고객센터로 환불을 요청하면 환불 절차를 진행해 드립니다. 환불 처리 기간은 결제 수단에 따라 달라질 수 있으며, 신청 후 최대 7영업일 이내에 완료됩니다.</p>
+                                                <ul>
+                                                    <li>포인트 충전 후 7일 이내에 지급받은 포인트와 무료 마일리지를 사용하지 않고 환불을 신청할 경우 결제 취소로 접수되어 전액 환불을 진행합니다.</li>
+                                                    <li>포인트 충전 후 7일이 지나거나 지급받은 포인트, 무료 마일리지를 사용한 후 환불을 신청할 경우 수수료 10%를 차감한 금액만큼 환불을 진행합니다.</li>
+                                                </ul>
+                                                <p class="faq-note">※ 단, 보너스로 지급된 무료 마일리지는 환불 대상에 포함되지 않고 소멸됩니다.</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </article>
+                                    <!-- Q4 -->
+                                    <div class="charge-faq-item">
+                                        <button type="button" class="charge-faq-btn" onclick="toggleChargeFaq(this)" aria-expanded="false">
+                                            <span>가상계좌로 환불하려는데 꼭 회원 본인 명의 계좌여야 하나요?</span>
+                                            <svg class="charge-faq-btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                        </button>
+                                        <div class="charge-faq-answer">
+                                            <div class="charge-faq-answer-inner">
+                                                <p>톡벨에서 가상계좌 환불을 받기 위해서는 가상계좌를 발급받은 회원의 명의와 입금한 계좌의 명의, 환불받을 계좌의 명의가 모두 동일해야 합니다.</p>
+                                                <p>입금한 계좌 명의 또는 환불 받고자 하는 계좌의 명의가 회원 명의와 다를 경우, 본인 인증을 위해 추가 서류 검증을 요청할 수 있으니, 이 점 유의해주시기 바랍니다.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -2223,6 +2348,24 @@ document.addEventListener('DOMContentLoaded', function() {
             if (chargeEl) chargeEl.textContent = formatNumber(chargeAmount) + ' P';
             if (vatEl) vatEl.textContent = formatNumber(vatAmount) + '원';
             if (totalEl) totalEl.textContent = formatNumber(totalAmount) + '원';
+        }
+
+        function toggleChargeFaq(btn) {
+            var item = btn.closest('.charge-faq-item');
+            var answer = item.querySelector('.charge-faq-answer');
+            var isOpen = btn.classList.contains('open');
+            // 모두 닫기
+            document.querySelectorAll('.charge-faq-btn.open').forEach(function(b) {
+                b.classList.remove('open');
+                b.setAttribute('aria-expanded', 'false');
+                b.closest('.charge-faq-item').querySelector('.charge-faq-answer').classList.remove('open');
+            });
+            // 현재 항목 토글
+            if (!isOpen) {
+                btn.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+                answer.classList.add('open');
+            }
         }
 
         function submitEstimate() {
