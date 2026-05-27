@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>세금계산서 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+    <style>
+        .tax-info-card {
+            background: linear-gradient(160deg, #2d6e0f 0%, #5cb82e 100%);
+            border-radius: 16px; padding: 20px; color: #fff; margin-bottom: 12px;
+        }
+        .tax-info-card .t-label { font-size: 12px; opacity: 0.8; font-weight: 600; }
+        .tax-info-card .t-biz { font-size: 18px; font-weight: 800; margin-top: 4px; }
+        .tax-info-card .t-num { font-size: 13px; opacity: 0.9; margin-top: 2px; }
+        .tax-info-card .t-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        .tax-info-card .t-chip {
+            background: rgba(255,255,255,0.2); border-radius: 6px;
+            padding: 4px 10px; font-size: 11px; font-weight: 600;
+        }
+        .tax-item {
+            background: #fff; border-radius: 14px; border: 1px solid var(--border);
+            overflow: hidden; margin-bottom: 10px;
+        }
+        .tax-item-head {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px; cursor: pointer;
+        }
+        .tax-item-head:active { background: #f8fafc; }
+        .tax-item-head .t-ico { font-size: 24px; flex-shrink: 0; }
+        .tax-item-head .t-info { flex: 1; min-width: 0; }
+        .tax-item-head .t-month { font-size: 14px; font-weight: 700; }
+        .tax-item-head .t-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .tax-item-head .t-amount { font-size: 15px; font-weight: 800; color: var(--primary); text-align: right; flex-shrink: 0; }
+        .tax-item-detail {
+            display: none; padding: 0 16px 16px;
+            border-top: 1px dashed var(--border); background: #f8fafc;
+        }
+        .tax-item.open .tax-item-detail { display: block; }
+        .tax-detail-row {
+            display: flex; justify-content: space-between;
+            font-size: 13px; padding: 8px 0;
+            border-bottom: 1px dashed #e2e8f0; color: var(--text-sub);
+        }
+        .tax-detail-row:last-child { border-bottom: none; }
+        .tax-detail-row .key { font-weight: 600; }
+        .tax-detail-row .val { font-weight: 700; color: var(--text); }
+        .tax-actions {
+            display: flex; gap: 8px; margin-top: 12px;
+        }
+        .tax-actions button { flex: 1; }
+        .email-modal-backdrop {
+            position: fixed; inset: 0; background: rgba(15,23,42,0.45);
+            z-index: 80; opacity: 0; pointer-events: none; transition: opacity .25s;
+        }
+        .email-modal-backdrop.open { opacity: 1; pointer-events: auto; }
+        .email-modal {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: calc(100% - 40px); max-width: 380px;
+            background: #fff; border-radius: 18px; padding: 24px;
+            z-index: 85; display: none;
+        }
+        .email-modal.open { display: block; }
+        .email-modal .modal-title { font-size: 17px; font-weight: 800; margin-bottom: 16px; }
+        .no-biz-card {
+            background: #fff; border-radius: 16px; border: 1px solid var(--border);
+            padding: 32px 20px; text-align: center; margin-bottom: 12px;
+        }
+        .no-biz-card .ico { font-size: 48px; margin-bottom: 12px; }
+        .no-biz-card h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+        .no-biz-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar"><span>9:41</span></div>
+
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="payment-history-mobile.html" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">세금계산서</div>
+                    <div class="subtitle">월별 세금계산서 조회</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <!-- 사업자 정보 -->
+            <div class="tax-info-card">
+                <div class="t-label">등록된 사업자 정보</div>
+                <div class="t-biz">(주)톡벨코리아</div>
+                <div class="t-num">사업자등록번호: 123-45-67890</div>
+                <div class="t-row">
+                    <span class="t-chip">법인사업자</span>
+                    <span class="t-chip">세금계산서 발행 가능</span>
+                </div>
+            </div>
+
+            <div class="alert alert-info" style="margin-bottom:12px;">
+                💡 세금계산서는 매월 말일 충전 내역 기준으로 발행됩니다. 이메일 또는 직접 다운로드 가능합니다.
+            </div>
+
+            <!-- 기간 필터 -->
+            <div class="filter-row" style="display:flex;gap:8px;margin-bottom:12px;">
+                <select style="flex:1;font-size:13px;border:1px solid var(--border);border-radius:10px;padding:8px 10px;background:#fff;color:var(--text);font-family:inherit;" id="yearSelect">
+                    <option value="2026">2026년</option>
+                    <option value="2025">2025년</option>
+                </select>
+                <select style="flex:1;font-size:13px;border:1px solid var(--border);border-radius:10px;padding:8px 10px;background:#fff;color:var(--text);font-family:inherit;" id="quarterSelect">
+                    <option value="all">전체 분기</option>
+                    <option value="1">1분기 (1~3월)</option>
+                    <option value="2">2분기 (4~6월)</option>
+                    <option value="3">3분기 (7~9월)</option>
+                    <option value="4">4분기 (10~12월)</option>
+                </select>
+            </div>
+
+            <!-- 세금계산서 목록 -->
+            <div id="taxList">
+                <!-- 5월 -->
+                <div class="tax-item" id="tax-2026-05">
+                    <div class="tax-item-head" onclick="toggleTax('tax-2026-05')">
+                        <div class="t-ico">📄</div>
+                        <div class="t-info">
+                            <div class="t-month">2026년 5월</div>
+                            <div class="t-sub">2026-06-10 발행 예정</div>
+                        </div>
+                        <div>
+                            <span class="badge badge-warning" style="margin-bottom:4px;display:block;text-align:center;">발행예정</span>
+                            <div class="t-amount">1,000,000P</div>
+                        </div>
+                    </div>
+                    <div class="tax-item-detail">
+                        <div class="tax-detail-row"><span class="key">공급가액</span><span class="val">909,091원</span></div>
+                        <div class="tax-detail-row"><span class="key">부가세 (10%)</span><span class="val">90,909원</span></div>
+                        <div class="tax-detail-row"><span class="key">합계 금액</span><span class="val" style="color:var(--primary);">1,000,000원</span></div>
+                        <div class="tax-detail-row"><span class="key">세금계산서번호</span><span class="val" style="font-size:12px;">발행 후 확인 가능</span></div>
+                    </div>
+                </div>
+
+                <!-- 4월 -->
+                <div class="tax-item" id="tax-2026-04">
+                    <div class="tax-item-head" onclick="toggleTax('tax-2026-04')">
+                        <div class="t-ico">📄</div>
+                        <div class="t-info">
+                            <div class="t-month">2026년 4월</div>
+                            <div class="t-sub">2026-05-10 발행</div>
+                        </div>
+                        <div>
+                            <span class="badge badge-success" style="margin-bottom:4px;display:block;text-align:center;">발행완료</span>
+                            <div class="t-amount">500,000P</div>
+                        </div>
+                    </div>
+                    <div class="tax-item-detail">
+                        <div class="tax-detail-row"><span class="key">공급가액</span><span class="val">454,545원</span></div>
+                        <div class="tax-detail-row"><span class="key">부가세 (10%)</span><span class="val">45,455원</span></div>
+                        <div class="tax-detail-row"><span class="key">합계 금액</span><span class="val" style="color:var(--primary);">500,000원</span></div>
+                        <div class="tax-detail-row"><span class="key">세금계산서번호</span><span class="val" style="font-size:12px;">2026-04-000123</span></div>
+                        <div class="tax-detail-row"><span class="key">발행일</span><span class="val">2026-05-10</span></div>
+                        <div class="tax-actions">
+                            <button class="btn btn-outline btn-sm" onclick="alert('이메일로 전송합니다. (UI 목업)')">
+                                📧 이메일 전송
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="alert('PDF 다운로드를 시작합니다. (UI 목업)')">
+                                ⬇ PDF 다운로드
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3월 -->
+                <div class="tax-item" id="tax-2026-03">
+                    <div class="tax-item-head" onclick="toggleTax('tax-2026-03')">
+                        <div class="t-ico">📄</div>
+                        <div class="t-info">
+                            <div class="t-month">2026년 3월</div>
+                            <div class="t-sub">2026-04-10 발행</div>
+                        </div>
+                        <div>
+                            <span class="badge badge-success" style="margin-bottom:4px;display:block;text-align:center;">발행완료</span>
+                            <div class="t-amount">300,000P</div>
+                        </div>
+                    </div>
+                    <div class="tax-item-detail">
+                        <div class="tax-detail-row"><span class="key">공급가액</span><span class="val">272,727원</span></div>
+                        <div class="tax-detail-row"><span class="key">부가세 (10%)</span><span class="val">27,273원</span></div>
+                        <div class="tax-detail-row"><span class="key">합계 금액</span><span class="val" style="color:var(--primary);">300,000원</span></div>
+                        <div class="tax-detail-row"><span class="key">세금계산서번호</span><span class="val" style="font-size:12px;">2026-03-000089</span></div>
+                        <div class="tax-detail-row"><span class="key">발행일</span><span class="val">2026-04-10</span></div>
+                        <div class="tax-actions">
+                            <button class="btn btn-outline btn-sm" onclick="alert('이메일로 전송합니다. (UI 목업)')">📧 이메일 전송</button>
+                            <button class="btn btn-primary btn-sm" onclick="alert('PDF 다운로드를 시작합니다. (UI 목업)')">⬇ PDF 다운로드</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 세금계산서 수신 이메일 설정 -->
+            <div class="card" style="margin-top:4px;">
+                <div class="card-title" style="margin-bottom:12px;">세금계산서 수신 이메일</div>
+                <div class="form-group" style="margin-bottom:10px;">
+                    <input type="email" class="form-input" value="jhcho5784@naver.com" placeholder="이메일 주소">
+                </div>
+                <button class="btn btn-primary btn-block btn-sm" onclick="alert('이메일이 저장되었습니다. (UI 목업)')">이메일 저장</button>
+            </div>
+
+            <!-- 사업자 전환 안내 (개인회원용) -->
+            <div class="alert alert-warning" style="margin-top:4px;">
+                ⚠️ 세금계산서는 사업자 회원만 발행 가능합니다.
+                <a href="mypage-mobile.html" style="color:var(--primary);font-weight:700;text-decoration:none;"> 사업자 전환 →</a>
+            </div>
+        </main>
+
+        <nav class="tab-bar" id="tabBar"></nav>
+        <div id="drawerWrap"></div>
+    </div>
+
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('tabBar').innerHTML = renderTabBar('');
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+
+        function toggleTax(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>

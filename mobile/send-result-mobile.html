@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>발송현황 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+    <style>
+        .filter-toggle {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 0; font-size: 13px; font-weight: 600; color: var(--primary);
+            cursor: pointer; border: none; background: none; width: 100%;
+        }
+        .filter-panel { display: none; margin-bottom: 12px; }
+        .filter-panel.open { display: block; }
+        .filter-panel .form-group { margin-bottom: 10px; }
+        .result-card {
+            background: #fff; border-radius: 14px; border: 1px solid var(--border);
+            padding: 14px 16px; margin-bottom: 10px;
+        }
+        .result-card:active { background: #f8fafc; }
+        .result-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+        .result-date { font-size: 12px; color: var(--text-muted); }
+        .result-msg {
+            font-size: 13px; color: var(--text-sub); margin: 8px 0;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .result-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--text-muted); }
+        .result-meta strong { color: var(--text); }
+        .success-count { color: var(--success); font-weight: 700; }
+        .fail-count { color: var(--danger); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar"><span>9:41</span></div>
+
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="main-mobile.html" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">발송현황</div>
+                    <div class="subtitle">발송 결과 조회 및 분석</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <div class="tab-scroll" id="pageTabs">
+            <button class="tab-pill" data-panel="reservation">예약내역</button>
+            <button class="tab-pill active" data-panel="result">발송결과</button>
+        </div>
+
+        <main class="page-content">
+            <div data-tab-panel="result">
+                <button class="filter-toggle" id="filterToggle">
+                    <span>🔍 필터 · 2025-01-01 ~ 2025-01-31</span>
+                    <span id="filterChev">▾</span>
+                </button>
+                <div class="filter-panel" id="filterPanel">
+                    <div class="card" style="padding:14px;">
+                        <div class="form-group">
+                            <label class="form-label">조회 기간</label>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <input type="date" class="form-input" value="2025-01-01" style="flex:1;">
+                                <span>~</span>
+                                <input type="date" class="form-input" value="2025-01-31" style="flex:1;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">메시지 타입</label>
+                            <select class="form-select">
+                                <option>전체</option>
+                                <option>일반문자(SMS)</option>
+                                <option>광고문자(LMS)</option>
+                                <option>알림톡</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">발송 상태</label>
+                            <select class="form-select">
+                                <option>전체</option>
+                                <option>성공</option>
+                                <option>실패</option>
+                                <option>전송중</option>
+                            </select>
+                        </div>
+                        <input type="text" class="form-input" placeholder="수신번호 또는 메시지 검색" style="margin-bottom:10px;">
+                        <div class="btn-row">
+                            <button class="btn btn-primary" style="flex:1;">조회</button>
+                            <button class="btn btn-outline" style="flex:1;">초기화</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-grid cols-4">
+                    <div class="stat-box"><div class="lbl">발송</div><div class="val primary">152</div></div>
+                    <div class="stat-box"><div class="lbl">성공</div><div class="val success">148</div></div>
+                    <div class="stat-box"><div class="lbl">실패</div><div class="val danger">4</div></div>
+                    <div class="stat-box"><div class="lbl">성공률</div><div class="val success">97.4%</div></div>
+                </div>
+
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <span style="font-size:14px;font-weight:700;">발송 내역</span>
+                    <button class="btn btn-outline btn-sm">엑셀 다운</button>
+                </div>
+
+                <div class="result-card" onclick="alert('상세 내역 (UI 목업)')">
+                    <div class="result-top">
+                        <span class="badge badge-primary">일반문자(SMS)</span>
+                        <span class="badge badge-success">완료</span>
+                    </div>
+                    <div class="result-date">2024-01-15 14:30 · 010-1234-5678</div>
+                    <div class="result-msg">이벤트 안내입니다. 자세한 내용은 홈페이지를 확인해 주세요.</div>
+                    <div class="result-meta">
+                        <span>수신 <strong>100명</strong></span>
+                        <span class="success-count">성공 98</span>
+                        <span class="fail-count">실패 2</span>
+                        <span>2,000P</span>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-top">
+                        <span class="badge badge-primary">광고문자(LMS)</span>
+                        <span class="badge badge-success">완료</span>
+                    </div>
+                    <div class="result-date">2024-01-14 10:15 · 02-1234-5678</div>
+                    <div class="result-msg">(광고) 홍길동님, 시즌 할인 이벤트가 시작되었습니다. 지금 바로 확인하세요!</div>
+                    <div class="result-meta">
+                        <span>수신 <strong>50명</strong></span>
+                        <span class="success-count">성공 50</span>
+                        <span class="fail-count">실패 0</span>
+                        <span>1,325P</span>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-top">
+                        <span class="badge badge-primary">알림톡</span>
+                        <span class="badge badge-warning">전송중</span>
+                    </div>
+                    <div class="result-date">2024-01-13 18:00 · 010-1234-5678</div>
+                    <div class="result-msg">[톡벨] 주문이 접수되었습니다. 배송 시작 시 알림을 보내드립니다.</div>
+                    <div class="result-meta">
+                        <span>수신 <strong>2명</strong></span>
+                        <span class="success-count">성공 1</span>
+                        <span class="fail-count">실패 0</span>
+                        <span>12.4P</span>
+                    </div>
+                </div>
+            </div>
+
+            <div data-tab-panel="reservation" style="display:none;">
+                <div class="card">
+                    <div class="card-title">예약 발송 내역</div>
+                    <div class="list-card" style="margin:0;">
+                        <div class="list-item">
+                            <div class="info">
+                                <div class="name">2024-01-20 09:00 예약</div>
+                                <div class="sub">일반문자 · 50명 · 010-1234-5678</div>
+                            </div>
+                            <span class="badge badge-warning">대기</span>
+                        </div>
+                        <div class="list-item">
+                            <div class="info">
+                                <div class="name">2024-01-18 14:00 예약</div>
+                                <div class="sub">광고문자 · 200명 · 02-1234-5678</div>
+                            </div>
+                            <span class="badge badge-success">완료</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="tab-bar" id="tabBar"></nav>
+        <div id="drawerWrap"></div>
+    </div>
+
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('tabBar').innerHTML = renderTabBar('send-result');
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+        initTabPills(document.getElementById('pageTabs'));
+
+        document.getElementById('filterToggle').addEventListener('click', () => {
+            const panel = document.getElementById('filterPanel');
+            const chev = document.getElementById('filterChev');
+            panel.classList.toggle('open');
+            chev.textContent = panel.classList.contains('open') ? '▴' : '▾';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>FAQ - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+</head>
+<body>
+    <div class="mobile-frame no-tab">
+        <div class="status-bar"><span>9:41</span></div>
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="support-center-mobile.html" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">고객센터</div>
+                    <div class="subtitle">자주 묻는 질문</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <nav class="support-tabs" id="supportTabsNav"></nav>
+
+        <main class="page-content">
+            <div class="search-bar">
+                <input type="text" class="form-input" placeholder="궁금한 내용을 검색하세요" id="faqSearch">
+            </div>
+
+            <div class="chip-filter" id="categoryFilter">
+                <span class="chip active" data-category="all">전체</span>
+                <span class="chip" data-category="account">회원/계정</span>
+                <span class="chip" data-category="payment">결제/포인트</span>
+                <span class="chip" data-category="message">문자발송</span>
+                <span class="chip" data-category="kakao">카카오톡</span>
+            </div>
+
+            <div id="faqList">
+                <div class="faq-item open" id="faq1" data-category="payment">
+                    <button type="button" class="faq-q">
+                        <span><span class="cat">결제/포인트</span>문자 발송 요금은 어떻게 되나요?</span>
+                        <span class="chev">▾</span>
+                    </button>
+                    <div class="faq-a">SMS 8.3원, LMS 26.5원, MMS 59원, 알림톡 6.2원부터 이용 가능합니다. 회원 등급에 따라 할인 혜택이 적용될 수 있습니다.</div>
+                </div>
+                <div class="faq-item" id="faq2" data-category="payment">
+                    <button type="button" class="faq-q">
+                        <span><span class="cat">결제/포인트</span>포인트 충전은 어떻게 하나요?</span>
+                        <span class="chev">▾</span>
+                    </button>
+                    <div class="faq-a">결제 관리 > 충전하기 메뉴에서 신용카드, 가상계좌, 전용계좌 중 선택하여 충전할 수 있습니다.</div>
+                </div>
+                <div class="faq-item" id="faq3" data-category="message">
+                    <button type="button" class="faq-q">
+                        <span><span class="cat">문자발송</span>발신번호 등록 방법을 알려주세요</span>
+                        <span class="chev">▾</span>
+                    </button>
+                    <div class="faq-a">마이페이지 > 발신번호 관리에서 등록할 수 있습니다. 통신서비스 이용증명원 등 서류 제출 후 심사가 완료되면 사용 가능합니다.</div>
+                </div>
+                <div class="faq-item" id="faq4" data-category="message">
+                    <button type="button" class="faq-q">
+                        <span><span class="cat">문자발송</span>예약 발송은 어떻게 설정하나요?</span>
+                        <span class="chev">▾</span>
+                    </button>
+                    <div class="faq-a">문자 발송 화면에서 '예약 발송'을 선택하고 원하는 날짜와 시간을 지정하면 됩니다. MMS는 예약 발송이 제한될 수 있습니다.</div>
+                </div>
+                <div class="faq-item" id="faq5" data-category="kakao">
+                    <button type="button" class="faq-q">
+                        <span><span class="cat">카카오톡</span>알림톡과 문자의 차이점이 무엇인가요?</span>
+                        <span class="chev">▾</span>
+                    </button>
+                    <div class="faq-a">알림톡은 카카오톡 채널을 통해 발송되며 스팸 필터링 없이 정보성 메시지를 저렴하게 보낼 수 있습니다. 문자는 SMS/LMS/MMS로 발송됩니다.</div>
+                </div>
+                <div class="faq-item" id="faq6" data-category="account">
+                    <button type="button" class="faq-q">
+                        <span><span class="cat">회원/계정</span>회원가입은 어떻게 하나요?</span>
+                        <span class="chev">▾</span>
+                    </button>
+                    <div class="faq-a">홈 화면에서 '톡벨 가입하기'를 클릭하여 본인인증 후 가입 절차를 진행하시면 됩니다.</div>
+                </div>
+            </div>
+
+            <div class="alert alert-info" style="margin-top:16px;">
+                원하는 답변을 찾지 못하셨나요?<br>
+                <a href="support-inquiry-mobile.html" style="color:var(--primary);font-weight:700;">1:1 문의하기 ›</a>
+            </div>
+        </main>
+    </div>
+    <div id="drawerWrap"></div>
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+        document.getElementById('supportTabsNav').innerHTML = renderSupportTabs('faq');
+        initFaqAccordion();
+        initCategoryFilter(document.getElementById('categoryFilter'), '#faqList .faq-item');
+
+        const hash = location.hash.replace('#', '');
+        if (hash) {
+            const el = document.getElementById(hash);
+            if (el) {
+                el.classList.add('open');
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        document.getElementById('faqSearch').addEventListener('input', (e) => {
+            const q = e.target.value.trim().toLowerCase();
+            document.querySelectorAll('#faqList .faq-item').forEach(item => {
+                item.style.display = !q || item.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

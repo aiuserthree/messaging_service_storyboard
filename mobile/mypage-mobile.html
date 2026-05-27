@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>마이페이지 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+    <style>
+        .profile-header {
+            background: linear-gradient(160deg, #2d6e0f 0%, #5cb82e 100%);
+            color: #fff; padding: 20px 16px 24px; margin: -16px -16px 16px;
+        }
+        .profile-header .avatar-lg {
+            width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.25);
+            display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .profile-header .p-name { font-size: 20px; font-weight: 800; }
+        .profile-header .p-email { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+        .profile-header .p-badges { display: flex; gap: 6px; margin-top: 10px; }
+        .profile-header .p-badge {
+            background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 999px;
+            font-size: 11px; font-weight: 600;
+        }
+        .summary-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px;
+        }
+        .summary-item {
+            background: #fff; border-radius: 12px; padding: 14px; border: 1px solid var(--border);
+        }
+        .summary-item .lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+        .summary-item .val { font-size: 16px; font-weight: 800; margin-top: 4px; }
+        .summary-item .val a { color: var(--primary); text-decoration: none; }
+        .panel-section { display: none; }
+        .panel-section.active { display: block; }
+        .toggle-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 0; border-bottom: 1px solid var(--border);
+        }
+        .toggle-row:last-child { border-bottom: none; }
+        .toggle-switch { position: relative; width: 44px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; inset: 0; background: #cbd5e1; border-radius: 999px; cursor: pointer; transition: .2s;
+        }
+        .toggle-slider::before {
+            content: ''; position: absolute; width: 18px; height: 18px; left: 3px; bottom: 3px;
+            background: #fff; border-radius: 50%; transition: .2s;
+        }
+        .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+        .caller-card {
+            border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 8px;
+        }
+        .caller-card .num { font-size: 16px; font-weight: 700; }
+        .caller-card .desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .history-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+        }
+        .history-row:last-child { border-bottom: none; }
+        .amount-plus { color: var(--success); font-weight: 700; }
+        .amount-minus { color: var(--danger); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar"><span>9:41</span></div>
+
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <div class="title-wrap">
+                    <div class="title">마이페이지</div>
+                    <div class="subtitle">회원정보 및 설정</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="profile-header">
+                <div class="avatar-lg">조</div>
+                <div class="p-name">조준형님</div>
+                <div class="p-email">jhcho5784@naver.com</div>
+                <div class="p-badges">
+                    <span class="p-badge">개인회원</span>
+                    <span class="p-badge">⭐ 일반 등급</span>
+                </div>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="lbl">잔액</div>
+                    <div class="val"><a href="payment-mobile.html">1,000,000P</a></div>
+                </div>
+                <div class="summary-item">
+                    <div class="lbl">마일리지</div>
+                    <div class="val">92.6M</div>
+                </div>
+                <div class="summary-item">
+                    <div class="lbl">발신번호</div>
+                    <div class="val"><a href="#" onclick="showPanel('caller');return false;">3건</a></div>
+                </div>
+                <div class="summary-item">
+                    <div class="lbl">SMS 가능</div>
+                    <div class="val" style="color:var(--primary);">120,481건</div>
+                </div>
+            </div>
+
+            <div class="tab-scroll" id="menuTabs" style="margin:0 -16px 12px;padding:0 16px 12px;">
+                <button class="tab-pill active" data-panel="profile">내 정보</button>
+                <button class="tab-pill" data-panel="password">비밀번호</button>
+                <button class="tab-pill" data-panel="caller">발신번호</button>
+                <button class="tab-pill" data-panel="history">이용내역</button>
+            </div>
+
+            <!-- 내 정보 수정 -->
+            <section class="panel-section active" id="panel-profile">
+                <div class="card">
+                    <div class="card-title">기본 정보</div>
+                    <div class="form-group">
+                        <label class="form-label">아이디</label>
+                        <input type="text" class="form-input" value="jhcho5784@naver.com" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">이름</label>
+                        <input type="text" class="form-input" value="조준형">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">휴대폰번호</label>
+                        <div style="display:flex;gap:8px;">
+                            <input type="tel" class="form-input" value="010-9872-5784" style="flex:1;">
+                            <button class="btn btn-outline btn-sm">인증</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">생년월일</label>
+                        <input type="text" class="form-input" value="1981년 07월 09일" readonly>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">주소 정보</div>
+                    <div class="form-group">
+                        <label class="form-label">우편번호</label>
+                        <div style="display:flex;gap:8px;">
+                            <input type="text" class="form-input" value="12345" readonly style="flex:1;">
+                            <button class="btn btn-outline btn-sm">주소 검색</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">주소</label>
+                        <input type="text" class="form-input" value="서울특별시 강남구 테헤란로 123" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상세주소</label>
+                        <input type="text" class="form-input" placeholder="상세주소를 입력하세요">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="toggle-row">
+                        <div>
+                            <div style="font-weight:700;font-size:14px;">마케팅 수신 동의</div>
+                            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">이벤트·혜택 정보 수신</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-block">저장하기</button>
+            </section>
+
+            <!-- 비밀번호 변경 -->
+            <section class="panel-section" id="panel-password">
+                <div class="card">
+                    <div class="card-title">비밀번호 변경</div>
+                    <div class="form-group">
+                        <label class="form-label required">현재 비밀번호</label>
+                        <input type="password" class="form-input" placeholder="현재 비밀번호">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">새 비밀번호</label>
+                        <input type="password" class="form-input" placeholder="8자 이상, 영문·숫자·특수문자">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">새 비밀번호 확인</label>
+                        <input type="password" class="form-input" placeholder="비밀번호 재입력">
+                    </div>
+                    <button class="btn btn-primary btn-block">변경하기</button>
+                </div>
+            </section>
+
+            <!-- 발신번호 관리 -->
+            <section class="panel-section" id="panel-caller">
+                <div class="card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                        <div class="card-title" style="margin:0;">발신번호 목록</div>
+                        <button class="btn btn-primary btn-sm">+ 등록</button>
+                    </div>
+                    <div class="caller-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <div class="num">010-1234-5678</div>
+                                <div class="desc">마케팅팀 · 등록일 2024-01-10</div>
+                            </div>
+                            <span class="badge badge-success">승인</span>
+                        </div>
+                    </div>
+                    <div class="caller-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <div class="num">02-1234-5678</div>
+                                <div class="desc">고객센터 · 등록일 2024-01-08</div>
+                            </div>
+                            <span class="badge badge-success">승인</span>
+                        </div>
+                    </div>
+                    <div class="caller-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <div class="num">010-5555-1234</div>
+                                <div class="desc">신규 등록 · 등록일 2026-05-15</div>
+                            </div>
+                            <span class="badge badge-warning">심사중</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 포인트/마일리지 내역 -->
+            <section class="panel-section" id="panel-history">
+                <div class="card">
+                    <div class="card-title">포인트/마일리지 내역</div>
+                    <div class="chip-filter" id="historyTypeFilter">
+                        <span class="chip active" data-value="all">전체</span>
+                        <span class="chip" data-value="point">포인트</span>
+                        <span class="chip" data-value="mileage">마일리지</span>
+                    </div>
+                    <div class="history-row">
+                        <div>
+                            <div style="font-weight:600;">충전 (신용카드)</div>
+                            <div style="font-size:12px;color:var(--text-muted);">2026-05-10</div>
+                        </div>
+                        <span class="amount-plus">+100,000P</span>
+                    </div>
+                    <div class="history-row">
+                        <div>
+                            <div style="font-weight:600;">SMS 발송</div>
+                            <div style="font-size:12px;color:var(--text-muted);">2026-05-09</div>
+                        </div>
+                        <span class="amount-minus">-8.3P</span>
+                    </div>
+                    <div class="history-row">
+                        <div>
+                            <div style="font-weight:600;">마일리지 적립</div>
+                            <div style="font-size:12px;color:var(--text-muted);">2026-05-10</div>
+                        </div>
+                        <span class="amount-plus">+5,000M</span>
+                    </div>
+                    <div class="history-row">
+                        <div>
+                            <div style="font-weight:600;">마일리지 사용</div>
+                            <div style="font-size:12px;color:var(--text-muted);">2026-05-09</div>
+                        </div>
+                        <span class="amount-minus">-8.3M</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="card menu-list" style="padding:0;margin-top:12px;">
+                <a href="payment-mobile.html" class="menu-item">
+                    <span class="left"><span class="ico">💳</span>결제 관리</span>
+                    <span class="arrow">›</span>
+                </a>
+                <a href="support-inquiry-mobile.html#history" class="menu-item">
+                    <span class="left"><span class="ico">💌</span>내 문의 내역</span>
+                    <span class="arrow">›</span>
+                </a>
+                <a href="index-mobile.html" class="menu-item">
+                    <span class="left"><span class="ico">🚪</span>로그아웃</span>
+                    <span class="arrow">›</span>
+                </a>
+            </div>
+        </main>
+
+        <nav class="tab-bar" id="tabBar"></nav>
+        <div id="drawerWrap"></div>
+    </div>
+
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('tabBar').innerHTML = renderTabBar('mypage');
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+
+        function showPanel(id) {
+            document.querySelectorAll('.panel-section').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel-' + id).classList.add('active');
+            document.querySelectorAll('#menuTabs .tab-pill').forEach(t => {
+                t.classList.toggle('active', t.dataset.panel === id);
+            });
+            document.getElementById('panel-' + id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        document.querySelectorAll('#menuTabs .tab-pill').forEach(pill => {
+            pill.addEventListener('click', () => showPanel(pill.dataset.panel));
+        });
+
+        initChipFilter(document.getElementById('historyTypeFilter'));
+    </script>
+</body>
+</html>

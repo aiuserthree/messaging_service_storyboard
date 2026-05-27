@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>회원가입 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5cb82e;
+            --primary-dark: #4a9a24;
+            --primary-soft: #f0fce8;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --text: #0f172a;
+            --text-sub: #475569;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+            background: #e2e8f0;
+            color: var(--text);
+            line-height: 1.5;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .mobile-frame {
+            width: 100%;
+            max-width: 430px;
+            min-height: 100vh;
+            background: var(--surface);
+            position: relative;
+            overflow-x: hidden;
+            box-shadow: 0 0 60px rgba(0,0,0,0.1);
+            padding-bottom: 100px;
+        }
+
+        /* 시뮬레이션용 상태바 */
+        .status-bar {
+            height: 44px;
+            background: #ffffff;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        /* === 앱 바 === */
+        .app-bar {
+            height: 56px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 4px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid var(--border);
+        }
+        .app-bar-spacer {
+            width: 40px;
+            flex-shrink: 0;
+            pointer-events: none;
+        }
+        .app-bar-center {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .brand-logo {
+            height: 24px;
+            width: auto;
+            max-width: 120px;
+            object-fit: contain;
+            display: block;
+            flex-shrink: 0;
+        }
+        .app-bar-center h1 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #475569;
+        }
+        .icon-btn:active { background: #f1f5f9; }
+        .icon-btn svg { width: 24px; height: 24px; }
+
+        /* === Stepper === */
+        .stepper {
+            padding: 24px 20px 28px;
+            background: linear-gradient(160deg, #f0fce8 0%, #ffffff 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        .step-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+        .step-sub {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-top: 6px;
+        }
+        .stepper-bar {
+            display: flex;
+            align-items: center;
+            margin-top: 18px;
+            gap: 0;
+        }
+        .stepper-dot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+        .stepper-dot::before {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+        }
+        .stepper-dot:last-child::before { display: none; }
+        .stepper-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            z-index: 1;
+            position: relative;
+            transition: all .25s;
+        }
+        .stepper-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-weight: 600;
+        }
+        .stepper-dot.active .stepper-num {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+        .stepper-dot.active .stepper-label {
+            color: var(--primary);
+        }
+        .stepper-dot.done .stepper-num {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+        .stepper-dot.done::before { background: var(--primary); }
+        .stepper-dot.done .stepper-num::after {
+            content: '✓';
+            position: absolute;
+            color: #fff;
+            font-size: 13px;
+        }
+        .stepper-dot.done .stepper-num span { display: none; }
+
+        /* === Step content === */
+        .step-pane {
+            display: none;
+            padding: 24px 20px 20px;
+        }
+        .step-pane.active { display: block; }
+
+        /* === Terms === */
+        .terms-all {
+            background: var(--primary-soft);
+            border: 1.5px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .terms-list {
+            margin-top: 8px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .term-item {
+            border-bottom: 1px solid var(--border);
+        }
+        .term-item:last-child { border-bottom: none; }
+        .term-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+        }
+        .term-row label {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+        }
+        .term-row label .req { color: var(--danger); font-size: 12px; }
+        .term-row label .opt { color: var(--text-muted); font-size: 12px; }
+        .term-row .view-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .term-detail {
+            display: none;
+            background: #f8fafc;
+            padding: 14px 16px;
+            font-size: 12px;
+            color: var(--text-sub);
+            line-height: 1.6;
+            border-top: 1px dashed var(--border);
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .term-item.open .term-detail { display: block; }
+        .term-detail strong { color: var(--text); display: block; margin: 8px 0 4px; }
+
+        .terms-info {
+            margin-top: 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            padding: 0 4px;
+        }
+
+        /* Custom checkbox */
+        .check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-strong);
+            border-radius: 6px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .check input { 
+            position: absolute; 
+            opacity: 0; 
+            width: 100%; 
+            height: 100%; 
+            cursor: pointer; 
+            margin: 0;
+        }
+        .check::after {
+            content: '✓';
+            font-size: 13px;
+            font-weight: 800;
+            color: transparent;
+        }
+        .check.checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        .check.checked::after { color: #fff; }
+        .terms-all .check {
+            width: 24px;
+            height: 24px;
+        }
+        .terms-all label {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            flex: 1;
+        }
+
+        /* === Form === */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .form-label .req-mark {
+            color: var(--danger);
+            margin-left: 2px;
+        }
+        .form-input {
+            width: 100%;
+            height: 50px;
+            padding: 0 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            background: #fff;
+            color: var(--text);
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(92, 184, 46, 0.1);
+        }
+        .form-input::placeholder { color: var(--text-muted); }
+        .form-help {
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .form-error {
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--danger);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+        .input-group .form-input { flex: 1; }
+        .input-group .btn {
+            flex-shrink: 0;
+            padding: 0 16px;
+            height: 50px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--text);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .input-group .btn.outline {
+            background: #fff;
+            color: var(--text);
+            border: 1.5px solid var(--border-strong);
+        }
+
+        .verification-info {
+            background: var(--primary-soft);
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .verification-info .ico {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .verification-info p {
+            font-size: 12.5px;
+            color: var(--primary-dark);
+            line-height: 1.6;
+        }
+
+        .verify-success {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .verify-success.show { display: flex; }
+
+        .timer {
+            display: inline-block;
+            font-size: 12px;
+            color: var(--danger);
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        /* === 알림 채널 선택 === */
+        .channel-row {
+            display: flex;
+            gap: 8px;
+        }
+        .channel-card {
+            flex: 1;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            background: #fff;
+            position: relative;
+        }
+        .channel-card .ico { font-size: 28px; }
+        .channel-card .name {
+            margin-top: 4px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .channel-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+        }
+        .channel-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* === 발신번호 등록 옵션 === */
+        .caller-option {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+        }
+        .caller-option label {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            cursor: pointer;
+        }
+        .caller-option .check {
+            margin-top: 2px;
+        }
+        .caller-option strong {
+            font-size: 13.5px;
+            color: var(--text);
+            display: block;
+        }
+        .caller-option .info-text {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+        .caller-option .info-text strong {
+            display: inline;
+            color: var(--primary);
+        }
+        .caller-option .info-note {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* === Bottom Sticky Buttons === */
+        .bottom-actions {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border);
+            padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+            display: flex;
+            gap: 8px;
+            z-index: 40;
+        }
+        .bottom-actions .b {
+            flex: 1;
+            height: 52px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        .bottom-actions .b.outline {
+            background: #fff;
+            color: var(--text);
+            border: 1.5px solid var(--border-strong);
+        }
+        .bottom-actions .b.primary {
+            background: var(--text);
+            color: #fff;
+            flex: 1.6;
+        }
+        .bottom-actions .b.primary:disabled {
+            background: var(--border-strong);
+            cursor: not-allowed;
+        }
+        .bottom-actions .b:active:not(:disabled) { transform: scale(0.98); }
+
+        /* === Toast === */
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.92);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 200;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+        .toast.show { display: block; animation: toast-in 0.25s; }
+        @keyframes toast-in {
+            from { opacity: 0; transform: translate(-50%, -10px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        /* === 사이드 드로어 === */
+        .drawer-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.45);
+            z-index: 90;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s;
+        }
+        .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: min(85%, 320px);
+            height: 100%;
+            background: #fff;
+            z-index: 100;
+            transition: left .25s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .drawer.open { left: 0; }
+        @media (min-width: 461px) {
+            .drawer { left: 50%; transform: translateX(calc(-50% - 430px)); }
+            .drawer.open { transform: translateX(calc(-50% - 215px + 160px)); }
+        }
+        .drawer-header {
+            background: linear-gradient(160deg, #2d6e0f 0%, #5cb82e 100%);
+            color: #fff;
+            padding: 24px 20px;
+        }
+        .drawer-header .brand-logo { height: 26px; max-width: 140px; margin-bottom: 12px; display: block; }
+        .drawer-header .name { font-size: 14px; opacity: 0.85; line-height: 1.5; }
+        .drawer-menu { flex: 1; padding: 8px 0; overflow-y: auto; }
+        .drawer-menu a {
+            display: flex;
+            padding: 14px 20px;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            align-items: center;
+        }
+        .drawer-menu a:active { background: #f8fafc; }
+        .drawer-menu .menu-section {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+            padding: 14px 20px 6px;
+            letter-spacing: 0.5px;
+        }
+        .drawer-footer {
+            border-top: 1px solid var(--border);
+            padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+        }
+        .drawer-footer a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame">
+
+        <!-- 상태바 -->
+        <div class="status-bar">
+            <span>9:41</span>
+        </div>
+
+        <!-- 앱 바 -->
+        <div class="app-bar">
+            <button class="icon-btn menu-btn-signup" id="menuBtnSignup" aria-label="메뉴">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <button class="icon-btn" onclick="history.back();" aria-label="뒤로">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <div class="app-bar-center">
+                <img src="../img/logo/tokbell_logo_o.png" alt="tokbell" class="brand-logo" width="100" height="24">
+                <h1>회원가입</h1>
+            </div>
+            <a href="login-mobile.html" class="icon-btn" aria-label="로그인" style="font-size:11px;font-weight:700;color:var(--primary);width:auto;padding:0 10px;text-decoration:none;">
+                로그인
+            </a>
+        </div>
+
+        <!-- 단계 표시 -->
+        <div class="stepper">
+            <div class="step-title" id="paneTitle">약관에 동의해 주세요</div>
+            <div class="step-sub" id="paneSub">서비스 이용을 위해 약관 동의가 필요합니다</div>
+            <div class="stepper-bar">
+                <div class="stepper-dot active" data-step="1">
+                    <div class="stepper-num"><span>1</span></div>
+                    <div class="stepper-label">약관동의</div>
+                </div>
+                <div class="stepper-dot" data-step="2">
+                    <div class="stepper-num"><span>2</span></div>
+                    <div class="stepper-label">본인인증</div>
+                </div>
+                <div class="stepper-dot" data-step="3">
+                    <div class="stepper-num"><span>3</span></div>
+                    <div class="stepper-label">정보입력</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== STEP 1: 약관 동의 ========== -->
+        <div class="step-pane active" id="step1">
+            <div class="terms-all">
+                <div class="check" data-check="all"><input type="checkbox" id="agreeAll"></div>
+                <label for="agreeAll" onclick="document.querySelector('[data-check=all]').click()">
+                    전체 동의<br>
+                    <span style="font-size:12px;font-weight:500;color:var(--text-sub);">필수 및 선택 항목 모두 동의합니다</span>
+                </label>
+            </div>
+
+            <div class="terms-list">
+                <div class="term-item">
+                    <div class="term-row">
+                        <div class="check" data-check="r1" data-required="1"><input type="checkbox"></div>
+                        <label>이용약관 동의 <span class="req">(필수)</span></label>
+                        <button class="view-btn" onclick="this.closest('.term-item').classList.toggle('open')">보기 ›</button>
+                    </div>
+                    <div class="term-detail">
+                        <strong>제1조 (목적)</strong>
+                        이 약관은 회사가 온라인으로 제공하는 서비스의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
+                        <strong>제2조 (정의)</strong>
+                        "서비스"란 회사가 제공하는 메시징 서비스를 의미합니다.<br>
+                        "이용자"란 이 약관에 따라 회사가 제공하는 서비스를 받는 회원 및 비회원을 말합니다.
+                    </div>
+                </div>
+                <div class="term-item">
+                    <div class="term-row">
+                        <div class="check" data-check="r2" data-required="1"><input type="checkbox"></div>
+                        <label>개인정보 수집 및 이용 동의 <span class="req">(필수)</span></label>
+                        <button class="view-btn" onclick="this.closest('.term-item').classList.toggle('open')">보기 ›</button>
+                    </div>
+                    <div class="term-detail">
+                        <strong>수집항목</strong>
+                        로그인ID, 비밀번호, 이동전화번호, 이메일, 결제기록, 접속IP, 서비스 이용기록 등<br>
+                        <strong>수집목적</strong>
+                        회원가입, 본인확인, 서비스 제공, 결제 처리, 고객 지원
+                    </div>
+                </div>
+                <div class="term-item">
+                    <div class="term-row">
+                        <div class="check" data-check="r3" data-required="1"><input type="checkbox"></div>
+                        <label>개인정보 취급 위탁 동의 <span class="req">(필수)</span></label>
+                        <button class="view-btn" onclick="this.closest('.term-item').classList.toggle('open')">보기 ›</button>
+                    </div>
+                    <div class="term-detail">
+                        <strong>위탁업체 및 업무</strong>
+                        엔에이치엔한국사이버결제 - 신용카드 결제 처리<br>
+                        다날 - 본인 인증 처리<br>
+                        AWS - 데이터 저장 및 처리
+                    </div>
+                </div>
+                <div class="term-item">
+                    <div class="term-row">
+                        <div class="check" data-check="r4" data-required="1"><input type="checkbox"></div>
+                        <label>불법스팸방지 안내 동의 <span class="req">(필수)</span></label>
+                        <button class="view-btn" onclick="this.closest('.term-item').classList.toggle('open')">보기 ›</button>
+                    </div>
+                    <div class="term-detail">
+                        불법스팸메시지(대출, 도박, 의약품, 성인, 주식 등)를 발송하는 경우, 즉시 가입이 차단되며 잔여 포인트는 환불되지 않습니다. KISA 스팸 신고 시 서비스 이용이 제한될 수 있습니다.
+                    </div>
+                </div>
+                <div class="term-item">
+                    <div class="term-row">
+                        <div class="check" data-check="o1"><input type="checkbox"></div>
+                        <label>마케팅 정보 수신 동의 <span class="opt">(선택)</span></label>
+                        <button class="view-btn" onclick="this.closest('.term-item').classList.toggle('open')">보기 ›</button>
+                    </div>
+                    <div class="term-detail">
+                        SMS, 이메일, 카카오톡 알림톡을 통해 이벤트, 프로모션, 신규 서비스 안내, 할인 정보 등을 발송할 수 있습니다. 동의하지 않아도 서비스 이용에는 제한이 없습니다.
+                    </div>
+                </div>
+            </div>
+
+            <div class="terms-info">
+                * 필수 약관 동의 거부 시, 회원가입이 제한됩니다.<br>
+                * 마케팅 수신 동의는 선택사항이며, 동의하지 않아도 서비스 이용에는 제한이 없습니다.
+            </div>
+        </div>
+
+        <!-- ========== STEP 2: 본인 인증 ========== -->
+        <div class="step-pane" id="step2">
+            <div class="verification-info">
+                <span class="ico">🔐</span>
+                <p>본인 명의의 휴대폰만 인증 가능합니다.<br>안전한 회원가입을 위해 휴대폰 인증을 진행해 주세요.</p>
+            </div>
+
+            <div class="verify-success" id="verifySuccess">
+                <span>✓</span> 인증이 완료되었습니다
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">이름<span class="req-mark">*</span></label>
+                <input type="text" class="form-input" id="verifyName" placeholder="실명을 입력해주세요">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">생년월일<span class="req-mark">*</span></label>
+                <input type="text" class="form-input" id="verifyBirth" placeholder="YYYYMMDD" maxlength="8" inputmode="numeric">
+                <div class="form-help">8자리 숫자로 입력해주세요 (예: 19900101)</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">휴대폰 번호<span class="req-mark">*</span></label>
+                <div class="input-group">
+                    <input type="tel" class="form-input" id="phoneNumber" placeholder="010-1234-5678" maxlength="13" inputmode="numeric">
+                    <button class="btn" id="sendCodeBtn">인증요청</button>
+                </div>
+            </div>
+
+            <div class="form-group" id="codeGroup" style="display:none;">
+                <label class="form-label">
+                    인증번호<span class="req-mark">*</span>
+                    <span class="timer" id="timer">03:00</span>
+                </label>
+                <div class="input-group">
+                    <input type="text" class="form-input" id="verifyCode" placeholder="인증번호 6자리" maxlength="6" inputmode="numeric">
+                    <button class="btn outline" id="confirmCodeBtn">확인</button>
+                </div>
+                <div class="form-help">인증번호가 오지 않나요? <a href="#" onclick="resendCode();return false;" style="color:var(--primary);font-weight:600;">재발송</a></div>
+            </div>
+        </div>
+
+        <!-- ========== STEP 3: 정보 입력 ========== -->
+        <div class="step-pane" id="step3">
+            <div class="form-group">
+                <label class="form-label">아이디 (이메일)<span class="req-mark">*</span></label>
+                <div class="input-group">
+                    <input type="email" class="form-input" id="userEmail" placeholder="example@email.com">
+                    <button class="btn outline" onclick="checkDup()">중복확인</button>
+                </div>
+                <div class="form-help">이메일 주소를 아이디로 사용합니다</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">비밀번호<span class="req-mark">*</span></label>
+                <input type="password" class="form-input" id="userPw" placeholder="8~16자 영문, 숫자, 특수문자 혼합">
+                <div class="form-help">
+                    · 8~16자 영문, 숫자, 특수문자(~!@#$%^&*?) 혼합<br>
+                    · 동일한 문자 연속 반복 사용 불가
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">비밀번호 확인<span class="req-mark">*</span></label>
+                <input type="password" class="form-input" id="userPwConfirm" placeholder="비밀번호를 다시 입력해주세요">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">연락처</label>
+                <input type="tel" class="form-input" id="userContact" placeholder="010-1234-5678" maxlength="13" inputmode="numeric">
+            </div>
+
+            <div class="form-group">
+                <div class="caller-option">
+                    <label>
+                        <div class="check" data-check="caller"><input type="checkbox"></div>
+                        <div>
+                            <strong>본인 전화번호를 발신번호로 등록</strong>
+                            <div class="info-text">
+                                인증된 번호 <strong id="verifiedPhoneText">010-1234-5678</strong>를<br>
+                                문자 발송 시 발신번호로 등록합니다.
+                            </div>
+                            <div class="info-note">※ 가입 후 마이페이지에서 추가/수정할 수 있습니다.</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">알림성 메시지 수신 채널<span class="req-mark">*</span></label>
+                <div class="form-help" style="margin-top:0;margin-bottom:8px;">둘 중 하나를 필수로 선택해주세요</div>
+                <div class="channel-row">
+                    <div class="channel-card" data-channel="sms">
+                        <div class="ico">📱</div>
+                        <div class="name">SMS</div>
+                    </div>
+                    <div class="channel-card" data-channel="email">
+                        <div class="ico">📧</div>
+                        <div class="name">E-mail</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 하단 버튼 -->
+        <div class="bottom-actions">
+            <button class="b outline" id="prevBtn">비동의</button>
+            <button class="b primary" id="nextBtn" disabled>동의</button>
+        </div>
+
+        <div class="toast" id="toast"></div>
+
+        <!-- 드로어 (비로그인 상태) -->
+        <div class="drawer-backdrop" id="signupBackdrop"></div>
+        <aside class="drawer" id="signupDrawer">
+            <div class="drawer-header">
+                <img src="../img/logo/tokbell_logo_drawer_white.png" alt="tokbell" class="brand-logo" width="120" height="26">
+                <div class="name" style="margin-top:8px;font-size:15px;opacity:0.85;">로그인 후 더 많은 기능을 이용하세요</div>
+            </div>
+            <div class="drawer-menu">
+                <div class="menu-section">서비스</div>
+                <a href="#">일반/광고 문자</a>
+                <a href="#">선거 문자</a>
+                <a href="#">알림톡</a>
+                <a href="#">브랜드 메시지</a>
+                <div class="menu-section">고객지원</div>
+                <a href="support-notice-mobile.html">공지사항</a>
+                <a href="support-faq-mobile.html">FAQ</a>
+                <a href="support-event-mobile.html">이벤트</a>
+                <a href="support-inquiry-mobile.html">1:1 문의</a>
+            </div>
+            <div class="drawer-footer">
+                <a href="login-mobile.html" style="text-align:center;background:var(--primary);color:#fff;">로그인</a>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        let currentStep = 1;
+
+        // === 체크박스 토글 ===
+        document.querySelectorAll('.check').forEach(c => {
+            c.addEventListener('click', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+                const input = c.querySelector('input');
+                input.checked = !input.checked;
+                c.classList.toggle('checked', input.checked);
+                handleCheckChange(c.dataset.check, input.checked);
+            });
+            const input = c.querySelector('input');
+            if (input) {
+                input.addEventListener('change', () => {
+                    c.classList.toggle('checked', input.checked);
+                    handleCheckChange(c.dataset.check, input.checked);
+                });
+            }
+        });
+
+        function getCheckEl(name) {
+            return document.querySelector(`.check[data-check="${name}"]`);
+        }
+        function getChecked(name) {
+            const el = getCheckEl(name);
+            return el ? el.classList.contains('checked') : false;
+        }
+        function setChecked(name, on) {
+            const el = getCheckEl(name);
+            if (!el) return;
+            el.classList.toggle('checked', on);
+            const inp = el.querySelector('input');
+            if (inp) inp.checked = on;
+        }
+
+        function handleCheckChange(name, on) {
+            if (name === 'all') {
+                ['r1','r2','r3','r4','o1'].forEach(k => setChecked(k, on));
+            } else if (['r1','r2','r3','r4','o1'].includes(name)) {
+                const allOn = ['r1','r2','r3','r4','o1'].every(k => getChecked(k));
+                setChecked('all', allOn);
+            }
+            updateStep1Btn();
+        }
+
+        function updateStep1Btn() {
+            if (currentStep !== 1) return;
+            const allReq = ['r1','r2','r3','r4'].every(k => getChecked(k));
+            document.getElementById('nextBtn').disabled = !allReq;
+        }
+
+        // === 단계 이동 ===
+        function goStep(n) {
+            currentStep = n;
+            document.querySelectorAll('.step-pane').forEach(p => p.classList.remove('active'));
+            document.getElementById('step' + n).classList.add('active');
+
+            document.querySelectorAll('.stepper-dot').forEach(d => {
+                const s = +d.dataset.step;
+                d.classList.toggle('active', s === n);
+                d.classList.toggle('done', s < n);
+            });
+
+            const titles = {
+                1: ['약관에 동의해 주세요', '서비스 이용을 위해 약관 동의가 필요합니다'],
+                2: ['본인 인증을 진행해 주세요', '안전한 가입을 위해 휴대폰 본인 인증이 필요합니다'],
+                3: ['회원 정보를 입력해 주세요', '서비스 이용에 필요한 정보를 입력해 주세요']
+            };
+            document.getElementById('paneTitle').textContent = titles[n][0];
+            document.getElementById('paneSub').textContent = titles[n][1];
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            if (n === 1) {
+                prevBtn.textContent = '비동의';
+                nextBtn.textContent = '동의';
+                updateStep1Btn();
+            } else if (n === 2) {
+                prevBtn.textContent = '이전';
+                nextBtn.textContent = '다음';
+                nextBtn.disabled = !verified;
+            } else {
+                prevBtn.textContent = '이전';
+                nextBtn.textContent = '가입 완료';
+                nextBtn.disabled = !canSubmit();
+            }
+            window.scrollTo(0, 0);
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentStep === 1) {
+                showToast('가입을 취소합니다');
+                setTimeout(() => location.href = 'index-mobile.html', 600);
+            } else {
+                goStep(currentStep - 1);
+            }
+        });
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentStep === 1) {
+                goStep(2);
+            } else if (currentStep === 2) {
+                goStep(3);
+            } else {
+                showToast('가입이 완료되었습니다 🎉');
+                setTimeout(() => location.href = 'main-mobile.html', 1200);
+            }
+        });
+
+        // === 본인 인증 ===
+        let verified = false;
+        let timerInterval = null;
+
+        function formatPhone(v) {
+            v = v.replace(/[^0-9]/g, '');
+            if (v.length < 4) return v;
+            if (v.length < 8) return v.slice(0,3) + '-' + v.slice(3);
+            return v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7,11);
+        }
+        document.getElementById('phoneNumber').addEventListener('input', e => {
+            e.target.value = formatPhone(e.target.value);
+        });
+        document.getElementById('userContact').addEventListener('input', e => {
+            e.target.value = formatPhone(e.target.value);
+        });
+        document.getElementById('verifyBirth').addEventListener('input', e => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+
+        document.getElementById('sendCodeBtn').addEventListener('click', () => {
+            const name = document.getElementById('verifyName').value.trim();
+            const birth = document.getElementById('verifyBirth').value.trim();
+            const phone = document.getElementById('phoneNumber').value.trim();
+            if (!name) return showToast('이름을 입력해주세요');
+            if (birth.length !== 8) return showToast('생년월일 8자리를 입력해주세요');
+            if (phone.length < 12) return showToast('휴대폰 번호를 입력해주세요');
+            document.getElementById('codeGroup').style.display = 'block';
+            startTimer(180);
+            showToast('인증번호가 발송되었습니다');
+        });
+
+        function startTimer(sec) {
+            clearInterval(timerInterval);
+            const el = document.getElementById('timer');
+            timerInterval = setInterval(() => {
+                const m = String(Math.floor(sec/60)).padStart(2,'0');
+                const s = String(sec%60).padStart(2,'0');
+                el.textContent = `${m}:${s}`;
+                if (sec-- <= 0) {
+                    clearInterval(timerInterval);
+                    el.textContent = '시간초과';
+                }
+            }, 1000);
+        }
+
+        function resendCode() {
+            startTimer(180);
+            showToast('인증번호가 재발송되었습니다');
+        }
+
+        document.getElementById('confirmCodeBtn').addEventListener('click', () => {
+            const code = document.getElementById('verifyCode').value.trim();
+            if (code.length !== 6) return showToast('인증번호 6자리를 입력해주세요');
+            verified = true;
+            clearInterval(timerInterval);
+            document.getElementById('verifySuccess').classList.add('show');
+            document.getElementById('verifiedPhoneText').textContent = document.getElementById('phoneNumber').value || '010-1234-5678';
+            document.getElementById('userContact').value = document.getElementById('phoneNumber').value;
+            if (currentStep === 2) document.getElementById('nextBtn').disabled = false;
+            showToast('인증이 완료되었습니다');
+        });
+
+        // === 채널 선택 ===
+        document.querySelectorAll('.channel-card').forEach(c => {
+            c.addEventListener('click', () => {
+                c.classList.toggle('selected');
+                if (currentStep === 3) document.getElementById('nextBtn').disabled = !canSubmit();
+            });
+        });
+
+        // === Step3 검증 ===
+        ['userEmail','userPw','userPwConfirm'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                if (currentStep === 3) document.getElementById('nextBtn').disabled = !canSubmit();
+            });
+        });
+        function canSubmit() {
+            const email = document.getElementById('userEmail').value.trim();
+            const pw = document.getElementById('userPw').value;
+            const pw2 = document.getElementById('userPwConfirm').value;
+            const channel = document.querySelectorAll('.channel-card.selected').length > 0;
+            return email.includes('@') && pw.length >= 8 && pw === pw2 && channel;
+        }
+
+        function checkDup() { showToast('사용 가능한 아이디입니다 ✓'); }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        // 햄버거 메뉴 (드로어)
+        document.getElementById('menuBtnSignup').addEventListener('click', () => {
+            document.getElementById('signupDrawer').classList.add('open');
+            document.getElementById('signupBackdrop').classList.add('open');
+        });
+        document.getElementById('signupBackdrop').addEventListener('click', () => {
+            document.getElementById('signupDrawer').classList.remove('open');
+            document.getElementById('signupBackdrop').classList.remove('open');
+        });
+    </script>
+
+</body>
+</html>

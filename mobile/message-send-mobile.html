@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>문자 발송 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+    <style>
+        .type-tabs { display: flex; gap: 0; background: #fff; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+        .type-tabs::-webkit-scrollbar { display: none; }
+        .type-tab {
+            flex: 1; min-width: max-content; padding: 12px 16px; border: none; background: none;
+            font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer;
+            border-bottom: 2px solid transparent; white-space: nowrap;
+        }
+        .type-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .recipient-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .recipient-count { font-size: 13px; color: var(--text-sub); margin-bottom: 10px; }
+        .recipient-count strong { color: var(--primary); }
+        .recipient-list { max-height: 160px; overflow-y: auto; border: 1px solid var(--border); border-radius: 10px; }
+        .recipient-row {
+            display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+            border-bottom: 1px solid var(--border); font-size: 13px;
+        }
+        .recipient-row:last-child { border-bottom: none; }
+        .var-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+        .var-btns button { padding: 6px 10px; font-size: 11px; border-radius: 6px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-weight: 600; color: var(--primary); }
+        .byte-counter { text-align: right; font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+        .msg-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .bottom-action { bottom: calc(72px + env(safe-area-inset-bottom)); }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar"><span>9:41</span></div>
+
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="main-mobile.html" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">문자 발송</div>
+                    <div class="subtitle">SMS / LMS / MMS</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <div class="type-tabs">
+            <button class="type-tab active">일반문자</button>
+            <button class="type-tab">광고문자</button>
+            <button class="type-tab">선거문자</button>
+        </div>
+
+        <main class="page-content" style="padding-bottom: 140px;">
+            <div class="alert alert-warning">
+                ⚠️ 발신번호 등록이 필요합니다. <a href="mypage-mobile.html" style="color:#92400e;font-weight:700;">등록하기</a>
+            </div>
+
+            <section class="card">
+                <div class="form-group">
+                    <label class="form-label required">발신번호</label>
+                    <select class="form-select" id="callerNumber">
+                        <option value="">발신번호를 선택하세요</option>
+                        <option value="010-1234-5678">010-1234-5678 (마케팅팀)</option>
+                        <option value="02-1234-5678">02-1234-5678 (고객센터)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">수신번호</label>
+                    <div class="recipient-toolbar">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('excelInput').click()">엑셀 업로드</button>
+                        <input type="file" id="excelInput" accept=".xlsx,.xls,.csv" hidden>
+                        <button type="button" class="btn btn-outline btn-sm">주소록</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="addRecipientBtn">+ 추가</button>
+                    </div>
+                    <div class="recipient-count">총 <strong id="recipientCount">2</strong>명</div>
+                    <div class="recipient-list" id="recipientList">
+                        <div class="recipient-row">
+                            <input type="checkbox" checked>
+                            <span style="flex:1;font-weight:600;">홍길동</span>
+                            <span style="color:var(--text-muted);">010-1234-5678</span>
+                        </div>
+                        <div class="recipient-row">
+                            <input type="checkbox" checked>
+                            <span style="flex:1;font-weight:600;">김영희</span>
+                            <span style="color:var(--text-muted);">010-9876-5432</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">메시지 타입</label>
+                    <div class="radio-row" id="msgTypeRow">
+                        <label class="radio-chip"><input type="radio" name="msgType" value="SMS" checked> SMS</label>
+                        <label class="radio-chip"><input type="radio" name="msgType" value="LMS"> LMS</label>
+                        <label class="radio-chip"><input type="radio" name="msgType" value="MMS"> MMS</label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="titleGroup" style="display:none;">
+                    <label class="form-label">제목</label>
+                    <input type="text" class="form-input" placeholder="제목을 입력하세요" maxlength="40">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">메시지 내용</label>
+                    <div class="var-btns">
+                        <button type="button" onclick="insertVar('#{이름}')">#{이름}</button>
+                        <button type="button" onclick="insertVar('#{전화번호}')">#{전화번호}</button>
+                        <button type="button" onclick="insertVar('#{변수1}')">#{변수1}</button>
+                        <button type="button" onclick="insertVar('#{변수2}')">#{변수2}</button>
+                        <button type="button" onclick="insertVar('#{변수3}')">#{변수3}</button>
+                    </div>
+                    <textarea class="form-textarea" id="messageContent" placeholder="메시지 내용을 입력하세요" oninput="updatePreview()"></textarea>
+                    <div class="byte-counter" id="byteCounter">0 / 90 바이트</div>
+                    <div class="msg-actions">
+                        <button type="button" class="btn btn-outline btn-sm">최근발송</button>
+                        <button type="button" class="btn btn-outline btn-sm">템플릿</button>
+                        <button type="button" class="btn btn-outline btn-sm">특수문자</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">발송 시간</label>
+                    <div class="radio-row">
+                        <label class="radio-chip"><input type="radio" name="sendTime" value="now" checked> 즉시 발송</label>
+                        <label class="radio-chip"><input type="radio" name="sendTime" value="reserve"> 예약 발송</label>
+                    </div>
+                    <input type="datetime-local" class="form-input" id="reserveTime" style="display:none;margin-top:10px;">
+                </div>
+
+                <div class="cost-box">
+                    <div class="cost-row"><span>수신번호</span><span id="costCount">2명</span></div>
+                    <div class="cost-row"><span>단가</span><span id="costUnit">8.3P</span></div>
+                    <div class="cost-row total"><span>예상 발송 비용</span><span id="costTotal">16.6P</span></div>
+                    <div class="form-help" style="margin-top:8px;">* 마일리지가 선 차감됩니다 (미보유 시 포인트 차감)</div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-title">메시지 미리보기</div>
+                <div class="phone-preview">
+                    <div class="screen">
+                        <div class="caller" id="previewCaller">발신번호를 선택하세요</div>
+                        <div class="bubble" id="previewBubble">메시지 내용을 입력하세요</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="bottom-action">
+            <div class="btn-row">
+                <button type="button" class="btn btn-outline" style="flex:1;">테스트 발송</button>
+                <button type="button" class="btn btn-primary" style="flex:2;" id="sendBtn">발송하기</button>
+            </div>
+        </div>
+
+        <nav class="tab-bar" id="tabBar"></nav>
+        <div id="drawerWrap"></div>
+    </div>
+
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('tabBar').innerHTML = renderTabBar('send');
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+
+        const msgContent = document.getElementById('messageContent');
+        const byteCounter = document.getElementById('byteCounter');
+        const previewBubble = document.getElementById('previewBubble');
+        const previewCaller = document.getElementById('previewCaller');
+        const callerSelect = document.getElementById('callerNumber');
+        const titleGroup = document.getElementById('titleGroup');
+        const costUnit = document.getElementById('costUnit');
+        const costTotal = document.getElementById('costTotal');
+        const prices = { SMS: 8.3, LMS: 26.5, MMS: 59 };
+        let count = 2;
+
+        function getByteLength(str) {
+            let len = 0;
+            for (let i = 0; i < str.length; i++) {
+                len += str.charCodeAt(i) > 127 ? 2 : 1;
+            }
+            return len;
+        }
+
+        function insertVar(v) {
+            const start = msgContent.selectionStart;
+            const end = msgContent.selectionEnd;
+            const text = msgContent.value;
+            msgContent.value = text.slice(0, start) + v + text.slice(end);
+            msgContent.focus();
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const bytes = getByteLength(msgContent.value);
+            const type = document.querySelector('input[name="msgType"]:checked').value;
+            const max = type === 'SMS' ? 90 : 2000;
+            byteCounter.textContent = bytes + ' / ' + max + ' 바이트';
+            previewBubble.textContent = msgContent.value || '메시지 내용을 입력하세요';
+            if (type !== 'SMS') titleGroup.style.display = 'block';
+            else titleGroup.style.display = 'none';
+            costUnit.textContent = prices[type] + 'P';
+            costTotal.textContent = (prices[type] * count).toFixed(1) + 'P';
+        }
+
+        callerSelect.addEventListener('change', () => {
+            previewCaller.textContent = callerSelect.value || '발신번호를 선택하세요';
+        });
+
+        document.querySelectorAll('input[name="msgType"]').forEach(r => r.addEventListener('change', updatePreview));
+        document.querySelectorAll('input[name="sendTime"]').forEach(r => {
+            r.addEventListener('change', () => {
+                document.getElementById('reserveTime').style.display = r.value === 'reserve' ? 'block' : 'none';
+            });
+        });
+
+        document.querySelectorAll('.type-tab').forEach((tab, i) => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        document.getElementById('sendBtn').addEventListener('click', () => {
+            if (!callerSelect.value) { alert('발신번호를 선택해주세요.'); return; }
+            if (!msgContent.value.trim()) { alert('메시지 내용을 입력해주세요.'); return; }
+            location.href = 'send-complete-mobile.html?total=1500&fail=13';
+        });
+
+        updatePreview();
+    </script>
+</body>
+</html>

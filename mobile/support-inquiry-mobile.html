@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>1:1 문의 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+</head>
+<body>
+    <div class="mobile-frame no-tab">
+        <div class="status-bar"><span>9:41</span></div>
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="support-center-mobile.html" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">1:1 문의</div>
+                    <div class="subtitle">문의 접수 및 내역</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <nav class="support-tabs" id="supportTabsNav"></nav>
+
+        <div class="tab-scroll" id="inquiryTabs" style="margin:0;padding:12px 16px;background:#fff;border-bottom:1px solid var(--border);">
+            <button class="tab-pill active" data-panel="form">문의하기</button>
+            <button class="tab-pill" data-panel="history" id="historyTab">내 문의내역</button>
+        </div>
+
+        <main class="page-content">
+            <div data-tab-panel="form">
+                <section class="card">
+                    <div class="form-group">
+                        <label class="form-label required">문의 유형</label>
+                        <select class="form-select">
+                            <option>서비스 이용</option>
+                            <option>결제/환불</option>
+                            <option>발송 오류</option>
+                            <option>계정/회원</option>
+                            <option>기타</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">제목</label>
+                        <input type="text" class="form-input" placeholder="문의 제목을 입력하세요">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">내용</label>
+                        <textarea class="form-textarea" placeholder="문의 내용을 상세히 입력해 주세요" rows="6"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">첨부파일</label>
+                        <div class="file-upload">
+                            <input type="file" id="inquiryFile" hidden>
+                            <label for="inquiryFile">파일 선택</label>
+                            <div class="form-help" style="margin-top:8px;">이미지, PDF (최대 10MB)</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">개인정보 수집·이용 동의</label>
+                        <div class="terms-box">
+                            문의 접수 및 답변을 위해 이름, 연락처, 이메일, 문의내용을 수집·이용합니다.
+                            보유기간: 문의 처리 완료 후 3년
+                        </div>
+                        <label class="check-row" style="margin-top:8px;">
+                            <input type="checkbox" id="privacyAgree"> 개인정보 수집·이용에 동의합니다
+                        </label>
+                    </div>
+                    <div class="btn-row">
+                        <button type="button" class="btn btn-outline" style="flex:1;">초기화</button>
+                        <button type="button" class="btn btn-primary" style="flex:2;" id="submitInquiry">문의 접수</button>
+                    </div>
+                </section>
+            </div>
+
+            <div data-tab-panel="history" style="display:none;" id="history">
+                <div class="inquiry-history-item">
+                    <div class="inquiry-history-head">
+                        <div>
+                            <div style="font-weight:700;font-size:14px;">발송 실패 건 문의</div>
+                            <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">2026-05-10 · 서비스 이용</div>
+                        </div>
+                        <span class="badge badge-success">답변완료</span>
+                    </div>
+                    <div class="inquiry-history-detail">
+                        <p><strong>문의:</strong> 어제 발송한 SMS 중 2건이 실패했는데 사유 확인 부탁드립니다.</p>
+                        <p style="margin-top:10px;padding:12px;background:#fff;border-left:3px solid var(--primary);border-radius:0 8px 8px 0;"><strong>답변:</strong> 확인 결과 수신거부 번호 1건, 잘못된 번호 형식 1건으로 확인되었습니다. 재발송 시 수신거부 번호는 자동 제외됩니다.</p>
+                    </div>
+                </div>
+                <div class="inquiry-history-item">
+                    <div class="inquiry-history-head">
+                        <div>
+                            <div style="font-weight:700;font-size:14px;">발신번호 등록 문의</div>
+                            <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">2026-05-05 · 계정/회원</div>
+                        </div>
+                        <span class="badge badge-warning">답변대기</span>
+                    </div>
+                    <div class="inquiry-history-detail">
+                        <p><strong>문의:</strong> 발신번호 등록 심사가 얼마나 걸리나요?</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="drawerWrap"></div>
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+        document.getElementById('supportTabsNav').innerHTML = renderSupportTabs('inquiry');
+        initTabPills(document.getElementById('inquiryTabs'));
+        initInquiryHistory();
+
+        if (location.hash === '#history') {
+            document.getElementById('historyTab').click();
+        }
+
+        document.getElementById('submitInquiry').addEventListener('click', () => {
+            if (!document.getElementById('privacyAgree').checked) {
+                alert('개인정보 수집·이용에 동의해 주세요.');
+                return;
+            }
+            alert('문의가 접수되었습니다. (UI 목업)');
+        });
+    </script>
+</body>
+</html>

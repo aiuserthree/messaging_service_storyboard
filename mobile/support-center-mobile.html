@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>통합 고객센터 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+</head>
+<body>
+    <div class="mobile-frame no-tab">
+        <div class="status-bar"><span>9:41</span></div>
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="javascript:history.back()" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">통합 고객센터</div>
+                    <div class="subtitle">공지 · FAQ · 문의</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="support-hero">
+                <h2>무엇을 도와드릴까요?</h2>
+                <p>톡벨의 공지사항, FAQ, 1:1 문의를<br>한곳에서 확인하세요.</p>
+            </div>
+
+            <div class="support-quick">
+                <a href="support-inquiry-mobile.html">
+                    <div class="ico">💬</div>
+                    <div class="lbl">문의하기</div>
+                </a>
+                <a href="support-inquiry-mobile.html#history">
+                    <div class="ico">📋</div>
+                    <div class="lbl">내 문의내역</div>
+                </a>
+                <a href="payment-refund-mobile.html">
+                    <div class="ico">↩️</div>
+                    <div class="lbl">환불신청</div>
+                </a>
+            </div>
+
+            <section class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <div class="card-title" style="margin:0;">공지사항</div>
+                    <a href="support-notice-mobile.html" style="font-size:13px;color:var(--primary);font-weight:700;text-decoration:none;">전체보기 ›</a>
+                </div>
+                <a href="support-notice-detail-mobile.html?id=1" class="notice-item">
+                    <span class="tag">[공지]</span>
+                    <div class="title">카카오 알림톡 템플릿 심사 기준 강화 안내</div>
+                    <div class="meta">2026-05-15 · 조회 1,234</div>
+                </a>
+                <a href="support-notice-detail-mobile.html?id=2" class="notice-item">
+                    <span class="tag">[알림]</span>
+                    <div class="title">카카오 브랜드메시지 요금 정책 변경 안내</div>
+                    <div class="meta">2026-05-12 · 조회 892</div>
+                </a>
+                <a href="support-notice-detail-mobile.html?id=3" class="notice-item">
+                    <span class="tag">[공지]</span>
+                    <div class="title">10/23(목) 시스템 점검 안내</div>
+                    <div class="meta">2026-05-10 · 조회 567</div>
+                </a>
+            </section>
+
+            <section class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <div class="card-title" style="margin:0;">자주 묻는 질문</div>
+                    <a href="support-faq-mobile.html" style="font-size:13px;color:var(--primary);font-weight:700;text-decoration:none;">전체보기 ›</a>
+                </div>
+                <a href="support-faq-mobile.html#faq1" class="notice-item">
+                    <span class="tag">[결제/포인트]</span>
+                    <div class="title">문자 발송 요금은 어떻게 되나요?</div>
+                </a>
+                <a href="support-faq-mobile.html#faq2" class="notice-item">
+                    <span class="tag">[문자발송]</span>
+                    <div class="title">발신번호 등록 방법을 알려주세요</div>
+                </a>
+                <a href="support-faq-mobile.html#faq3" class="notice-item">
+                    <span class="tag">[카카오톡]</span>
+                    <div class="title">알림톡과 문자의 차이점이 무엇인가요?</div>
+                </a>
+            </section>
+
+            <section class="card menu-list" style="padding:0;">
+                <a href="support-notice-mobile.html" class="menu-item"><span class="left"><span class="ico">📢</span>공지사항</span><span class="arrow">›</span></a>
+                <a href="support-faq-mobile.html" class="menu-item"><span class="left"><span class="ico">❓</span>FAQ</span><span class="arrow">›</span></a>
+                <a href="support-event-mobile.html" class="menu-item"><span class="left"><span class="ico">🎉</span>이벤트</span><span class="arrow">›</span></a>
+                <a href="support-inquiry-mobile.html" class="menu-item"><span class="left"><span class="ico">💌</span>1:1 문의</span><span class="arrow">›</span></a>
+                <a href="payment-refund-mobile.html" class="menu-item"><span class="left"><span class="ico">↩️</span>환불신청</span><span class="arrow">›</span></a>
+                <a href="quote-inquiry-mobile.html" class="menu-item"><span class="left"><span class="ico">📊</span>견적 문의</span><span class="arrow">›</span></a>
+            </section>
+
+            <div class="alert alert-info" style="margin-top:12px;">
+                📞 고객센터 <strong>1588-0000</strong> · 평일 09:00~18:00
+            </div>
+        </main>
+    </div>
+    <div id="drawerWrap"></div>
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>공지사항 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+</head>
+<body>
+    <div class="mobile-frame no-tab">
+        <div class="status-bar"><span>9:41</span></div>
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="support-center-mobile.html" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">고객센터</div>
+                    <div class="subtitle">공지사항</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <nav class="support-tabs" id="supportTabsNav"></nav>
+
+        <main class="page-content">
+            <div class="search-bar">
+                <input type="text" class="form-input" placeholder="제목 또는 내용 검색" id="noticeSearch">
+                <button class="btn btn-primary btn-sm">검색</button>
+            </div>
+
+            <div class="card" style="padding:0 16px;" id="noticeList">
+                <a href="support-notice-detail-mobile.html?id=1" class="notice-item" data-title="카카오 알림톡">
+                    <span class="tag">[공지]</span>
+                    <div class="title">카카오 알림톡 템플릿 심사 기준 강화 안내</div>
+                    <div class="meta">2026-05-15 · 조회 1,234</div>
+                </a>
+                <a href="support-notice-detail-mobile.html?id=2" class="notice-item" data-title="브랜드메시지">
+                    <span class="tag">[알림]</span>
+                    <div class="title">카카오 브랜드메시지 요금 정책 변경 안내</div>
+                    <div class="meta">2026-05-12 · 조회 892</div>
+                </a>
+                <a href="support-notice-detail-mobile.html?id=3" class="notice-item" data-title="시스템 점검">
+                    <span class="tag">[공지]</span>
+                    <div class="title">[공지] 10/23(목) 시스템 점검 안내</div>
+                    <div class="meta">2026-05-10 · 조회 567</div>
+                </a>
+                <a href="support-notice-detail-mobile.html?id=4" class="notice-item" data-title="세금계산서">
+                    <span class="tag">[알림]</span>
+                    <div class="title">11월 세금계산서 발행 안내</div>
+                    <div class="meta">2026-05-08 · 조회 423</div>
+                </a>
+                <a href="support-notice-detail-mobile.html?id=5" class="notice-item" data-title="톡벨몰">
+                    <span class="tag">[공지]</span>
+                    <div class="title">[공지] 톡벨몰 서비스 종료 안내</div>
+                    <div class="meta">2026-05-05 · 조회 789</div>
+                </a>
+                <a href="support-notice-detail-mobile.html?id=6" class="notice-item" data-title="추석">
+                    <span class="tag">[알림]</span>
+                    <div class="title">추석 연휴 안내</div>
+                    <div class="meta">2026-05-01 · 조회 312</div>
+                </a>
+            </div>
+
+            <div style="display:flex;justify-content:center;gap:6px;margin-top:16px;">
+                <button class="btn btn-outline btn-sm">‹</button>
+                <button class="btn btn-primary btn-sm">1</button>
+                <button class="btn btn-outline btn-sm">2</button>
+                <button class="btn btn-outline btn-sm">3</button>
+                <button class="btn btn-outline btn-sm">›</button>
+            </div>
+        </main>
+    </div>
+    <div id="drawerWrap"></div>
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+        document.getElementById('supportTabsNav').innerHTML = renderSupportTabs('notice');
+        document.getElementById('noticeSearch').addEventListener('input', (e) => {
+            const q = e.target.value.trim().toLowerCase();
+            document.querySelectorAll('#noticeList .notice-item').forEach(item => {
+                const title = item.dataset.title.toLowerCase() + item.textContent.toLowerCase();
+                item.style.display = !q || title.includes(q) ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

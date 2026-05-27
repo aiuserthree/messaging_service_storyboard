@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>발송 완료 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+    <style>
+        .complete-hero {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 36px 20px 24px; text-align: center;
+        }
+        .success-ring {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 24px rgba(16,185,129,0.35);
+            margin-bottom: 18px;
+            animation: popIn .4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .success-ring svg { width: 40px; height: 40px; stroke: #fff; stroke-width: 2.5; }
+        .complete-hero h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; }
+        .complete-hero .sub { font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
+        .summary-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .summary-table tr { border-bottom: 1px dashed var(--border); }
+        .summary-table tr:last-child { border-bottom: none; }
+        .summary-table td { padding: 11px 4px; }
+        .summary-table td:first-child { color: var(--text-muted); font-weight: 600; width: 90px; }
+        .summary-table td:last-child { font-weight: 700; color: var(--text); text-align: right; }
+        .progress-ring-wrap {
+            display: flex; align-items: center; justify-content: center;
+            gap: 20px; padding: 16px 0;
+        }
+        .ring-stat { text-align: center; }
+        .ring-stat .ring-val { font-size: 20px; font-weight: 800; }
+        .ring-stat .ring-lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+        .ring-stat.success .ring-val { color: var(--success); }
+        .ring-stat.danger .ring-val { color: var(--danger); }
+        .ring-stat.warning .ring-val { color: var(--warning); }
+        .ring-divider { width: 1px; height: 40px; background: var(--border); }
+        .share-btns { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+        .confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar"><span>9:41</span></div>
+
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <div class="title-wrap">
+                    <div class="title">발송 완료</div>
+                    <div class="subtitle">메시지 전송 결과</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <!-- 완료 히어로 -->
+            <div class="complete-hero">
+                <div class="success-ring">
+                    <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <h2>발송이 완료되었습니다!</h2>
+                <p class="sub">총 <strong id="heroTotal">1,500</strong>건의 메시지가<br>성공적으로 접수되었습니다.</p>
+            </div>
+
+            <!-- 발송 결과 요약 -->
+            <div class="card">
+                <div class="card-title">발송 결과 요약</div>
+                <div class="progress-ring-wrap">
+                    <div class="ring-stat">
+                        <div class="ring-val" id="totalCount">1,500</div>
+                        <div class="ring-lbl">전체</div>
+                    </div>
+                    <div class="ring-divider"></div>
+                    <div class="ring-stat success">
+                        <div class="ring-val" id="successCount">1,487</div>
+                        <div class="ring-lbl">성공</div>
+                    </div>
+                    <div class="ring-divider"></div>
+                    <div class="ring-stat danger">
+                        <div class="ring-val" id="failCount">13</div>
+                        <div class="ring-lbl">실패</div>
+                    </div>
+                    <div class="ring-divider"></div>
+                    <div class="ring-stat warning">
+                        <div class="ring-val" id="pendingCount">0</div>
+                        <div class="ring-lbl">대기</div>
+                    </div>
+                </div>
+                <div style="background:#f1f5f9;border-radius:8px;overflow:hidden;height:8px;margin:0 0 8px;">
+                    <div style="background:var(--success);height:100%;border-radius:8px;" id="successBar"></div>
+                </div>
+                <div style="text-align:center;font-size:13px;color:var(--text-muted);">
+                    성공률 <strong style="color:var(--success);" id="successRate">99.1%</strong>
+                </div>
+            </div>
+
+            <!-- 발송 상세 정보 -->
+            <div class="card">
+                <div class="card-title">발송 상세 정보</div>
+                <table class="summary-table">
+                    <tr><td>발송 유형</td><td>SMS (일반문자)</td></tr>
+                    <tr><td>발신번호</td><td>010-1234-5678</td></tr>
+                    <tr><td>발송 일시</td><td id="sendTime"></td></tr>
+                    <tr><td>메시지</td><td>안녕하세요, 톡벨 테스트 메시지입니다.</td></tr>
+                    <tr><td>사용 포인트</td><td style="color:var(--danger);">-12,443P</td></tr>
+                    <tr><td>잔여 포인트</td><td style="color:var(--primary);">987,557P</td></tr>
+                </table>
+            </div>
+
+            <!-- 즉시 액션 버튼들 -->
+            <div class="share-btns">
+                <a href="send-result-mobile.html" class="btn btn-outline" style="font-size:13px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    발송 내역
+                </a>
+                <a href="message-send-mobile.html" class="btn btn-outline" style="font-size:13px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                    재발송
+                </a>
+                <a href="message-send-mobile.html" class="btn btn-primary btn-block" style="grid-column:span 2;font-size:14px;">
+                    새 메시지 보내기
+                </a>
+            </div>
+
+            <!-- 실패 수신자 처리 -->
+            <div class="card" style="margin-top:4px;" id="failCard">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <div class="card-title" style="margin:0;">실패 수신자 처리</div>
+                    <span class="badge badge-danger" id="failBadge">13건</span>
+                </div>
+                <div class="alert alert-warning">
+                    실패한 수신자에게 재발송하거나, 원인을 확인할 수 있습니다.
+                </div>
+                <div class="btn-row" style="margin-top:12px;">
+                    <button class="btn btn-outline btn-sm" style="flex:1;" onclick="alert('실패 목록을 다운로드합니다. (UI 목업)')">실패 목록 다운로드</button>
+                    <button class="btn btn-primary btn-sm" style="flex:1;" onclick="alert('실패 번호에 재발송합니다. (UI 목업)')">재발송</button>
+                </div>
+            </div>
+
+            <!-- 홈으로 -->
+            <a href="main-mobile.html" class="btn btn-outline btn-block" style="margin-top:8px;color:var(--text-muted);">
+                홈으로 돌아가기
+            </a>
+        </main>
+
+        <nav class="tab-bar" id="tabBar"></nav>
+        <div id="drawerWrap"></div>
+    </div>
+
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('tabBar').innerHTML = renderTabBar('send-result');
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+
+        // 현재 시간 표시
+        const now = new Date();
+        document.getElementById('sendTime').textContent =
+            now.getFullYear() + '-' +
+            String(now.getMonth() + 1).padStart(2, '0') + '-' +
+            String(now.getDate()).padStart(2, '0') + ' ' +
+            String(now.getHours()).padStart(2, '0') + ':' +
+            String(now.getMinutes()).padStart(2, '0');
+
+        // URL 파라미터로 결과 데이터 받기 (실제 환경 대비)
+        const params = new URLSearchParams(location.search);
+        const total = parseInt(params.get('total') || '1500');
+        const fail = parseInt(params.get('fail') || '13');
+        const pending = parseInt(params.get('pending') || '0');
+        const success = total - fail - pending;
+        const rate = total > 0 ? ((success / total) * 100).toFixed(1) : '0.0';
+
+        document.getElementById('heroTotal').textContent = total.toLocaleString();
+        document.getElementById('totalCount').textContent = total.toLocaleString();
+        document.getElementById('successCount').textContent = success.toLocaleString();
+        document.getElementById('failCount').textContent = fail.toLocaleString();
+        document.getElementById('pendingCount').textContent = pending.toLocaleString();
+        document.getElementById('successRate').textContent = rate + '%';
+        document.getElementById('successBar').style.width = rate + '%';
+        document.getElementById('failBadge').textContent = fail + '건';
+        if (fail === 0) document.getElementById('failCard').style.display = 'none';
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>이벤트 상세 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+    <style>
+        .event-hero { border-radius: 16px; padding: 32px 20px; color: #fff; text-align: center; margin-bottom: 16px; font-weight: 800; font-size: 20px; }
+        .event-hero.b1 { background: linear-gradient(135deg, #ec4899, #be185d); }
+        .event-hero.b2 { background: linear-gradient(135deg, #06b6d4, #0e7490); }
+        .event-hero.b3 { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame no-tab">
+        <div class="status-bar"><span>9:41</span></div>
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="support-event-mobile.html" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">이벤트</div>
+                    <div class="subtitle">상세보기</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="event-hero b1" id="eventBanner">🎁 첫 충전 10% 적립</div>
+            <article class="card">
+                <h2 style="font-size:18px;font-weight:800;margin-bottom:8px;" id="eventTitle">신규 회원 첫 충전 이벤트</h2>
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;" id="eventDate">2026.01.01 ~ 상시 진행</div>
+                <div class="notice-detail-body" id="eventBody">
+                    <p><strong>이벤트 대상</strong><br>톡벨 신규 가입 회원 (첫 충전 1회 한정)</p>
+                    <p><strong>혜택 내용</strong><br>• 충전 금액의 10% 포인트 추가 적립<br>• 톡벨커피 쿠폰 1매 증정</p>
+                    <p><strong>참여 방법</strong><br>1. 회원가입 완료<br>2. 결제 관리 > 충전하기에서 첫 충전<br>3. 자동 적립 (영업일 1~2일 이내)</p>
+                    <p><strong>유의사항</strong><br>• 1인 1회 한정<br>• 최소 충전 금액 5만원 이상<br>• 부정 사용 시 혜택 회수</p>
+                </div>
+            </article>
+            <a href="payment-mobile.html" class="btn btn-primary btn-block">충전하러 가기</a>
+        </main>
+    </div>
+    <div id="drawerWrap"></div>
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+    </script>
+    <script>
+        const events = {
+            '1': { banner: '🎁 첫 충전 10% 적립', title: '신규 회원 첫 충전 이벤트', date: '2026.01.01 ~ 상시 진행', cls: 'b1' },
+            '2': { banner: '📨 대량발송 보상', title: '대량 발송 고객 특별 보상', date: '2026.03.01 ~ 2026.06.30', cls: 'b2' },
+            '3': { banner: '⭐ 마일리지 10%', title: '첫 발송 마일리지 적립', date: '2026.01.01 ~ 상시 진행', cls: 'b3' }
+        };
+        const id = new URLSearchParams(location.search).get('id') || '1';
+        const ev = events[id];
+        if (ev) {
+            const hero = document.getElementById('eventBanner');
+            hero.textContent = ev.banner;
+            hero.className = 'event-hero ' + ev.cls;
+            document.getElementById('eventTitle').textContent = ev.title;
+            document.getElementById('eventDate').textContent = ev.date;
+        }
+    </script>
+</body>
+</html>

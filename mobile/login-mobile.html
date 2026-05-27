@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>로그인 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+</head>
+<body>
+    <div class="mobile-frame no-tab">
+        <div class="status-bar"><span>9:41</span></div>
+
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="index-mobile.html" class="back-btn" aria-label="홈">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">로그인</div>
+                </div>
+                <a href="signup-mobile.html" class="icon-btn profile-btn" aria-label="회원가입" style="font-size:11px;font-weight:700;color:var(--primary);width:auto;padding:0 10px;">
+                    가입
+                </a>
+            </div>
+        </header>
+
+        <main class="page-content" style="padding-top:8px;">
+            <div class="login-logo">
+                <img src="../img/logo/tokbell_logo_o.png" alt="tokbell" width="140" height="32">
+            </div>
+
+            <div class="login-card">
+                <div class="form-group">
+                    <label class="form-label">아이디 (이메일)</label>
+                    <input type="email" class="form-input" placeholder="이메일을 입력하세요" id="loginId">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">비밀번호</label>
+                    <input type="password" class="form-input" placeholder="비밀번호를 입력하세요" id="loginPw">
+                </div>
+                <label class="check-row" style="margin-bottom:20px;">
+                    <input type="checkbox" id="rememberMe"> 로그인 상태 유지
+                </label>
+                <button class="btn btn-primary btn-block" id="loginBtn">로그인</button>
+            </div>
+
+            <div class="login-links">
+                <a href="find-id-mobile.html">아이디 찾기</a>
+                <a href="find-password-mobile.html">비밀번호 찾기</a>
+                <a href="signup-mobile.html" class="primary">회원가입</a>
+            </div>
+
+            <div style="margin-top:32px;text-align:center;">
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">소셜 계정으로 시작하기</div>
+                <div class="btn-row" style="justify-content:center;">
+                    <button class="btn btn-outline" style="flex:1;max-width:100px;">카카오</button>
+                    <button class="btn btn-outline" style="flex:1;max-width:100px;">네이버</button>
+                    <button class="btn btn-outline" style="flex:1;max-width:100px;">Google</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="drawerWrap"></div>
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const id = document.getElementById('loginId').value.trim();
+            const pw = document.getElementById('loginPw').value.trim();
+            if (!id || !pw) { alert('아이디와 비밀번호를 입력해 주세요.'); return; }
+            location.href = 'main-mobile.html';
+        });
+    </script>
+</body>
+</html>

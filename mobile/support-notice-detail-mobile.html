@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>공지사항 상세 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+</head>
+<body>
+    <div class="mobile-frame no-tab">
+        <div class="status-bar"><span>9:41</span></div>
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="support-notice-mobile.html" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">공지사항</div>
+                    <div class="subtitle">상세보기</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <article class="card">
+                <div class="notice-detail-title" id="noticeTitle">카카오 알림톡 템플릿 심사 기준 강화 안내</div>
+                <div class="notice-detail-meta">
+                    <span>2026-05-15</span>
+                    <span>조회 1,234</span>
+                    <span class="badge badge-primary">공지</span>
+                </div>
+                <div class="notice-detail-body" id="noticeBody">
+                    <p>안녕하세요, 톡벨입니다.</p>
+                    <p>카카오 알림톡 템플릿 심사 기준이 강화됨에 따라 아래 내용을 안내드립니다.</p>
+                    <p><strong>주요 변경 사항</strong></p>
+                    <p>1. 광고성 문구 포함 시 별도 심사 필요<br>
+                    2. 변수 사용 시 샘플 데이터 필수 제출<br>
+                    3. 심사 기간: 영업일 기준 1~3일</p>
+                    <p>자세한 내용은 카카오 비즈니스 채널 가이드를 참고해 주시기 바랍니다.</p>
+                    <p>감사합니다.</p>
+                </div>
+            </article>
+
+            <div class="btn-row">
+                <a href="support-notice-mobile.html" class="btn btn-outline" style="flex:1;">목록으로</a>
+                <a href="support-inquiry-mobile.html" class="btn btn-primary" style="flex:1;">1:1 문의</a>
+            </div>
+        </main>
+    </div>
+    <div id="drawerWrap"></div>
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+    </script>
+    <script>
+        const notices = {
+            '1': { title: '카카오 알림톡 템플릿 심사 기준 강화 안내', date: '2026-05-15' },
+            '2': { title: '카카오 브랜드메시지 요금 정책 변경 안내', date: '2026-05-12' },
+            '3': { title: '[공지] 10/23(목) 시스템 점검 안내', date: '2026-05-10' }
+        };
+        const id = new URLSearchParams(location.search).get('id') || '1';
+        const n = notices[id];
+        if (n) {
+            document.getElementById('noticeTitle').textContent = n.title;
+            document.querySelector('.notice-detail-meta span').textContent = n.date;
+        }
+    </script>
+</body>
+</html>

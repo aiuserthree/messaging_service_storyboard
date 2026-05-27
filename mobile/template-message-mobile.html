@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>문자 템플릿 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+    <style>
+        .tpl-card {
+            background: #fff; border-radius: 14px; border: 1px solid var(--border);
+            padding: 16px; margin-bottom: 10px; position: relative;
+        }
+        .tpl-card:active { background: #f8fafc; }
+        .tpl-card .tpl-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+        .tpl-card .tpl-name { font-size: 14px; font-weight: 700; flex: 1; min-width: 0; }
+        .tpl-card .tpl-type-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; }
+        .tpl-sms { background: #dcfce7; color: #4a9a24; }
+        .tpl-lms { background: #dcfce7; color: #15803d; }
+        .tpl-mms { background: #fef3c7; color: #b45309; }
+        .tpl-ad { background: #fee2e2; color: #b91c1c; }
+        .tpl-body { font-size: 12px; color: var(--text-sub); line-height: 1.5;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .tpl-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .tpl-meta { font-size: 11px; color: var(--text-muted); }
+        .tpl-actions { display: flex; gap: 6px; }
+        .tpl-actions button { padding: 6px 10px; font-size: 11px; border-radius: 8px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-weight: 600; }
+        .tpl-actions .use-btn { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .tpl-actions .edit-btn { color: var(--text-sub); }
+        .tpl-actions .del-btn { color: var(--danger); border-color: #fee2e2; }
+        .fab-add {
+            position: fixed; bottom: calc(88px + env(safe-area-inset-bottom)); right: calc(50% - 195px);
+            width: 52px; height: 52px; border-radius: 50%; background: var(--primary); color: #fff;
+            border: none; font-size: 28px; box-shadow: 0 6px 18px rgba(92,184,46,0.45); cursor: pointer; z-index: 45;
+        }
+        @media (max-width: 460px) { .fab-add { right: 20px; } }
+
+        /* 템플릿 편집 시트 (bottom sheet) */
+        .sheet-backdrop {
+            position: fixed; inset: 0; background: rgba(15,23,42,0.45);
+            z-index: 80; opacity: 0; pointer-events: none; transition: opacity .25s;
+        }
+        .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+        .sheet {
+            position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 430px;
+            background: #fff; border-radius: 24px 24px 0 0;
+            padding: 0 16px calc(24px + env(safe-area-inset-bottom));
+            z-index: 85; transition: bottom .3s ease; max-height: 85vh; overflow-y: auto;
+        }
+        .sheet.open { bottom: 0; }
+        .sheet-handle { width: 40px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 12px auto 16px; }
+        .sheet-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .byte-counter { text-align: right; font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        .var-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+        .var-btn { padding: 5px 10px; font-size: 11px; border-radius: 6px; border: 1px solid var(--primary); background: var(--primary-soft); color: var(--primary); cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar"><span>9:41</span></div>
+
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="main-mobile.html" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">문자 템플릿</div>
+                    <div class="subtitle">자주 쓰는 메시지 관리</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <!-- 탭 (문자 유형별 필터) -->
+        <div class="tab-scroll" id="typeTabs">
+            <button class="tab-pill active" data-value="all">전체</button>
+            <button class="tab-pill" data-value="sms">SMS</button>
+            <button class="tab-pill" data-value="lms">LMS</button>
+            <button class="tab-pill" data-value="mms">MMS</button>
+            <button class="tab-pill" data-value="ad">광고</button>
+        </div>
+
+        <main class="page-content">
+            <div class="search-bar" style="margin-bottom:16px;">
+                <input type="text" class="form-input" placeholder="템플릿명, 내용 검색" id="tplSearch">
+                <button class="btn btn-primary btn-sm">검색</button>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <span style="font-size:13px;color:var(--text-muted);">총 <strong style="color:var(--text);" id="tplCount">5</strong>개</span>
+                <button class="btn btn-primary btn-sm" onclick="openSheet(null)">+ 템플릿 추가</button>
+            </div>
+
+            <div id="tplList">
+                <!-- 템플릿 카드들이 JS로 렌더링 -->
+            </div>
+        </main>
+
+        <button class="fab-add" onclick="openSheet(null)" aria-label="템플릿 추가">+</button>
+        <nav class="tab-bar" id="tabBar"></nav>
+        <div id="drawerWrap"></div>
+    </div>
+
+    <!-- 바텀 시트: 템플릿 편집/추가 -->
+    <div class="sheet-backdrop" id="sheetBackdrop"></div>
+    <div class="sheet" id="editSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title" id="sheetTitle">새 템플릿 추가</div>
+
+        <div class="form-group">
+            <label class="form-label required">템플릿명</label>
+            <input type="text" class="form-input" placeholder="예) 구매 감사 문자" id="tplName" maxlength="30">
+            <div class="form-help">최대 30자</div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label required">유형</label>
+            <select class="form-select" id="tplType">
+                <option value="SMS">SMS (단문 90byte)</option>
+                <option value="LMS">LMS (장문 2,000byte)</option>
+                <option value="MMS">MMS (이미지+텍스트)</option>
+                <option value="AD">광고문자</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label required">메시지 내용</label>
+            <div class="var-btns">
+                <button class="var-btn" onclick="insertVar('#{이름}')">#{이름}</button>
+                <button class="var-btn" onclick="insertVar('#{연락처}')">#{연락처}</button>
+                <button class="var-btn" onclick="insertVar('#{날짜}')">#{날짜}</button>
+                <button class="var-btn" onclick="insertVar('#{금액}')">#{금액}</button>
+                <button class="var-btn" onclick="insertVar('#{상품명}')">#{상품명}</button>
+            </div>
+            <textarea class="form-textarea" id="tplContent" rows="5"
+                placeholder="메시지 내용을 입력하세요. #{이름}, #{날짜} 등 변수를 사용할 수 있습니다."
+                oninput="updateByteCount()"></textarea>
+            <div class="byte-counter"><span id="byteCount">0</span> / 2,000 byte</div>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-outline" style="flex:1;" id="sheetCancelBtn">취소</button>
+            <button class="btn btn-primary" style="flex:1;" id="sheetSaveBtn">저장</button>
+        </div>
+    </div>
+
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('tabBar').innerHTML = renderTabBar('');
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+
+        const templates = [
+            { id: 1, name: '구매 감사 문자', type: 'SMS', content: '#{이름}님, 안녕하세요!\n구매해 주셔서 감사합니다. 주문하신 상품은 2-3일 내 배송될 예정입니다.', updated: '2026-05-10' },
+            { id: 2, name: '예약 확인 안내', type: 'SMS', content: '#{이름}님, 예약이 확정되었습니다.\n일시: #{날짜}\n장소: 강남점\n문의: 02-1234-5678', updated: '2026-05-08' },
+            { id: 3, name: '이벤트 안내 (광고)', type: 'AD', content: '(광고) #{이름}님, 안녕하세요!\n[특별 할인 이벤트] 오늘만 30% 할인!\n구매 링크: https://example.com\n무료수신거부 080-000-0000', updated: '2026-04-22' },
+            { id: 4, name: '배송 완료 알림', type: 'SMS', content: '#{이름}님, 주문하신 상품이 배송 완료되었습니다.\n배송지: #{주소}\n감사합니다!', updated: '2026-04-15' },
+            { id: 5, name: '긴 마케팅 메시지', type: 'LMS', content: '#{이름}님, 안녕하세요 톡벨입니다.\n\n이번 달 진행되는 특별 이벤트를 소개합니다.\n\n■ 이벤트 기간: 2026.05.01 ~ 2026.05.31\n■ 혜택: 문자 발송 시 마일리지 2배 적립\n■ 대상: 전 회원\n\n많은 이용 부탁드립니다. 감사합니다.', updated: '2026-04-01' }
+        ];
+
+        let editingId = null;
+        let currentFilter = 'all';
+
+        const typeBadgeClass = { SMS: 'tpl-sms', LMS: 'tpl-lms', MMS: 'tpl-mms', AD: 'tpl-ad' };
+
+        function renderTemplates(filter, search) {
+            const list = document.getElementById('tplList');
+            const query = (search || '').trim().toLowerCase();
+            const filtered = templates.filter(t => {
+                const matchType = !filter || filter === 'all' || t.type.toLowerCase() === filter.toLowerCase();
+                const matchSearch = !query || t.name.toLowerCase().includes(query) || t.content.toLowerCase().includes(query);
+                return matchType && matchSearch;
+            });
+            document.getElementById('tplCount').textContent = filtered.length;
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="card" style="text-align:center;padding:40px 20px;color:var(--text-muted);"><div style="font-size:32px;margin-bottom:12px;">📝</div><div style="font-weight:600;">템플릿이 없습니다</div><div style="font-size:13px;margin-top:6px;">+ 버튼으로 새 템플릿을 추가하세요</div></div>';
+                return;
+            }
+            list.innerHTML = filtered.map(t => `
+                <div class="tpl-card">
+                    <div class="tpl-head">
+                        <div class="tpl-name">${t.name}</div>
+                        <span class="tpl-type-badge ${typeBadgeClass[t.type] || ''}">${t.type}</span>
+                    </div>
+                    <div class="tpl-body">${t.content.replace(/\n/g, ' ')}</div>
+                    <div class="tpl-foot">
+                        <div class="tpl-meta">${t.updated} 수정</div>
+                        <div class="tpl-actions">
+                            <button class="edit-btn" onclick="openSheet(${t.id})">수정</button>
+                            <button class="del-btn" onclick="deleteTpl(${t.id})">삭제</button>
+                            <button class="use-btn" onclick="useTpl(${t.id})">사용</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openSheet(id) {
+            editingId = id;
+            if (id) {
+                const t = templates.find(x => x.id === id);
+                document.getElementById('sheetTitle').textContent = '템플릿 수정';
+                document.getElementById('tplName').value = t.name;
+                document.getElementById('tplType').value = t.type;
+                document.getElementById('tplContent').value = t.content;
+                updateByteCount();
+            } else {
+                document.getElementById('sheetTitle').textContent = '새 템플릿 추가';
+                document.getElementById('tplName').value = '';
+                document.getElementById('tplType').value = 'SMS';
+                document.getElementById('tplContent').value = '';
+                document.getElementById('byteCount').textContent = '0';
+            }
+            document.getElementById('editSheet').classList.add('open');
+            document.getElementById('sheetBackdrop').classList.add('open');
+        }
+
+        function closeSheet() {
+            document.getElementById('editSheet').classList.remove('open');
+            document.getElementById('sheetBackdrop').classList.remove('open');
+        }
+
+        document.getElementById('sheetCancelBtn').addEventListener('click', closeSheet);
+        document.getElementById('sheetBackdrop').addEventListener('click', closeSheet);
+
+        document.getElementById('sheetSaveBtn').addEventListener('click', () => {
+            const name = document.getElementById('tplName').value.trim();
+            const type = document.getElementById('tplType').value;
+            const content = document.getElementById('tplContent').value.trim();
+            if (!name || !content) { alert('템플릿명과 내용을 입력해 주세요.'); return; }
+            if (editingId) {
+                const t = templates.find(x => x.id === editingId);
+                t.name = name; t.type = type; t.content = content;
+                t.updated = new Date().toISOString().split('T')[0];
+            } else {
+                templates.unshift({ id: Date.now(), name, type, content, updated: new Date().toISOString().split('T')[0] });
+            }
+            closeSheet();
+            renderTemplates(currentFilter, document.getElementById('tplSearch').value);
+        });
+
+        function deleteTpl(id) {
+            if (!confirm('이 템플릿을 삭제하시겠습니까?')) return;
+            const idx = templates.findIndex(t => t.id === id);
+            if (idx > -1) templates.splice(idx, 1);
+            renderTemplates(currentFilter, document.getElementById('tplSearch').value);
+        }
+
+        function useTpl(id) {
+            const t = templates.find(x => x.id === id);
+            if (t) {
+                sessionStorage.setItem('tplContent', t.content);
+                location.href = 'message-send-mobile.html';
+            }
+        }
+
+        function insertVar(v) {
+            const ta = document.getElementById('tplContent');
+            const s = ta.selectionStart, e = ta.selectionEnd;
+            ta.value = ta.value.substring(0, s) + v + ta.value.substring(e);
+            ta.selectionStart = ta.selectionEnd = s + v.length;
+            ta.focus();
+            updateByteCount();
+        }
+
+        function updateByteCount() {
+            const text = document.getElementById('tplContent').value;
+            let bytes = 0;
+            for (let i = 0; i < text.length; i++) {
+                bytes += text.charCodeAt(i) > 127 ? 2 : 1;
+            }
+            document.getElementById('byteCount').textContent = bytes;
+        }
+
+        initTabPills(document.getElementById('typeTabs'));
+        document.querySelectorAll('#typeTabs .tab-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                currentFilter = pill.dataset.value;
+                renderTemplates(currentFilter, document.getElementById('tplSearch').value);
+            });
+        });
+
+        document.getElementById('tplSearch').addEventListener('input', e => {
+            renderTemplates(currentFilter, e.target.value);
+        });
+
+        renderTemplates('all');
+    </script>
+</body>
+</html>

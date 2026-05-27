@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#5cb82e">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>결제 관리 - 톡벨 (Mobile)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mobile-app.css">
+    <style>
+        .balance-banner {
+            background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 16px; padding: 20px; color: #fff; margin-bottom: 12px;
+        }
+        .balance-banner .lbl { font-size: 12px; opacity: 0.75; font-weight: 600; }
+        .balance-banner .amount { font-size: 28px; font-weight: 800; margin-top: 4px; letter-spacing: -0.5px; }
+        .balance-banner .amount small { font-size: 14px; opacity: 0.7; }
+        .balance-banner .mileage { font-size: 12px; margin-top: 6px; opacity: 0.85; }
+        .balance-banner .mileage strong { color: #fbbf24; }
+        .vip-notice {
+            background: #fef3c7; border-radius: 10px; padding: 12px 14px;
+            font-size: 12px; color: #92400e; line-height: 1.5; margin-bottom: 12px;
+        }
+        .payment-methods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+        .pay-method {
+            border: 1px solid var(--border); border-radius: 12px; padding: 14px 8px;
+            text-align: center; cursor: pointer; background: #fff;
+        }
+        .pay-method.active { border-color: var(--primary); background: var(--primary-soft); }
+        .pay-method .ico { font-size: 24px; margin-bottom: 6px; }
+        .pay-method .name { font-size: 12px; font-weight: 700; }
+        .amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .amount-btn {
+            padding: 14px 8px; border: 1px solid var(--border); border-radius: 10px;
+            background: #fff; text-align: center; cursor: pointer; font-weight: 700; font-size: 14px;
+        }
+        .amount-btn.active { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
+        .amount-btn .bonus { font-size: 10px; color: var(--success); margin-top: 2px; font-weight: 600; }
+        .history-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 0; border-bottom: 1px solid var(--border);
+        }
+        .history-item:last-child { border-bottom: none; }
+        .history-item .left .date { font-size: 12px; color: var(--text-muted); }
+        .history-item .left .desc { font-size: 14px; font-weight: 600; margin-top: 2px; }
+        .history-item .amount { font-weight: 800; font-size: 15px; }
+        .history-item .amount.plus { color: var(--success); }
+        .price-table { font-size: 12px; }
+        .price-table .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border); }
+        .price-table .row:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar"><span>9:41</span></div>
+
+        <header class="page-header-bar">
+            <div class="inner">
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="main-mobile.html" class="back-btn" aria-label="뒤로">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+                <div class="title-wrap">
+                    <div class="title">결제 관리</div>
+                    <div class="subtitle">포인트 충전 및 내역</div>
+                </div>
+                <a href="mypage-mobile.html" class="icon-btn profile-btn" aria-label="프로필">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                </a>
+            </div>
+        </header>
+
+        <div class="tab-scroll" id="pageTabs">
+            <button class="tab-pill active" data-panel="charge">충전하기</button>
+            <button class="tab-pill" data-panel="history">충전 내역</button>
+            <button class="tab-pill" data-panel="refund">환불 신청</button>
+        </div>
+
+        <main class="page-content">
+            <div class="balance-banner">
+                <div class="lbl">현재 보유 포인트</div>
+                <div class="amount">1,000,000<small>P</small></div>
+                <div class="mileage"><strong>92.6 M</strong> 마일리지 보유</div>
+            </div>
+
+            <div data-tab-panel="charge">
+                <div class="vip-notice">
+                    ⭐ VIP 등급 혜택: 충전 금액의 5% 마일리지 추가 제공
+                </div>
+
+                <section class="card">
+                    <div class="form-group">
+                        <label class="form-label required">결제 수단</label>
+                        <div class="payment-methods" id="paymentMethods">
+                            <div class="pay-method active" data-method="card">
+                                <div class="ico">💳</div>
+                                <div class="name">신용카드</div>
+                            </div>
+                            <div class="pay-method" data-method="virtual">
+                                <div class="ico">🏦</div>
+                                <div class="name">가상계좌</div>
+                            </div>
+                            <div class="pay-method" data-method="transfer">
+                                <div class="ico">💰</div>
+                                <div class="name">전용계좌</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="chargeAmountGroup">
+                        <label class="form-label required">충전 포인트</label>
+                        <div class="amount-grid" id="amountGrid">
+                            <div class="amount-btn" data-amount="50000">5만</div>
+                            <div class="amount-btn active" data-amount="100000">10만<div class="bonus">+1만 M</div></div>
+                            <div class="amount-btn" data-amount="300000">30만</div>
+                            <div class="amount-btn" data-amount="500000">50만</div>
+                            <div class="amount-btn" data-amount="1000000">100만</div>
+                            <div class="amount-btn" data-amount="2000000">200만</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="directInputGroup" style="display:none;">
+                        <label class="form-label required">충전 포인트 (P)</label>
+                        <input type="number" class="form-input" placeholder="최소 10,000 P" min="10000" step="1000">
+                        <div class="form-help">최소 10,000 P 이상 입력</div>
+                    </div>
+
+                    <div class="cost-box">
+                        <div class="cost-row"><span>충전 포인트</span><span id="chargePoints">100,000P</span></div>
+                        <div class="cost-row"><span>결제 금액 (VAT 별도)</span><span id="chargePrice">100,000원</span></div>
+                        <div class="cost-row total"><span>충전 후 예상 잔액</span><span id="afterBalance">1,100,000P</span></div>
+                    </div>
+
+                    <button class="btn btn-primary btn-block" style="margin-top:16px;" id="chargeBtn">충전하기</button>
+                </section>
+
+                <section class="card">
+                    <div class="card-title">요금 안내</div>
+                    <div class="price-table">
+                        <div class="row"><span>SMS (단문)</span><strong>8.3원/건</strong></div>
+                        <div class="row"><span>LMS (장문)</span><strong>26.5원/건</strong></div>
+                        <div class="row"><span>MMS (그림)</span><strong>59원/건</strong></div>
+                        <div class="row"><span>알림톡</span><strong>6.2원/건</strong></div>
+                    </div>
+                </section>
+            </div>
+
+            <div data-tab-panel="history" style="display:none;">
+                <section class="card">
+                    <div class="card-title">충전 내역</div>
+                    <div class="chip-filter" id="historyFilter">
+                        <span class="chip active" data-value="all">전체</span>
+                        <span class="chip" data-value="card">신용카드</span>
+                        <span class="chip" data-value="virtual">가상계좌</span>
+                        <span class="chip" data-value="transfer">전용계좌</span>
+                    </div>
+                    <div class="history-item">
+                        <div class="left">
+                            <div class="date">2026-05-10 14:32</div>
+                            <div class="desc">신용카드 충전</div>
+                        </div>
+                        <div class="amount plus">+100,000P</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="left">
+                            <div class="date">2026-04-22 09:15</div>
+                            <div class="desc">가상계좌 충전</div>
+                        </div>
+                        <div class="amount plus">+500,000P</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="left">
+                            <div class="date">2026-03-05 16:48</div>
+                            <div class="desc">신용카드 충전</div>
+                        </div>
+                        <div class="amount plus">+50,000P</div>
+                    </div>
+                </section>
+            </div>
+
+            <div data-tab-panel="refund" style="display:none;">
+                <section class="card">
+                    <div class="card-title">환불 신청</div>
+                    <div class="alert alert-info">환불은 잔여 포인트 전액 기준으로 처리됩니다. 수수료 10%가 차감됩니다.</div>
+                    <p style="font-size:13px;color:var(--text-sub);margin-bottom:16px;line-height:1.5;">통장사본 업로드 및 계좌 정보 입력이 필요합니다.</p>
+                    <a href="payment-refund-mobile.html" class="btn btn-primary btn-block">환불 신청 페이지로 이동</a>
+                </section>
+            </div>
+        </main>
+
+        <nav class="tab-bar" id="tabBar"></nav>
+        <div id="drawerWrap"></div>
+    </div>
+
+    <script src="js/mobile-app.js"></script>
+    <script>
+        document.getElementById('tabBar').innerHTML = renderTabBar('mypage');
+        document.getElementById('drawerWrap').innerHTML = renderDrawer();
+        initMobileDrawer();
+        initTabPills(document.getElementById('pageTabs'));
+
+        const baseBalance = 1000000;
+        let selectedAmount = 100000;
+
+        function formatNum(n) { return n.toLocaleString('ko-KR'); }
+
+        function updateChargeSummary() {
+            document.getElementById('chargePoints').textContent = formatNum(selectedAmount) + 'P';
+            document.getElementById('chargePrice').textContent = formatNum(selectedAmount) + '원';
+            document.getElementById('afterBalance').textContent = formatNum(baseBalance + selectedAmount) + 'P';
+        }
+
+        document.querySelectorAll('.pay-method').forEach(m => {
+            m.addEventListener('click', () => {
+                document.querySelectorAll('.pay-method').forEach(x => x.classList.remove('active'));
+                m.classList.add('active');
+                const isVirtual = m.dataset.method === 'virtual';
+                document.getElementById('chargeAmountGroup').style.display = isVirtual ? 'none' : 'block';
+                document.getElementById('directInputGroup').style.display = isVirtual ? 'block' : 'none';
+            });
+        });
+
+        document.querySelectorAll('.amount-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedAmount = parseInt(btn.dataset.amount, 10);
+                updateChargeSummary();
+            });
+        });
+
+        document.getElementById('chargeBtn').addEventListener('click', () => {
+            alert(formatNum(selectedAmount) + 'P 충전 요청 (UI 목업)');
+        });
+
+        initChipFilter(document.getElementById('historyFilter'));
+        updateChargeSummary();
+    </script>
+</body>
+</html>
