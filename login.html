@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
-    <title>로그인 - Tokbell Admin</title>
+    <title>로그인 - Tokbell</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/header.js"></script>
     <style>
 /* 공통 스타일 */
@@ -15,6 +16,9 @@
 }
 
 :root {
+    --brand-green: #5cb82e;
+    --brand-green-hover: #4a9a24;
+    --brand-green-soft: rgba(92, 184, 46, 0.12);
     --primary-color: #2563eb;
     --primary-hover: #1d4ed8;
     --secondary-color: #64748b;
@@ -294,85 +298,123 @@ body {
     font-size: 12px;
 }
 
-/* 메인 컨텐츠 */
-.main-content {
+/* 로그인 페이지 전용 */
+.login-page {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+    background-color: #eef1f4;
+    letter-spacing: -0.02em;
+}
+.login-page .header {
+    display: none;
+}
+.login-page .main-content {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 24px;
-    min-height: calc(100vh - 64px);
+    padding: 48px 24px;
+    min-height: 100vh;
 }
 
 .login-container {
-    background-color: var(--surface-color);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
     width: 100%;
-    max-width: 440px;
-    padding: 48px 40px;
+    max-width: 420px;
+    padding: 44px 40px 36px;
 }
 
 .login-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 32px;
 }
 
-.login-logo {
-    font-size: 36px;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 8px;
+.login-brand {
+    margin-bottom: 28px;
+}
+.login-brand img {
+    height: 34px;
+    width: auto;
+    display: inline-block;
 }
 
 .login-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--text-primary);
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
     margin-bottom: 8px;
+    letter-spacing: -0.03em;
 }
 
 .login-subtitle {
     font-size: 14px;
-    color: var(--text-secondary);
+    color: #64748b;
+    font-weight: 400;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .form-label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 500;
-    color: var(--text-primary);
+    font-weight: 600;
+    color: #334155;
     font-size: 14px;
 }
 
 .form-input {
     width: 100%;
-    padding: 12px 16px;
+    padding: 13px 16px;
     font-size: 14px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    background-color: var(--surface-color);
+    border: 1px solid #dde3ea;
+    border-radius: 8px;
+    background-color: #ffffff;
     color: var(--text-primary);
-    transition: all 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-input:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: var(--brand-green);
+    box-shadow: 0 0 0 3px var(--brand-green-soft);
 }
 
 .form-input::placeholder {
-    color: var(--text-muted);
+    color: #94a3b8;
+}
+
+.login-page .btn-primary {
+    background-color: var(--brand-green);
+    color: #ffffff;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-size: 15px;
+}
+.login-page .btn-primary:hover:not(:disabled) {
+    background-color: var(--brand-green-hover);
+}
+.login-page .btn-outline {
+    background-color: #ffffff;
+    border: 1px solid #dde3ea;
+    color: #334155;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 13px 20px;
+    font-size: 15px;
+}
+.login-page .btn-outline:hover:not(:disabled) {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
 }
 
 .login-button {
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin-top: 4px;
+    margin-bottom: 10px;
     width: 100%;
 }
 
@@ -401,20 +443,24 @@ body {
 }
 
 .login-footer {
-    margin-top: 32px;
+    margin-top: 28px;
     text-align: center;
     font-size: 13px;
-    color: var(--text-secondary);
+    color: #94a3b8;
 }
 
 .login-footer a {
-    color: var(--primary-color);
+    color: var(--brand-green);
     text-decoration: none;
     margin: 0 8px;
+    font-weight: 600;
 }
 
 .login-footer a:hover {
     text-decoration: underline;
+}
+.login-footer span {
+    color: #cbd5e1;
 }
 
 .form-error {
@@ -432,19 +478,22 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .checkbox-group input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     cursor: pointer;
+    accent-color: var(--brand-green);
+    border-radius: 4px;
 }
 
 .checkbox-group label {
     font-size: 14px;
-    color: var(--text-secondary);
+    color: #475569;
     cursor: pointer;
+    font-weight: 500;
 }
 
 /* 영구정지 계정 로그인 시 안내 모달 */
@@ -555,6 +604,194 @@ body {
     letter-spacing: -0.02em;
 }
 
+/* 2단계 인증 모달 */
+.mfa-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2100;
+    background: rgba(15, 23, 42, 0.45);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+.mfa-modal-overlay.is-open {
+    display: flex;
+}
+.mfa-modal-box {
+    background: #ffffff;
+    border-radius: 16px;
+    max-width: 420px;
+    width: 100%;
+    padding: 44px 40px 36px;
+    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+}
+.mfa-modal-brand {
+    text-align: center;
+    margin-bottom: 28px;
+}
+.mfa-modal-brand img {
+    height: 34px;
+    width: auto;
+}
+.mfa-modal-box h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1.35;
+    letter-spacing: -0.03em;
+}
+.mfa-modal-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    text-align: center;
+    line-height: 1.65;
+    margin-bottom: 28px;
+}
+.mfa-modal-subtitle strong {
+    color: #0f172a;
+    font-weight: 600;
+}
+.mfa-modal-box .mfa-form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #334155;
+}
+.mfa-modal-box .mfa-form-label .required {
+    color: var(--danger-color);
+}
+.mfa-modal-box .mfa-form-input {
+    width: 100%;
+    padding: 13px 16px;
+    font-size: 14px;
+    border: 1px solid #dde3ea;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: var(--text-primary);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.mfa-modal-box .mfa-form-input:focus {
+    outline: none;
+    border-color: var(--brand-green);
+    box-shadow: 0 0 0 3px var(--brand-green-soft);
+}
+.mfa-modal-box .mfa-form-input::placeholder {
+    color: #94a3b8;
+}
+.mfa-modal-box .mfa-form-error {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--danger-color);
+    display: none;
+}
+.mfa-modal-box .mfa-form-error.show {
+    display: block;
+}
+.mfa-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
+}
+.mfa-modal-actions.mfa-modal-actions-row {
+    flex-direction: row;
+}
+.mfa-modal-actions .mfa-btn {
+    flex: 1;
+    padding: 14px 16px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+.mfa-btn-cancel {
+    background: #ffffff;
+    border: 1px solid #dde3ea;
+    color: #334155;
+    font-weight: 600;
+}
+.mfa-btn-cancel:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+.mfa-btn-primary {
+    background: var(--brand-green);
+    border: 1px solid var(--brand-green);
+    color: #ffffff;
+}
+.mfa-btn-primary:hover:not(:disabled) {
+    background: var(--brand-green-hover);
+    border-color: var(--brand-green-hover);
+}
+.mfa-btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+.mfa-modal-help {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
+}
+.mfa-modal-help a {
+    color: var(--brand-green);
+    text-decoration: none;
+    font-weight: 600;
+}
+.mfa-modal-help a:hover {
+    text-decoration: underline;
+}
+.mfa-code-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+.mfa-code-row .mfa-form-input {
+    flex: 1;
+}
+.mfa-timer {
+    font-size: 13px;
+    color: var(--danger-color);
+    font-weight: 700;
+    white-space: nowrap;
+    padding-top: 14px;
+    min-width: 42px;
+}
+.mfa-resend-wrap {
+    margin-top: 12px;
+    text-align: center;
+}
+.mfa-resend-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 13px;
+    color: var(--brand-green);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+.mfa-resend-btn:hover:not(:disabled) {
+    text-decoration: underline;
+}
+.mfa-resend-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    color: #94a3b8;
+    text-decoration: none;
+}
+.mfa-form-help {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
@@ -595,21 +832,19 @@ body {
         padding: 24px 16px;
     }
 
-    .login-container {
-        padding: 32px 24px;
+    .login-container,
+    .mfa-modal-box {
+        padding: 32px 24px 28px;
     }
     
-    .login-logo {
-        font-size: 28px;
-    }
-    
-    .login-title {
-        font-size: 20px;
+    .login-title,
+    .mfa-modal-box h2 {
+        font-size: 22px;
     }
         }
     </style>
 </head>
-<body>
+<body class="login-page">
     <div class="app-container">
         <script>
             document.write(createHeader());
@@ -618,14 +853,22 @@ body {
         <!-- 메인 컨텐츠 -->
         <main class="main-content">
             <div class="login-container" id="loginContainer">
+                <div class="login-header">
+                    <div class="login-brand">
+                        <img src="img/logo/tokbell_logo_o.png" alt="tokbell" width="140" height="34">
+                    </div>
+                    <h1 class="login-title">로그인</h1>
+                    <p class="login-subtitle">계정에 로그인하세요</p>
+                </div>
+
                 <form id="loginForm" onsubmit="handleLogin(event)">
                     <div class="form-group" id="userIdGroup">
-                        <label class="form-label" for="userId">아이디</label>
+                        <label class="form-label" for="userId">아이디(이메일)</label>
                         <input 
-                            type="text" 
+                            type="email" 
                             id="userId" 
                             class="form-input" 
-                            placeholder="아이디를 입력하세요" 
+                            placeholder="아이디(이메일)을 입력하세요" 
                             autocomplete="username"
                         >
                         <div class="form-error" id="userIdError">아이디를 입력해주세요.</div>
@@ -662,6 +905,66 @@ body {
                 </div>
             </div>
         </main>
+
+        <!-- 2단계 인증 모달 -->
+        <div id="mfaModal" class="mfa-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="mfaModalTitle">
+            <div class="mfa-modal-box">
+                <div class="mfa-modal-brand">
+                    <img src="img/logo/tokbell_logo_o.png" alt="tokbell" width="140" height="34">
+                </div>
+
+                <!-- 1단계: 휴대폰 번호 입력 -->
+                <div id="mfaStep1">
+                    <h2 id="mfaModalTitle">2차 인증</h2>
+                    <p class="mfa-modal-subtitle">보안을 위해 등록된 휴대폰 번호로<br>인증번호를 발송합니다.</p>
+                    <label class="mfa-form-label" for="mfaPhone">휴대폰 번호 <span class="required">*</span></label>
+                    <input
+                        type="tel"
+                        id="mfaPhone"
+                        class="mfa-form-input"
+                        placeholder="휴대폰 번호를 숫자만 입력해주세요."
+                        inputmode="numeric"
+                        autocomplete="tel"
+                        maxlength="11"
+                    >
+                    <div class="mfa-form-error" id="mfaPhoneError">휴대폰 번호를 올바르게 입력해주세요.</div>
+                    <div class="mfa-modal-actions">
+                        <button type="button" class="mfa-btn mfa-btn-primary" id="mfaSendCodeBtn">인증 번호 보내기</button>
+                        <button type="button" class="mfa-btn mfa-btn-cancel" id="mfaCancelBtn">취소</button>
+                    </div>
+                    <p class="mfa-modal-help">인증 과정에 어려움이 있나요? <a href="support-inquiry.html">1:1 문의하기</a></p>
+                </div>
+
+                <!-- 2단계: 인증번호 입력 -->
+                <div id="mfaStep2" style="display: none;">
+                    <h2>2차 인증</h2>
+                    <p class="mfa-modal-subtitle"><strong id="mfaPhoneDisplay">010-0000-0000</strong>로 발송된<br>인증번호 6자리를 입력해주세요.</p>
+                    <label class="mfa-form-label" for="mfaCode">인증번호 <span class="required">*</span></label>
+                    <div class="mfa-code-row">
+                        <input
+                            type="text"
+                            id="mfaCode"
+                            class="mfa-form-input"
+                            placeholder="인증번호 6자리"
+                            inputmode="numeric"
+                            maxlength="6"
+                            autocomplete="one-time-code"
+                        >
+                        <span class="mfa-timer" id="mfaTimer">03:00</span>
+                    </div>
+                    <div class="mfa-form-error" id="mfaCodeError">인증번호 6자리를 입력해주세요.</div>
+                    <p class="mfa-form-help">인증번호 유효시간 3분</p>
+                    <div class="mfa-resend-wrap">
+                        <button type="button" class="mfa-resend-btn" id="mfaResendBtn" disabled>인증번호 재전송</button>
+                    </div>
+                    <div class="mfa-modal-actions">
+                        <button type="button" class="mfa-btn mfa-btn-primary" id="mfaVerifyBtn">인증하기</button>
+                        <button type="button" class="mfa-btn mfa-btn-cancel" id="mfaBackBtn">취소</button>
+                    </div>
+                    <p class="mfa-modal-help">인증 과정에 어려움이 있나요? <a href="support-inquiry.html">1:1 문의하기</a></p>
+                </div>
+            </div>
+        </div>
 
         <!-- 계정 제재 안내: 영구정지·일시정지 (데모 아이디: permanent_ban_demo, temp_suspend_demo) -->
         <div id="accountRestrictionModal" class="ban-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="restrictionModalTitle">
@@ -816,35 +1119,210 @@ body {
             if (el) el.classList.remove('is-open');
         }
 
+        /* ===== 2단계 인증 (MFA) ===== */
+        var mfaTimerInterval = null;
+        var mfaTimerSeconds = 180;
+        var pendingLoginRedirect = 'main.html';
+
+        function formatPhoneDisplay(digits) {
+            if (digits.length <= 3) return digits;
+            if (digits.length <= 7) return digits.slice(0, 3) + '-' + digits.slice(3);
+            return digits.slice(0, 3) + '-' + digits.slice(3, 7) + '-' + digits.slice(7);
+        }
+
+        function sanitizePhoneInput(value) {
+            return String(value || '').replace(/\D/g, '').slice(0, 11);
+        }
+
+        function showFormError(elId, show) {
+            var el = document.getElementById(elId);
+            if (el) el.classList.toggle('show', !!show);
+        }
+
+        function validateLoginForm() {
+            var userId = document.getElementById('userId').value.trim();
+            var password = document.getElementById('password').value;
+            var valid = true;
+
+            showFormError('userIdError', !userId);
+            showFormError('passwordError', !password);
+            if (!userId || !password) valid = false;
+            return valid;
+        }
+
+        function getLoginRedirect() {
+            var p = new URLSearchParams(window.location.search);
+            var r = p.get('redirect');
+            if (r && /^[a-zA-Z0-9_\-\.]+\.html(\#.*)?$/.test(r)) return r;
+            return 'main.html';
+        }
+
+        function completeLogin(userId, rememberId) {
+            if (rememberId && userId) {
+                localStorage.setItem('savedUserId', userId);
+            } else {
+                localStorage.removeItem('savedUserId');
+            }
+            localStorage.setItem('isLoggedIn', 'true');
+            window.location.href = pendingLoginRedirect;
+        }
+
+        function resetMfaModal() {
+            clearInterval(mfaTimerInterval);
+            mfaTimerInterval = null;
+            document.getElementById('mfaStep1').style.display = '';
+            document.getElementById('mfaStep2').style.display = 'none';
+            document.getElementById('mfaPhone').value = '';
+            document.getElementById('mfaCode').value = '';
+            showFormError('mfaPhoneError', false);
+            showFormError('mfaCodeError', false);
+        }
+
+        function openMfaModal() {
+            resetMfaModal();
+            var el = document.getElementById('mfaModal');
+            if (el) {
+                el.classList.add('is-open');
+                setTimeout(function () {
+                    var phone = document.getElementById('mfaPhone');
+                    if (phone) phone.focus();
+                }, 50);
+            }
+        }
+
+        function closeMfaModal() {
+            var el = document.getElementById('mfaModal');
+            if (el) el.classList.remove('is-open');
+            resetMfaModal();
+        }
+
+        function startMfaTimer() {
+            clearInterval(mfaTimerInterval);
+            mfaTimerSeconds = 180;
+            var timerEl = document.getElementById('mfaTimer');
+            var resendBtn = document.getElementById('mfaResendBtn');
+            if (resendBtn) resendBtn.disabled = true;
+
+            function tick() {
+                var min = Math.floor(mfaTimerSeconds / 60);
+                var sec = mfaTimerSeconds % 60;
+                if (timerEl) timerEl.textContent = ('0' + min).slice(-2) + ':' + ('0' + sec).slice(-2);
+                if (mfaTimerSeconds <= 0) {
+                    clearInterval(mfaTimerInterval);
+                    mfaTimerInterval = null;
+                    if (timerEl) timerEl.textContent = '00:00';
+                    if (resendBtn) resendBtn.disabled = false;
+                    return;
+                }
+                mfaTimerSeconds--;
+            }
+
+            tick();
+            mfaTimerInterval = setInterval(tick, 1000);
+        }
+
+        function showMfaStep2(phoneDigits) {
+            document.getElementById('mfaStep1').style.display = 'none';
+            document.getElementById('mfaStep2').style.display = '';
+            document.getElementById('mfaPhoneDisplay').textContent = formatPhoneDisplay(phoneDigits);
+            document.getElementById('mfaCode').value = '';
+            showFormError('mfaCodeError', false);
+            startMfaTimer();
+            setTimeout(function () {
+                var code = document.getElementById('mfaCode');
+                if (code) code.focus();
+            }, 50);
+        }
+
+        function handleMfaSendCode() {
+            var phoneInput = document.getElementById('mfaPhone');
+            var digits = sanitizePhoneInput(phoneInput.value);
+            phoneInput.value = digits;
+
+            var valid = /^01[0-9]{8,9}$/.test(digits);
+            showFormError('mfaPhoneError', !valid);
+            if (!valid) return;
+
+            showMfaStep2(digits);
+        }
+
+        function handleMfaVerify() {
+            var code = document.getElementById('mfaCode').value.replace(/\D/g, '');
+            document.getElementById('mfaCode').value = code;
+            var valid = code.length === 6;
+            showFormError('mfaCodeError', !valid);
+            if (!valid) return;
+
+            var userId = document.getElementById('userId').value.trim();
+            var rememberId = document.getElementById('rememberId').checked;
+            closeMfaModal();
+            completeLogin(userId, rememberId);
+        }
+
+        function initMfaModal() {
+            var modal = document.getElementById('mfaModal');
+            var phoneInput = document.getElementById('mfaPhone');
+            var codeInput = document.getElementById('mfaCode');
+
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function () {
+                    this.value = sanitizePhoneInput(this.value);
+                    showFormError('mfaPhoneError', false);
+                });
+            }
+            if (codeInput) {
+                codeInput.addEventListener('input', function () {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 6);
+                    showFormError('mfaCodeError', false);
+                });
+                codeInput.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleMfaVerify();
+                    }
+                });
+            }
+
+            var cancelBtn = document.getElementById('mfaCancelBtn');
+            var backBtn = document.getElementById('mfaBackBtn');
+            var sendBtn = document.getElementById('mfaSendCodeBtn');
+            var verifyBtn = document.getElementById('mfaVerifyBtn');
+            var resendBtn = document.getElementById('mfaResendBtn');
+
+            if (cancelBtn) cancelBtn.addEventListener('click', closeMfaModal);
+            if (backBtn) backBtn.addEventListener('click', closeMfaModal);
+            if (sendBtn) sendBtn.addEventListener('click', handleMfaSendCode);
+            if (verifyBtn) verifyBtn.addEventListener('click', handleMfaVerify);
+            if (resendBtn) {
+                resendBtn.addEventListener('click', function () {
+                    if (resendBtn.disabled) return;
+                    startMfaTimer();
+                });
+            }
+
+            if (modal) {
+                modal.addEventListener('click', function (e) {
+                    if (e.target === modal) closeMfaModal();
+                });
+            }
+        }
+
         // 로그인 처리
         function handleLogin(event) {
             event.preventDefault();
-            
+
+            if (!validateLoginForm()) return;
+
             const userId = document.getElementById('userId').value.trim();
-            const rememberId = document.getElementById('rememberId').checked;
 
             var restriction = getLoginAccountRestriction(userId);
             if (restriction) {
                 showAccountRestrictionModal(restriction);
                 return;
             }
-            
-            // 아이디 저장 처리
-            if (rememberId && userId) {
-                localStorage.setItem('savedUserId', userId);
-        } else {
-                localStorage.removeItem('savedUserId');
-            }
-            
-            // 로그인 성공 처리 (아이디, 비밀번호 검증 없이 바로 로그인)
-            localStorage.setItem('isLoggedIn', 'true');
-            var redirect = (function() {
-                var p = new URLSearchParams(window.location.search);
-                var r = p.get('redirect');
-                if (r && /^[a-zA-Z0-9_\-\.]+\.html(\#.*)?$/.test(r)) return r;
-                return 'main.html';
-            })();
-            window.location.href = redirect;
+
+            pendingLoginRedirect = getLoginRedirect();
+            openMfaModal();
         }
 
         // 아이디 저장 기능
@@ -859,6 +1337,8 @@ body {
             // 드롭다운 메뉴 초기화
             initDropdownMenus();
 
+            initMfaModal();
+
             var banModal = document.getElementById('accountRestrictionModal');
             var banOk = document.getElementById('restrictionModalOkBtn');
             if (banOk) banOk.addEventListener('click', closeAccountRestrictionModal);
@@ -868,8 +1348,14 @@ body {
                 });
             }
             document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && banModal && banModal.classList.contains('is-open')) {
+                if (e.key !== 'Escape') return;
+                if (banModal && banModal.classList.contains('is-open')) {
                     closeAccountRestrictionModal();
+                    return;
+                }
+                var mfaModal = document.getElementById('mfaModal');
+                if (mfaModal && mfaModal.classList.contains('is-open')) {
+                    closeMfaModal();
                 }
             });
 });
@@ -886,9 +1372,10 @@ body {
                 position: { top: '10px', left: '10px' },
                 function: '로그인 폼 전체 영역 (중앙 정렬 카드 형태)',
                 behavior: [
-                    '화면 중앙 배치',
+                    'tokbell 로고 + 로그인 타이틀 + 부제목',
+                    '화면 중앙 배치, 연회색 배경',
                     '반응형: 모바일에서 너비 100%',
-                    '로고, 폼, 부가 기능 포함'
+                    '녹색 브랜드 컬러(#5cb82e) 버튼·링크'
                 ]
             },
             // 2. 로그인 폼
@@ -987,8 +1474,8 @@ body {
                 behavior: [
                     '클릭 또는 Enter 키로 실행',
                     '아이디/비밀번호 빈 값 검증',
-                    'API 호출 중 로딩 상태 표시',
-                    '성공 시 main.html로 리다이렉트',
+                    '검증 통과 시 2단계 인증 모달 표시',
+                    'MFA 인증 완료 후 main.html로 리다이렉트',
                     '실패 시 "아이디 또는 비밀번호가 일치하지 않습니다" 에러',
                     '5회 실패 시 계정 잠금 안내'
                 ],
@@ -1042,6 +1529,21 @@ body {
                     '임시 비밀번호 발급 또는 재설정 링크 발송'
                 ],
                 api: 'POST /api/auth/find-password'
+            },
+            // 14. 2단계 인증 모달
+            {
+                selector: '#mfaModal',
+                title: '2차 인증 모달',
+                position: { top: '10px', left: '10px' },
+                function: '로그인 후 다중인증(MFA) 수행 — 로그인 카드와 동일 톤앤매너',
+                behavior: [
+                    'tokbell 로고 + 2차 인증 타이틀',
+                    '1단계: 휴대폰 번호 입력 → 인증번호 발송',
+                    '2단계: SMS 인증번호 6자리 입력 (3분 타이머)',
+                    '녹색 Primary / 흰색 Outline 버튼',
+                    '인증 완료 시 main.html로 이동'
+                ],
+                api: 'POST /api/auth/mfa/send, POST /api/auth/mfa/verify'
             }
         ];
         initSpecOverlay(specData);

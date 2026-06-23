@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
-    <title>일반문자 발송 - 메시징 서비스</title>
+    <title>일반문자 발송 - Tokbell</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/header.js"></script>
     <style>/* 공통 스타일 */
 * {
@@ -14,38 +15,42 @@
 }
 
 :root {
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
+    --brand-green: #5cb82e;
+    --brand-green-hover: #4a9a24;
+    --brand-green-soft: rgba(92, 184, 46, 0.12);
+    --primary-color: #5cb82e;
+    --primary-hover: #4a9a24;
     --secondary-color: #64748b;
     --success-color: #10b981;
     --danger-color: #ef4444;
     --warning-color: #f59e0b;
-    --purple-color: #7c5cdb;
-    --purple-light: #a78bfa;
-    --purple-bg: linear-gradient(135deg, #e8e4f8 0%, #dcd6f0 50%, #d0c8eb 100%);
-    --bg-color: #f8fafc;
+    --purple-color: #5cb82e;
+    --purple-light: #7dce52;
+    --purple-bg: linear-gradient(135deg, #f0fce8 0%, #e8f8dc 50%, #dff5d0 100%);
+    --bg-color: #eef1f4;
     --surface-color: #ffffff;
-    --border-color: #e2e8f0;
-    --text-primary: #1e293b;
+    --border-color: #dde3ea;
+    --text-primary: #0f172a;
     --text-secondary: #64748b;
     --text-muted: #94a3b8;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-card: 0 8px 32px rgba(15, 23, 42, 0.06);
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 12px;
     --radius-xl: 16px;
-    --radius-2xl: 20px;
+    --radius-2xl: 16px;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
     font-size: 14px;
     line-height: 1.6;
     color: var(--text-primary);
     background-color: var(--bg-color);
+    letter-spacing: -0.02em;
 }
 
 /* 버튼 스타일 */
@@ -108,15 +113,16 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
+    background-color: var(--brand-green);
     color: white;
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(92, 184, 46, 0.28);
 }
 
 .btn-primary:hover:not(:disabled) {
-    background-color: var(--primary-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    background-color: var(--brand-green-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(92, 184, 46, 0.35);
 }
 
 .btn-secondary {
@@ -125,13 +131,15 @@ body {
 }
 
 .btn-outline {
-    background-color: transparent;
+    background-color: #ffffff;
     border: 1px solid var(--border-color);
-    color: var(--text-primary);
+    color: #334155;
+    font-weight: 600;
 }
 
 .btn-outline:hover:not(:disabled) {
-    background-color: var(--bg-color);
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
 }
 
 .btn-danger {
@@ -157,8 +165,8 @@ body {
 .form-label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 500;
-    color: var(--text-primary);
+    font-weight: 600;
+    color: #334155;
 }
 
 .form-label.required::after {
@@ -170,21 +178,21 @@ body {
 .form-select,
 .form-textarea {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 14px;
     font-size: 14px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     background-color: var(--surface-color);
     color: var(--text-primary);
-    transition: all 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: var(--brand-green);
+    box-shadow: 0 0 0 3px var(--brand-green-soft);
 }
 
 .form-textarea {
@@ -204,11 +212,11 @@ body {
     color: var(--text-secondary);
 }
 
-/* 카드 (디자인: 여백·그림자 강화) */
+/* 카드 (로그인 페이지 톤앤매너) */
 .card {
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-xl);
     padding: 28px;
     box-shadow: var(--shadow-card);
 }
@@ -294,6 +302,212 @@ body {
     gap: 12px;
 }
 
+/* KG 이니시스 간편인증 (본인인증) 팝업 */
+.easy-auth-overlay {
+    z-index: 1100;
+}
+.easy-auth-modal {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+    max-width: 420px;
+    width: 92%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+}
+.easy-auth-browser-bar {
+    background: #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px 16px;
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+}
+.easy-auth-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.easy-auth-inicis-logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: #374151;
+    letter-spacing: -0.02em;
+}
+.easy-auth-inicis-logo .kg {
+    color: #6b21a8;
+    font-weight: 800;
+}
+.easy-auth-header-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2937;
+}
+.easy-auth-body {
+    padding: 20px 18px 8px;
+}
+.easy-auth-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px 10px;
+    margin-bottom: 20px;
+}
+.easy-auth-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+.easy-auth-item:hover {
+    transform: translateY(-2px);
+}
+.easy-auth-item:active {
+    transform: scale(0.97);
+}
+.easy-auth-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.03em;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+.easy-auth-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.easy-auth-icon.ibk { background: linear-gradient(145deg, #0056a6, #0072ce); font-size: 13px; }
+.easy-auth-icon.kb { background: linear-gradient(145deg, #ffcc00, #ffe066); color: #1a1a1a; }
+.easy-auth-icon.pass { background: #e60012; font-size: 14px; letter-spacing: 0.02em; }
+.easy-auth-icon.toss { background: linear-gradient(145deg, #0064ff, #3182f6); font-size: 18px; font-weight: 900; }
+.easy-auth-icon.woori { background: linear-gradient(145deg, #0067ac, #0088cc); }
+.easy-auth-icon.naver { background: #03c75a; font-size: 22px; font-weight: 900; }
+.easy-auth-icon.kakao { background: #ffeb00; color: #191919; font-size: 20px; font-weight: 900; }
+.easy-auth-icon.hana { background: linear-gradient(145deg, #008485, #00a5a5); }
+.easy-auth-icon.samsung { background: linear-gradient(145deg, #4f46e5, #7c3aed); font-size: 10px; }
+.easy-auth-icon.shinhan { background: linear-gradient(145deg, #0046ff, #0066ff); }
+.easy-auth-icon.cert {
+    background: linear-gradient(145deg, #1e40af, #2563eb);
+    font-size: 20px;
+}
+.easy-auth-label {
+    font-size: 11px;
+    color: #374151;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+    word-break: keep-all;
+}
+.easy-auth-notes {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+}
+.easy-auth-notes li {
+    position: relative;
+    padding-left: 10px;
+    font-size: 11px;
+    color: #9ca3af;
+    line-height: 1.65;
+    margin-bottom: 4px;
+}
+.easy-auth-notes li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: #9ca3af;
+}
+.easy-auth-footer {
+    padding: 0 18px 18px;
+    background: #fafafa;
+}
+.easy-auth-cancel {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 999px;
+    background: #9ca3af;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.easy-auth-cancel:hover {
+    background: #6b7280;
+}
+.easy-auth-support {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 11px;
+    color: #9ca3af;
+}
+.easy-auth-support a {
+    color: #9ca3af;
+    text-decoration: none;
+}
+.easy-auth-support a:hover {
+    text-decoration: underline;
+}
+.easy-auth-loading {
+    display: none;
+    text-align: center;
+    padding: 32px 20px;
+}
+.easy-auth-loading.is-visible {
+    display: block;
+}
+.easy-auth-loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #6b21a8;
+    border-radius: 50%;
+    margin: 0 auto 14px;
+    animation: easyAuthSpin 0.8s linear infinite;
+}
+@keyframes easyAuthSpin {
+    to { transform: rotate(360deg); }
+}
+.easy-auth-loading-text {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 600;
+}
+.easy-auth-loading-sub {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 6px;
+}
+.easy-auth-content.is-hidden {
+    display: none;
+}
+
+@media (max-width: 400px) {
+    .easy-auth-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .easy-auth-icon {
+        width: 52px;
+        height: 52px;
+    }
+}
+
 /* 배지 */
 .badge {
     display: inline-flex;
@@ -305,7 +519,7 @@ body {
 }
 
 .badge-primary {
-    background-color: rgba(37, 99, 235, 0.1);
+    background-color: rgba(92, 184, 46, 0.1);
     color: var(--primary-color);
 }
 
@@ -399,8 +613,8 @@ body {
 }
 
 .alert-info {
-    background-color: rgba(37, 99, 235, 0.1);
-    border: 1px solid rgba(37, 99, 235, 0.2);
+    background-color: rgba(92, 184, 46, 0.1);
+    border: 1px solid rgba(92, 184, 46, 0.2);
     color: var(--primary-color);
 }
 
@@ -652,7 +866,7 @@ body {
 }
 
 .nav-item.active {
-    background-color: rgba(37, 99, 235, 0.1);
+    background-color: rgba(92, 184, 46, 0.1);
     color: var(--primary-color);
 }
 
@@ -719,7 +933,7 @@ body {
 }
 
 .nav-dropdown-item.active {
-    background-color: rgba(37, 99, 235, 0.1);
+    background-color: rgba(92, 184, 46, 0.1);
     color: var(--primary-color);
     font-weight: 600;
 }
@@ -764,9 +978,10 @@ body {
 
 .page-header h2 {
     font-size: 28px;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-weight: 800;
+    color: #0f172a;
     margin-bottom: 8px;
+    letter-spacing: -0.03em;
 }
 
 .page-description {
@@ -928,8 +1143,52 @@ body {
     }
 }
 
-</style>
+    </style>
     <style>
+        /* Tokbell 브랜드 톤 — 로그인 페이지와 통일 */
+        input[type="checkbox"],
+        input[type="radio"] {
+            accent-color: var(--brand-green);
+        }
+        .tab-item.active {
+            color: var(--brand-green);
+            border-bottom-color: var(--brand-green);
+            font-weight: 600;
+        }
+        .nav-item.active {
+            background-color: var(--brand-green-soft);
+            color: var(--brand-green);
+        }
+        .badge-primary {
+            background-color: var(--brand-green-soft);
+            color: var(--brand-green);
+        }
+        .alert-info {
+            background-color: var(--brand-green-soft);
+            border: 1px solid rgba(92, 184, 46, 0.22);
+            color: #3d7a1c;
+        }
+        .modal {
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+        }
+        .modal-title {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        #submitSendBtn {
+            min-width: 140px;
+            padding: 14px 28px;
+            font-size: 15px;
+            border-radius: 8px;
+        }
+        .cost-info {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+        }
+        .cost-total span:last-child {
+            color: var(--brand-green);
+        }
         .send-form-container {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -1265,7 +1524,7 @@ body {
                                         <span style="font-size: 14px;">총 <strong id="recipientCount">0</strong>명</span>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
-                                        <a href="#" role="button" id="excelSampleBtn" onclick="downloadSampleFile(); return false;" style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--primary-color, #2563eb); text-decoration: underline; cursor: pointer;">
+                                        <a href="#" role="button" id="excelSampleBtn" onclick="downloadSampleFile(); return false;" style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--primary-color, #5cb82e); text-decoration: underline; cursor: pointer;">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                             샘플 다운로드
                                         </a>
@@ -1698,6 +1957,81 @@ body {
             <div class="modal-footer" id="sendConfirmModalFooter">
                 <button class="btn btn-outline" id="sendConfirmCancelBtn" onclick="closeModal('sendConfirmModal')">취소</button>
                 <button class="btn btn-primary" id="sendConfirmSubmitBtn" onclick="confirmSend()">발송하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KG 이니시스 간편인증 (본인인증) 팝업 -->
+    <div class="modal-overlay easy-auth-overlay" id="easyAuthModal">
+        <div class="easy-auth-modal" role="dialog" aria-modal="true" aria-labelledby="easyAuthTitle">
+            <div class="easy-auth-browser-bar">kssa.inicis.com/init</div>
+            <div class="easy-auth-header">
+                <div class="easy-auth-inicis-logo"><span class="kg">KG</span> 이니시스</div>
+                <span class="easy-auth-header-title" id="easyAuthTitle">간편인증</span>
+            </div>
+            <div class="easy-auth-content" id="easyAuthContent">
+                <div class="easy-auth-body">
+                    <div class="easy-auth-grid">
+                        <button type="button" class="easy-auth-item" data-provider="ibk" onclick="startEasyAuth('IBK 인증')">
+                            <span class="easy-auth-icon ibk">IBK</span>
+                            <span class="easy-auth-label">IBK 인증</span>
+                        </button>
+                        <button type="button" class="easy-auth-item" data-provider="kb" onclick="startEasyAuth('KB국민인증')">
+                            <span class="easy-auth-icon kb">KB</span>
+                            <span class="easy-auth-label">KB국민인증</span>
+                        </button>
+                        <button type="button" class="easy-auth-item" data-provider="pass" onclick="startEasyAuth('PASS 인증')">
+                            <span class="easy-auth-icon pass">PASS</span>
+                            <span class="easy-auth-label">PASS 인증</span>
+                        </button>
+                        <button type="button" class="easy-auth-item" data-provider="toss" onclick="startEasyAuth('토스 인증')">
+                            <span class="easy-auth-icon toss">toss</span>
+                            <span class="easy-auth-label">토스 인증</span>
+                        </button>
+                        <button type="button" class="easy-auth-item" data-provider="woori" onclick="startEasyAuth('우리WON인증')">
+                            <span class="easy-auth-icon woori">W</span>
+                            <span class="easy-auth-label">우리WON인증</span>
+                        </button>
+                        <button type="button" class="easy-auth-item" data-provider="naver" onclick="startEasyAuth('네이버 인증')">
+                            <span class="easy-auth-icon naver">N</span>
+                            <span class="easy-auth-label">네이버 인증</span>
+                        </button>
+                        <button type="button" class="easy-auth-item" data-provider="kakao" onclick="startEasyAuth('카카오뱅크')">
+                            <span class="easy-auth-icon kakao">B</span>
+                            <span class="easy-auth-label">카카오뱅크</span>
+                        </button>
+                        <button type="button" class="easy-auth-item" data-provider="hana" onclick="startEasyAuth('하나 인증')">
+                            <span class="easy-auth-icon hana">H</span>
+                            <span class="easy-auth-label">하나 인증</span>
+                        </button>
+                        <button type="button" class="easy-auth-item" data-provider="samsung" onclick="startEasyAuth('삼성패스 인증')">
+                            <span class="easy-auth-icon samsung">Pass</span>
+                            <span class="easy-auth-label">삼성패스 인증</span>
+                        </button>
+                        <button type="button" class="easy-auth-item" data-provider="shinhan" onclick="startEasyAuth('신한 인증')">
+                            <span class="easy-auth-icon shinhan">S</span>
+                            <span class="easy-auth-label">신한 인증</span>
+                        </button>
+                        <button type="button" class="easy-auth-item" data-provider="cert" onclick="startEasyAuth('금융인증서')">
+                            <span class="easy-auth-icon cert">🔑</span>
+                            <span class="easy-auth-label">금융인증서</span>
+                        </button>
+                    </div>
+                    <ul class="easy-auth-notes">
+                        <li>본인 명의의 인증서로 간편인증이 가능합니다.</li>
+                        <li>입력한 정보는 간편인증을 위해서만 활용됩니다.</li>
+                        <li>각 인증서는 해당 인증서의 앱 설치 후 발급 가능 (금융인증서는 각 은행에서 발급 가능)</li>
+                    </ul>
+                </div>
+                <div class="easy-auth-footer">
+                    <button type="button" class="easy-auth-cancel" onclick="closeEasyAuthModal()">취 소</button>
+                    <p class="easy-auth-support">고객지원 1588-4954 | <a href="docs/개인정보처리방침_popup.html" target="_blank">개인정보처리방침</a></p>
+                </div>
+            </div>
+            <div class="easy-auth-loading" id="easyAuthLoading">
+                <div class="easy-auth-loading-spinner"></div>
+                <div class="easy-auth-loading-text" id="easyAuthLoadingText">간편인증 진행 중</div>
+                <div class="easy-auth-loading-sub" id="easyAuthLoadingSub">선택하신 앱에서 인증을 완료해주세요.</div>
             </div>
         </div>
     </div>
@@ -2159,7 +2493,7 @@ style.textContent = `
     }
     .drag-over {
         border-color: var(--primary-color) !important;
-        background-color: rgba(37, 99, 235, 0.05) !important;
+        background-color: rgba(92, 184, 46, 0.05) !important;
     }
     .pagination {
         display: flex;
@@ -2643,11 +2977,16 @@ document.getElementById('confirmRecipientCount').textContent =
         }
 
         function confirmSend() {
+            if (!validateSendBeforeAuth()) return;
+            resetEasyAuthModal();
+            openModal('easyAuthModal');
+        }
+
+        function validateSendBeforeAuth() {
             // 전화번호 최소 9자리 검증
             const invalidPhones = [];
             recipientTableData.forEach((row, index) => {
                 if (row.phone && row.phone.trim()) {
-                    // 하이픈 제거 후 숫자만 추출
                     const phoneDigits = row.phone.replace(/[^0-9]/g, '');
                     if (phoneDigits.length < 9) {
                         invalidPhones.push({
@@ -2657,72 +2996,93 @@ document.getElementById('confirmRecipientCount').textContent =
                     }
                 }
             });
-            
+
             if (invalidPhones.length > 0) {
                 showToast('전화번호는 최소 9자리 이상 입력해주세요. 잘못된 번호가 있습니다.', 'warning');
-                return;
+                return false;
             }
-            
-            // SMS 발송 시 변수값 길이 체크
+
             const messageType = document.querySelector('input[name="messageType"]:checked')?.value || 'SMS';
             if (messageType === 'SMS') {
                 const messageContent = document.getElementById('messageContent').value;
                 const messageTitle = document.getElementById('messageTitle')?.value || '';
                 const recipientRows = document.querySelectorAll('#recipientDataTableBody tr');
-                
+
                 let hasOverLimit = false;
-                let overLimitCount = 0;
-                
-                recipientRows.forEach((row, index) => {
+
+                recipientRows.forEach((row) => {
                     const checkbox = row.querySelector('input[type="checkbox"]');
-                    if (!checkbox || !checkbox.checked) return; // 선택되지 않은 행은 제외
-                    
-                    // 변수값 가져오기
+                    if (!checkbox || !checkbox.checked) return;
+
                     const cells = row.querySelectorAll('td');
-                    if (cells.length < 8) return; // 체크박스, 순번, 이름, 전화번호, 변수1, 변수2, 변수3 (총 7개) 필요
-                    
+                    if (cells.length < 8) return;
+
                     const var1 = cells[4]?.querySelector('input')?.value || '';
                     const var2 = cells[5]?.querySelector('input')?.value || '';
                     const var3 = cells[6]?.querySelector('input')?.value || '';
-                    
-                    // 변수 치환
+
                     let replacedContent = messageContent;
                     replacedContent = replacedContent.replace(/#\{이름\}/g, cells[2]?.querySelector('input')?.value || '');
                     replacedContent = replacedContent.replace(/#\{전화번호\}/g, cells[3]?.querySelector('input')?.value || '');
                     replacedContent = replacedContent.replace(/#\{변수1\}/g, var1);
                     replacedContent = replacedContent.replace(/#\{변수2\}/g, var2);
                     replacedContent = replacedContent.replace(/#\{변수3\}/g, var3);
-                    
-                    // 바이트 계산
+
                     let totalBytes = calculateByteLength(replacedContent);
                     if (messageTitle) {
                         totalBytes += calculateByteLength(messageTitle);
                     }
-                    
-                    // 90바이트 초과 체크
+
                     if (totalBytes > 90) {
                         hasOverLimit = true;
-                        overLimitCount++;
                     }
                 });
-                
+
                 if (hasOverLimit) {
                     showToast('변수값 길이로 인해 글자수가 90바이트가 넘는 항목이 있어서 SMS 전송이 불가합니다.', 'warning');
-                    return;
+                    return false;
                 }
             }
-            
-            // 발송 완료 페이지로 이동
-            closeModal('sendConfirmModal');
-            
-            // 발송 정보를 URL 파라미터로 전달
+
+            return true;
+        }
+
+        function resetEasyAuthModal() {
+            var content = document.getElementById('easyAuthContent');
+            var loading = document.getElementById('easyAuthLoading');
+            if (content) content.classList.remove('is-hidden');
+            if (loading) loading.classList.remove('is-visible');
+        }
+
+        function closeEasyAuthModal() {
+            resetEasyAuthModal();
+            closeModal('easyAuthModal');
+        }
+
+        function startEasyAuth(providerName) {
+            var content = document.getElementById('easyAuthContent');
+            var loading = document.getElementById('easyAuthLoading');
+            var loadingText = document.getElementById('easyAuthLoadingText');
+            if (content) content.classList.add('is-hidden');
+            if (loading) loading.classList.add('is-visible');
+            if (loadingText) loadingText.textContent = providerName + ' 인증 진행 중';
+
+            setTimeout(function () {
+                closeModal('easyAuthModal');
+                closeModal('sendConfirmModal');
+                resetEasyAuthModal();
+                executeActualSend();
+            }, 1500);
+        }
+
+        function executeActualSend() {
             const isReserved = document.querySelector('input[name="sendTime"]:checked').value === 'reserved';
             const recipients = document.getElementById('recipientCount').textContent;
             const sendTime = isReserved
                 ? (document.getElementById('reservedDateTime')?.value || '예약 일시')
                 : '즉시 발송';
             const cost = document.getElementById('costTotal').textContent;
-            
+
             const params = new URLSearchParams({
                 type: isReserved ? '예약발송' : '일반문자',
                 recipients: recipients,
@@ -2730,7 +3090,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 cost: cost,
                 from: 'message-send-general.html'
             });
-            
+
             const completePage = isReserved ? 'send-complete-reservation.html' : 'send-complete.html';
             window.location.href = completePage + '?' + params.toString();
         }
@@ -5346,15 +5706,28 @@ document.getElementById('confirmRecipientCount').textContent =
                 selector: '#sendConfirmSubmitBtn',
                 title: '발송하기 버튼',
                 position: { top: '-5px', right: '-10px' },
-                function: '최종 발송 실행',
+                function: '본인인증 후 최종 발송 실행',
                 behavior: [
-                    '클릭 시 API 호출',
-                    '[ 발송 결과 ]',
-                    '발송 성공: "발송이 완료되었습니다" 토스트 + 결과 페이지 이동',
+                    '클릭 시 유효성 검증',
+                    '통과 시 KG 이니시스 간편인증(#easyAuthModal) 팝업 표시',
+                    '인증 수단 선택 후 발송 완료 페이지 이동',
                     '발송 실패: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"'
                 ],
-                api: 'POST /api/messages/send',
                 tags: [{ text: 'API', type: 'api' }]
+            },
+            // 69. KG 이니시스 간편인증 (본인인증) 팝업
+            {
+                selector: '#easyAuthModal',
+                title: '간편인증 (본인인증) 팝업',
+                position: { top: '60px', left: '20px' },
+                function: '발송 전 추가 본인인증 (KG 이니시스 통합 간편인증)',
+                behavior: [
+                    '발송 확인 모달에서 "발송하기" 클릭 후 노출',
+                    'IBK·KB·PASS·토스·우리·네이버·카카오뱅크·하나·삼성패스·신한·금융인증서 선택',
+                    '인증 수단 선택 시 해당 앱 연동 (데모: 1.5초 후 발송 완료)',
+                    '"취 소" 버튼으로 닫기 → 발송 확인 모달로 복귀'
+                ],
+                tags: [{ text: '모달', type: 'info' }, { text: '필수', type: 'required' }]
             },
             
             // ===== 전화번호만 입력 모달 =====
