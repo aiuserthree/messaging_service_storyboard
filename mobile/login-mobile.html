@@ -84,5 +84,34 @@
             });
         });
     </script>
+
+    <!-- 화면설계 오버레이 -->
+    <script src="../js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            {
+                selector: '#atkSheet',
+                title: '2차 인증 바텀시트 (알림톡)',
+                position: { top: '10px', left: '10px' },
+                function: '로그인 후 다중인증(MFA) 수행 — 카카오톡 알림톡 인증번호',
+                behavior: [
+                    '아이디·비밀번호 입력 후 "로그인" 클릭 시 하단에서 슬라이드업',
+                    '1단계: 휴대폰 번호 입력 → 알림톡으로 인증번호 6자리 발송',
+                    '2단계: 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
+                    '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
+                    '【실패 처리】',
+                    '자릿수 미달: "인증번호 6자리를 입력해주세요."',
+                    '불일치: "인증번호가 일치하지 않습니다. (n/5회)" — 남은 시도 횟수 표시',
+                    '5회 초과 또는 유효시간 만료: 입력·인증 버튼 잠금, 재전송해야 재시도 가능',
+                    '재전송 시 입력값·오류 문구·시도 횟수 초기화',
+                    '배경 탭·취소·ESC로 닫기 → 1단계로 초기화',
+                    '인증 완료 시 main-mobile.html로 이동'
+                ],
+                api: 'POST /api/auth/mfa/send, POST /api/auth/mfa/verify',
+                tags: [{ text: '모달', type: 'info' }, { text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
+            }
+        ];
+        initSpecOverlay(specData);
+    </script>
 </body>
 </html>

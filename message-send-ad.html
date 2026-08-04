@@ -5258,6 +5258,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 function: '저장된 광고문자 템플릿 목록에서 선택',
                 behavior: ['템플릿명/내용 검색', '선택 시 메시지 내용에 자동 적용'],
                 tags: [{ text: '모달', type: 'info' }]
+            },
+
+            // 발송 추가 인증 (알림톡) 팝업
+            {
+                selector: '#alimtalkAuthModal',
+                title: '발송 추가 인증 (알림톡) 팝업',
+                position: { top: '60px', left: '20px' },
+                function: '발송 전 추가 인증 (카카오톡 알림톡 인증번호)',
+                behavior: [
+                    '발송 확인 모달에서 "발송하기" 클릭 → 유효성 검증 통과 후 노출',
+                    '1단계: 휴대폰 번호 입력 → 알림톡으로 인증번호 6자리 발송',
+                    '2단계: 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
+                    '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
+                    '【실패 처리】',
+                    '자릿수 미달: "인증번호 6자리를 입력해주세요."',
+                    '불일치: "인증번호가 일치하지 않습니다. (n/5회)" — 남은 시도 횟수 표시',
+                    '5회 초과 또는 유효시간 만료: 입력·인증 버튼 잠금, 재전송해야 재시도 가능',
+                    '재전송 시 입력값·오류 문구·시도 횟수 초기화',
+                    '인증 성공 시 발송 완료 페이지 이동 / "취소" 클릭 시 발송 확인 모달로 복귀'
+                ],
+                api: 'POST /api/auth/mfa/send, POST /api/auth/mfa/verify',
+                tags: [{ text: '모달', type: 'info' }, { text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             }
         ];
         initSpecOverlay(specData);
