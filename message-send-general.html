@@ -7,6 +7,7 @@
     <title>일반문자 발송 - Tokbell</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/header.js"></script>
+    <script src="js/alimtalk-auth.js"></script>
     <style>/* 공통 스타일 */
 * {
     margin: 0;
@@ -300,212 +301,6 @@ body {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-}
-
-/* KG 이니시스 간편인증 (본인인증) 팝업 */
-.easy-auth-overlay {
-    z-index: 1100;
-}
-.easy-auth-modal {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
-    max-width: 420px;
-    width: 92%;
-    overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-}
-.easy-auth-browser-bar {
-    background: #f3f4f6;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 8px 16px;
-    text-align: center;
-    font-size: 12px;
-    color: #6b7280;
-}
-.easy-auth-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px 12px;
-    border-bottom: 1px solid #f0f0f0;
-}
-.easy-auth-inicis-logo {
-    font-size: 15px;
-    font-weight: 700;
-    color: #374151;
-    letter-spacing: -0.02em;
-}
-.easy-auth-inicis-logo .kg {
-    color: #6b21a8;
-    font-weight: 800;
-}
-.easy-auth-header-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #1f2937;
-}
-.easy-auth-body {
-    padding: 20px 18px 8px;
-}
-.easy-auth-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px 10px;
-    margin-bottom: 20px;
-}
-.easy-auth-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-    transition: transform 0.15s;
-}
-.easy-auth-item:hover {
-    transform: translateY(-2px);
-}
-.easy-auth-item:active {
-    transform: scale(0.97);
-}
-.easy-auth-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 800;
-    color: #ffffff;
-    letter-spacing: -0.03em;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-}
-.easy-auth-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.easy-auth-icon.ibk { background: linear-gradient(145deg, #0056a6, #0072ce); font-size: 13px; }
-.easy-auth-icon.kb { background: linear-gradient(145deg, #ffcc00, #ffe066); color: #1a1a1a; }
-.easy-auth-icon.pass { background: #e60012; font-size: 14px; letter-spacing: 0.02em; }
-.easy-auth-icon.toss { background: linear-gradient(145deg, #0064ff, #3182f6); font-size: 18px; font-weight: 900; }
-.easy-auth-icon.woori { background: linear-gradient(145deg, #0067ac, #0088cc); }
-.easy-auth-icon.naver { background: #03c75a; font-size: 22px; font-weight: 900; }
-.easy-auth-icon.kakao { background: #ffeb00; color: #191919; font-size: 20px; font-weight: 900; }
-.easy-auth-icon.hana { background: linear-gradient(145deg, #008485, #00a5a5); }
-.easy-auth-icon.samsung { background: linear-gradient(145deg, #4f46e5, #7c3aed); font-size: 10px; }
-.easy-auth-icon.shinhan { background: linear-gradient(145deg, #0046ff, #0066ff); }
-.easy-auth-icon.cert {
-    background: linear-gradient(145deg, #1e40af, #2563eb);
-    font-size: 20px;
-}
-.easy-auth-label {
-    font-size: 11px;
-    color: #374151;
-    font-weight: 500;
-    text-align: center;
-    line-height: 1.3;
-    word-break: keep-all;
-}
-.easy-auth-notes {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 16px;
-}
-.easy-auth-notes li {
-    position: relative;
-    padding-left: 10px;
-    font-size: 11px;
-    color: #9ca3af;
-    line-height: 1.65;
-    margin-bottom: 4px;
-}
-.easy-auth-notes li::before {
-    content: '·';
-    position: absolute;
-    left: 0;
-    color: #9ca3af;
-}
-.easy-auth-footer {
-    padding: 0 18px 18px;
-    background: #fafafa;
-}
-.easy-auth-cancel {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 999px;
-    background: #9ca3af;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.easy-auth-cancel:hover {
-    background: #6b7280;
-}
-.easy-auth-support {
-    margin-top: 12px;
-    text-align: center;
-    font-size: 11px;
-    color: #9ca3af;
-}
-.easy-auth-support a {
-    color: #9ca3af;
-    text-decoration: none;
-}
-.easy-auth-support a:hover {
-    text-decoration: underline;
-}
-.easy-auth-loading {
-    display: none;
-    text-align: center;
-    padding: 32px 20px;
-}
-.easy-auth-loading.is-visible {
-    display: block;
-}
-.easy-auth-loading-spinner {
-    width: 36px;
-    height: 36px;
-    border: 3px solid #e5e7eb;
-    border-top-color: #6b21a8;
-    border-radius: 50%;
-    margin: 0 auto 14px;
-    animation: easyAuthSpin 0.8s linear infinite;
-}
-@keyframes easyAuthSpin {
-    to { transform: rotate(360deg); }
-}
-.easy-auth-loading-text {
-    font-size: 14px;
-    color: #374151;
-    font-weight: 600;
-}
-.easy-auth-loading-sub {
-    font-size: 12px;
-    color: #9ca3af;
-    margin-top: 6px;
-}
-.easy-auth-content.is-hidden {
-    display: none;
-}
-
-@media (max-width: 400px) {
-    .easy-auth-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .easy-auth-icon {
-        width: 52px;
-        height: 52px;
-    }
 }
 
 /* 배지 */
@@ -1961,81 +1756,6 @@ body {
         </div>
     </div>
 
-    <!-- KG 이니시스 간편인증 (본인인증) 팝업 -->
-    <div class="modal-overlay easy-auth-overlay" id="easyAuthModal">
-        <div class="easy-auth-modal" role="dialog" aria-modal="true" aria-labelledby="easyAuthTitle">
-            <div class="easy-auth-browser-bar">kssa.inicis.com/init</div>
-            <div class="easy-auth-header">
-                <div class="easy-auth-inicis-logo"><span class="kg">KG</span> 이니시스</div>
-                <span class="easy-auth-header-title" id="easyAuthTitle">간편인증</span>
-            </div>
-            <div class="easy-auth-content" id="easyAuthContent">
-                <div class="easy-auth-body">
-                    <div class="easy-auth-grid">
-                        <button type="button" class="easy-auth-item" data-provider="ibk" onclick="startEasyAuth('IBK 인증')">
-                            <span class="easy-auth-icon ibk">IBK</span>
-                            <span class="easy-auth-label">IBK 인증</span>
-                        </button>
-                        <button type="button" class="easy-auth-item" data-provider="kb" onclick="startEasyAuth('KB국민인증')">
-                            <span class="easy-auth-icon kb">KB</span>
-                            <span class="easy-auth-label">KB국민인증</span>
-                        </button>
-                        <button type="button" class="easy-auth-item" data-provider="pass" onclick="startEasyAuth('PASS 인증')">
-                            <span class="easy-auth-icon pass">PASS</span>
-                            <span class="easy-auth-label">PASS 인증</span>
-                        </button>
-                        <button type="button" class="easy-auth-item" data-provider="toss" onclick="startEasyAuth('토스 인증')">
-                            <span class="easy-auth-icon toss">toss</span>
-                            <span class="easy-auth-label">토스 인증</span>
-                        </button>
-                        <button type="button" class="easy-auth-item" data-provider="woori" onclick="startEasyAuth('우리WON인증')">
-                            <span class="easy-auth-icon woori">W</span>
-                            <span class="easy-auth-label">우리WON인증</span>
-                        </button>
-                        <button type="button" class="easy-auth-item" data-provider="naver" onclick="startEasyAuth('네이버 인증')">
-                            <span class="easy-auth-icon naver">N</span>
-                            <span class="easy-auth-label">네이버 인증</span>
-                        </button>
-                        <button type="button" class="easy-auth-item" data-provider="kakao" onclick="startEasyAuth('카카오뱅크')">
-                            <span class="easy-auth-icon kakao">B</span>
-                            <span class="easy-auth-label">카카오뱅크</span>
-                        </button>
-                        <button type="button" class="easy-auth-item" data-provider="hana" onclick="startEasyAuth('하나 인증')">
-                            <span class="easy-auth-icon hana">H</span>
-                            <span class="easy-auth-label">하나 인증</span>
-                        </button>
-                        <button type="button" class="easy-auth-item" data-provider="samsung" onclick="startEasyAuth('삼성패스 인증')">
-                            <span class="easy-auth-icon samsung">Pass</span>
-                            <span class="easy-auth-label">삼성패스 인증</span>
-                        </button>
-                        <button type="button" class="easy-auth-item" data-provider="shinhan" onclick="startEasyAuth('신한 인증')">
-                            <span class="easy-auth-icon shinhan">S</span>
-                            <span class="easy-auth-label">신한 인증</span>
-                        </button>
-                        <button type="button" class="easy-auth-item" data-provider="cert" onclick="startEasyAuth('금융인증서')">
-                            <span class="easy-auth-icon cert">🔑</span>
-                            <span class="easy-auth-label">금융인증서</span>
-                        </button>
-                    </div>
-                    <ul class="easy-auth-notes">
-                        <li>본인 명의의 인증서로 간편인증이 가능합니다.</li>
-                        <li>입력한 정보는 간편인증을 위해서만 활용됩니다.</li>
-                        <li>각 인증서는 해당 인증서의 앱 설치 후 발급 가능 (금융인증서는 각 은행에서 발급 가능)</li>
-                    </ul>
-                </div>
-                <div class="easy-auth-footer">
-                    <button type="button" class="easy-auth-cancel" onclick="closeEasyAuthModal()">취 소</button>
-                    <p class="easy-auth-support">고객지원 1588-4954 | <a href="docs/개인정보처리방침_popup.html" target="_blank">개인정보처리방침</a></p>
-                </div>
-            </div>
-            <div class="easy-auth-loading" id="easyAuthLoading">
-                <div class="easy-auth-loading-spinner"></div>
-                <div class="easy-auth-loading-text" id="easyAuthLoadingText">간편인증 진행 중</div>
-                <div class="easy-auth-loading-sub" id="easyAuthLoadingSub">선택하신 앱에서 인증을 완료해주세요.</div>
-            </div>
-        </div>
-    </div>
-
     <!-- 전화번호만 입력 모달 (ESC/배경 클릭으로 닫히지 않음, 취소 버튼으로만 닫기) -->
     <div class="modal-overlay" id="phoneOnlyInputModal">
         <div class="modal" style="max-width: 600px; width: 95%;">
@@ -2978,8 +2698,20 @@ document.getElementById('confirmRecipientCount').textContent =
 
         function confirmSend() {
             if (!validateSendBeforeAuth()) return;
-            resetEasyAuthModal();
-            openModal('easyAuthModal');
+            requestSendAuth();
+        }
+
+        /* 발송 전 추가 인증 — 알림톡 인증번호 */
+        function requestSendAuth() {
+            openAlimtalkAuth({
+                title: '발송 추가 인증',
+                description: '발송 전 확인을 위해 등록된 휴대폰 번호로<br>카카오톡 알림톡을 보내드립니다.',
+                confirmText: '인증하고 발송하기',
+                onSuccess: function () {
+                    closeModal('sendConfirmModal');
+                    executeActualSend();
+                }
+            });
         }
 
         function validateSendBeforeAuth() {
@@ -3045,34 +2777,6 @@ document.getElementById('confirmRecipientCount').textContent =
             }
 
             return true;
-        }
-
-        function resetEasyAuthModal() {
-            var content = document.getElementById('easyAuthContent');
-            var loading = document.getElementById('easyAuthLoading');
-            if (content) content.classList.remove('is-hidden');
-            if (loading) loading.classList.remove('is-visible');
-        }
-
-        function closeEasyAuthModal() {
-            resetEasyAuthModal();
-            closeModal('easyAuthModal');
-        }
-
-        function startEasyAuth(providerName) {
-            var content = document.getElementById('easyAuthContent');
-            var loading = document.getElementById('easyAuthLoading');
-            var loadingText = document.getElementById('easyAuthLoadingText');
-            if (content) content.classList.add('is-hidden');
-            if (loading) loading.classList.add('is-visible');
-            if (loadingText) loadingText.textContent = providerName + ' 인증 진행 중';
-
-            setTimeout(function () {
-                closeModal('easyAuthModal');
-                closeModal('sendConfirmModal');
-                resetEasyAuthModal();
-                executeActualSend();
-            }, 1500);
         }
 
         function executeActualSend() {
@@ -5709,27 +5413,28 @@ document.getElementById('confirmRecipientCount').textContent =
                 function: '본인인증 후 최종 발송 실행',
                 behavior: [
                     '클릭 시 유효성 검증',
-                    '통과 시 KG 이니시스 간편인증(#easyAuthModal) 팝업 표시',
-                    '인증 수단 선택 후 발송 완료 페이지 이동',
+                    '통과 시 알림톡 추가 인증(#alimtalkAuthModal) 팝업 표시',
+                    '알림톡 인증번호 확인 후 발송 완료 페이지 이동',
                     '발송 실패: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"'
                 ],
                 tags: [{ text: 'API', type: 'api' }]
             },
-            // 69. KG 이니시스 간편인증 (본인인증) 팝업
+            // 69. 알림톡 추가 인증 팝업
             {
-                selector: '#easyAuthModal',
-                title: '간편인증 (본인인증) 팝업',
+                selector: '#alimtalkAuthModal',
+                title: '발송 추가 인증 (알림톡) 팝업',
                 position: { top: '60px', left: '20px' },
-                function: '발송 전 추가 본인인증 (KG 이니시스 통합 간편인증)',
+                function: '발송 전 추가 인증 (카카오톡 알림톡 인증번호)',
                 behavior: [
                     '발송 확인 모달에서 "발송하기" 클릭 후 노출',
-                    'IBK·KB·PASS·토스·우리·네이버·카카오뱅크·하나·삼성패스·신한·금융인증서 선택',
-                    '인증 수단 선택 시 해당 앱 연동 (데모: 1.5초 후 발송 완료)',
-                    '"취 소" 버튼으로 닫기 → 발송 확인 모달로 복귀'
+                    '1단계: 휴대폰 번호 입력 → 알림톡으로 인증번호 6자리 발송',
+                    '2단계: 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
+                    '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
+                    '인증 성공 시 발송 완료 페이지 이동 / "취소" 클릭 시 발송 확인 모달로 복귀'
                 ],
-                tags: [{ text: '모달', type: 'info' }, { text: '필수', type: 'required' }]
+                tags: [{ text: '모달', type: 'info' }, { text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
-            
+
             // ===== 전화번호만 입력 모달 =====
             // 69. 전화번호만 입력 모달
             {

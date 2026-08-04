@@ -234,10 +234,16 @@
             });
         });
 
+        // 발송 → 알림톡 추가 인증 후 실행
         document.getElementById('sendBtn').addEventListener('click', () => {
             if (!callerSelect.value) { alert('발신번호를 선택해주세요.'); return; }
             if (!msgContent.value.trim()) { alert('메시지 내용을 입력해주세요.'); return; }
-            location.href = 'send-complete-mobile.html?total=1500&fail=13';
+            openAlimtalkAuth({
+                title: '발송 추가 인증',
+                description: '발송 전 확인을 위해 등록된 휴대폰 번호로 카카오톡 알림톡을 보내드립니다.',
+                confirmText: '인증하고 발송하기',
+                onSuccess: () => { location.href = 'send-complete-mobile.html?total=1500&fail=13'; }
+            });
         });
 
         updatePreview();

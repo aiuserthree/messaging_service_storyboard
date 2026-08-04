@@ -181,6 +181,264 @@ function initCategoryFilter(container, itemSelector) {
     });
 }
 
+/* ===================================================================
+ * 알림톡 인증 (모바일 공용 바텀시트)
+ *
+ * 등록된 휴대폰 번호로 카카오톡 알림톡 인증번호를 발송하는 인증 시트.
+ * 로그인 2차 인증과 발송 전 추가 인증에서 함께 사용한다.
+ * 카카오톡 미사용·수신 불가 시 문자(SMS)로 대체 발송한다.
+ *
+ * 사용법:
+ *   openAlimtalkAuth({
+ *       title: '2차 인증',
+ *       description: '보안을 위해 등록된 휴대폰 번호로 카카오톡 알림톡을 보내드립니다.',
+ *       confirmText: '인증하기',
+ *       onSuccess: (result) => { ... }   // result: { phone, channel }
+ *   });
+ *
+ * 프로토타입 한계: 실제 발송·대조 없이 형식 검증만 수행한다.
+ * =================================================================== */
+const ATK_TIMER_SECONDS = 180;
+
+const atkState = {
+    timerInterval: null,
+    seconds: ATK_TIMER_SECONDS,
+    channel: 'alimtalk', // 'alimtalk' | 'sms'
+    phone: '',
+    onSuccess: null,
+    mounted: false
+};
+
+function atkEl(id) { return document.getElementById(id); }
+
+function atkFormatPhone(digits) {
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 7) return digits.slice(0, 3) + '-' + digits.slice(3);
+    return digits.slice(0, 3) + '-' + digits.slice(3, 7) + '-' + digits.slice(7);
+}
+
+function atkSanitizePhone(value) {
+    return String(value || '').replace(/\D/g, '').slice(0, 11);
+}
+
+function atkShowError(id, show) {
+    const el = atkEl(id);
+    if (el) el.classList.toggle('show', !!show);
+}
+
+function renderAlimtalkAuthSheet() {
+    if (atkEl('atkSheet')) return;
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+        <div class="atk-backdrop" id="atkBackdrop"></div>
+        <div class="atk-sheet" id="atkSheet" role="dialog" aria-modal="true" aria-labelledby="atkTitle">
+            <div class="atk-grabber"></div>
+
+            <div id="atkStep1">
+                <div class="atk-title" id="atkTitle">알림톡 인증</div>
+                <div class="atk-channel">
+                    <span class="atk-badge">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.9 3 2.8 6.3 2.8 10.3c0 2.6 1.7 4.9 4.3 6.2-.2.7-.7 2.5-.8 2.9 0 .2.1.4.3.3.3-.1 2.6-1.7 3.6-2.4.6.1 1.2.1 1.8.1 5.1 0 9.2-3.3 9.2-7.3S17.1 3 12 3z"/></svg>
+                        알림톡
+                    </span>
+                    <span id="atkDesc"></span>
+                </div>
+                <p class="atk-desc">카카오톡 미사용 또는 수신 불가 시<br>문자(SMS)로 자동 대체 발송됩니다.</p>
+                <div class="form-group">
+                    <label class="form-label required" for="atkPhone">휴대폰 번호</label>
+                    <input type="tel" inputmode="numeric" autocomplete="tel" class="form-input"
+                           id="atkPhone" placeholder="숫자만 입력 (예: 01012345678)" maxlength="11">
+                    <div class="atk-error" id="atkPhoneError">휴대폰 번호를 올바르게 입력해주세요.</div>
+                </div>
+                <div class="atk-actions">
+                    <button type="button" class="btn btn-primary btn-block" id="atkSendBtn">인증 번호 보내기</button>
+                    <button type="button" class="btn btn-outline btn-block" id="atkCancelBtn">취소</button>
+                </div>
+                <p class="atk-help">인증 과정에 어려움이 있나요? <a href="support-inquiry-mobile.html">1:1 문의하기</a></p>
+            </div>
+
+            <div id="atkStep2" style="display:none;">
+                <div class="atk-title" id="atkTitle2">알림톡 인증</div>
+                <p class="atk-desc"><strong id="atkPhoneDisplay">010-0000-0000</strong>로 발송된<br><strong id="atkChannelLabel">알림톡</strong>의 인증번호 6자리를 입력해주세요.</p>
+                <div class="form-group">
+                    <label class="form-label required" for="atkCode">인증번호</label>
+                    <div class="atk-code-row">
+                        <input type="tel" inputmode="numeric" autocomplete="one-time-code" class="form-input"
+                               id="atkCode" placeholder="인증번호 6자리" maxlength="6">
+                        <span class="atk-timer" id="atkTimer">03:00</span>
+                    </div>
+                    <div class="atk-error" id="atkCodeError">인증번호 6자리를 입력해주세요.</div>
+                    <div class="form-help">인증번호 유효시간 3분</div>
+                </div>
+                <div class="atk-resend-wrap">
+                    <button type="button" class="atk-resend-btn" id="atkResendBtn" disabled>인증번호 재전송</button>
+                </div>
+                <div class="atk-fallback" id="atkFallback"></div>
+                <div class="atk-actions">
+                    <button type="button" class="btn btn-primary btn-block" id="atkVerifyBtn">인증하기</button>
+                    <button type="button" class="btn btn-outline btn-block" id="atkBackBtn">취소</button>
+                </div>
+                <p class="atk-help">인증 과정에 어려움이 있나요? <a href="support-inquiry-mobile.html">1:1 문의하기</a></p>
+            </div>
+        </div>
+    `;
+    while (wrap.firstElementChild) document.body.appendChild(wrap.firstElementChild);
+    initAlimtalkAuth();
+}
+
+function atkApplyChannel() {
+    const isSms = atkState.channel === 'sms';
+    atkEl('atkChannelLabel').textContent = isSms ? '문자(SMS)' : '알림톡';
+    const fallback = atkEl('atkFallback');
+    fallback.classList.toggle('used', isSms);
+    fallback.innerHTML = isSms
+        ? '문자(SMS)로 인증번호를 다시 보냈습니다.'
+        : '카카오톡으로 받지 못하셨나요? <button type="button" class="atk-link-btn" id="atkSmsBtn">문자(SMS)로 받기</button>';
+    const btn = atkEl('atkSmsBtn');
+    if (btn) btn.addEventListener('click', atkSmsFallback);
+}
+
+function atkSmsFallback() {
+    atkState.channel = 'sms';
+    atkApplyChannel();
+    atkEl('atkCode').value = '';
+    atkShowError('atkCodeError', false);
+    atkStartTimer();
+    atkEl('atkCode').focus();
+}
+
+function atkStartTimer() {
+    clearInterval(atkState.timerInterval);
+    atkState.seconds = ATK_TIMER_SECONDS;
+    const timerEl = atkEl('atkTimer');
+    const resendBtn = atkEl('atkResendBtn');
+    resendBtn.disabled = true;
+
+    const tick = () => {
+        const min = Math.floor(atkState.seconds / 60);
+        const sec = atkState.seconds % 60;
+        timerEl.textContent = ('0' + min).slice(-2) + ':' + ('0' + sec).slice(-2);
+        if (atkState.seconds <= 0) {
+            clearInterval(atkState.timerInterval);
+            atkState.timerInterval = null;
+            timerEl.textContent = '00:00';
+            resendBtn.disabled = false;
+            return;
+        }
+        atkState.seconds--;
+    };
+
+    tick();
+    atkState.timerInterval = setInterval(tick, 1000);
+}
+
+function atkReset() {
+    clearInterval(atkState.timerInterval);
+    atkState.timerInterval = null;
+    atkState.channel = 'alimtalk';
+    atkState.phone = '';
+    atkEl('atkStep1').style.display = '';
+    atkEl('atkStep2').style.display = 'none';
+    atkEl('atkPhone').value = '';
+    atkEl('atkCode').value = '';
+    atkShowError('atkPhoneError', false);
+    atkShowError('atkCodeError', false);
+    atkApplyChannel();
+}
+
+function atkShowStep2(phoneDigits) {
+    atkState.phone = phoneDigits;
+    atkEl('atkStep1').style.display = 'none';
+    atkEl('atkStep2').style.display = '';
+    atkEl('atkPhoneDisplay').textContent = atkFormatPhone(phoneDigits);
+    atkEl('atkCode').value = '';
+    atkShowError('atkCodeError', false);
+    atkStartTimer();
+    setTimeout(() => atkEl('atkCode').focus(), 100);
+}
+
+function atkHandleSend() {
+    const input = atkEl('atkPhone');
+    const digits = atkSanitizePhone(input.value);
+    input.value = digits;
+
+    const valid = /^01[0-9]{8,9}$/.test(digits);
+    atkShowError('atkPhoneError', !valid);
+    if (!valid) return;
+
+    atkShowStep2(digits);
+}
+
+function atkHandleVerify() {
+    const input = atkEl('atkCode');
+    const code = input.value.replace(/\D/g, '');
+    input.value = code;
+    const valid = code.length === 6;
+    atkShowError('atkCodeError', !valid);
+    if (!valid) return;
+
+    const result = { phone: atkState.phone, channel: atkState.channel };
+    const cb = atkState.onSuccess;
+    closeAlimtalkAuth();
+    if (typeof cb === 'function') cb(result);
+}
+
+function closeAlimtalkAuth() {
+    atkEl('atkBackdrop').classList.remove('open');
+    atkEl('atkSheet').classList.remove('open');
+    atkReset();
+    atkState.onSuccess = null;
+}
+
+function initAlimtalkAuth() {
+    if (atkState.mounted) return;
+    atkState.mounted = true;
+
+    atkEl('atkPhone').addEventListener('input', function () {
+        this.value = atkSanitizePhone(this.value);
+        atkShowError('atkPhoneError', false);
+    });
+    atkEl('atkCode').addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 6);
+        atkShowError('atkCodeError', false);
+    });
+    atkEl('atkCode').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); atkHandleVerify(); }
+    });
+
+    atkEl('atkSendBtn').addEventListener('click', atkHandleSend);
+    atkEl('atkVerifyBtn').addEventListener('click', atkHandleVerify);
+    atkEl('atkCancelBtn').addEventListener('click', closeAlimtalkAuth);
+    atkEl('atkBackBtn').addEventListener('click', closeAlimtalkAuth);
+    atkEl('atkBackdrop').addEventListener('click', closeAlimtalkAuth);
+    atkEl('atkResendBtn').addEventListener('click', function () {
+        if (this.disabled) return;
+        atkStartTimer();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && atkEl('atkSheet').classList.contains('open')) closeAlimtalkAuth();
+    });
+}
+
+function openAlimtalkAuth(options = {}) {
+    renderAlimtalkAuthSheet();
+    atkReset();
+
+    const title = options.title || '알림톡 인증';
+    atkEl('atkTitle').textContent = title;
+    atkEl('atkTitle2').textContent = title;
+    atkEl('atkDesc').innerHTML = options.description
+        || '보안을 위해 등록된 휴대폰 번호로 카카오톡 알림톡을 보내드립니다.';
+    atkEl('atkVerifyBtn').textContent = options.confirmText || '인증하기';
+
+    atkState.onSuccess = options.onSuccess || null;
+
+    atkEl('atkBackdrop').classList.add('open');
+    atkEl('atkSheet').classList.add('open');
+    setTimeout(() => atkEl('atkPhone').focus(), 300);
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     initMobileDrawer();
 });

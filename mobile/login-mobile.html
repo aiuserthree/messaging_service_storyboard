@@ -66,16 +66,22 @@
             </div>
         </main>
     </div>
+
     <div id="drawerWrap"></div>
     <script src="js/mobile-app.js"></script>
     <script>
         document.getElementById('drawerWrap').innerHTML = renderDrawer();
         initMobileDrawer();
+        // 로그인 → 2차 인증 진입
         document.getElementById('loginBtn').addEventListener('click', () => {
             const id = document.getElementById('loginId').value.trim();
             const pw = document.getElementById('loginPw').value.trim();
             if (!id || !pw) { alert('아이디와 비밀번호를 입력해 주세요.'); return; }
-            location.href = 'main-mobile.html';
+            openAlimtalkAuth({
+                title: '2차 인증',
+                description: '보안을 위해 등록된 휴대폰 번호로 카카오톡 알림톡을 보내드립니다.',
+                onSuccess: () => { location.href = 'main-mobile.html'; }
+            });
         });
     </script>
 </body>

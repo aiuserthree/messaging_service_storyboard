@@ -760,3 +760,91 @@ body {
 .login-links { display: flex; justify-content: center; gap: 16px; margin-top: 20px; font-size: 13px; }
 .login-links a { color: var(--text-sub); text-decoration: none; font-weight: 600; }
 .login-links a.primary { color: var(--primary); }
+
+/* ===== 알림톡 인증 바텀시트 (로그인 2차 인증 · 발송 추가 인증 공용) ===== */
+.atk-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.45);
+    z-index: 110;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s;
+}
+.atk-backdrop.open { opacity: 1; pointer-events: auto; }
+.atk-sheet {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    max-width: 430px;
+    transform: translate(-50%, 100%);
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -8px 32px rgba(15,23,42,0.18);
+    z-index: 120;
+    padding: 8px 24px calc(28px + env(safe-area-inset-bottom));
+    transition: transform .3s cubic-bezier(0.32, 0.72, 0, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.atk-sheet.open { transform: translate(-50%, 0); }
+.atk-grabber {
+    width: 40px; height: 4px; border-radius: 2px;
+    background: #cbd5e1; margin: 0 auto 20px;
+}
+.atk-title { font-size: 19px; font-weight: 800; margin-bottom: 12px; }
+.atk-desc {
+    font-size: 13px; color: var(--text-sub);
+    line-height: 1.6; margin-bottom: 20px;
+}
+.atk-desc strong { color: var(--text); font-weight: 700; }
+/* 발송 채널 안내 — 알림톡 */
+.atk-channel {
+    display: flex; align-items: center; gap: 8px;
+    background: #fffdf0; border: 1px solid #f2e08a;
+    border-radius: 10px; padding: 11px 12px;
+    font-size: 12px; font-weight: 600; color: var(--text-sub);
+    line-height: 1.5; margin-bottom: 16px;
+}
+.atk-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #FEE500; color: #3c1e1e;
+    border-radius: 6px; padding: 4px 8px;
+    font-size: 11px; font-weight: 800; white-space: nowrap; flex-shrink: 0;
+}
+.atk-badge svg { width: 12px; height: 12px; }
+.atk-error {
+    display: none;
+    font-size: 12px; color: var(--danger); font-weight: 600;
+    margin-top: 6px;
+}
+.atk-error.show { display: block; }
+.atk-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+.atk-code-row { display: flex; gap: 8px; align-items: center; }
+.atk-code-row .form-input { flex: 1; }
+.atk-timer { font-size: 13px; color: var(--danger); font-weight: 700; white-space: nowrap; }
+.atk-resend-wrap { text-align: right; margin-top: 10px; }
+.atk-resend-btn {
+    background: none; border: none; padding: 4px 0;
+    font-size: 12px; font-weight: 700; color: var(--primary);
+    text-decoration: underline; cursor: pointer; font-family: inherit;
+}
+.atk-resend-btn:disabled { color: var(--text-muted); text-decoration: none; cursor: default; }
+/* 알림톡 미수신 시 SMS 대체 */
+.atk-fallback {
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px dashed var(--border);
+    font-size: 12px; color: var(--text-muted); text-align: center;
+}
+.atk-fallback.used { color: var(--success); }
+.atk-link-btn {
+    background: none; border: none; padding: 2px 0;
+    font-size: 12px; font-weight: 700; color: var(--primary);
+    text-decoration: underline; cursor: pointer; font-family: inherit;
+}
+.atk-help {
+    margin-top: 16px; text-align: center;
+    font-size: 12px; color: var(--text-muted);
+}
+.atk-help a { color: var(--primary); font-weight: 600; text-decoration: none; }
