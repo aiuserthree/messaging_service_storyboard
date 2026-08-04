@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>톡벨 - 비즈니스 메시징 플랫폼</title>
     <!-- index.html 과 동일 순서·경로(상위 폴더 spec 기준). <base> 미사용 → GNB/푸터 깨짐 방지 -->
-    <script src="js/header.js?v=4"></script>
+    <script src="js/header.js?v=5"></script>
     <link rel="stylesheet" href="css/common.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,6 +57,18 @@
         /* GNB 로그인·톡벨 가입하기 — 디자인 참고(둥근 모서리, 프라이머리 톤 그림자) */
         .page-index .header .header-actions {
             gap: 10px;
+            align-items: center;
+        }
+        .page-index .header .header-util-enterprise {
+            margin-right: 4px;
+            color: #475569 !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            padding: 8px 6px !important;
+        }
+        .page-index .header .header-util-enterprise:hover,
+        .page-index .header .header-util-enterprise:focus-visible {
+            color: #111111 !important;
         }
         .page-index .header .btn.btn-outline {
             background: #ffffff !important;

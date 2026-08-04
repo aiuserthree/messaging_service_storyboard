@@ -199,18 +199,23 @@ function createHeader(activeMenu = '') {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const isLoggedIn = typeof localStorage !== 'undefined' && localStorage.getItem('isLoggedIn') === 'true';
     const isIndexPage = currentPage === 'index.html';
+    const enterprisePurchaseLinkHTML = isIndexPage
+        ? `<a href="quote-inquiry.html" class="header-util-link header-util-enterprise" target="_blank" rel="noopener noreferrer">기업구매</a>`
+        : '';
     
     // 헤더 액션 HTML 생성
     let headerActionsHTML = '';
     if (isIndexPage && !isLoggedIn) {
         // 랜딩: 비로그인만 로그인/가입 CTA
         headerActionsHTML = `
+            ${enterprisePurchaseLinkHTML}
             <a href="login.html" class="btn btn-outline">로그인</a>
             <a href="signup.html" class="btn btn-primary">톡벨 가입하기</a>
         `;
     } else if (isLoggedIn) {
         // 로그인 후
         headerActionsHTML = `
+            ${enterprisePurchaseLinkHTML}
             <div class="balance-tooltip-wrapper">
                 <a href="${resolveSpecPageUrl('payment-charge.html')}" class="balance-clickable" title="충전하기">
                     <div class="balance-info">
@@ -349,6 +354,33 @@ function createHeader(activeMenu = '') {
                 height: 1px;
                 background: #e2e8f0;
                 margin: 4px 0;
+            }
+
+            .header-util-link {
+                display: inline-flex;
+                align-items: center;
+                font-size: 13px;
+                font-weight: 600;
+                color: #475569;
+                text-decoration: none;
+                white-space: nowrap;
+                padding: 8px 4px;
+                transition: color 0.2s;
+            }
+            .header-util-link:hover,
+            .header-util-link:focus-visible {
+                color: #111111;
+            }
+            .header-util-enterprise::after {
+                content: '';
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                margin-left: 4px;
+                background: currentColor;
+                opacity: 0.55;
+                -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3Cpolyline points='15 3 21 3 21 9'/%3E%3Cline x1='10' y1='14' x2='21' y2='3'/%3E%3C/svg%3E") center / contain no-repeat;
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3Cpolyline points='15 3 21 3 21 9'/%3E%3Cline x1='10' y1='14' x2='21' y2='3'/%3E%3C/svg%3E") center / contain no-repeat;
             }
         </style>
         <header class="header">
