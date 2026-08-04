@@ -1129,16 +1129,17 @@ body {
                 ],
                 api: 'POST /api/auth/find-password'
             },
-            // 14. 2단계 인증 모달
+            // 14. 2차 인증 모달 (알림톡)
             {
-                selector: '#mfaModal',
-                title: '2차 인증 모달',
+                selector: '#alimtalkAuthModal',
+                title: '2차 인증 모달 (알림톡)',
                 position: { top: '10px', left: '10px' },
-                function: '로그인 후 다중인증(MFA) 수행 — 로그인 카드와 동일 톤앤매너',
+                function: '로그인 후 다중인증(MFA) 수행 — 카카오톡 알림톡 인증번호',
                 behavior: [
                     'tokbell 로고 + 2차 인증 타이틀',
-                    '1단계: 휴대폰 번호 입력 → 인증번호 발송',
-                    '2단계: SMS 인증번호 6자리 입력 (3분 타이머)',
+                    '1단계: 휴대폰 번호 입력 → 알림톡으로 인증번호 발송',
+                    '2단계: 인증번호 6자리 입력 (3분 타이머, 만료 시 재전송 활성화)',
+                    '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
                     '녹색 Primary / 흰색 Outline 버튼',
                     '인증 완료 시 main.html로 이동'
                 ],
