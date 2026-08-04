@@ -831,6 +831,9 @@ body {
     text-decoration: underline; cursor: pointer; font-family: inherit;
 }
 .atk-resend-btn:disabled { color: var(--text-muted); text-decoration: none; cursor: default; }
+/* 인증 잠금 상태 (오답 초과 · 유효시간 만료) */
+.atk-code-row .form-input:disabled { background: #f1f5f9; color: var(--text-muted); cursor: not-allowed; }
+.atk-sheet .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
 /* 알림톡 미수신 시 SMS 대체 */
 .atk-fallback {
     margin-top: 14px; padding-top: 14px;

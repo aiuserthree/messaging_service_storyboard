@@ -199,12 +199,17 @@ function initCategoryFilter(container, itemSelector) {
  * 프로토타입 한계: 실제 발송·대조 없이 형식 검증만 수행한다.
  * =================================================================== */
 const ATK_TIMER_SECONDS = 180;
+const ATK_DEMO_CODE = '123456';   // 프로토타입: 이 값만 인증 성공, 그 외 6자리는 오답 처리
+const ATK_MAX_ATTEMPTS = 5;       // 초과 시 잠금 → 재전송해야 재시도 가능
 
 const atkState = {
     timerInterval: null,
     seconds: ATK_TIMER_SECONDS,
     channel: 'alimtalk', // 'alimtalk' | 'sms'
     phone: '',
+    attempts: 0,
+    expired: false,
+    locked: false,
     onSuccess: null,
     mounted: false
 };
@@ -224,6 +229,33 @@ function atkSanitizePhone(value) {
 function atkShowError(id, show) {
     const el = atkEl(id);
     if (el) el.classList.toggle('show', !!show);
+}
+
+/* 인증번호 오류 문구를 상황별로 교체해 노출한다. */
+function atkSetCodeError(message) {
+    const el = atkEl('atkCodeError');
+    if (!el) return;
+    el.textContent = message;
+    el.classList.add('show');
+}
+
+/* 시도 횟수 초과 · 유효시간 만료 → 재전송 전까지 인증 차단 */
+function atkLockCode(message) {
+    atkState.locked = true;
+    atkSetCodeError(message);
+    atkEl('atkCode').disabled = true;
+    atkEl('atkVerifyBtn').disabled = true;
+    clearInterval(atkState.timerInterval);
+    atkState.timerInterval = null;
+    atkEl('atkTimer').textContent = '00:00';  // 잠긴 인증번호는 만료 처리
+    atkEl('atkResendBtn').disabled = false;
+}
+
+function atkUnlockCode() {
+    atkState.locked = false;
+    atkState.expired = false;
+    atkEl('atkCode').disabled = false;
+    atkEl('atkVerifyBtn').disabled = false;
 }
 
 function renderAlimtalkAuthSheet() {
@@ -298,6 +330,14 @@ function atkApplyChannel() {
     if (btn) btn.addEventListener('click', atkSmsFallback);
 }
 
+/* 재전송 — 새 인증번호가 발송되므로 이전 입력·오류·시도횟수를 모두 비운다. */
+function atkHandleResend() {
+    atkEl('atkCode').value = '';
+    atkShowError('atkCodeError', false);
+    atkStartTimer();
+    atkEl('atkCode').focus();
+}
+
 function atkSmsFallback() {
     atkState.channel = 'sms';
     atkApplyChannel();
@@ -310,6 +350,8 @@ function atkSmsFallback() {
 function atkStartTimer() {
     clearInterval(atkState.timerInterval);
     atkState.seconds = ATK_TIMER_SECONDS;
+    atkState.attempts = 0;
+    atkUnlockCode();
     const timerEl = atkEl('atkTimer');
     const resendBtn = atkEl('atkResendBtn');
     resendBtn.disabled = true;
@@ -322,7 +364,9 @@ function atkStartTimer() {
             clearInterval(atkState.timerInterval);
             atkState.timerInterval = null;
             timerEl.textContent = '00:00';
-            resendBtn.disabled = false;
+            atkState.expired = true;
+            // 유효시간 만료 → 재전송 전까지 인증 불가
+            atkLockCode('인증번호 유효시간이 만료되었습니다. 인증번호를 재전송해 주세요.');
             return;
         }
         atkState.seconds--;
@@ -337,6 +381,8 @@ function atkReset() {
     atkState.timerInterval = null;
     atkState.channel = 'alimtalk';
     atkState.phone = '';
+    atkState.attempts = 0;
+    atkUnlockCode();
     atkEl('atkStep1').style.display = '';
     atkEl('atkStep2').style.display = 'none';
     atkEl('atkPhone').value = '';
@@ -370,12 +416,36 @@ function atkHandleSend() {
 }
 
 function atkHandleVerify() {
+    if (atkState.locked) return;
+
     const input = atkEl('atkCode');
     const code = input.value.replace(/\D/g, '');
     input.value = code;
-    const valid = code.length === 6;
-    atkShowError('atkCodeError', !valid);
-    if (!valid) return;
+
+    // 미입력 · 자릿수 부족
+    if (code.length !== 6) {
+        atkSetCodeError('인증번호 6자리를 입력해주세요.');
+        return;
+    }
+
+    // 유효시간 만료
+    if (atkState.expired) {
+        atkLockCode('인증번호 유효시간이 만료되었습니다. 인증번호를 재전송해 주세요.');
+        return;
+    }
+
+    // 인증번호 불일치
+    if (code !== ATK_DEMO_CODE) {
+        atkState.attempts++;
+        if (atkState.attempts >= ATK_MAX_ATTEMPTS) {
+            atkLockCode(`인증 시도 횟수(${ATK_MAX_ATTEMPTS}회)를 초과했습니다. 인증번호를 재전송해 주세요.`);
+        } else {
+            atkSetCodeError(`인증번호가 일치하지 않습니다. (${atkState.attempts}/${ATK_MAX_ATTEMPTS}회)`);
+            input.focus();
+            input.select();
+        }
+        return;
+    }
 
     const result = { phone: atkState.phone, channel: atkState.channel };
     const cb = atkState.onSuccess;
@@ -413,7 +483,7 @@ function initAlimtalkAuth() {
     atkEl('atkBackdrop').addEventListener('click', closeAlimtalkAuth);
     atkEl('atkResendBtn').addEventListener('click', function () {
         if (this.disabled) return;
-        atkStartTimer();
+        atkHandleResend();
     });
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && atkEl('atkSheet').classList.contains('open')) closeAlimtalkAuth();

@@ -22,12 +22,17 @@
 
     var TIMER_SECONDS = 180;
     var LOGO_SRC = 'img/logo/tokbell_logo_o.png';
+    var DEMO_CODE = '123456';   // 프로토타입: 이 값만 인증 성공, 그 외 6자리는 오답 처리
+    var MAX_ATTEMPTS = 5;       // 초과 시 잠금 → 재전송해야 재시도 가능
 
     var state = {
         timerInterval: null,
         seconds: TIMER_SECONDS,
         channel: 'alimtalk', // 'alimtalk' | 'sms'
         phone: '',
+        attempts: 0,
+        expired: false,
+        locked: false,
         onSuccess: null,
         onCancel: null
     };
@@ -59,6 +64,7 @@
             '.atk-auth-input{width:100%;padding:13px 16px;font-size:14px;border:1px solid #dde3ea;border-radius:8px;background:#fff;color:#1e293b;transition:border-color .2s,box-shadow .2s;font-family:inherit;}',
             '.atk-auth-input:focus{outline:none;border-color:#5cb82e;box-shadow:0 0 0 3px rgba(92,184,46,0.12);}',
             '.atk-auth-input::placeholder{color:#94a3b8;}',
+            '.atk-auth-input:disabled{background:#f1f5f9;color:#94a3b8;cursor:not-allowed;}',
             '.atk-auth-error{margin-top:8px;font-size:12px;color:#ef4444;display:none;}',
             '.atk-auth-error.show{display:block;}',
             '.atk-auth-help{margin-top:6px;font-size:12px;color:#94a3b8;}',
@@ -160,6 +166,33 @@
         if (el) el.classList.toggle('show', !!show);
     }
 
+    /* 인증번호 오류 문구를 상황별로 교체해 노출한다. */
+    function setCodeError(message) {
+        var el = $('atkAuthCodeError');
+        if (!el) return;
+        el.textContent = message;
+        el.classList.add('show');
+    }
+
+    /* 시도 횟수 초과 · 유효시간 만료 → 재전송 전까지 인증 차단 */
+    function lockCode(message) {
+        state.locked = true;
+        setCodeError(message);
+        $('atkAuthCode').disabled = true;
+        $('atkAuthVerifyBtn').disabled = true;
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+        $('atkAuthTimer').textContent = '00:00';  // 잠긴 인증번호는 만료 처리
+        $('atkAuthResendBtn').disabled = false;
+    }
+
+    function unlockCode() {
+        state.locked = false;
+        state.expired = false;
+        $('atkAuthCode').disabled = false;
+        $('atkAuthVerifyBtn').disabled = false;
+    }
+
     /* ---------- 흐름 ---------- */
 
     function applyChannel() {
@@ -174,6 +207,14 @@
         if (btn) btn.addEventListener('click', handleSmsFallback);
     }
 
+    /* 재전송 — 새 인증번호가 발송되므로 이전 입력·오류·시도횟수를 모두 비운다. */
+    function handleResend() {
+        $('atkAuthCode').value = '';
+        showError('atkAuthCodeError', false);
+        startTimer();
+        $('atkAuthCode').focus();
+    }
+
     function handleSmsFallback() {
         state.channel = 'sms';
         applyChannel();
@@ -186,6 +227,8 @@
     function startTimer() {
         clearInterval(state.timerInterval);
         state.seconds = TIMER_SECONDS;
+        state.attempts = 0;
+        unlockCode();
         var timerEl = $('atkAuthTimer');
         var resendBtn = $('atkAuthResendBtn');
         resendBtn.disabled = true;
@@ -198,7 +241,9 @@
                 clearInterval(state.timerInterval);
                 state.timerInterval = null;
                 timerEl.textContent = '00:00';
-                resendBtn.disabled = false;
+                state.expired = true;
+                // 유효시간 만료 → 재전송 전까지 인증 불가
+                lockCode('인증번호 유효시간이 만료되었습니다. 인증번호를 재전송해 주세요.');
                 return;
             }
             state.seconds--;
@@ -213,6 +258,8 @@
         state.timerInterval = null;
         state.channel = 'alimtalk';
         state.phone = '';
+        state.attempts = 0;
+        unlockCode();
         $('atkAuthStep1').style.display = '';
         $('atkAuthStep2').style.display = 'none';
         $('atkAuthPhone').value = '';
@@ -246,12 +293,36 @@
     }
 
     function handleVerify() {
+        if (state.locked) return;
+
         var input = $('atkAuthCode');
         var code = input.value.replace(/\D/g, '');
         input.value = code;
-        var valid = code.length === 6;
-        showError('atkAuthCodeError', !valid);
-        if (!valid) return;
+
+        // 미입력 · 자릿수 부족
+        if (code.length !== 6) {
+            setCodeError('인증번호 6자리를 입력해주세요.');
+            return;
+        }
+
+        // 유효시간 만료
+        if (state.expired) {
+            lockCode('인증번호 유효시간이 만료되었습니다. 인증번호를 재전송해 주세요.');
+            return;
+        }
+
+        // 인증번호 불일치
+        if (code !== DEMO_CODE) {
+            state.attempts++;
+            if (state.attempts >= MAX_ATTEMPTS) {
+                lockCode('인증 시도 횟수(' + MAX_ATTEMPTS + '회)를 초과했습니다. 인증번호를 재전송해 주세요.');
+            } else {
+                setCodeError('인증번호가 일치하지 않습니다. (' + state.attempts + '/' + MAX_ATTEMPTS + '회)');
+                input.focus();
+                input.select();
+            }
+            return;
+        }
 
         var result = { phone: state.phone, channel: state.channel };
         var cb = state.onSuccess;
@@ -294,7 +365,7 @@
         $('atkAuthBackBtn').addEventListener('click', function () { close(); });
         $('atkAuthResendBtn').addEventListener('click', function () {
             if (this.disabled) return;
-            startTimer();
+            handleResend();
         });
 
         $('alimtalkAuthModal').addEventListener('click', function (e) {
