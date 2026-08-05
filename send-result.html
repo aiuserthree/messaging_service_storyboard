@@ -1283,7 +1283,7 @@ body {
                                             <div class="detail-list-title">실패 내역 (2건)</div>
                                             <div class="detail-list-actions">
                                                 <button class="btn btn-sm btn-outline" onclick="selectAllFailed(1)">전체 선택</button>
-                                                <button class="btn btn-sm btn-primary" onclick="resendSelected(1)">선택 재발송</button>
+                                                <button class="btn btn-sm btn-primary" data-action="resend" onclick="resendSelected(1)">선택 재발송</button>
                                                 <button class="btn btn-sm btn-outline" onclick="toggleDetailList(1, 'failed')">닫기</button>
                                             </div>
                                         </div>
@@ -1400,7 +1400,7 @@ body {
                                             <div class="detail-list-title">실패 내역 (5건)</div>
                                             <div class="detail-list-actions">
                                                 <button class="btn btn-sm btn-outline" onclick="selectAllFailed(5)">전체 선택</button>
-                                                <button class="btn btn-sm btn-primary" onclick="resendSelected(5)">선택 재발송</button>
+                                                <button class="btn btn-sm btn-primary" data-action="resend" onclick="resendSelected(5)">선택 재발송</button>
                                                 <button class="btn btn-sm btn-outline" onclick="toggleDetailList(5, 'failed')">닫기</button>
                                             </div>
                                         </div>
@@ -1501,7 +1501,7 @@ body {
                                             <div class="detail-list-title">실패 내역 (5건)</div>
                                             <div class="detail-list-actions">
                                                 <button class="btn btn-sm btn-outline" onclick="selectAllFailed(3)">전체 선택</button>
-                                                <button class="btn btn-sm btn-primary" onclick="resendSelected(3)">선택 재발송</button>
+                                                <button class="btn btn-sm btn-primary" data-action="resend" onclick="resendSelected(3)">선택 재발송</button>
                                                 <button class="btn btn-sm btn-outline" onclick="toggleDetailList(3, 'failed')">닫기</button>
                                             </div>
                                         </div>
@@ -1602,7 +1602,7 @@ body {
                                             <div class="detail-list-title">실패 내역 (2건)</div>
                                             <div class="detail-list-actions">
                                                 <button class="btn btn-sm btn-outline" onclick="selectAllFailed(4)">전체 선택</button>
-                                                <button class="btn btn-sm btn-primary" onclick="resendSelected(4)">선택 재발송</button>
+                                                <button class="btn btn-sm btn-primary" data-action="resend" onclick="resendSelected(4)">선택 재발송</button>
                                                 <button class="btn btn-sm btn-outline" onclick="toggleDetailList(4, 'failed')">닫기</button>
                                             </div>
                                         </div>
@@ -1753,7 +1753,7 @@ body {
                 <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="card">
+                <div class="card" id="detailSendInfoCard">
                     <h4 style="margin-bottom: 16px;">발송 정보</h4>
                     <div class="table-container">
                         <table class="table">
@@ -2450,7 +2450,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '.msg-content-cell', title: '메시지 내용 셀', position: { top: '-5px', left: '-10px' }, description: '클릭 시 발송 상세 팝업', function: 'viewDetail(id) 호출 → 상세보기 모달 열림', behavior: ['말줄임 처리', 'title로 전체 내용 툴팁', '클릭 시 해당 발송 상세보기 모달 표시'] },
             // 재발송 버튼
             {
-                selector: 'tr[data-row-id] .btn-sm[onclick*="resend"]',
+                selector: '.detail-list-row [data-action="resend"]',
                 title: '재발송 버튼',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button - Primary)',
@@ -2478,7 +2478,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 29-33. 성공 내역 펼침 영역
             { selector: '.detail-list-row[data-type="success"]', title: '성공 내역 영역', position: { top: '10px', left: '10px' }, description: '성공한 수신번호 목록', function: '성공 내역 상세 표시', behavior: ['페이지당 10건 표시', '페이징 처리'] },
             { selector: '.detail-list-row[data-type="success"] .btn-outline', title: '성공 내역 닫기 버튼', position: { top: '-5px', right: '-10px' }, description: '성공 내역 목록 닫기', function: 'toggleDetailList(id, "success") 호출', behavior: ['클릭 시 목록 접기'] },
-            { selector: '.detail-list-pagination .page-btn', title: '성공 내역 페이지 버튼', position: { top: '-5px', left: '-10px' }, description: '성공 내역 페이지 이동', function: 'goToSuccessPage(rowId, page) 호출' },
+            { selector: '.detail-list-pagination', title: '성공 내역 페이지네이션', position: { top: '-5px', left: '-10px' }, description: '성공 내역 페이지 이동', function: 'goToSuccessPage(rowId, page) 호출', behavior: ['페이지 버튼은 목록 렌더링 시 JS 로 동적 생성됨', '현재 페이지 버튼에 active 표시', '처음·마지막 페이지에서 이전·다음 버튼 비활성화'] },
             // 34-39. 실패 내역 펼침 영역
             { selector: '.detail-list-row[data-type="failed"]', title: '실패 내역 영역', position: { top: '10px', left: '10px' }, description: '실패한 수신번호 목록', function: '실패 내역 상세 표시', behavior: ['체크박스로 선택 가능', '선택 재발송 지원'] },
             { selector: '.select-all-failed', title: '실패 전체 선택 체크박스', position: { top: '-5px', left: '-10px' }, description: '실패 내역 전체 선택', function: 'toggleAllFailedCheckboxes(rowId, checked) 호출' },
@@ -2515,7 +2515,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#detailModal .modal-header', title: '모달 헤더', position: { top: '-5px', left: '-10px' }, description: '모달 제목 영역', function: '발송 상세 정보 제목 표시' },
             { selector: '#detailModal .modal-close', title: '모달 닫기 버튼 (X)', position: { top: '-5px', right: '-10px' }, description: '모달 닫기', function: 'closeModal("detailModal") 호출' },
             { selector: '#detailModal .card:first-of-type', title: '기본 정보 카드', position: { top: '5px', left: '5px' }, description: '발송 기본 정보 표시', function: '발송ID, 발송일시, 발신번호 등 표시' },
-            { selector: '#detailModal .card:nth-of-type(2)', title: '발송 통계 카드', position: { top: '5px', left: '5px' }, description: '발송 결과 통계 표시', function: '수신번호 수, 성공/실패 건수 표시' },
+            { selector: '#detailSendInfoCard', title: '발송 통계 카드', position: { top: '5px', left: '5px' }, description: '발송 결과 통계 표시', function: '수신번호 수, 성공/실패 건수 표시' },
             { selector: '#detailModal .modal-footer .btn-outline', title: '닫기 버튼', position: { top: '-5px', left: '-10px' }, description: '모달 닫기', function: 'closeModal("detailModal") 호출' },
             { selector: '#detailModal .modal-footer .btn-primary', title: '재발송 버튼', position: { top: '-5px', right: '-10px' }, description: '동일 내용으로 재발송', function: 'resendFromDetail() 호출', api: 'POST /api/messages/resend/{id}', behavior: ['전송중일 때는 미노출', '완료/실패 시에만 표시', '클릭 시 모달 닫고 재발송 실행'] }
         ];
