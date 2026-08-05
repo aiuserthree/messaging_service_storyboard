@@ -2538,17 +2538,10 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             // 20. 개별 템플릿 카드
             {
-                selector: '#templateGrid .template-item:first-child',
+                selector: '#templateGrid .template-item',
                 title: '템플릿 카드',
                 position: { top: '-5px', left: '-10px' },
                 function: '개별 템플릿 정보 카드'
-            },
-            // 21. 템플릿 카드 - 미리보기 버튼
-            {
-                selector: '.btn-outline[onclick*="previewTemplate"]',
-                title: '미리보기 버튼',
-                position: { top: '-5px', left: '-10px' },
-                function: '템플릿 전체 내용 미리보기 모달 열기'
             },
             // 22. 템플릿 카드 - 수정 버튼
             {
@@ -2743,14 +2736,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: '이미지 미리보기',
                 position: { top: '5px', right: '5px' },
                 function: '첨부된 이미지 미리보기 및 삭제',
-                behavior: ['X 버튼 클릭으로 이미지 제거']
-            },
-            // 43. 이미지 삭제 버튼
-            {
-                selector: '.remove-btn[onclick*="removeImage"]',
-                title: '이미지 삭제(X)',
-                position: { top: '-5px', right: '-10px' },
-                function: '첨부된 이미지 제거'
+                behavior: [
+                    '업로드한 이미지가 썸네일로 추가됨',
+                    '각 썸네일 우측 상단 X 버튼 클릭 시 해당 이미지 제거',
+                    'X 버튼은 이미지 업로드 시 동적으로 생성됨'
+                ]
             },
             // 44. 메모 입력
             {

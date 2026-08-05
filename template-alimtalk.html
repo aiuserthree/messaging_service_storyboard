@@ -989,7 +989,7 @@ body {
                         <input type="text" class="form-input" placeholder="템플릿명으로 검색">
                     </div>
                     <div style="width: 150px;">
-                        <select class="form-select">
+                        <select class="form-select" id="filterStatus">
                             <option>전체 상태</option>
                             <option>심사필요</option>
                             <option>심사요청</option>
@@ -1001,7 +1001,7 @@ body {
                         </select>
                     </div>
                     <div style="width: 150px;">
-                        <select class="form-select">
+                        <select class="form-select" id="filterCategory">
                             <option>전체 카테고리</option>
                             <option>쇼핑/배송</option>
                             <option>예약/티켓</option>
@@ -1046,15 +1046,15 @@ body {
                                 <td>
                                     <div class="flex gap-2" style="align-items: center;">
                                         <span class="status-badge status-approved">승인</span>
-                                        <button class="btn btn-sm btn-outline" onclick="viewReviewResult(1)">심사결과</button>
+                                        <button class="btn btn-sm btn-outline" data-action="review-result" onclick="viewReviewResult(1)">심사결과</button>
                                     </div>
                                 </td>
                                 <td>2024-01-15</td>
                                 <td>2024-01-15</td>
                                 <td>
                                     <div class="flex gap-2">
-                                        <button class="btn btn-sm btn-outline" onclick="previewTemplate(1)">미리보기</button>
-                                        <button class="btn btn-sm btn-outline" onclick="copyTemplate(1)">복사</button>
+                                        <button class="btn btn-sm btn-outline" data-action="preview" onclick="previewTemplate(1)">미리보기</button>
+                                        <button class="btn btn-sm btn-outline" data-action="copy" onclick="copyTemplate(1)">복사</button>
                                     </div>
                                 </td>
                             </tr>
@@ -1067,15 +1067,15 @@ body {
                                 <td>
                                     <div class="flex gap-2" style="align-items: center;">
                                         <span class="status-badge status-approved">승인</span>
-                                        <button class="btn btn-sm btn-outline" onclick="viewReviewResult(2)">심사결과</button>
+                                        <button class="btn btn-sm btn-outline" data-action="review-result" onclick="viewReviewResult(2)">심사결과</button>
                                     </div>
                                 </td>
                                 <td>2024-01-14</td>
                                 <td>2024-01-14</td>
                                 <td>
                                     <div class="flex gap-2">
-                                        <button class="btn btn-sm btn-outline" onclick="previewTemplate(2)">미리보기</button>
-                                        <button class="btn btn-sm btn-outline" onclick="copyTemplate(2)">복사</button>
+                                        <button class="btn btn-sm btn-outline" data-action="preview" onclick="previewTemplate(2)">미리보기</button>
+                                        <button class="btn btn-sm btn-outline" data-action="copy" onclick="copyTemplate(2)">복사</button>
                                     </div>
                                 </td>
                             </tr>
@@ -1088,14 +1088,14 @@ body {
                                 <td>
                                     <div class="flex gap-2" style="align-items: center;">
                                         <span class="status-badge status-pending">심사요청</span>
-                                        <button class="btn btn-sm btn-outline" onclick="viewReviewResult(3)">심사결과</button>
+                                        <button class="btn btn-sm btn-outline" data-action="review-result" onclick="viewReviewResult(3)">심사결과</button>
                                     </div>
                                 </td>
                                 <td>2024-01-16</td>
                                 <td>2024-01-16</td>
                                 <td>
                                     <div class="flex gap-2">
-                                        <button class="btn btn-sm btn-outline" onclick="previewTemplate(3)">미리보기</button>
+                                        <button class="btn btn-sm btn-outline" data-action="preview" onclick="previewTemplate(3)">미리보기</button>
                                     </div>
                                 </td>
                             </tr>
@@ -1108,16 +1108,16 @@ body {
                                 <td>
                                     <div class="flex gap-2" style="align-items: center;">
                                         <span class="status-badge status-rejected">반려</span>
-                                        <button class="btn btn-sm btn-outline" onclick="viewReviewResult(4)">심사결과</button>
+                                        <button class="btn btn-sm btn-outline" data-action="review-result" onclick="viewReviewResult(4)">심사결과</button>
                                     </div>
                                 </td>
                                 <td>2024-01-13</td>
                                 <td>2024-01-13</td>
                                 <td>
                                     <div class="flex gap-2">
-                                        <button class="btn btn-sm btn-outline" onclick="previewTemplate(4)">미리보기</button>
-                                        <button class="btn btn-sm btn-outline" onclick="editTemplate(4)">수정</button>
-                                        <button class="btn btn-sm btn-primary" onclick="requestReview(4)">심사요청</button>
+                                        <button class="btn btn-sm btn-outline" data-action="preview" onclick="previewTemplate(4)">미리보기</button>
+                                        <button class="btn btn-sm btn-outline" data-action="edit" onclick="editTemplate(4)">수정</button>
+                                        <button class="btn btn-sm btn-primary" data-action="review-request" onclick="requestReview(4)">심사요청</button>
                                     </div>
                                 </td>
                             </tr>
@@ -1130,16 +1130,16 @@ body {
                                 <td>
                                     <div class="flex gap-2" style="align-items: center;">
                                         <span class="status-badge status-pending">심사필요</span>
-                                        <button class="btn btn-sm btn-outline" onclick="viewReviewResult(5)">심사결과</button>
+                                        <button class="btn btn-sm btn-outline" data-action="review-result" onclick="viewReviewResult(5)">심사결과</button>
                                     </div>
                                 </td>
                                 <td>2024-01-17</td>
                                 <td>2024-01-17</td>
                                 <td>
                                     <div class="flex gap-2">
-                                        <button class="btn btn-sm btn-outline" onclick="previewTemplate(5)">미리보기</button>
-                                        <button class="btn btn-sm btn-outline" onclick="editTemplate(5)">수정</button>
-                                        <button class="btn btn-sm btn-primary" onclick="requestReview(5)">심사요청</button>
+                                        <button class="btn btn-sm btn-outline" data-action="preview" onclick="previewTemplate(5)">미리보기</button>
+                                        <button class="btn btn-sm btn-outline" data-action="edit" onclick="editTemplate(5)">수정</button>
+                                        <button class="btn btn-sm btn-primary" data-action="review-request" onclick="requestReview(5)">심사요청</button>
                                     </div>
                                 </td>
                             </tr>
@@ -1935,8 +1935,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // 검색 섹션
             { selector: '#searchFilterSection', title: '검색 및 필터', position: { top: '10px', left: '-15px' }, function: '템플릿 검색 및 필터링 영역' },
             { selector: '#searchFilterSection input[type="text"]', title: '검색 입력', position: { top: '-5px', left: '-10px' }, function: '템플릿명으로 검색' },
-            { selector: '#searchFilterSection .form-select:nth-of-type(1)', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '심사상태별 필터링', behavior: ['【상태 항목】 전체, 승인, 검수중(심사요청/심사필요), 반려'] },
-            { selector: '#searchFilterSection .form-select:nth-of-type(2)', title: '카테고리 필터', position: { top: '-5px', left: '-10px' }, function: '카테고리별 필터링' },
+            { selector: '#filterStatus', title: '상태 필터', position: { top: '-5px', left: '-10px' }, function: '심사상태별 필터링', behavior: ['【상태 항목】 전체, 승인, 검수중(심사요청/심사필요), 반려'] },
+            { selector: '#filterCategory', title: '카테고리 필터', position: { top: '-5px', left: '-10px' }, function: '카테고리별 필터링' },
             { selector: '#searchFilterSection .btn-primary', title: '검색 버튼', position: { top: '-5px', left: '-10px' }, function: '검색 실행', api: 'GET /api/kakao/templates/alimtalk' },
             { selector: '#searchFilterSection .btn-outline', title: '초기화 버튼', position: { top: '-5px', right: '-10px' }, function: '검색 조건 초기화' },
             // 템플릿 목록 섹션
@@ -1945,12 +1945,11 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#selectAll', title: '전체 선택 체크박스', position: { top: '-5px', left: '-10px' }, function: '모든 템플릿 일괄 선택/해제' },
             { selector: '.template-table', title: '템플릿 테이블', position: { top: '5px', left: '5px' }, function: '템플릿 정보 표시', behavior: ['【템플릿 상태 컬럼 값】 승인(녹색), 심사요청/심사필요(노란색), 반려(빨간색)'] },
             // 테이블 내 버튼들
-            { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="openPreviewModal"]', title: '미리보기 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 미리보기 모달 열기' },
-            { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="copyTemplate"]', title: '복사 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 복사하여 새로 생성' },
-            { selector: '.template-table tbody a.btn-sm.btn-outline', title: '수정 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 수정 페이지로 이동' },
-            { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="openReviewResultModal"]', title: '심사결과 버튼', position: { top: '-5px', left: '-10px' }, function: '심사 결과 이력 확인 모달' },
-            { selector: '.template-table tbody .btn-sm.btn-outline[onclick*="openReviewRequestModal"]', title: '심사요청 버튼', position: { top: '-5px', left: '-10px' }, function: '카카오 심사 요청 모달' },
-            { selector: '.template-table tbody .btn-sm.btn-danger', title: '삭제 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 삭제 확인 모달' },
+            { selector: '.template-table tbody [data-action="preview"]', title: '미리보기 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 미리보기 모달 열기' },
+            { selector: '.template-table tbody [data-action="copy"]', title: '복사 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 복사하여 새로 생성' },
+            { selector: '.template-table tbody [data-action="edit"]', title: '수정 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 수정 페이지로 이동' },
+            { selector: '.template-table tbody [data-action="review-result"]', title: '심사결과 버튼', position: { top: '-5px', left: '-10px' }, function: '심사 결과 이력 확인 모달' },
+            { selector: '.template-table tbody [data-action="review-request"]', title: '심사요청 버튼', position: { top: '-5px', left: '-10px' }, function: '카카오 심사 요청 모달' },
             { selector: '#batchDeleteBtn', title: '선택 삭제 버튼', position: { top: '-10px', right: '-15px' }, function: '선택된 템플릿 일괄 삭제', api: 'DELETE /api/kakao/templates/batch' },
             { selector: '#pagination', title: '페이지네이션', position: { top: '10px', left: '50%', transform: 'translateX(-50%)' }, function: '템플릿 목록 페이지 이동' },
             
