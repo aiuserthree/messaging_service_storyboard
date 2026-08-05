@@ -257,9 +257,9 @@
 
             <!-- 서브 메인: 탭에서 선택 시 해당 페이지로 이동 -->
             <div class="support-tabs" id="supportTabs">
-                <a href="support-notice.html" class="support-tab active">공지사항</a>
-                <a href="support-faq.html" class="support-tab">FAQ</a>
-                <a href="support-inquiry.html" class="support-tab">1:1 문의</a>
+                <a href="support-notice.html" class="support-tab active" id="tabNotice">공지사항</a>
+                <a href="support-faq.html" class="support-tab" id="tabFaq">FAQ</a>
+                <a href="support-inquiry.html" class="support-tab" id="tabInquiry">1:1 문의</a>
             </div>
 
             <!-- 공지사항 검색 -->
@@ -389,21 +389,21 @@
                 function: '고객센터 탭 간 이동 (공지사항 | FAQ | 1:1 문의)'
             },
             {
-                selector: '#supportTabs .support-tab:nth-child(1)',
+                selector: '#tabNotice',
                 title: '공지사항 탭',
                 position: { top: '-5px', left: '-10px' },
                 function: '공지사항 페이지 (현재)',
                 behavior: ['활성 상태 표시']
             },
             {
-                selector: '#supportTabs .support-tab:nth-child(2)',
+                selector: '#tabFaq',
                 title: 'FAQ 탭',
                 position: { top: '-5px', left: '-10px' },
                 function: 'FAQ 페이지 이동',
                 behavior: ['클릭 시 support-faq.html 이동']
             },
             {
-                selector: '#supportTabs .support-tab:nth-child(3)',
+                selector: '#tabInquiry',
                 title: '1:1 문의 탭',
                 position: { top: '-5px', right: '-10px' },
                 function: '1:1 문의 페이지 이동',

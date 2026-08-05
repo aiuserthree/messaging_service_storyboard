@@ -1209,12 +1209,12 @@ body {
 
             <!-- LNB + 콘텐츠 -->
             <div class="mypage-layout">
-                <nav class="mypage-lnb">
-                    <a href="mypage.html" class="mypage-lnb-item">마이페이지</a>
-                    <a href="mypage-profile.html" class="mypage-lnb-item active">내정보수정</a>
-                    <a href="mypage-password.html" class="mypage-lnb-item">비밀번호변경</a>
-                    <a href="mypage-caller-number.html" class="mypage-lnb-item">발신번호관리</a>
-                    <a href="mypage.html#history" class="mypage-lnb-item">이용내역</a>
+                <nav class="mypage-lnb" id="mypageLnb">
+                    <a href="mypage.html" class="mypage-lnb-item" id="lnbMypage">마이페이지</a>
+                    <a href="mypage-profile.html" class="mypage-lnb-item active" id="lnbProfile">내정보수정</a>
+                    <a href="mypage-password.html" class="mypage-lnb-item" id="lnbPassword">비밀번호변경</a>
+                    <a href="mypage-caller-number.html" class="mypage-lnb-item" id="lnbCallerNumber">발신번호관리</a>
+                    <a href="mypage.html#history" class="mypage-lnb-item" id="lnbHistory">이용내역</a>
                 </nav>
                 <div class="mypage-content-wrap">
             <!-- 기본 정보 수정 -->
@@ -2189,8 +2189,8 @@ function submitTaxAutoApply() {
             // ===== 마이페이지 기본 구조 =====
             // 1. 탭 메뉴
             {
-                selector: '#mypageTabs',
-                title: '1. 탭 메뉴',
+                selector: '#mypageLnb',
+                title: '1. 좌측 메뉴 (LNB)',
                 position: { top: '-5px', left: '-10px' },
                 function: '마이페이지 내 페이지 이동',
                 behavior: [

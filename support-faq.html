@@ -425,9 +425,9 @@
 
             <!-- 서브 메인: 탭에서 선택 시 해당 페이지로 이동 -->
             <div class="support-tabs" id="supportTabs">
-                <a href="support-notice.html" class="support-tab">공지사항</a>
-                <a href="support-faq.html" class="support-tab active">FAQ</a>
-                <a href="support-inquiry.html" class="support-tab">1:1 문의</a>
+                <a href="support-notice.html" class="support-tab" id="tabNotice">공지사항</a>
+                <a href="support-faq.html" class="support-tab active" id="tabFaq">FAQ</a>
+                <a href="support-inquiry.html" class="support-tab" id="tabInquiry">1:1 문의</a>
             </div>
 
             <!-- 검색바 -->
@@ -913,10 +913,9 @@
             // ===== 페이지 기본 요소 =====
             // 1-5. 탭 메뉴
             { selector: '#supportTabs', title: '탭 메뉴', position: { top: '-10px', left: '10px' }, description: '고객센터 탭 영역', function: '고객센터 페이지 전환' },
-            { selector: '#supportTabs .support-tab:nth-child(1)', title: '공지사항 탭', position: { top: '-5px', left: '-10px' }, description: '공지사항 페이지', function: '클릭 시 support-notice.html로 이동' },
-            { selector: '#supportTabs .support-tab:nth-child(2)', title: '이벤트 탭', position: { top: '-5px', left: '-10px' }, description: '이벤트 페이지', function: '클릭 시 support-event.html로 이동' },
-            { selector: '#supportTabs .support-tab:nth-child(3)', title: 'FAQ 탭', position: { top: '-5px', left: '-10px' }, description: 'FAQ 페이지 (현재)', function: '현재 페이지', behavior: ['현재 활성 탭'] },
-            { selector: '#supportTabs .support-tab:nth-child(4)', title: '1:1 문의 탭', position: { top: '-5px', right: '-10px' }, description: '1:1 문의 페이지', function: '클릭 시 support-inquiry.html로 이동' },
+            { selector: '#tabNotice', title: '공지사항 탭', position: { top: '-5px', left: '-10px' }, description: '공지사항 페이지', function: '클릭 시 support-notice.html로 이동' },
+            { selector: '#tabFaq', title: 'FAQ 탭', position: { top: '-5px', left: '-10px' }, description: 'FAQ 페이지 (현재)', function: '현재 페이지', behavior: ['현재 활성 탭'] },
+            { selector: '#tabInquiry', title: '1:1 문의 탭', position: { top: '-5px', right: '-10px' }, description: '1:1 문의 페이지', function: '클릭 시 support-inquiry.html로 이동' },
             // 6-8. 검색바
             { selector: '.search-bar', title: '검색바 영역', position: { top: '10px', left: '10px' }, description: 'FAQ 검색 영역', function: 'FAQ 검색' },
             { selector: '.search-input', title: '검색 입력', position: { top: '-5px', left: '-10px' }, description: '검색어 입력', function: '키워드 입력 시 실시간 필터링', behavior: ['입력 시 FAQ 목록 필터링', '카테고리 필터 초기화'] },

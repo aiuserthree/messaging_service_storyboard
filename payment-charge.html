@@ -1512,8 +1512,8 @@ body {
             <!-- 탭 메뉴 -->
             <div class="tabs" id="paymentTabs">
                 <div class="tab-list">
-                    <button class="tab-item active" onclick="window.location.href='payment-charge.html'">충전하기</button>
-                    <button class="tab-item" onclick="window.location.href='payment-history.html'">충전 내역</button>
+                    <button class="tab-item active" id="tabCharge" onclick="window.location.href='payment-charge.html'">충전하기</button>
+                    <button class="tab-item" id="tabHistory" onclick="window.location.href='payment-history.html'">충전 내역</button>
                 </div>
             </div>
 
@@ -2440,28 +2440,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: '탭 메뉴',
                 position: { top: '-5px', left: '-10px' },
                 function: '결제 관련 페이지 이동',
-                behavior: ['충전하기 / 충전 내역 / 환불 (세금계산서 발행 메뉴 없음 — 기업정보·세금계산서 자동발행은 내정보수정에서)']
+                behavior: ['충전하기 / 충전 내역 2개 탭 (환불·세금계산서 발행은 별도 메뉴)']
             },
             // 2. 충전하기 탭
             {
-                selector: '#paymentTabs .tab-item:nth-child(1)',
+                selector: '#tabCharge',
                 title: '충전하기 탭',
                 position: { top: '-5px', left: '-10px' },
                 function: '포인트 충전 페이지 (현재)'
             },
             // 3. 충전내역 탭
             {
-                selector: '#paymentTabs .tab-item:nth-child(2)',
+                selector: '#tabHistory',
                 title: '충전내역 탭',
                 position: { top: '-5px', left: '-10px' },
                 function: '충전 이력 조회'
-            },
-            // 4. 환불 탭
-            {
-                selector: '#paymentTabs .tab-item:nth-child(3)',
-                title: '환불 탭',
-                position: { top: '-5px', right: '-10px' },
-                function: '환불 신청 페이지(payment-refund.html)로 이동'
             },
             // 5. 현재 보유 포인트
             {
