@@ -404,4 +404,13 @@
     };
 
     window.closeAlimtalkAuth = function () { close(); };
+    window.mountAlimtalkAuth = mount;
+
+    /* 화면설계 오버레이는 첫 토글 시점에 마커를 한 번만 만든다.
+     * 그 전에 모달이 DOM 에 없으면 인증 항목 마커가 누락되므로 미리 올려둔다. */
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', mount);
+    } else {
+        mount();
+    }
 })();

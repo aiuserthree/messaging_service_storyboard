@@ -264,6 +264,25 @@
             transform: scale(1) !important;
         }
 
+        /* 모바일: 상단 헤더와 좌상단 마커를 모두 피해 우하단으로 이동하고 크기 축소.
+           하단 탭바(72px)와 액션 바를 넘도록 여유를 둔다. */
+        @media (max-width: 768px) {
+            .spec-toggle-btn {
+                top: auto;
+                left: auto;
+                right: 12px;
+                bottom: calc(150px + env(safe-area-inset-bottom));
+                padding: 8px 14px;
+                font-size: 12px;
+                gap: 6px;
+                opacity: 0.92;
+            }
+            /* 하단 탭바가 없는 화면(.no-tab)은 더 아래로 내려 콘텐츠를 덜 가린다 */
+            body:has(.mobile-frame.no-tab) .spec-toggle-btn {
+                bottom: calc(20px + env(safe-area-inset-bottom));
+            }
+        }
+
     `;
     document.head.appendChild(style);
 

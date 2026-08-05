@@ -36,11 +36,11 @@
             </div>
 
             <div class="login-card">
-                <div class="form-group">
+                <div class="form-group" id="loginIdGroup">
                     <label class="form-label">아이디 (이메일)</label>
                     <input type="email" class="form-input" placeholder="이메일을 입력하세요" id="loginId">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="loginPwGroup">
                     <label class="form-label">비밀번호</label>
                     <input type="password" class="form-input" placeholder="비밀번호를 입력하세요" id="loginPw">
                 </div>
@@ -89,6 +89,106 @@
     <script src="../js/spec-overlay.js"></script>
     <script>
         const specData = [
+            // ===== 헤더 =====
+            {
+                selector: '#menuBtn',
+                title: '햄버거 메뉴 버튼',
+                position: { top: '-6px', left: '-6px' },
+                function: '전체 메뉴 드로어 열기',
+                behavior: [
+                    '클릭 시 좌측에서 드로어 슬라이드인 + 배경 딤 처리',
+                    '드로어 메뉴는 mobile-app.js 의 renderDrawer() 공용 함수로 생성',
+                    '배경 딤 탭 또는 드로어 내 닫기로 종료'
+                ],
+                tags: [{ text: '공통', type: 'info' }]
+            },
+            {
+                selector: '.page-header-bar .back-btn',
+                title: '홈 이동 버튼',
+                position: { top: '-6px', left: '-6px' },
+                function: 'index-mobile.html(랜딩)로 이동'
+            },
+            {
+                selector: '.page-header-bar .profile-btn',
+                title: '가입 바로가기',
+                position: { top: '-6px', right: '-6px' },
+                function: 'signup-mobile.html(회원가입)로 이동'
+            },
+
+            // ===== 로그인 폼 =====
+            {
+                selector: '.login-logo',
+                title: '브랜드 로고',
+                position: { top: '0px', left: '0px' },
+                function: 'tokbell 로고 노출 (../img/logo/tokbell_logo_o.png)'
+            },
+            {
+                selector: '#loginIdGroup',
+                title: '아이디 (이메일) 입력',
+                position: { top: '-6px', left: '-6px' },
+                function: '로그인 아이디 입력 — 이메일 형식',
+                behavior: [
+                    'type="email" — 모바일에서 이메일 키패드 노출',
+                    '미입력 시 "아이디와 비밀번호를 입력해 주세요." 얼럿',
+                    '프로토타입: 형식 검증만 수행하며 계정 대조는 없음'
+                ],
+                api: 'POST /api/auth/login',
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '#loginPwGroup',
+                title: '비밀번호 입력',
+                position: { top: '-6px', left: '-6px' },
+                function: '로그인 비밀번호 입력',
+                behavior: [
+                    'type="password" — 입력값 마스킹',
+                    '미입력 시 "아이디와 비밀번호를 입력해 주세요." 얼럿'
+                ],
+                tags: [{ text: '필수', type: 'required' }]
+            },
+            {
+                selector: '.check-row',
+                title: '로그인 상태 유지',
+                position: { top: '-6px', left: '-6px' },
+                function: '체크 시 로그인 상태 유지',
+                behavior: ['프로토타입: 체크 상태만 표시하며 저장 동작은 미구현']
+            },
+            {
+                selector: '#loginBtn',
+                title: '로그인 버튼',
+                position: { top: '-6px', right: '-6px' },
+                function: '입력값 검증 후 2차 인증(알림톡) 진입',
+                behavior: [
+                    '아이디·비밀번호 중 하나라도 비어 있으면 얼럿 후 중단',
+                    '검증 통과 시 openAlimtalkAuth() 호출 → 2차 인증 바텀시트 노출',
+                    '인증 성공 시에만 main-mobile.html 로 이동'
+                ],
+                api: 'POST /api/auth/login',
+                tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
+            },
+
+            // ===== 보조 링크 =====
+            {
+                selector: '.login-links',
+                title: '보조 링크 영역',
+                position: { top: '-6px', left: '-6px' },
+                function: '계정 찾기 · 회원가입 진입',
+                behavior: [
+                    '아이디 찾기 → find-id-mobile.html',
+                    '비밀번호 찾기 → find-password-mobile.html',
+                    '회원가입 → signup-mobile.html'
+                ]
+            },
+            {
+                selector: '.btn-row',
+                title: '소셜 로그인',
+                position: { top: '-6px', left: '-6px' },
+                function: '카카오 · 네이버 · Google 간편 로그인',
+                behavior: ['프로토타입: 버튼만 배치되어 있으며 연동 동작은 미구현'],
+                tags: [{ text: '준비중', type: 'info' }]
+            },
+
+            // ===== 2차 인증 =====
             {
                 selector: '#atkSheet',
                 title: '2차 인증 바텀시트 (알림톡)',
@@ -111,6 +211,8 @@
                 tags: [{ text: '모달', type: 'info' }, { text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             }
         ];
+        // 오버레이는 첫 토글 때 마커를 만든다 — 인증 시트를 미리 DOM 에 올려 마커 누락을 막는다
+        renderAlimtalkAuthSheet();
         initSpecOverlay(specData);
     </script>
 </body>
