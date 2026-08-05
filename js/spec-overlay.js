@@ -318,12 +318,30 @@
     }
 
     // 마커 생성
+    /**
+     * 마커를 실제로 담을 요소를 반환한다.
+     *
+     * 마커는 대상 요소의 자식으로 붙는데 input·select·textarea·img 등은
+     * 자식 요소를 렌더하지 않아 마커가 보이지 않는다. textarea 는 한술 더 떠
+     * 자식 노드가 입력값으로 취급되어 값이 오염된다.
+     * 이런 대상은 마커를 담을 수 있는 가장 가까운 조상(보통 .form-group)에 붙인다.
+     */
+    const MARKER_HOST_BLOCKED = /^(INPUT|SELECT|TEXTAREA|IMG|BR|HR|EMBED|IFRAME|VIDEO|AUDIO|CANVAS|OBJECT|PROGRESS|METER|AREA|SOURCE|TRACK|COL|COLGROUP)$/;
+
+    function getMarkerHost(target) {
+        let host = target;
+        while (host && host !== document.body && MARKER_HOST_BLOCKED.test(host.tagName)) {
+            host = host.parentElement;
+        }
+        return host || target;
+    }
+
     function createMarker(item, index) {
         const marker = document.createElement('div');
         marker.className = 'spec-marker';
         marker.textContent = index + 1;
         marker.dataset.index = index;
-        
+
         // 대상 요소 찾기
         const target = document.querySelector(item.selector);
         if (!target) {
@@ -331,20 +349,32 @@
             return null;
         }
 
+        // 마커를 담을 수 있는 요소로 대체 (input/select/textarea 등 대응)
+        const host = getMarkerHost(target);
+
         // position relative 설정
-        const computedStyle = window.getComputedStyle(target);
+        const computedStyle = window.getComputedStyle(host);
         if (computedStyle.position === 'static') {
-            target.style.position = 'relative';
+            host.style.position = 'relative';
         }
 
         // 마커 위치 설정
+        // 한 호스트에 여러 마커가 모이면(컨테이너 항목 + 그 안의 input 항목) 겹치므로
+        // 이미 붙어 있는 마커 수만큼 가로로 어긋나게 배치한다.
+        const shift = host.querySelectorAll(':scope > .spec-marker').length * 30;
+        const top = item.position?.top || '-10px';
+        const left = item.position?.left || '-10px';
+
         marker.style.position = 'absolute';
-        marker.style.top = item.position?.top || '-10px';
-        marker.style.left = item.position?.left || '-10px';
-        if (item.position?.right) marker.style.right = item.position.right;
+        marker.style.top = top;
+        if (item.position?.right) {
+            marker.style.right = shift ? `calc(${item.position.right} + ${shift}px)` : item.position.right;
+        } else {
+            marker.style.left = shift ? `calc(${left} + ${shift}px)` : left;
+        }
         if (item.position?.bottom) marker.style.bottom = item.position.bottom;
 
-        target.appendChild(marker);
+        host.appendChild(marker);
 
         // 호버 이벤트 (마우스 올리면 툴팁 표시)
         marker.onmouseenter = (e) => {
@@ -571,7 +601,7 @@
             // 타겟이 해당 모달 내부에 있는지 확인
             if (modal.contains(target)) {
                 // 기존 마커 제거
-                const existingMarker = target.querySelector('.spec-marker');
+                const existingMarker = getMarkerHost(target).querySelector('.spec-marker');
                 if (existingMarker) {
                     existingMarker.remove();
                 }
