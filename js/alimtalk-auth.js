@@ -78,6 +78,13 @@
             '.atk-auth-link-label{color:#64748b;font-weight:500;flex-shrink:0;}',
             '.atk-auth-link-value{color:#334155;font-weight:600;text-align:right;word-break:break-all;}',
             '.atk-auth-link-value.is-strong{color:#0f172a;font-weight:800;font-size:15px;letter-spacing:0.01em;}',
+            /* 유선번호 ARS 인증 */
+            '.atk-auth-ars-badge{display:inline-flex;align-items:center;gap:5px;background:#e0f2fe;color:#0369a1;border-radius:6px;padding:4px 9px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;}',
+            '.atk-auth-ars-guide{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:14px 16px;margin-top:16px;font-size:13px;line-height:1.7;color:#0c4a6e;}',
+            '.atk-auth-ars-number{display:block;text-align:center;font-size:24px;font-weight:800;color:#0f172a;letter-spacing:0.02em;margin:10px 0 4px;}',
+            '.atk-auth-ars-status{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding:12px;border:1px dashed #cbd5e1;border-radius:8px;font-size:13px;font-weight:600;color:#64748b;}',
+            '.atk-auth-ars-status .dot{width:8px;height:8px;border-radius:50%;background:#38bdf8;animation:atkPulse 1.2s ease-in-out infinite;}',
+            '@keyframes atkPulse{0%,100%{opacity:1}50%{opacity:0.3}}',
             /* 인증번호 + 타이머 */
             '.atk-auth-code-row{display:flex;align-items:center;gap:10px;}',
             '.atk-auth-code-row .atk-auth-input{flex:1;}',
@@ -158,6 +165,36 @@
             '      <div class="atk-auth-actions">',
             '        <button type="button" class="atk-auth-btn atk-auth-btn-primary" id="atkAuthVerifyBtn">인증하기</button>',
             '        <button type="button" class="atk-auth-btn atk-auth-btn-cancel" id="atkAuthBackBtn">취소</button>',
+            '      </div>',
+            '      <p class="atk-auth-footnote">인증 과정에 어려움이 있나요? <a href="support-inquiry.html">1:1 문의하기</a></p>',
+            '    </div>',
+            /* 유선·대표번호 ARS 인증 단계 */
+            '    <div id="atkAuthStepArs" style="display:none;">',
+            '      <h2 id="atkAuthArsTitle">발송 추가 인증</h2>',
+            '      <p class="atk-auth-subtitle">유선·대표번호는 ARS 음성 인증으로<br>발신번호 소유를 확인합니다.</p>',
+            '      <div class="atk-auth-channel">',
+            '        <span class="atk-auth-ars-badge">ARS</span>',
+            '        <span>알림톡·문자는 휴대폰 전용이라 유선번호는 ARS 로 인증합니다.</span>',
+            '      </div>',
+            '      <div class="atk-auth-link-box">',
+            '        <div class="atk-auth-link-row">',
+            '          <span class="atk-auth-link-label">발신번호</span>',
+            '          <span class="atk-auth-link-value" id="atkAuthArsCaller">-</span>',
+            '        </div>',
+            '      </div>',
+            '      <div class="atk-auth-ars-guide">',
+            '        아래 <strong>인증 전화번호</strong>로 <strong id="atkAuthArsFrom">발신번호</strong> 에서 전화를 걸어주세요.',
+            '        <span class="atk-auth-ars-number" id="atkAuthArsNumber">1600-0000</span>',
+            '        시스템이 인입 번호와 등록된 발신번호의 일치 여부를 확인해 자동으로 인증 처리합니다.',
+            '      </div>',
+            '      <div class="atk-auth-ars-status" id="atkAuthArsStatus">',
+            '        <span class="dot"></span><span>수신 대기 중</span>',
+            '        <span class="atk-auth-timer" id="atkAuthArsTimer">05:00</span>',
+            '      </div>',
+            '      <div class="atk-auth-error" id="atkAuthArsError">아직 인증 전화가 확인되지 않았습니다. 통화 후 다시 시도해주세요.</div>',
+            '      <div class="atk-auth-actions">',
+            '        <button type="button" class="atk-auth-btn atk-auth-btn-primary" id="atkAuthArsVerifyBtn">인증 확인</button>',
+            '        <button type="button" class="atk-auth-btn atk-auth-btn-cancel" id="atkAuthArsCancelBtn">취소</button>',
             '      </div>',
             '      <p class="atk-auth-footnote">인증 과정에 어려움이 있나요? <a href="support-inquiry.html">1:1 문의하기</a></p>',
             '    </div>',
@@ -282,8 +319,11 @@
         state.channel = 'alimtalk';
         state.attempts = 0;
         unlockCode();
+        clearInterval(arsTimerInterval);
+        arsTimerInterval = null;
         $('atkAuthStep1').style.display = '';
         $('atkAuthStep2').style.display = 'none';
+        if ($('atkAuthStepArs')) $('atkAuthStepArs').style.display = 'none';
         $('atkAuthCode').value = '';
         showError('atkAuthPhoneError', false);
         showError('atkAuthCodeError', false);
@@ -371,6 +411,8 @@
             if (e.key === 'Enter') { e.preventDefault(); handleVerify(); }
         });
 
+        $('atkAuthArsVerifyBtn').addEventListener('click', handleArsVerify);
+        $('atkAuthArsCancelBtn').addEventListener('click', function () { close(); });
         $('atkAuthSendBtn').addEventListener('click', handleSend);
         $('atkAuthVerifyBtn').addEventListener('click', handleVerify);
         $('atkAuthCancelBtn').addEventListener('click', function () { close(); });
@@ -432,6 +474,81 @@
 
         $('alimtalkAuthModal').classList.add('is-open');
         setTimeout(function () { $('atkAuthSendBtn').focus(); }, 50);
+    };
+
+    /* ---------- 유선·대표번호 ARS 인증 (보안심사 3.5-③) ----------
+     * 항목해설이 예시한 인바운드 방식: 인증받으려는 유선번호에서 사업자가 지정한
+     * 번호로 전화를 걸면, 시스템이 인입 발신번호와 등록 요청 발신번호의 일치
+     * 여부를 확인해 인증 처리한다.
+     * 프로토타입: 실제 수신 확인 없이 "인증 확인" 클릭 시 성공 처리한다.
+     */
+    var ARS_TIMER_SECONDS = 300;   // 인증 전화 수신 대기 5분
+    var arsTimerInterval = null;
+    var arsSeconds = ARS_TIMER_SECONDS;
+
+    function startArsTimer() {
+        clearInterval(arsTimerInterval);
+        arsSeconds = ARS_TIMER_SECONDS;
+        var el = $('atkAuthArsTimer');
+
+        function tick() {
+            var m = Math.floor(arsSeconds / 60), sec = arsSeconds % 60;
+            el.textContent = ('0' + m).slice(-2) + ':' + ('0' + sec).slice(-2);
+            if (arsSeconds <= 0) {
+                clearInterval(arsTimerInterval);
+                arsTimerInterval = null;
+                el.textContent = '00:00';
+                showError('atkAuthArsError', true);
+                $('atkAuthArsError').textContent = '인증 대기시간이 만료되었습니다. 취소 후 다시 시도해주세요.';
+                $('atkAuthArsVerifyBtn').disabled = true;
+                return;
+            }
+            arsSeconds--;
+        }
+        tick();
+        arsTimerInterval = setInterval(tick, 1000);
+    }
+
+    function handleArsVerify() {
+        var cb = state.onSuccess;
+        var result = { callerNumber: state.phone, channel: 'ars' };
+        clearInterval(arsTimerInterval);
+        arsTimerInterval = null;
+        close(true);
+        if (typeof cb === 'function') cb(result);
+    }
+
+    /* 유선·대표번호 여부 판정 — 01X 가 아니면 유선으로 본다. */
+    window.isLandlineNumber = function (value) {
+        var digits = String(value || '').replace(/\D/g, '');
+        return digits.length > 0 && !/^01[0-9]{8,9}$/.test(digits);
+    };
+
+    window.openArsAuth = function (options) {
+        var opts = options || {};
+        mount();
+        reset();
+
+        var caller = opts.callerNumber || '-';
+        $('atkAuthArsTitle').textContent = opts.title || '발송 추가 인증';
+        $('atkAuthArsCaller').textContent = caller;
+        $('atkAuthArsFrom').textContent = caller;
+        $('atkAuthArsNumber').textContent = opts.arsNumber || '1600-0000';
+        $('atkAuthArsVerifyBtn').disabled = false;
+        showError('atkAuthArsError', false);
+        $('atkAuthArsError').textContent = '아직 인증 전화가 확인되지 않았습니다. 통화 후 다시 시도해주세요.';
+
+        state.phone = caller;
+        state.onSuccess = opts.onSuccess || null;
+        state.onCancel = opts.onCancel || null;
+
+        $('atkAuthStep1').style.display = 'none';
+        $('atkAuthStep2').style.display = 'none';
+        $('atkAuthStepArs').style.display = '';
+
+        $('alimtalkAuthModal').classList.add('is-open');
+        startArsTimer();
+        setTimeout(function () { $('atkAuthArsVerifyBtn').focus(); }, 50);
     };
 
     /* ===================================================================

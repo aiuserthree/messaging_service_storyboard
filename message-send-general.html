@@ -2703,7 +2703,7 @@ document.getElementById('confirmRecipientCount').textContent =
 
         /* 발신번호 등록 시 본인확인된 인증 대상 번호를 조회한다.
          * 실제 연동 시 GET /api/caller-numbers/{id}/auth-phone 응답값으로 대체한다.
-         * 유선번호(02·0XX 등)는 알림톡·SMS 인증이 불가하므로 ARS 등 대체 인증 필요. */
+         * 유선번호(02·0XX 등)는 ARS 음성 인증으로 분기되므로 이 함수는 휴대폰 발신번호에만 사용된다. */
         function getCallerAuthPhone(caller) {
             var digits = String(caller || '').replace(/\D/g, '');
             if (/^01[0-9]{8,9}$/.test(digits)) return digits;   // 휴대폰 발신번호: 자기 자신
@@ -2725,6 +2725,20 @@ document.getElementById('confirmRecipientCount').textContent =
                     showToast('추가 인증이 유효합니다. (약 ' + state.remainMin + '분 남음) 재인증 없이 발송합니다.', 'info');
                 }
                 executeActualSend();
+                return;
+            }
+
+            // 유선·대표번호는 알림톡·문자 인증이 불가하므로 ARS 음성 인증으로 분기 (3.5-③)
+            if (isLandlineNumber(caller)) {
+                openArsAuth({
+                    callerNumber: caller,
+                    arsNumber: '1600-0000',
+                    onSuccess: function () {
+                        markSendAuthenticated(ctx);
+                        closeModal('sendConfirmModal');
+                        executeActualSend();
+                    }
+                });
                 return;
             }
 
@@ -5461,7 +5475,12 @@ document.getElementById('confirmRecipientCount').textContent =
                     '발송 확인 모달에서 "발송하기" 클릭 후 노출',
                     '1단계: 선택한 발신번호와 인증받을 번호(마스킹)를 함께 표시 → 알림톡 발송',
                     '사용자가 번호를 직접 입력할 수 없음 (보안심사 3.5-①② 발신번호·계정 연계 확인)',
-                    '휴대폰 발신번호는 해당 번호로, 유선 발신번호는 등록 담당자 번호로 인증',
+                    '휴대폰 발신번호는 해당 번호로 알림톡 인증',
+                    '【유선·대표번호 — ARS 인증 (3.5-③)】',
+                    '발신번호가 01X 가 아니면 알림톡 대신 ARS 음성 인증 단계로 분기',
+                    '지정된 인증 전화번호(1600-0000)로 해당 유선번호에서 전화를 걸면',
+                    '시스템이 인입 번호와 등록 발신번호의 일치 여부를 확인해 인증 처리',
+                    '수신 대기 05:00 카운트다운, 만료 시 재시도 안내 후 인증 버튼 비활성',
                     '2단계: 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
                     '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
                     '【재인증 기준 — 보안심사 3.5-⑤】',
