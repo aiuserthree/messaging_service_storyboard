@@ -2764,7 +2764,7 @@ document.getElementById('confirmRecipientCount').textContent =
         }
 
         /* 승인 담당자 이메일 — 기업 고객사에 등록·확인된 값.
-         * 실제 연동 시 GET /api/send-approval/control 의 approverEmail 로 대체한다. */
+         * 실제 연동 시 GET /api/send-approval/approver 응답으로 대체한다. */
         function getApprovalEmail() {
             return (typeof APPROVAL_ADMIN !== 'undefined' && APPROVAL_ADMIN.email)
                 ? APPROVAL_ADMIN.email
@@ -2772,7 +2772,7 @@ document.getElementById('confirmRecipientCount').textContent =
         }
 
         /* 이메일 OTP 인증으로 확인된 승인 사실을 이력에 남긴다 (3.5-④ 입증자료).
-         * 실제 연동 시 POST /api/send-approval/decision 응답으로 대체한다. */
+         * 실제 연동 시 POST /api/send-approval/record 로 대체한다. */
         function recordSendApproval(ctx) {
             if (typeof apvRecordSendApproval !== 'function') return;
             apvRecordSendApproval({
