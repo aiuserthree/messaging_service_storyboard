@@ -104,8 +104,7 @@ function createHeader(activeMenu = '') {
             hasDropdown: true,
             items: [
                 { label: '예약내역', url: 'send-reservation.html' },
-                { label: '발송결과', url: 'send-result.html' },
-                { label: '발송 사후승인', url: 'api-approval.html' }
+                { label: '발송결과', url: 'send-result.html' }
             ]
         },
         'event': {
@@ -134,7 +133,6 @@ function createHeader(activeMenu = '') {
         'send-reservation.html': 'send',
         'send-complete.html': 'send',
         'send-complete-reservation.html': 'send',
-        'api-approval.html': 'send',
         'payment-charge.html': 'payment',
         'payment-deposit-distribution.html': 'payment',
         'payment-history.html': 'payment',

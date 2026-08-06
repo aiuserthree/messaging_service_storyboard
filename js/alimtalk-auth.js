@@ -32,8 +32,10 @@
     var state = {
         timerInterval: null,
         seconds: TIMER_SECONDS,
-        channel: 'alimtalk', // 'alimtalk' | 'sms'
+        mode: 'phone',       // 'phone'(알림톡·SMS) | 'email'(이메일 OTP)
+        channel: 'alimtalk', // 'alimtalk' | 'sms' | 'email'
         phone: '',
+        email: '',
         attempts: 0,
         expired: false,
         locked: false,
@@ -80,6 +82,8 @@
             '.atk-auth-link-value.is-strong{color:#0f172a;font-weight:800;font-size:15px;letter-spacing:0.01em;}',
             /* 유선번호 ARS 인증 */
             '.atk-auth-ars-badge{display:inline-flex;align-items:center;gap:5px;background:#e0f2fe;color:#0369a1;border-radius:6px;padding:4px 9px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;}',
+            '.atk-auth-mail-badge{display:inline-flex;align-items:center;gap:5px;background:#eef2ff;color:#4338ca;border-radius:6px;padding:4px 9px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;}',
+            '.atk-auth-mail-badge svg{width:13px;height:13px;}',
             '.atk-auth-ars-guide{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:14px 16px;margin-top:16px;font-size:13px;line-height:1.7;color:#0c4a6e;}',
             '.atk-auth-ars-number{display:block;text-align:center;font-size:24px;font-weight:800;color:#0f172a;letter-spacing:0.02em;margin:10px 0 4px;}',
             '.atk-auth-ars-status{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding:12px;border:1px dashed #cbd5e1;border-radius:8px;font-size:13px;font-weight:600;color:#64748b;}',
@@ -121,7 +125,7 @@
             '    <div id="atkAuthStep1">',
             '      <h2 id="atkAuthTitle">알림톡 인증</h2>',
             '      <p class="atk-auth-subtitle" id="atkAuthDesc"></p>',
-            '      <div class="atk-auth-channel">',
+            '      <div class="atk-auth-channel" id="atkAuthChannelBox">',
             '        <span class="atk-auth-badge">',
             '          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.9 3 2.8 6.3 2.8 10.3c0 2.6 1.7 4.9 4.3 6.2-.2.7-.7 2.5-.8 2.9 0 .2.1.4.3.3.3-.1 2.6-1.7 3.6-2.4.6.1 1.2.1 1.8.1 5.1 0 9.2-3.3 9.2-7.3S17.1 3 12 3z"/></svg>',
             '          알림톡',
@@ -135,7 +139,7 @@
             '          <span class="atk-auth-link-value" id="atkAuthCallerValue">-</span>',
             '        </div>',
             '        <div class="atk-auth-link-row">',
-            '          <span class="atk-auth-link-label">인증받을 번호</span>',
+            '          <span class="atk-auth-link-label" id="atkAuthTargetLabel">인증받을 번호</span>',
             '          <span class="atk-auth-link-value is-strong" id="atkAuthPhoneMasked">-</span>',
             '        </div>',
             '      </div>',
@@ -221,6 +225,37 @@
         return head + '-****-' + tail;
     }
 
+    /* 등록된 이메일도 마스킹해 노출한다 (ad****@ibank.co.kr) */
+    function maskEmail(value) {
+        var s = String(value || '');
+        var at = s.indexOf('@');
+        if (at < 1) return s || '-';
+        var local = s.slice(0, at);
+        var head = local.slice(0, Math.min(2, local.length));
+        var stars = Math.max(4, local.length - head.length);
+        return head + new Array(stars + 1).join('*') + s.slice(at);
+    }
+
+    /* 이메일 OTP 모드로 바뀐 라벨·안내를 기본(알림톡) 상태로 되돌린다.
+     * 한 페이지에서 알림톡 인증과 이메일 OTP 를 함께 쓰는 경우가 있어 필요하다. */
+    var PHONE_CHANNEL_HTML = '' +
+        '<span class="atk-auth-badge">' +
+          '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.9 3 2.8 6.3 2.8 10.3c0 2.6 1.7 4.9 4.3 6.2-.2.7-.7 2.5-.8 2.9 0 .2.1.4.3.3.3-.1 2.6-1.7 3.6-2.4.6.1 1.2.1 1.8.1 5.1 0 9.2-3.3 9.2-7.3S17.1 3 12 3z"/></svg>' +
+          '알림톡' +
+        '</span>' +
+        '<span>카카오톡 미사용 또는 수신 불가 시 문자(SMS)로 자동 대체 발송됩니다.</span>';
+
+    function restorePhoneLabels() {
+        var box = $('atkAuthChannelBox');
+        if (box) box.innerHTML = PHONE_CHANNEL_HTML;
+        var label = $('atkAuthTargetLabel');
+        if (label) label.textContent = '인증받을 번호';
+        var err = $('atkAuthPhoneError');
+        if (err) err.textContent = '등록된 인증 번호가 없습니다. 마이페이지에서 인증 수단을 먼저 등록해 주세요.';
+        var sendBtn = $('atkAuthSendBtn');
+        if (sendBtn) sendBtn.textContent = '인증 번호 보내기';
+    }
+
     function showError(id, show) {
         var el = $(id);
         if (el) el.classList.toggle('show', !!show);
@@ -256,9 +291,20 @@
     /* ---------- 흐름 ---------- */
 
     function applyChannel() {
+        var fallback = $('atkAuthFallback');
+
+        // 이메일 OTP 모드에는 문자(SMS) 대체 발송이 없다.
+        if (state.mode === 'email') {
+            $('atkAuthChannelLabel').textContent = '이메일';
+            fallback.classList.remove('used');
+            fallback.innerHTML = '';
+            fallback.style.display = 'none';
+            return;
+        }
+
+        fallback.style.display = '';
         var isSms = state.channel === 'sms';
         $('atkAuthChannelLabel').textContent = isSms ? '문자(SMS)' : '알림톡';
-        var fallback = $('atkAuthFallback');
         fallback.classList.toggle('used', isSms);
         fallback.innerHTML = isSms
             ? '문자(SMS)로 인증번호를 다시 보냈습니다.'
@@ -316,8 +362,10 @@
     function reset() {
         clearInterval(state.timerInterval);
         state.timerInterval = null;
+        state.mode = 'phone';
         state.channel = 'alimtalk';
         state.attempts = 0;
+        restorePhoneLabels();
         unlockCode();
         clearInterval(arsTimerInterval);
         arsTimerInterval = null;
@@ -330,11 +378,11 @@
         applyChannel();
     }
 
-    function showStep2(phoneDigits) {
-        state.phone = phoneDigits;
+    function showStep2(target) {
         $('atkAuthStep1').style.display = 'none';
         $('atkAuthStep2').style.display = '';
-        $('atkAuthPhoneDisplay').textContent = maskPhone(phoneDigits);   // 2단계도 동일하게 마스킹
+        // 2단계도 동일하게 마스킹해 노출한다
+        $('atkAuthPhoneDisplay').textContent = state.mode === 'email' ? maskEmail(target) : maskPhone(target);
         $('atkAuthCode').value = '';
         showError('atkAuthCodeError', false);
         startTimer();
@@ -342,13 +390,14 @@
     }
 
     function handleSend() {
-        // 사용자가 번호를 입력하지 않는다. 계정·발신번호에 등록·확인된 번호로만 발송한다.
-        if (!state.phone) {
+        // 사용자가 번호·이메일을 입력하지 않는다. 계정에 등록·확인된 값으로만 발송한다.
+        var target = state.mode === 'email' ? state.email : state.phone;
+        if (!target) {
             showError('atkAuthPhoneError', true);
             return;
         }
         showError('atkAuthPhoneError', false);
-        showStep2(state.phone);
+        showStep2(target);
     }
 
     function handleVerify() {
@@ -383,7 +432,7 @@
             return;
         }
 
-        var result = { phone: state.phone, channel: state.channel };
+        var result = { phone: state.phone, email: state.email, channel: state.channel, mode: state.mode };
         var cb = state.onSuccess;
         close(true);
         if (typeof cb === 'function') cb(result);
@@ -517,6 +566,72 @@
         close(true);
         if (typeof cb === 'function') cb(result);
     }
+
+    /* ---------------------------------------------------------------
+     * 이메일 OTP 인증 (보안심사 3.5-④ 기업관리자 사후승인)
+     *
+     * 심사 항목해설상 사후승인은 전자결재·관리자 콘솔 승인·이메일 승인·
+     * 서면 결재 등 "승인(확인) 사실을 입증할 수 있는 방식"이면 된다.
+     * 톡벨은 이 중 **이메일 승인**을 채택해, 기업 고객사의 관리자·담당자
+     * 이메일로 6자리 인증번호를 보내고 이를 입력해야 발송되도록 한다.
+     *
+     * 인증 대상 이메일은 사용자가 직접 입력하지 않고, 계정에 등록·확인된
+     * 승인 담당자 이메일로 고정된다(3.4-② 연계 기준과 동일).
+     *
+     * 실제 연동 시 대체할 API
+     *   POST /api/send-approval/otp/send    승인용 이메일 OTP 발송
+     *   POST /api/send-approval/otp/verify  OTP 검증
+     * --------------------------------------------------------------- */
+    window.openEmailOtpAuth = function (options) {
+        var opts = options || {};
+        mount();
+        reset();
+
+        state.mode = 'email';
+        state.channel = 'email';
+        state.email = String(opts.email || '').trim();
+        state.phone = '';
+
+        var title = opts.title || '발송 승인 인증';
+        $('atkAuthTitle').textContent = title;
+        $('atkAuthTitle2').textContent = title;
+        $('atkAuthDesc').innerHTML = opts.description
+            || '발송 승인을 위해 등록된 담당자 이메일로<br>인증번호를 보내드립니다.';
+        $('atkAuthVerifyBtn').textContent = opts.confirmText || '인증하고 발송하기';
+
+        // 채널 안내를 이메일로 교체
+        $('atkAuthChannelBox').innerHTML =
+            '<span class="atk-auth-mail-badge">' +
+              '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6z"/></svg>' +
+              '이메일' +
+            '</span>' +
+            '<span>' + (opts.channelNote || '기업 고객사 승인 담당자 이메일로 6자리 인증번호가 발송됩니다.') + '</span>';
+
+        // 연계 정보 — 발신번호와 승인 담당자 이메일을 함께 노출한다
+        var callerRow = $('atkAuthCallerRow');
+        if (opts.callerNumber) {
+            callerRow.style.display = '';
+            $('atkAuthCallerValue').textContent = opts.callerNumber;
+        } else {
+            callerRow.style.display = 'none';
+        }
+
+        $('atkAuthTargetLabel').textContent = '승인 담당자';
+        $('atkAuthPhoneMasked').textContent = state.email ? maskEmail(state.email) : '미등록';
+        $('atkAuthLinkHelp').innerHTML = opts.linkHelp
+            || '기업 고객사에 등록·확인된 승인 담당자 이메일입니다.<br>변경은 마이페이지 &gt; 발송 사후승인에서 가능합니다.';
+
+        $('atkAuthPhoneError').textContent = '등록된 승인 담당자 이메일이 없습니다. 마이페이지에서 먼저 등록해 주세요.';
+        $('atkAuthSendBtn').disabled = !state.email;
+        showError('atkAuthPhoneError', !state.email);
+        $('atkAuthSendBtn').textContent = '인증번호 받기';
+
+        state.onSuccess = typeof opts.onSuccess === 'function' ? opts.onSuccess : null;
+        state.onCancel = typeof opts.onCancel === 'function' ? opts.onCancel : null;
+
+        applyChannel();
+        $('alimtalkAuthModal').classList.add('is-open');
+    };
 
     /* 유선·대표번호 여부 판정 — 01X 가 아니면 유선으로 본다. */
     window.isLandlineNumber = function (value) {

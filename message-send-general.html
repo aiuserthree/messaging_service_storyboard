@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/header.js"></script>
     <script src="js/alimtalk-auth.js"></script>
+    <script src="js/approval-data.js"></script>
     <style>/* 공통 스타일 */
 * {
     margin: 0;
@@ -2743,20 +2744,44 @@ document.getElementById('confirmRecipientCount').textContent =
             }
 
             var desc = state.reason
-                ? state.reason + '<br>등록된 번호로 카카오톡 알림톡을 보내드립니다.'
-                : '발신번호와 계정의 연계 확인을 위해<br>등록된 번호로 카카오톡 알림톡을 보내드립니다.';
+                ? state.reason + '<br>등록된 담당자 이메일로 인증번호를 보내드립니다.'
+                : '발송 승인을 위해 등록된 담당자 이메일로<br>인증번호 6자리를 보내드립니다.';
 
-            openAlimtalkAuth({
-                title: '발송 추가 인증',
+            // 기업관리자 사후승인 — 이메일 OTP (3.5-④)
+            openEmailOtpAuth({
+                title: '발송 승인 인증',
                 description: desc,
                 confirmText: '인증하고 발송하기',
-                phone: getCallerAuthPhone(caller),
+                email: getApprovalEmail(),
                 callerNumber: caller || '-',
                 onSuccess: function () {
                     markSendAuthenticated(ctx);
+                    recordSendApproval(ctx);
                     closeModal('sendConfirmModal');
                     executeActualSend();
                 }
+            });
+        }
+
+        /* 승인 담당자 이메일 — 기업 고객사에 등록·확인된 값.
+         * 실제 연동 시 GET /api/send-approval/control 의 approverEmail 로 대체한다. */
+        function getApprovalEmail() {
+            return (typeof APPROVAL_ADMIN !== 'undefined' && APPROVAL_ADMIN.email)
+                ? APPROVAL_ADMIN.email
+                : 'admin@ibank.co.kr';
+        }
+
+        /* 이메일 OTP 인증으로 확인된 승인 사실을 이력에 남긴다 (3.5-④ 입증자료).
+         * 실제 연동 시 POST /api/send-approval/decision 응답으로 대체한다. */
+        function recordSendApproval(ctx) {
+            if (typeof apvRecordSendApproval !== 'function') return;
+            apvRecordSendApproval({
+                channel: '웹 발송',
+                caller: ctx.callerNumber || '-',
+                count: ctx.recipientCount || 0,
+                template: document.getElementById('templateName')
+                    ? document.getElementById('templateName').value || '직접 작성'
+                    : '직접 작성'
             });
         }
 
@@ -5459,8 +5484,8 @@ document.getElementById('confirmRecipientCount').textContent =
                 function: '본인인증 후 최종 발송 실행',
                 behavior: [
                     '클릭 시 유효성 검증',
-                    '통과 시 알림톡 추가 인증(#alimtalkAuthModal) 팝업 표시',
-                    '알림톡 인증번호 확인 후 발송 완료 페이지 이동',
+                    '통과 시 발송 승인 인증(#alimtalkAuthModal) 팝업 표시',
+                    '이메일 OTP 6자리 확인 후 발송 완료 페이지 이동',
                     '발송 실패: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"'
                 ],
                 tags: [{ text: 'API', type: 'api' }]
@@ -5468,21 +5493,25 @@ document.getElementById('confirmRecipientCount').textContent =
             // 69. 알림톡 추가 인증 팝업
             {
                 selector: '#alimtalkAuthModal',
-                title: '발송 추가 인증 (알림톡) 팝업',
+                title: '발송 승인 인증 (이메일 OTP) 팝업',
                 position: { top: '60px', left: '20px' },
-                function: '발송 전 추가 인증 (카카오톡 알림톡 인증번호)',
+                function: '발송 전 기업관리자 승인 — 이메일 OTP 인증번호 (보안심사 3.5-④)',
                 behavior: [
                     '발송 확인 모달에서 "발송하기" 클릭 후 노출',
-                    '1단계: 선택한 발신번호와 인증받을 번호(마스킹)를 함께 표시 → 알림톡 발송',
-                    '사용자가 번호를 직접 입력할 수 없음 (보안심사 3.5-①② 발신번호·계정 연계 확인)',
-                    '휴대폰 발신번호는 해당 번호로 알림톡 인증',
+                    '【사후승인 방식 — 이메일 승인 (3.5-④)】',
+                    '항목해설상 사후승인은 전자결재·관리자 콘솔 승인·이메일 승인·서면 결재 등',
+                    '승인(확인) 사실을 입증할 수 있는 방식이면 되며, 톡벨은 이메일 승인을 채택',
+                    '승인 주체는 문자재판매사업자가 아니라 서비스를 이용하는 기업 고객사의 관리자·담당자',
+                    '1단계: 선택한 발신번호와 승인 담당자 이메일(마스킹)을 함께 표시 → 인증번호 발송',
+                    '사용자가 이메일을 직접 입력할 수 없음 — 등록·확인된 담당자 이메일로만 발송',
+                    '2단계: 이메일로 받은 6자리 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
+                    '인증 통과 시 문자 발송이 실행되고, 승인 사실이 이력에 기록됨',
+                    '이력 항목: 승인번호 / 처리일시 / 처리자 / 발신번호 / 건수 / 본인확인 수단(이메일 OTP) / 접속 IP',
                     '【유선·대표번호 — ARS 인증 (3.5-③)】',
-                    '발신번호가 01X 가 아니면 알림톡 대신 ARS 음성 인증 단계로 분기',
+                    '발신번호가 01X 가 아니면 ARS 음성 인증 단계로 분기해 발신번호 소유를 확인',
                     '지정된 인증 전화번호(1600-0000)로 해당 유선번호에서 전화를 걸면',
                     '시스템이 인입 번호와 등록 발신번호의 일치 여부를 확인해 인증 처리',
                     '수신 대기 05:00 카운트다운, 만료 시 재시도 안내 후 인증 버튼 비활성',
-                    '2단계: 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
-                    '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
                     '【재인증 기준 — 보안심사 3.5-⑤】',
                     '인증 완료 후 동일 세션에서 30분간 재인증 없이 발송 가능',
                     '아래 조건에서는 재인증: 유효시간 30분 경과 / 발신번호 변경 / 대량발송(1,000건 이상) / 접속환경 변경',

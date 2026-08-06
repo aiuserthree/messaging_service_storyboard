@@ -205,8 +205,10 @@ const ATK_MAX_ATTEMPTS = 5;       // 초과 시 잠금 → 재전송해야 재�
 const atkState = {
     timerInterval: null,
     seconds: ATK_TIMER_SECONDS,
-    channel: 'alimtalk', // 'alimtalk' | 'sms'
+    mode: 'phone',       // 'phone'(알림톡·SMS) | 'email'(이메일 OTP)
+    channel: 'alimtalk', // 'alimtalk' | 'sms' | 'email'
     phone: '',
+    email: '',
     attempts: 0,
     expired: false,
     locked: false,
@@ -269,21 +271,21 @@ function renderAlimtalkAuthSheet() {
 
             <div id="atkStep1">
                 <div class="atk-title" id="atkTitle">알림톡 인증</div>
-                <div class="atk-channel">
-                    <span class="atk-badge">
+                <div class="atk-channel" id="atkChannelBox">
+                    <span class="atk-badge" id="atkChannelBadge">
                         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.9 3 2.8 6.3 2.8 10.3c0 2.6 1.7 4.9 4.3 6.2-.2.7-.7 2.5-.8 2.9 0 .2.1.4.3.3.3-.1 2.6-1.7 3.6-2.4.6.1 1.2.1 1.8.1 5.1 0 9.2-3.3 9.2-7.3S17.1 3 12 3z"/></svg>
                         알림톡
                     </span>
                     <span id="atkDesc"></span>
                 </div>
-                <p class="atk-desc">카카오톡 미사용 또는 수신 불가 시<br>문자(SMS)로 자동 대체 발송됩니다.</p>
+                <p class="atk-desc" id="atkChannelNote">카카오톡 미사용 또는 수신 불가 시<br>문자(SMS)로 자동 대체 발송됩니다.</p>
                 <div class="atk-link-box">
                     <div class="atk-link-row" id="atkCallerRow">
                         <span class="atk-link-label">발신번호</span>
                         <span class="atk-link-value" id="atkCallerValue">-</span>
                     </div>
                     <div class="atk-link-row">
-                        <span class="atk-link-label">인증받을 번호</span>
+                        <span class="atk-link-label" id="atkTargetLabel">인증받을 번호</span>
                         <span class="atk-link-value is-strong" id="atkPhoneMasked">-</span>
                     </div>
                 </div>
@@ -326,6 +328,18 @@ function renderAlimtalkAuthSheet() {
 }
 
 function atkApplyChannel() {
+    const fallback0 = atkEl('atkFallback');
+
+    // 이메일 OTP 모드에는 문자(SMS) 대체 발송이 없다.
+    if (atkState.mode === 'email') {
+        atkEl('atkChannelLabel').textContent = '이메일';
+        fallback0.classList.remove('used');
+        fallback0.innerHTML = '';
+        fallback0.style.display = 'none';
+        return;
+    }
+    fallback0.style.display = '';
+
     const isSms = atkState.channel === 'sms';
     atkEl('atkChannelLabel').textContent = isSms ? '문자(SMS)' : '알림톡';
     const fallback = atkEl('atkFallback');
@@ -386,8 +400,10 @@ function atkStartTimer() {
 function atkReset() {
     clearInterval(atkState.timerInterval);
     atkState.timerInterval = null;
+    atkState.mode = 'phone';
     atkState.channel = 'alimtalk';
     atkState.attempts = 0;
+    atkRestorePhoneLabels();
     atkUnlockCode();
     atkEl('atkStep1').style.display = '';
     atkEl('atkStep2').style.display = 'none';
@@ -397,11 +413,11 @@ function atkReset() {
     atkApplyChannel();
 }
 
-function atkShowStep2(phoneDigits) {
-    atkState.phone = phoneDigits;
+function atkShowStep2(target) {
     atkEl('atkStep1').style.display = 'none';
     atkEl('atkStep2').style.display = '';
-    atkEl('atkPhoneDisplay').textContent = atkMaskPhone(phoneDigits);   // 2단계도 동일하게 마스킹
+    // 2단계도 동일하게 마스킹해 노출한다
+    atkEl('atkPhoneDisplay').textContent = atkState.mode === 'email' ? atkMaskEmail(target) : atkMaskPhone(target);
     atkEl('atkCode').value = '';
     atkShowError('atkCodeError', false);
     atkStartTimer();
@@ -409,13 +425,41 @@ function atkShowStep2(phoneDigits) {
 }
 
 function atkHandleSend() {
-    // 사용자가 번호를 입력하지 않는다. 계정·발신번호에 등록·확인된 번호로만 발송한다.
-    if (!atkState.phone) {
+    // 사용자가 번호·이메일을 입력하지 않는다. 계정에 등록·확인된 값으로만 발송한다.
+    const target = atkState.mode === 'email' ? atkState.email : atkState.phone;
+    if (!target) {
         atkShowError('atkPhoneError', true);
         return;
     }
     atkShowError('atkPhoneError', false);
-    atkShowStep2(atkState.phone);
+    atkShowStep2(target);
+}
+
+/* 등록된 이메일도 마스킹해 노출한다 (ad****@ibank.co.kr) */
+function atkMaskEmail(value) {
+    const s = String(value || '');
+    const at = s.indexOf('@');
+    if (at < 1) return s || '-';
+    const local = s.slice(0, at);
+    const head = local.slice(0, Math.min(2, local.length));
+    return head + '*'.repeat(Math.max(4, local.length - head.length)) + s.slice(at);
+}
+
+/* 이메일 OTP 모드로 바뀐 라벨·안내를 기본(알림톡) 상태로 되돌린다. */
+function atkRestorePhoneLabels() {
+    const badge = atkEl('atkChannelBadge');
+    if (badge) {
+        badge.className = 'atk-badge';
+        badge.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.9 3 2.8 6.3 2.8 10.3c0 2.6 1.7 4.9 4.3 6.2-.2.7-.7 2.5-.8 2.9 0 .2.1.4.3.3.3-.1 2.6-1.7 3.6-2.4.6.1 1.2.1 1.8.1 5.1 0 9.2-3.3 9.2-7.3S17.1 3 12 3z"/></svg> 알림톡';
+    }
+    const note = atkEl('atkChannelNote');
+    if (note) note.innerHTML = '카카오톡 미사용 또는 수신 불가 시<br>문자(SMS)로 자동 대체 발송됩니다.';
+    const label = atkEl('atkTargetLabel');
+    if (label) label.textContent = '인증받을 번호';
+    const err = atkEl('atkPhoneError');
+    if (err) err.textContent = '등록된 인증 번호가 없습니다. 마이페이지에서 인증 수단을 먼저 등록해 주세요.';
+    const sendBtn = atkEl('atkSendBtn');
+    if (sendBtn) sendBtn.textContent = '인증 번호 보내기';
 }
 
 function atkHandleVerify() {
@@ -564,6 +608,66 @@ function openAlimtalkAuth(options = {}) {
 
     atkState.onSuccess = options.onSuccess || null;
 
+    atkEl('atkBackdrop').classList.add('open');
+    atkEl('atkSheet').classList.add('open');
+}
+
+/* ===================================================================
+ * 이메일 OTP 인증 (모바일 · 보안심사 3.5-④ 기업관리자 사후승인)
+ *
+ * 심사 항목해설상 사후승인은 전자결재·관리자 콘솔 승인·이메일 승인·
+ * 서면 결재 등 "승인(확인) 사실을 입증할 수 있는 방식"이면 된다.
+ * 톡벨은 이메일 승인을 채택해 기업 고객사 승인 담당자 이메일로 6자리
+ * 인증번호를 보내고, 이를 입력해야 발송되도록 한다.
+ *
+ * 인증 대상 이메일은 사용자가 직접 입력하지 않고 등록·확인된 값으로 고정.
+ * 실제 연동 시 POST /api/send-approval/otp/send · /verify 로 대체한다.
+ * =================================================================== */
+function openEmailOtpAuth(options = {}) {
+    renderAlimtalkAuthSheet();
+    atkReset();
+
+    atkState.mode = 'email';
+    atkState.channel = 'email';
+    atkState.email = String(options.email || '').trim();
+    atkState.phone = '';
+
+    const title = options.title || '발송 승인 인증';
+    atkEl('atkTitle').textContent = title;
+    atkEl('atkTitle2').textContent = title;
+    atkEl('atkDesc').innerHTML = options.description
+        || '발송 승인을 위해 등록된 담당자 이메일로 인증번호를 보내드립니다.';
+    atkEl('atkVerifyBtn').textContent = options.confirmText || '인증하고 발송하기';
+
+    const badge = atkEl('atkChannelBadge');
+    if (badge) {
+        badge.className = 'atk-badge atk-badge-mail';
+        badge.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6z"/></svg> 이메일';
+    }
+    const note = atkEl('atkChannelNote');
+    if (note) note.innerHTML = options.channelNote || '기업 고객사 승인 담당자 이메일로<br>6자리 인증번호가 발송됩니다.';
+
+    const callerRow = atkEl('atkCallerRow');
+    if (options.callerNumber) {
+        callerRow.style.display = '';
+        atkEl('atkCallerValue').textContent = options.callerNumber;
+    } else {
+        callerRow.style.display = 'none';
+    }
+
+    atkEl('atkTargetLabel').textContent = '승인 담당자';
+    atkEl('atkPhoneMasked').textContent = atkState.email ? atkMaskEmail(atkState.email) : '미등록';
+    atkEl('atkLinkHelp').innerHTML = options.linkHelp
+        || '기업 고객사에 등록·확인된 승인 담당자 이메일입니다.<br>변경은 마이페이지 &gt; 발송 사후승인에서 가능합니다.';
+
+    atkEl('atkPhoneError').textContent = '등록된 승인 담당자 이메일이 없습니다. 마이페이지에서 먼저 등록해 주세요.';
+    atkEl('atkSendBtn').disabled = !atkState.email;
+    atkEl('atkSendBtn').textContent = '인증번호 받기';
+    atkShowError('atkPhoneError', !atkState.email);
+
+    atkState.onSuccess = options.onSuccess || null;
+
+    atkApplyChannel();
     atkEl('atkBackdrop').classList.add('open');
     atkEl('atkSheet').classList.add('open');
 }

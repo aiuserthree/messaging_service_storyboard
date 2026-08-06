@@ -170,6 +170,7 @@
         <div id="drawerWrap"></div>
     </div>
 
+    <script src="../js/approval-data.js"></script>
     <script src="js/mobile-app.js"></script>
     <script>
         document.getElementById('tabBar').innerHTML = renderTabBar('send');
@@ -258,16 +259,25 @@
                 location.href = 'send-complete-mobile.html?total=1500&fail=13';
                 return;
             }
-            openAlimtalkAuth({
-                title: '발송 추가 인증',
+            // 기업관리자 사후승인 — 이메일 OTP (3.5-④)
+            openEmailOtpAuth({
+                title: '발송 승인 인증',
                 description: state.reason
-                    ? state.reason + ' 등록된 번호로 카카오톡 알림톡을 보내드립니다.'
-                    : '발신번호와 계정의 연계 확인을 위해 등록된 번호로 카카오톡 알림톡을 보내드립니다.',
+                    ? state.reason + ' 등록된 담당자 이메일로 인증번호를 보내드립니다.'
+                    : '발송 승인을 위해 등록된 담당자 이메일로 인증번호 6자리를 보내드립니다.',
                 confirmText: '인증하고 발송하기',
-                phone: getCallerAuthPhone(callerSelect.value),
+                email: (typeof APPROVAL_ADMIN !== 'undefined' && APPROVAL_ADMIN.email) ? APPROVAL_ADMIN.email : 'admin@ibank.co.kr',
                 callerNumber: callerSelect.value || '-',
                 onSuccess: () => {
                     markSendAuthenticated(ctx);
+                    if (typeof apvRecordSendApproval === 'function') {
+                        apvRecordSendApproval({
+                            channel: '웹 발송(모바일)',
+                            caller: ctx.callerNumber || '-',
+                            count: ctx.recipientCount || 0,
+                            template: '직접 작성'
+                        });
+                    }
                     location.href = 'send-complete-mobile.html?total=1500&fail=13';
                 }
             });
@@ -470,7 +480,7 @@
                 behavior: [
                     '발신번호 미선택: "발신번호를 선택해주세요." 얼럿 후 중단',
                     '메시지 미입력: "메시지 내용을 입력해주세요." 얼럿 후 중단',
-                    '검증 통과 시 openAlimtalkAuth() 호출 → 알림톡 추가 인증',
+                    '검증 통과 시 openEmailOtpAuth() 호출 → 이메일 OTP 승인 인증',
                     '인증 성공 시에만 send-complete-mobile.html 로 이동'
                 ],
                 api: 'POST /api/messages/send',
@@ -488,15 +498,17 @@
             // ===== 발송 추가 인증 =====
             {
                 selector: '#atkSheet',
-                title: '발송 추가 인증 바텀시트 (알림톡)',
+                title: '발송 승인 인증 바텀시트 (이메일 OTP)',
                 position: { top: '10px', left: '10px' },
-                function: '발송 전 추가 인증 (카카오톡 알림톡 인증번호)',
+                function: '발송 전 기업관리자 승인 — 이메일 OTP 인증번호 (보안심사 3.5-④)',
                 behavior: [
                     '"발송하기" 클릭 → 발신번호·메시지 내용 검증 통과 후 하단에서 슬라이드업',
-                    '1단계: 선택한 발신번호와 인증받을 번호(마스킹)를 함께 표시 → 알림톡 발송',
-                    '사용자가 번호를 직접 입력할 수 없음 (보안심사 3.5-①②)',
-                    '2단계: 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
-                    '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
+                    '【사후승인 방식 — 이메일 승인 (3.5-④)】',
+                    '승인 주체는 문자재판매사업자가 아니라 서비스를 이용하는 기업 고객사의 관리자·담당자',
+                    '1단계: 선택한 발신번호와 승인 담당자 이메일(마스킹)을 함께 표시 → 인증번호 발송',
+                    '사용자가 이메일을 직접 입력할 수 없음 — 등록·확인된 담당자 이메일로만 발송',
+                    '2단계: 이메일로 받은 6자리 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
+                    '인증 통과 시 문자 발송이 실행되고, 승인 사실이 이력에 기록됨',
                     '【재인증 기준 — 보안심사 3.5-⑤】',
                     '인증 완료 후 동일 세션에서 30분간 재인증 없이 발송 가능',
                     '아래 조건에서는 재인증: 유효시간 30분 경과 / 발신번호 변경 / 대량발송(1,000건 이상) / 접속환경 변경',

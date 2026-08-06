@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>발송 사후승인 - 메시징 서비스</title>
+    <script src="js/header.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/alimtalk-auth.js"></script>
+    <script src="js/approval-data.js"></script>
+    <style>
+/* 공통 스타일 - mypage-mfa.html 과 동일 */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --bg-color: #f8fafc;
+    --surface-color: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-color);
+}
+
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px 20px; font-size: 14px; font-weight: 500; border: none;
+    border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s;
+    text-decoration: none; font-family: inherit;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background-color: var(--primary-color); color: white; }
+.btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); }
+.btn-outline { background-color: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+.btn-outline:hover:not(:disabled) { background-color: var(--bg-color); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+.form-group { margin-bottom: 20px; }
+.form-label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-primary); }
+.form-input, .form-select {
+    width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid var(--border-color);
+    border-radius: var(--radius-md); background-color: var(--surface-color); color: var(--text-primary);
+    transition: all 0.2s; font-family: inherit;
+}
+.form-input:focus, .form-select:focus {
+    outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.form-help { margin-top: 4px; font-size: 12px; color: var(--text-secondary); }
+
+.card {
+    background-color: var(--surface-color); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm);
+    margin-bottom: 24px;
+}
+.card-title { font-size: 18px; font-weight: 600; color: var(--text-primary); }
+.flex { display: flex; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.gap-2 { gap: 16px; }
+.mb-2 { margin-bottom: 16px; }
+.mt-3 { margin-top: 24px; }
+
+.badge {
+    display: inline-flex; align-items: center; padding: 4px 8px;
+    font-size: 12px; font-weight: 500; border-radius: var(--radius-sm); white-space: nowrap;
+}
+.badge-primary { background-color: rgba(37, 99, 235, 0.1); color: var(--primary-color); }
+.badge-success { background-color: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+.badge-danger { background-color: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+.badge-warning { background-color: rgba(245, 158, 11, 0.1); color: var(--warning-color); }
+.badge-muted { background-color: #f1f5f9; color: var(--text-secondary); }
+
+/* 헤더 · 레이아웃 (마이페이지 공통) */
+.app-container { min-height: 100vh; display: flex; flex-direction: column; }
+.header {
+    background-color: var(--surface-color); border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 100;
+}
+.header-content {
+    max-width: 1400px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; height: 64px;
+}
+.logo h1 { font-size: 28px; font-weight: 700; color: var(--primary-color); margin: 0; }
+.logo a { text-decoration: none; color: inherit; display: block; }
+.logo a:hover h1 { opacity: 0.8; }
+.main-nav { display: flex; gap: 4px; flex: 1; justify-content: center; position: relative; }
+.nav-item {
+    padding: 8px 16px; text-decoration: none; color: var(--text-secondary); font-weight: 500;
+    border-radius: var(--radius-md); transition: all 0.2s; position: relative;
+    display: flex; align-items: center; gap: 4px;
+}
+.nav-item:hover { background-color: var(--bg-color); color: var(--text-primary); }
+.nav-item.active { background-color: rgba(37, 99, 235, 0.1); color: var(--primary-color); }
+.nav-item.has-dropdown { position: relative; }
+.nav-item.has-dropdown .nav-link::after {
+    content: '▼'; font-size: 10px; margin-left: 4px; transition: transform 0.2s; display: inline-block;
+}
+.nav-item.has-dropdown.open .nav-link::after { transform: rotate(180deg); }
+.nav-item.has-dropdown .nav-link { text-decoration: none; color: inherit; display: flex; align-items: center; }
+.nav-dropdown {
+    position: absolute; top: 100%; left: 0; margin-top: 8px;
+    background-color: var(--surface-color); border: 1px solid var(--border-color);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-lg); min-width: 180px;
+    opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s;
+    z-index: 1000; padding: 8px 0;
+}
+.nav-item.open .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.nav-dropdown-item {
+    display: block; padding: 10px 20px; text-decoration: none;
+    color: var(--text-primary); font-size: 14px; transition: all 0.2s;
+}
+.nav-dropdown-item:hover { background-color: var(--bg-color); color: var(--primary-color); }
+.nav-dropdown-item.active { background-color: rgba(37, 99, 235, 0.1); color: var(--primary-color); font-weight: 600; }
+.header-actions { display: flex; align-items: center; gap: 16px; }
+.balance-info { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: var(--bg-color); border-radius: var(--radius-md); }
+.balance-label { font-size: 12px; color: var(--text-secondary); }
+.balance-amount { font-weight: 600; color: var(--primary-color); }
+
+.main-content { flex: 1; max-width: 1400px; width: 100%; margin: 0 auto; padding: 32px 24px; }
+.page-header { margin-bottom: 32px; }
+.page-header h2 { font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+.page-description { color: var(--text-secondary); font-size: 14px; }
+
+.mypage-layout { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; }
+.mypage-lnb {
+    background: var(--surface-color); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 12px 0; position: sticky; top: 88px;
+}
+.mypage-lnb-item {
+    display: block; width: 100%; padding: 12px 20px; text-align: left;
+    font-size: 14px; font-weight: 500; color: var(--text-primary); text-decoration: none;
+    border-left: 3px solid transparent; background: none; cursor: pointer;
+    transition: all 0.2s; box-sizing: border-box;
+}
+.mypage-lnb-item:hover { background: var(--bg-color); color: var(--primary-color); }
+.mypage-lnb-item.active {
+    background: rgba(37, 99, 235, 0.08); color: var(--primary-color); border-left-color: var(--primary-color);
+}
+.mypage-content-wrap { min-width: 0; }
+@media (max-width: 900px) {
+    .mypage-layout { grid-template-columns: 1fr; }
+    .mypage-lnb { position: static; display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; }
+    .mypage-lnb-item { border-left: none; border-bottom: 3px solid transparent; }
+    .mypage-lnb-item.active { border-left: none; border-bottom-color: var(--primary-color); }
+}
+
+/* ===== 발송 사후승인 ===== */
+.apv-guide {
+    background: rgba(37, 99, 235, 0.06); border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: var(--radius-md); padding: 16px; margin-bottom: 24px;
+    font-size: 13px; line-height: 1.8;
+}
+.apv-guide strong { color: var(--primary-color); }
+
+.apv-summary { display: grid; grid-template-columns: 150px 1fr; gap: 12px 20px; align-items: center; }
+.apv-summary dt { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+.apv-summary dd { font-size: 14px; color: var(--text-primary); font-weight: 600; }
+.apv-email-value { font-size: 17px; font-weight: 800; letter-spacing: 0.01em; }
+.apv-method-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #eef2ff; color: #4338ca; border-radius: 6px;
+    padding: 4px 10px; font-size: 12px; font-weight: 800;
+}
+.apv-method-badge svg { width: 13px; height: 13px; }
+.apv-actions { display: flex; gap: 8px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color); }
+.apv-notice {
+    background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px;
+    padding: 14px 16px; margin-top: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+}
+.apv-notice strong { color: var(--text-primary); }
+
+/* 통계 */
+.stat-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-box {
+    background: var(--surface-color); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 18px; text-align: center;
+}
+.stat-box.alert-box { border-color: rgba(239, 68, 68, 0.35); background: rgba(239, 68, 68, 0.03); }
+.stat-box-label { color: var(--text-secondary); font-size: 13px; }
+.stat-box-value { font-size: 28px; font-weight: 700; margin-top: 6px; }
+
+/* 필터·테이블 */
+.apv-filter { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.apv-table-wrap { overflow-x: auto; }
+.apv-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.apv-table th, .apv-table td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); text-align: left; }
+.apv-table th { background: #f8fafc; font-weight: 600; color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+.apv-table td.nowrap { white-space: nowrap; }
+.apv-table tbody tr:hover { background: #fafcff; }
+.apv-empty { text-align: center; padding: 44px 0; color: var(--text-muted); font-size: 13px; }
+.apv-no { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--text-secondary); }
+.template-name { font-weight: 600; color: var(--text-primary); }
+.template-pattern { font-size: 11px; color: var(--text-muted); }
+.row-overdue { background-color: rgba(239, 68, 68, 0.04); }
+.elapsed-over { color: var(--danger-color); font-weight: 700; }
+.elapsed-warn { color: var(--warning-color); font-weight: 600; }
+
+/* 내부통제 */
+.control-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+.control-item {
+    border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px;
+    display: flex; flex-direction: column; gap: 6px;
+}
+.control-item-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.control-item-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.control-item-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+.control-item-value { font-size: 20px; font-weight: 700; color: var(--primary-color); }
+.switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch-slider { position: absolute; cursor: pointer; inset: 0; background-color: #cbd5e1; border-radius: 22px; transition: 0.2s; }
+.switch-slider::before {
+    content: ''; position: absolute; height: 16px; width: 16px; left: 3px; bottom: 3px;
+    background-color: #fff; border-radius: 50%; transition: 0.2s;
+}
+.switch input:checked + .switch-slider { background-color: var(--primary-color); }
+.switch input:checked + .switch-slider::before { transform: translateX(18px); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>document.write(createHeader());</script>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h2>발송 사후승인</h2>
+                <p class="page-description">발송 승인 수단(이메일 OTP)을 관리하고 승인 이력을 확인합니다</p>
+            </div>
+
+            <div class="mypage-layout">
+                <nav class="mypage-lnb" id="mypageLnb">
+                    <a href="mypage.html" class="mypage-lnb-item" id="lnbMypage">마이페이지</a>
+                    <a href="mypage-profile.html" class="mypage-lnb-item" id="lnbProfile">내정보수정</a>
+                    <a href="mypage-password.html" class="mypage-lnb-item" id="lnbPassword">비밀번호변경</a>
+                    <a href="mypage-mfa.html" class="mypage-lnb-item" id="lnbMfa">2차 인증 설정</a>
+                    <a href="mypage-caller-number.html" class="mypage-lnb-item" id="lnbCallerNumber">발신번호관리</a>
+                    <a href="mypage-approval.html" class="mypage-lnb-item active" id="lnbApproval">발송 사후승인</a>
+                    <a href="mypage.html#history" class="mypage-lnb-item" id="lnbHistory">이용내역</a>
+                </nav>
+
+                <div class="mypage-content-wrap">
+                    <!-- 제도 안내 -->
+                    <div class="apv-guide" id="approvalGuide">
+                        <strong>발송 사후승인</strong>은 API·솔루션·모듈 및 웹 발송 건을 <strong>서비스를 이용하는 기업 고객사의 관리자·담당자</strong>가 확인·승인하는 절차입니다.<br>
+                        · 심사 항목해설상 사후승인은 전자결재 · 관리자 콘솔 승인 · <strong>이메일 승인</strong> · 서면 결재 등 승인(확인) 사실을 입증할 수 있는 방식이면 되며, 톡벨은 <strong>이메일 OTP 인증</strong> 방식을 채택했습니다.<br>
+                        · 문자 발송 시 등록된 승인 담당자 이메일로 <strong>6자리 인증번호</strong>가 발송되며, 이를 입력해야 발송이 실행됩니다.<br>
+                        · 한 번 인증하면 <strong>30분 동안 유효</strong>하며, 발신번호 변경·대량발송·접속환경 변경 시에는 다시 인증합니다.
+                    </div>
+
+                    <!-- 승인 수단 -->
+                    <div class="card" id="approverCard">
+                        <h3 class="card-title" style="margin-bottom:20px;">승인 수단</h3>
+                        <dl class="apv-summary">
+                            <dt>승인 방식</dt>
+                            <dd>
+                                <span class="apv-method-badge">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6z"/></svg>
+                                    이메일 OTP
+                                </span>
+                                <span style="margin-left:8px;font-weight:500;color:var(--text-secondary);font-size:13px;">6자리 인증번호 · 유효시간 3분</span>
+                            </dd>
+
+                            <dt>승인 담당자</dt>
+                            <dd id="approverRow">
+                                <span class="apv-email-value" id="approverEmail">ad****@ibank.co.kr</span>
+                                <span style="margin-left:8px;font-weight:500;color:var(--text-secondary);font-size:13px;" id="approverName">김담당</span>
+                            </dd>
+
+                            <dt>기업 고객사</dt>
+                            <dd id="approverCompany">(주)아이뱅크</dd>
+
+                            <dt>인증 유효시간</dt>
+                            <dd id="approverValidMinutes">30분 (인증 후 재인증 없이 발송 가능)</dd>
+
+                            <dt>재인증 조건</dt>
+                            <dd style="font-weight:500;font-size:13px;color:var(--text-secondary);">유효시간 30분 경과 · 발신번호 변경 · 대량발송(1,000건 이상) · 접속환경 변경</dd>
+                        </dl>
+
+                        <div class="apv-actions">
+                            <button type="button" class="btn btn-primary" id="approverChangeBtn">승인 담당자 변경</button>
+                            <button type="button" class="btn btn-outline" id="approverTestBtn">테스트 메일 발송</button>
+                            <a href="email-approval-request.html" target="_blank" class="btn btn-outline" id="approverMailPreviewBtn" style="margin-left:auto;">승인 메일 미리보기</a>
+                        </div>
+
+                        <div class="apv-notice">
+                            · 승인 담당자 이메일은 <strong>기업 고객사에 등록·확인된 주소</strong>이며, 발송 화면에서 직접 입력할 수 없습니다.<br>
+                            · 담당자 변경 시에는 보안을 위해 <strong>기존 수단으로 재인증</strong>이 필요합니다.<br>
+                            · 승인 담당자가 지정되지 않으면 API·솔루션 발송이 제한됩니다.
+                        </div>
+                    </div>
+
+                    <!-- 승인 현황 -->
+                    <div class="stat-summary" id="statSummary">
+                        <div class="stat-box">
+                            <div class="stat-box-label">승인 대기</div>
+                            <div class="stat-box-value" id="statPending" style="color: var(--primary-color);">-</div>
+                        </div>
+                        <div class="stat-box alert-box">
+                            <div class="stat-box-label">24시간 경과</div>
+                            <div class="stat-box-value" id="statOverdue" style="color: var(--danger-color);">-</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-label">고위험 발송</div>
+                            <div class="stat-box-value" id="statHighRisk" style="color: var(--warning-color);">-</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-label">금일 승인</div>
+                            <div class="stat-box-value" id="statApproved" style="color: var(--success-color);">-</div>
+                        </div>
+                    </div>
+
+                    <!-- 승인 대기 (API·솔루션 발송) -->
+                    <div class="card" id="pendingCard">
+                        <div class="flex-between mb-2">
+                            <h3 class="card-title">승인 대기 (API · 솔루션 · 모듈)</h3>
+                            <button type="button" class="btn btn-outline btn-sm" id="pendingResendBtn">승인 메일 재발송</button>
+                        </div>
+                        <p class="form-help" style="margin-bottom:16px;">
+                            연동 발송은 화면 입력이 없으므로 발송 후 승인 담당자 이메일로 승인 요청 메일이 발송됩니다.
+                            메일의 승인 링크에서 이메일 OTP 인증을 거쳐 처리합니다.
+                        </p>
+
+                        <div class="apv-table-wrap" id="pendingTableWrap">
+                            <table class="apv-table" id="pendingTable">
+                                <thead>
+                                    <tr>
+                                        <th>발송일시</th>
+                                        <th>경과</th>
+                                        <th>채널</th>
+                                        <th>발신번호</th>
+                                        <th>템플릿 · 패턴</th>
+                                        <th>건수</th>
+                                        <th>구분</th>
+                                        <th>메일 발송</th>
+                                        <th>처리</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingBody"></tbody>
+                            </table>
+                            <div class="apv-empty" id="pendingEmpty" style="display:none;">승인 대기 중인 발송이 없습니다.</div>
+                        </div>
+                    </div>
+
+                    <!-- 승인 이력 -->
+                    <div class="card" id="historyCard">
+                        <div class="flex-between mb-2">
+                            <h3 class="card-title">승인 이력</h3>
+                            <button type="button" class="btn btn-outline btn-sm" id="historyExportBtn">엑셀 다운로드</button>
+                        </div>
+
+                        <div class="apv-filter" id="historyFilter">
+                            <select class="form-select" id="historyPeriod" style="width:130px;">
+                                <option value="7">최근 7일</option>
+                                <option value="30" selected>최근 30일</option>
+                                <option value="90">최근 90일</option>
+                            </select>
+                            <select class="form-select" id="historyDecision" style="width:120px;">
+                                <option value="all">전체 구분</option>
+                                <option value="approve">승인</option>
+                                <option value="reject">반려</option>
+                            </select>
+                            <select class="form-select" id="historyMethod" style="width:160px;">
+                                <option value="all">전체 처리방식</option>
+                                <option value="send-time">발송 시 승인</option>
+                                <option value="single">개별 승인</option>
+                                <option value="bulk">패턴 일괄 승인</option>
+                            </select>
+                        </div>
+
+                        <div class="apv-table-wrap" id="historyTableWrap">
+                            <table class="apv-table" id="historyTable">
+                                <thead>
+                                    <tr>
+                                        <th>승인번호</th>
+                                        <th>처리일시</th>
+                                        <th>구분</th>
+                                        <th>대상 발송</th>
+                                        <th>채널</th>
+                                        <th>템플릿 · 패턴</th>
+                                        <th>건수</th>
+                                        <th>처리 방식</th>
+                                        <th>본인확인</th>
+                                        <th>처리자</th>
+                                        <th>사유</th>
+                                        <th>접속 IP</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyBody"></tbody>
+                            </table>
+                            <div class="apv-empty" id="historyEmpty" style="display:none;">조회 조건에 해당하는 이력이 없습니다.</div>
+                        </div>
+                    </div>
+
+                    <!-- 내부통제 -->
+                    <div class="card" id="controlCard">
+                        <div class="flex-between mb-2">
+                            <h3 class="card-title">내부통제 설정</h3>
+                            <span class="badge badge-muted">기업 고객사별 설정</span>
+                        </div>
+
+                        <div class="control-grid">
+                            <div class="control-item" id="controlNotify">
+                                <div class="control-item-head">
+                                    <span class="control-item-title">미확인 알림</span>
+                                    <label class="switch"><input type="checkbox" id="controlNotifyToggle" checked><span class="switch-slider"></span></label>
+                                </div>
+                                <span class="control-item-desc">발송 후 <strong>4시간</strong> 내 미확인 시 승인 담당자에게 메일 재발송</span>
+                                <span class="control-item-value" id="controlNotifyCount">-</span>
+                            </div>
+
+                            <div class="control-item" id="controlRenotify">
+                                <div class="control-item-head">
+                                    <span class="control-item-title">재알림</span>
+                                    <label class="switch"><input type="checkbox" id="controlRenotifyToggle" checked><span class="switch-slider"></span></label>
+                                </div>
+                                <span class="control-item-desc"><strong>24시간</strong> 경과 미확인 건에 대해 4시간 주기 재알림</span>
+                                <span class="control-item-value" id="controlRenotifyCount">-</span>
+                            </div>
+
+                            <div class="control-item" id="controlAudit">
+                                <div class="control-item-head">
+                                    <span class="control-item-title">반복 미확인 점검</span>
+                                    <label class="switch"><input type="checkbox" id="controlAuditToggle" checked><span class="switch-slider"></span></label>
+                                </div>
+                                <span class="control-item-desc"><strong>3회</strong> 이상 재알림에도 미확인 시 운영팀 점검 대상으로 등록</span>
+                                <span class="control-item-value" id="controlAuditCount">-</span>
+                            </div>
+
+                            <div class="control-item" id="controlRestrict">
+                                <div class="control-item-head">
+                                    <span class="control-item-title">고위험 발송 임시제한</span>
+                                    <label class="switch"><input type="checkbox" id="controlRestrictToggle" checked><span class="switch-slider"></span></label>
+                                </div>
+                                <span class="control-item-desc">점검 대상 상태에서 <strong>대량·광고성 발송</strong>을 승인 시점까지 임시 제한</span>
+                                <span class="control-item-value" id="controlRestrictCount">-</span>
+                            </div>
+                        </div>
+
+                        <div class="apv-notice" id="controlNotice">
+                            · 24시간 내 사후승인이 지연되었다는 사유만으로 발송이 즉시 중지되지는 않습니다. 미확인 알림·재알림과 반복 미확인 점검을 통해 단계적으로 통제합니다.<br>
+                            · 승인 이력은 <strong>수정·삭제할 수 없으며</strong>, 승인번호·처리자·처리일시·본인확인 수단·접속 IP가 함께 보관됩니다.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        /* ===== 발송 사후승인 관리 (보안심사 3.5-④) =====
+         * 승인 수단은 이메일 OTP. 데이터·유틸은 js/approval-data.js 공용.
+         *   GET/PUT /api/send-approval/control       승인 담당자·내부통제 설정
+         *   GET     /api/send-approval/pending       승인 대기 목록
+         *   POST    /api/send-approval/request/resend 승인 요청 메일 재발송
+         *   GET     /api/send-approval/history       승인 이력
+         */
+
+        /* ---------- 승인 수단 ---------- */
+
+        function renderApprover() {
+            document.getElementById('approverEmail').textContent = apvMaskEmail(APPROVAL_ADMIN.email);
+            document.getElementById('approverName').textContent = APPROVAL_ADMIN.name;
+            document.getElementById('approverCompany').textContent = APPROVAL_ADMIN.company;
+        }
+
+        /* 담당자 변경 — 기존 수단(이메일 OTP)으로 재확인 후 진행 (3.4-③ 기준과 동일) */
+        document.getElementById('approverChangeBtn').addEventListener('click', function () {
+            openEmailOtpAuth({
+                title: '본인 재확인',
+                description: '승인 담당자 변경을 위해 기존에 등록된<br>담당자 이메일로 인증번호를 보내드립니다.',
+                confirmText: '재확인',
+                email: APPROVAL_ADMIN.email,
+                onSuccess: function () {
+                    var next = prompt('변경할 승인 담당자 이메일을 입력해주세요.', '');
+                    if (!next) return;
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(next.trim())) {
+                        apvToast('이메일 형식을 확인해주세요.', 'warning');
+                        return;
+                    }
+                    openEmailOtpAuth({
+                        title: '새 담당자 이메일 인증',
+                        description: '변경할 담당자 이메일로<br>인증번호를 보내드립니다.',
+                        confirmText: '변경 완료',
+                        email: next.trim(),
+                        onSuccess: function () {
+                            APPROVAL_ADMIN.email = next.trim();
+                            renderApprover();
+                            apvToast('승인 담당자가 변경되었습니다.', 'success');
+                        }
+                    });
+                }
+            });
+        });
+
+        document.getElementById('approverTestBtn').addEventListener('click', function () {
+            apvToast(apvMaskEmail(APPROVAL_ADMIN.email) + ' 로 테스트 승인 메일을 보냈습니다.', 'info');
+        });
+
+        /* ---------- 승인 대기 ---------- */
+
+        function renderPending() {
+            var list = apvLoadPending();
+            var body = document.getElementById('pendingBody');
+            var empty = document.getElementById('pendingEmpty');
+
+            body.innerHTML = list.map(function (p) {
+                var overdue = apvIsOverdue(p);
+                var elapsedClass = overdue ? 'elapsed-over'
+                    : (apvHoursSince(p.sentAt) >= APPROVAL_NOTIFY_HOURS ? 'elapsed-warn' : '');
+
+                var marks = [];
+                if (p.risk === 'high') marks.push('<span class="badge badge-warning" title="' + apvEscape(p.riskReason) + '">고위험</span>');
+                if (p.restricted) marks.push('<span class="badge badge-danger">임시제한</span>');
+                if (p.patternApproval) marks.push('<span class="badge badge-success">패턴 승인 대상</span>');
+                if (!marks.length) marks.push('<span class="badge badge-muted">일반</span>');
+
+                return '<tr class="' + (overdue ? 'row-overdue' : '') + '">' +
+                    '<td class="nowrap">' + p.sentAt + '</td>' +
+                    '<td class="nowrap ' + elapsedClass + '">' + apvElapsed(p.sentAt) + '</td>' +
+                    '<td class="nowrap"><span class="badge badge-primary">' + p.channel + '</span></td>' +
+                    '<td class="nowrap">' + p.caller + '</td>' +
+                    '<td>' +
+                        '<div class="template-name">' + apvEscape(p.template) + '</div>' +
+                        '<div class="template-pattern">' + p.pattern + ' · ' + p.msgType + '</div>' +
+                    '</td>' +
+                    '<td class="nowrap">' + apvComma(p.count) + '건</td>' +
+                    '<td class="nowrap">' + marks.join(' ') + '</td>' +
+                    '<td class="nowrap">' + (p.mailSent || 1) + '회</td>' +
+                    '<td class="nowrap"><a href="approval-email.html?id=' + p.id + '" class="btn btn-outline btn-sm">승인 화면</a></td>' +
+                '</tr>';
+            }).join('');
+
+            body.style.display = list.length ? '' : 'none';
+            empty.style.display = list.length ? 'none' : 'block';
+            document.getElementById('pendingResendBtn').disabled = !list.length;
+
+            renderStats();
+            renderControl();
+        }
+
+        document.getElementById('pendingResendBtn').addEventListener('click', function () {
+            var n = apvLoadPending().length;
+            apvToast('승인 대기 ' + n + '건의 승인 요청 메일을 재발송했습니다.', 'success');
+        });
+
+        function renderStats() {
+            var list = apvLoadPending();
+            document.getElementById('statPending').textContent = apvComma(list.length);
+            document.getElementById('statOverdue').textContent = apvComma(list.filter(apvIsOverdue).length);
+            document.getElementById('statHighRisk').textContent = apvComma(list.filter(function (p) { return p.risk === 'high'; }).length);
+
+            var today = apvDateOnly(new Date());
+            var todayRows = apvLoadHistory().filter(function (h) {
+                return h.at.slice(0, 10) === today && h.decision === 'approve';
+            });
+            document.getElementById('statApproved').textContent = apvComma(todayRows.length);
+        }
+
+        /* ---------- 승인 이력 ---------- */
+
+        var METHOD_LABEL = {
+            'send-time': '<span class="badge badge-primary">발송 시 승인</span>',
+            'single': '<span class="badge badge-muted">개별</span>',
+            'bulk': '<span class="badge badge-success">패턴 일괄</span>'
+        };
+
+        function renderHistory() {
+            var days = parseInt(document.getElementById('historyPeriod').value, 10);
+            var decision = document.getElementById('historyDecision').value;
+            var method = document.getElementById('historyMethod').value;
+            var limit = Date.now() - days * 86400000;
+
+            var filtered = apvLoadHistory().filter(function (h) {
+                if (apvParse(h.at).getTime() < limit) return false;
+                if (decision !== 'all' && h.decision !== decision) return false;
+                if (method !== 'all' && h.method !== method) return false;
+                return true;
+            });
+
+            var body = document.getElementById('historyBody');
+            var empty = document.getElementById('historyEmpty');
+
+            body.innerHTML = filtered.map(function (h) {
+                var badge = h.decision === 'approve'
+                    ? '<span class="badge badge-success">승인</span>'
+                    : '<span class="badge badge-danger">반려</span>';
+                var verify = h.verify === 'email-otp'
+                    ? '<span class="badge badge-primary">이메일 OTP</span>'
+                    : '<span class="badge badge-muted">' + (h.verify || '-') + '</span>';
+                return '<tr>' +
+                    '<td class="nowrap apv-no">' + (h.approvalNo || '-') + '</td>' +
+                    '<td class="nowrap">' + h.at + '</td>' +
+                    '<td class="nowrap">' + badge + '</td>' +
+                    '<td class="nowrap">' + h.target + '</td>' +
+                    '<td class="nowrap">' + h.channel + '</td>' +
+                    '<td>' +
+                        '<div class="template-name">' + apvEscape(h.template) + '</div>' +
+                        '<div class="template-pattern">' + h.pattern + '</div>' +
+                    '</td>' +
+                    '<td class="nowrap">' + apvComma(h.count) + '건</td>' +
+                    '<td class="nowrap">' + (METHOD_LABEL[h.method] || '-') + '</td>' +
+                    '<td class="nowrap">' + verify + '</td>' +
+                    '<td class="nowrap">' + apvEscape(h.actor) + '</td>' +
+                    '<td>' + (h.reason ? apvEscape(h.reason) : '<span style="color:var(--text-muted);">-</span>') + '</td>' +
+                    '<td class="nowrap">' + h.ip + '</td>' +
+                '</tr>';
+            }).join('');
+
+            body.style.display = filtered.length ? '' : 'none';
+            empty.style.display = filtered.length ? 'none' : 'block';
+        }
+
+        ['historyPeriod', 'historyDecision', 'historyMethod'].forEach(function (id) {
+            document.getElementById(id).addEventListener('change', renderHistory);
+        });
+
+        document.getElementById('historyExportBtn').addEventListener('click', function () {
+            apvToast('승인 이력을 엑셀로 내려받습니다.', 'info');
+        });
+
+        /* ---------- 내부통제 ---------- */
+
+        function renderControl() {
+            var control = apvLoadControl();
+            var list = apvLoadPending();
+
+            document.getElementById('controlNotifyToggle').checked = control.notify;
+            document.getElementById('controlRenotifyToggle').checked = control.renotify;
+            document.getElementById('controlAuditToggle').checked = control.audit;
+            document.getElementById('controlRestrictToggle').checked = control.restrict;
+
+            var notifyTargets = list.filter(function (p) { return apvHoursSince(p.sentAt) >= APPROVAL_NOTIFY_HOURS; });
+            var renotifyTargets = list.filter(apvIsOverdue);
+            var auditTargets = list.filter(function (p) { return (p.mailSent || 1) >= APPROVAL_AUDIT_COUNT; });
+            var restricted = list.filter(function (p) { return p.restricted; });
+
+            document.getElementById('controlNotifyCount').textContent = control.notify ? notifyTargets.length + '건 발송' : '사용 안 함';
+            document.getElementById('controlRenotifyCount').textContent = control.renotify ? renotifyTargets.length + '건 대상' : '사용 안 함';
+            document.getElementById('controlAuditCount').textContent = control.audit ? auditTargets.length + '건 점검' : '사용 안 함';
+            document.getElementById('controlRestrictCount').textContent = control.restrict ? restricted.length + '건 제한' : '사용 안 함';
+        }
+
+        [['controlNotifyToggle', 'notify'], ['controlRenotifyToggle', 'renotify'],
+         ['controlAuditToggle', 'audit'], ['controlRestrictToggle', 'restrict']].forEach(function (pair) {
+            document.getElementById(pair[0]).addEventListener('change', function () {
+                var control = apvLoadControl();
+                control[pair[1]] = this.checked;
+                apvSaveControl(control);
+                renderControl();
+                apvToast('내부통제 설정이 저장되었습니다.', 'success');
+            });
+        });
+
+        /* ---------- 초기화 ---------- */
+
+        renderApprover();
+        renderPending();
+        renderHistory();
+
+        document.addEventListener('DOMContentLoaded', function () { initDropdownMenus(); });
+    </script>
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            { selector: '#mypageLnb', title: '좌측 메뉴 (LNB)', position: { top: '-5px', left: '-10px' }, function: '마이페이지 내 이동', behavior: ['마이페이지 / 내정보수정 / 비밀번호변경 / 2차 인증 설정 / 발신번호관리 / 발송 사후승인 / 이용내역'] },
+            { selector: '#lnbApproval', title: '발송 사후승인 (현재)', position: { top: '-5px', left: '-10px' }, function: '현재 페이지' },
+
+            {
+                selector: '#approvalGuide',
+                title: '사후승인 제도 안내',
+                position: { top: '-5px', left: '-10px' },
+                function: '사후승인 주체·방식·유효시간 고지',
+                behavior: [
+                    '승인 주체는 문자재판매사업자가 아니라 서비스를 이용하는 기업 고객사의 관리자·담당자임을 명시',
+                    '항목해설이 허용하는 방식(전자결재 · 관리자 콘솔 승인 · 이메일 승인 · 서면 결재) 중 이메일 승인을 채택했음을 명시',
+                    '문자 발송 시 6자리 인증번호 입력으로 승인이 이뤄짐을 안내',
+                    '인증 후 30분 유효, 재인증 조건 안내'
+                ],
+                tags: [{ text: '심사 3.5-④', type: 'required' }]
+            },
+            {
+                selector: '#approverCard',
+                title: '승인 수단',
+                position: { top: '10px', left: '10px' },
+                function: '발송 승인에 사용하는 이메일 OTP 수단·담당자 조회',
+                behavior: [
+                    '승인 방식(이메일 OTP, 6자리·유효시간 3분), 승인 담당자(마스킹), 기업 고객사 표시',
+                    '인증 유효시간 30분과 재인증 조건을 함께 노출',
+                    '승인 담당자가 없으면 API·솔루션 발송이 제한됨'
+                ],
+                api: 'GET /api/send-approval/control',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#approverRow',
+                title: '승인 담당자 이메일',
+                position: { top: '-5px', right: '-10px' },
+                function: '기업 고객사에 등록·확인된 승인 담당자 주소',
+                behavior: [
+                    '개인정보 보호를 위해 마스킹 노출 (ad****@ibank.co.kr)',
+                    '발송 화면에서 직접 입력할 수 없음 — 심사 3.4-② 등록·확인된 정보와의 연계 근거'
+                ]
+            },
+            {
+                selector: '#approverChangeBtn',
+                title: '승인 담당자 변경',
+                position: { top: '-5px', left: '-10px' },
+                function: '승인 담당자 이메일 변경 — 기존 수단 재확인 후 진행',
+                behavior: [
+                    '【1단계】 기존 담당자 이메일로 OTP 재인증 (본인 재확인)',
+                    '【2단계】 변경할 새 이메일 입력 → 해당 주소로 OTP 인증',
+                    '두 단계 모두 통과해야 변경 완료',
+                    '심사 3.4-③ "변경 과정에서의 재확인"과 동일 기준'
+                ],
+                api: 'PUT /api/send-approval/control',
+                tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#approverTestBtn',
+                title: '테스트 메일 발송',
+                position: { top: '-5px', left: '-10px' },
+                function: '승인 담당자 주소로 승인 메일이 정상 수신되는지 점검',
+                api: 'POST /api/send-approval/otp/send'
+            },
+            {
+                selector: '#approverMailPreviewBtn',
+                title: '승인 메일 미리보기',
+                position: { top: '-5px', right: '-10px' },
+                function: '담당자에게 발송되는 승인 요청 메일 양식 확인',
+                behavior: ['새 창으로 email-approval-request.html 열림', '심사 증빙자료(승인 요청 메일 캡처)로 사용']
+            },
+            {
+                selector: '#statSummary',
+                title: '승인 현황 요약',
+                position: { top: '-5px', left: '-10px' },
+                function: '승인 대기 / 24시간 경과 / 고위험 / 금일 승인 집계',
+                api: 'GET /api/send-approval/summary',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#pendingCard',
+                title: '승인 대기 (연동 발송)',
+                position: { top: '10px', left: '10px' },
+                function: 'API·솔루션·모듈 발송 중 아직 승인되지 않은 건',
+                behavior: [
+                    '연동 발송은 화면 입력이 없으므로 발송 후 승인 요청 메일로 처리',
+                    '24시간 경과 행은 배경을 붉게 강조, 4시간 경과는 주황 표기',
+                    '구분 배지: 고위험 / 임시제한 / 패턴 승인 대상 / 일반',
+                    '메일 발송 횟수(재알림 포함) 표시',
+                    '"승인 화면" 클릭 시 이메일 승인 화면(approval-email.html)으로 이동'
+                ],
+                api: 'GET /api/send-approval/pending',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#pendingResendBtn',
+                title: '승인 메일 재발송',
+                position: { top: '-5px', right: '-10px' },
+                function: '승인 대기 건의 승인 요청 메일을 담당자에게 다시 발송',
+                api: 'POST /api/send-approval/request/resend',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#pendingEmpty',
+                title: '대기 건 없음 안내',
+                position: { top: '-5px', left: '-10px' },
+                function: '승인 대기 건이 없을 때 노출',
+                tags: [{ text: '조건부', type: 'info' }]
+            },
+            {
+                selector: '#historyCard',
+                title: '승인 이력',
+                position: { top: '10px', left: '10px' },
+                function: '승인(확인) 사실을 입증하는 이력',
+                behavior: [
+                    '심사 증빙자료 "기업관리자 사후승인 이력"에 해당',
+                    '컬럼: 승인번호 / 처리일시 / 구분 / 대상 발송 / 채널 / 템플릿·패턴 / 건수 / 처리 방식 / 본인확인 / 처리자 / 사유 / 접속 IP',
+                    '본인확인 수단(이메일 OTP)을 함께 기록해 승인 주체를 입증',
+                    '처리 방식: 발송 시 승인(웹 발송) / 개별 승인 / 패턴 일괄 승인',
+                    '이력은 수정·삭제할 수 없음'
+                ],
+                api: 'GET /api/send-approval/history',
+                tags: [{ text: 'API', type: 'api' }, { text: '심사 3.5-④', type: 'required' }]
+            },
+            {
+                selector: '#historyFilter',
+                title: '이력 조회 필터',
+                position: { top: '-5px', left: '-10px' },
+                function: '기간 · 처리 구분 · 처리 방식별 필터링',
+                behavior: [
+                    '기간: 최근 7일 / 30일(기본) / 90일',
+                    '구분: 전체 / 승인 / 반려',
+                    '처리 방식: 전체 / 발송 시 승인 / 개별 승인 / 패턴 일괄 승인',
+                    '변경 즉시 목록 재조회'
+                ]
+            },
+            {
+                selector: '#historyExportBtn',
+                title: '엑셀 다운로드',
+                position: { top: '-5px', right: '-10px' },
+                function: '조회된 승인 이력을 엑셀로 내려받기',
+                behavior: ['심사 증빙자료 제출용'],
+                api: 'GET /api/send-approval/history/export',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#historyEmpty',
+                title: '이력 없음 안내',
+                position: { top: '-5px', left: '-10px' },
+                function: '조회 조건에 해당하는 이력이 없을 때 노출',
+                tags: [{ text: '조건부', type: 'info' }]
+            },
+            {
+                selector: '#controlCard',
+                title: '내부통제 설정',
+                position: { top: '10px', left: '10px' },
+                function: '사후승인 지연에 대한 단계적 통제 설정·현황',
+                behavior: [
+                    '미확인 알림(4h) → 재알림(24h) → 반복 미확인 점검(3회) → 고위험 임시제한의 4단계',
+                    '각 항목은 토글로 사용 여부를 설정하고 현재 대상 건수를 표시',
+                    '24시간 지연만으로 즉시 발송이 중지되지 않는다는 점을 함께 고지'
+                ],
+                api: 'GET/PUT /api/send-approval/control',
+                tags: [{ text: 'API', type: 'api' }, { text: '심사 3.5-④', type: 'required' }]
+            },
+            {
+                selector: '#controlRestrict',
+                title: '고위험 발송 임시제한',
+                position: { top: '-5px', right: '-10px' },
+                function: '점검 대상 상태에서 대량·광고성 발송을 승인 시점까지 임시 제한',
+                behavior: ['임시제한된 건은 목록에 "임시제한" 배지로 표시']
+            }
+        ];
+        // 오버레이는 첫 토글 때 마커를 한 번만 만든다 — 인증 모달을 미리 DOM 에 올려 마커 누락을 막는다
+        if (typeof mountAlimtalkAuth === 'function') mountAlimtalkAuth();
+        initSpecOverlay(specData);
+    </script>
+</body>
+</html>

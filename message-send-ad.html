@@ -7,6 +7,7 @@
     <title>광고문자 발송 - 메시징 서비스</title>
     <script src="js/header.js"></script>
     <script src="js/alimtalk-auth.js"></script>
+    <script src="js/approval-data.js"></script>
     <style>/* 공통 스타일 */
 * {
     margin: 0;
@@ -4197,20 +4198,41 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             var desc = state.reason
-                ? state.reason + '<br>등록된 번호로 카카오톡 알림톡을 보내드립니다.'
-                : '발신번호와 계정의 연계 확인을 위해<br>등록된 번호로 카카오톡 알림톡을 보내드립니다.';
+                ? state.reason + '<br>등록된 담당자 이메일로 인증번호를 보내드립니다.'
+                : '발송 승인을 위해 등록된 담당자 이메일로<br>인증번호 6자리를 보내드립니다.';
 
-            openAlimtalkAuth({
-                title: '발송 추가 인증',
+            // 기업관리자 사후승인 — 이메일 OTP (3.5-④)
+            openEmailOtpAuth({
+                title: '발송 승인 인증',
                 description: desc,
                 confirmText: '인증하고 발송하기',
-                phone: getCallerAuthPhone(caller),
+                email: getApprovalEmail(),
                 callerNumber: caller || '-',
                 onSuccess: function () {
                     markSendAuthenticated(ctx);
+                    recordSendApproval(ctx);
                     closeModal('sendConfirmModal');
                     executeActualSend();
                 }
+            });
+        }
+
+        /* 승인 담당자 이메일 — 기업 고객사에 등록·확인된 값.
+         * 실제 연동 시 GET /api/send-approval/control 의 approverEmail 로 대체한다. */
+        function getApprovalEmail() {
+            return (typeof APPROVAL_ADMIN !== 'undefined' && APPROVAL_ADMIN.email)
+                ? APPROVAL_ADMIN.email
+                : 'admin@ibank.co.kr';
+        }
+
+        /* 이메일 OTP 인증으로 확인된 승인 사실을 이력에 남긴다 (3.5-④ 입증자료). */
+        function recordSendApproval(ctx) {
+            if (typeof apvRecordSendApproval !== 'function') return;
+            apvRecordSendApproval({
+                channel: '웹 발송',
+                caller: ctx.callerNumber || '-',
+                count: ctx.recipientCount || 0,
+                template: '직접 작성'
             });
         }
 
@@ -5312,9 +5334,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // 발송 추가 인증 (알림톡) 팝업
             {
                 selector: '#alimtalkAuthModal',
-                title: '발송 추가 인증 (알림톡) 팝업',
+                title: '발송 승인 인증 (이메일 OTP) 팝업',
                 position: { top: '60px', left: '20px' },
-                function: '발송 전 추가 인증 (카카오톡 알림톡 인증번호)',
+                function: '발송 전 기업관리자 승인 — 이메일 OTP 인증번호 (보안심사 3.5-④)',
                 behavior: [
                     '발송 확인 모달에서 "발송하기" 클릭 → 유효성 검증 통과 후 노출',
                     '1단계: 휴대폰 번호 입력 → 알림톡으로 인증번호 6자리 발송',
