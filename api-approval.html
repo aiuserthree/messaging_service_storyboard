@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>발송 사후승인 - 메시징 서비스</title>
+    <script src="js/header.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/alimtalk-auth.js"></script>
+    <style>
+/* 공통 스타일 - send-result.html / mypage-mfa.html 과 동일한 토큰 사용 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --bg-color: #f8fafc;
+    --surface-color: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-color);
+}
+
+/* 버튼 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    gap: 8px;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background-color: var(--primary-color); color: white; }
+.btn-primary:hover:not(:disabled) { background-color: var(--primary-hover); }
+.btn-outline { background-color: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+.btn-outline:hover:not(:disabled) { background-color: var(--bg-color); }
+.btn-danger { background-color: var(--danger-color); color: white; }
+.btn-danger:hover:not(:disabled) { background-color: #dc2626; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* 입력 필드 */
+.form-group { margin-bottom: 20px; }
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.form-label.required::after { content: ' *'; color: var(--danger-color); }
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.form-textarea { resize: vertical; min-height: 88px; }
+.form-help { margin-top: 4px; font-size: 12px; color: var(--text-secondary); }
+.form-error { margin-top: 6px; font-size: 12px; color: var(--danger-color); }
+
+/* 카드 */
+.card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 24px;
+}
+.card-title { font-size: 18px; font-weight: 600; color: var(--text-primary); }
+
+/* 배지 */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+.badge-primary { background-color: rgba(37, 99, 235, 0.1); color: var(--primary-color); }
+.badge-success { background-color: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+.badge-danger { background-color: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+.badge-warning { background-color: rgba(245, 158, 11, 0.1); color: var(--warning-color); }
+.badge-muted { background-color: #f1f5f9; color: var(--text-secondary); }
+
+/* 알림 */
+.alert { padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px; font-size: 13px; line-height: 1.8; }
+.alert-info { background-color: rgba(37, 99, 235, 0.06); border: 1px solid rgba(37, 99, 235, 0.2); color: var(--text-primary); }
+.alert-info strong { color: var(--primary-color); }
+
+/* 탭 */
+.tabs { border-bottom: 1px solid var(--border-color); margin-bottom: 24px; }
+.tab-list { display: flex; gap: 8px; }
+.tab-item {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+.tab-item:hover { color: var(--text-primary); }
+.tab-item.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+
+/* 테이블 */
+.table-container { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th, .table td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border-color); }
+.table th { background-color: var(--bg-color); font-weight: 600; color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+.table tbody tr:hover { background-color: #fafcff; }
+.table .nowrap { white-space: nowrap; }
+.table-empty { text-align: center; padding: 48px 0; color: var(--text-muted); font-size: 13px; }
+
+/* 유틸리티 */
+.flex { display: flex; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.gap-2 { gap: 16px; }
+.mb-2 { margin-bottom: 16px; }
+
+/* 레이아웃 */
+.app-container { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* 헤더 */
+.header {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+.logo h1 { font-size: 28px; font-weight: 700; color: var(--primary-color); margin: 0; }
+.logo a { text-decoration: none; color: inherit; display: block; }
+.logo a:hover h1 { opacity: 0.8; }
+.main-nav { display: flex; gap: 4px; flex: 1; justify-content: center; position: relative; }
+.nav-item {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.nav-item:hover { background-color: var(--bg-color); color: var(--text-primary); }
+.nav-item.active { background-color: rgba(37, 99, 235, 0.1); color: var(--primary-color); }
+.nav-item.has-dropdown { position: relative; }
+.nav-item.has-dropdown .nav-link::after {
+    content: '▼';
+    font-size: 10px;
+    margin-left: 4px;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+.nav-item.has-dropdown.open .nav-link::after { transform: rotate(180deg); }
+.nav-item.has-dropdown .nav-link { text-decoration: none; color: inherit; display: flex; align-items: center; }
+.nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s;
+    z-index: 1000;
+    padding: 8px 0;
+}
+.nav-item.open .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.nav-dropdown-item {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.2s;
+}
+.nav-dropdown-item:hover { background-color: var(--bg-color); color: var(--primary-color); }
+.nav-dropdown-item.active { background-color: rgba(37, 99, 235, 0.1); color: var(--primary-color); font-weight: 600; }
+.header-actions { display: flex; align-items: center; gap: 16px; }
+.balance-info { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: var(--bg-color); border-radius: var(--radius-md); }
+.balance-label { font-size: 12px; color: var(--text-secondary); }
+.balance-amount { font-weight: 600; color: var(--primary-color); }
+
+.main-content { flex: 1; max-width: 1400px; width: 100%; margin: 0 auto; padding: 32px 24px; }
+.page-header { margin-bottom: 32px; }
+.page-header h2 { font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+.page-description { color: var(--text-secondary); font-size: 14px; }
+
+/* ===== 사후승인 콘솔 ===== */
+
+/* 승인 권한자 정보 */
+.approver-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+}
+.approver-item { display: flex; flex-direction: column; gap: 4px; padding: 0 24px; border-left: 1px solid var(--border-color); }
+.approver-item:first-child { padding-left: 0; border-left: none; }
+.approver-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+.approver-value { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+
+/* 통계 요약 */
+.stat-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.stat-box {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    text-align: center;
+}
+.stat-box.alert-box { border-color: rgba(239, 68, 68, 0.35); background: rgba(239, 68, 68, 0.03); }
+.stat-box-label { color: var(--text-secondary); font-size: 13px; }
+.stat-box-value { font-size: 30px; font-weight: 700; margin: 8px 0 0; }
+
+/* 필터 */
+.filter-section {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+}
+.filter-row { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+.filter-group { flex: 1; min-width: 160px; }
+.filter-group .form-label { margin-bottom: 8px; font-size: 13px; }
+.filter-group.date-range { flex: 0 0 auto; min-width: 330px; }
+.date-range-group { display: flex; align-items: center; gap: 8px; }
+.date-range-group .form-input { min-width: 145px; }
+.date-range-separator { color: var(--text-secondary); font-weight: 500; flex-shrink: 0; }
+
+/* 일괄 처리 바 */
+.bulk-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+}
+.bulk-selected { font-size: 13px; color: var(--text-secondary); }
+.bulk-selected strong { color: var(--primary-color); font-size: 15px; }
+.bulk-actions { display: flex; gap: 8px; margin-left: auto; }
+
+/* 대기 목록 행 강조 */
+.row-overdue { background-color: rgba(239, 68, 68, 0.04); }
+.row-overdue:hover { background-color: rgba(239, 68, 68, 0.07) !important; }
+.elapsed-over { color: var(--danger-color); font-weight: 700; }
+.elapsed-warn { color: var(--warning-color); font-weight: 600; }
+.template-cell { min-width: 200px; }
+.template-name { font-weight: 600; color: var(--text-primary); }
+.template-pattern { font-size: 11px; color: var(--text-muted); }
+.content-preview {
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+}
+.row-check { width: 36px; text-align: center; }
+.row-check input { width: 16px; height: 16px; cursor: pointer; }
+
+/* 내부통제 */
+.control-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.control-item {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.control-item-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.control-item-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.control-item-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+.control-item-value { font-size: 20px; font-weight: 700; color: var(--primary-color); }
+
+/* 토글 스위치 */
+.switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #cbd5e1;
+    border-radius: 22px;
+    transition: 0.2s;
+}
+.switch-slider::before {
+    content: '';
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+.switch input:checked + .switch-slider { background-color: var(--primary-color); }
+.switch input:checked + .switch-slider::before { transform: translateX(18px); }
+
+/* 처리 모달 */
+.approval-target {
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.8;
+    max-height: 180px;
+    overflow-y: auto;
+}
+.approval-target strong { color: var(--text-primary); }
+.decision-group { display: flex; gap: 12px; margin-bottom: 20px; }
+.decision-option {
+    flex: 1;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+}
+.decision-option:hover { background: var(--bg-color); }
+.decision-option.selected { border-color: var(--primary-color); background: rgba(37, 99, 235, 0.05); }
+.decision-option.selected.reject { border-color: var(--danger-color); background: rgba(239, 68, 68, 0.05); }
+.decision-option input { width: 16px; height: 16px; }
+.decision-option-label { font-weight: 600; font-size: 14px; }
+.approval-notice {
+    background: rgba(37, 99, 235, 0.05);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-top: 16px;
+}
+
+/* 발송 내용 상세 */
+.detail-row { display: grid; grid-template-columns: 110px 1fr; gap: 10px 16px; font-size: 13px; margin-bottom: 16px; }
+.detail-row dt { color: var(--text-secondary); font-weight: 500; }
+.detail-row dd { color: var(--text-primary); font-weight: 600; }
+.detail-message {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    background: #f8fafc;
+    font-size: 13px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 900px) {
+    .approver-item { padding: 12px 0; border-left: none; border-top: 1px solid var(--border-color); width: 100%; }
+    .approver-item:first-child { border-top: none; padding-top: 0; }
+    .bulk-actions { margin-left: 0; width: 100%; }
+    .decision-group { flex-direction: column; }
+}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader());
+        </script>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <div class="page-header" id="pageHeader">
+                <h2>발송 사후승인</h2>
+                <p class="page-description">API·솔루션·모듈로 발송된 메시지를 기업관리자가 사후 확인하고 승인·반려합니다</p>
+            </div>
+
+            <!-- 탭 메뉴 -->
+            <div class="tabs" id="tabMenu">
+                <div class="tab-list">
+                    <button class="tab-item" data-tab="send-reservation" onclick="window.location.href='send-reservation.html'">예약내역</button>
+                    <button class="tab-item" data-tab="send-result" onclick="window.location.href='send-result.html'">발송결과</button>
+                    <button class="tab-item active" data-tab="api-approval">발송 사후승인</button>
+                </div>
+            </div>
+
+            <!-- 제도 안내 -->
+            <div class="alert alert-info" id="approvalGuide">
+                <strong>기업관리자 사후승인</strong>이란, API·솔루션·모듈 연동으로 발송된 메시지를 <strong>서비스를 이용하는 기업 고객사의 관리자·담당자</strong>가 사후에 확인하고 승인하는 절차입니다.<br>
+                · 발송 건마다 <strong>승인(확인) 사실이 이력으로 기록</strong>되며, 처리자·처리일시·사유·접속 IP가 함께 저장됩니다.<br>
+                · 동일 템플릿·인증번호 발송·정형화된 시스템 안내 메시지는 <strong>패턴 단위 일괄 승인</strong>이 가능합니다.<br>
+                · 24시간 내 미확인 건은 담당자에게 <strong>재알림</strong>이 발송되며, 반복 미확인 시 고위험 발송은 임시 제한됩니다.
+            </div>
+
+            <!-- 승인 권한자 정보 -->
+            <div class="approver-bar" id="approverBar">
+                <div class="approver-item">
+                    <span class="approver-label">기업 고객사</span>
+                    <span class="approver-value" id="approverCompany">(주)아이뱅크</span>
+                </div>
+                <div class="approver-item">
+                    <span class="approver-label">기업관리자</span>
+                    <span class="approver-value" id="approverName">김담당 (admin@ibank.co.kr)</span>
+                </div>
+                <div class="approver-item">
+                    <span class="approver-label">승인 권한</span>
+                    <span class="approver-value"><span class="badge badge-primary">발송 승인·반려</span></span>
+                </div>
+                <div class="approver-item">
+                    <span class="approver-label">연동 채널</span>
+                    <span class="approver-value" id="approverChannels">API · 솔루션 · 모듈</span>
+                </div>
+            </div>
+
+            <!-- 통계 요약 -->
+            <div class="stat-summary" id="statSummary">
+                <div class="stat-box">
+                    <div class="stat-box-label">승인 대기</div>
+                    <div class="stat-box-value" id="statPending" style="color: var(--primary-color);">-</div>
+                </div>
+                <div class="stat-box alert-box">
+                    <div class="stat-box-label">24시간 경과</div>
+                    <div class="stat-box-value" id="statOverdue" style="color: var(--danger-color);">-</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-label">고위험 발송</div>
+                    <div class="stat-box-value" id="statHighRisk" style="color: var(--warning-color);">-</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-label">금일 승인</div>
+                    <div class="stat-box-value" id="statApproved" style="color: var(--success-color);">-</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-label">금일 반려</div>
+                    <div class="stat-box-value" id="statRejected" style="color: var(--text-secondary);">-</div>
+                </div>
+            </div>
+
+            <!-- 승인 대기 목록 -->
+            <div class="card" id="pendingCard">
+                <div class="flex-between mb-2">
+                    <h3 class="card-title">승인 대기 목록</h3>
+                    <span class="badge badge-muted" id="pendingUpdatedAt">-</span>
+                </div>
+
+                <div class="filter-section" id="pendingFilter">
+                    <div class="filter-row">
+                        <div class="filter-group date-range">
+                            <label class="form-label">발송일시</label>
+                            <div class="date-range-group">
+                                <input type="date" class="form-input" id="pendingStartDate">
+                                <span class="date-range-separator">~</span>
+                                <input type="date" class="form-input" id="pendingEndDate">
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">발송 채널</label>
+                            <select class="form-select" id="pendingChannel">
+                                <option value="all">전체</option>
+                                <option value="API">API</option>
+                                <option value="솔루션">솔루션</option>
+                                <option value="모듈">모듈</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">발신번호</label>
+                            <select class="form-select" id="pendingCaller">
+                                <option value="all">전체</option>
+                                <option value="02-1234-5678">02-1234-5678</option>
+                                <option value="1600-0000">1600-0000</option>
+                                <option value="010-1234-5678">010-1234-5678</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">위험도</label>
+                            <select class="form-select" id="pendingRisk">
+                                <option value="all">전체</option>
+                                <option value="high">고위험만</option>
+                                <option value="overdue">24시간 경과만</option>
+                                <option value="restricted">임시제한만</option>
+                            </select>
+                        </div>
+                        <div class="filter-group" style="flex: 0 0 auto; min-width: auto;">
+                            <button type="button" class="btn btn-outline" id="pendingResetBtn">초기화</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bulk-bar" id="bulkBar">
+                    <label class="flex" style="align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+                        <input type="checkbox" id="pendingCheckAll" style="width:16px;height:16px;cursor:pointer;">
+                        전체 선택
+                    </label>
+                    <span class="bulk-selected">선택 <strong id="bulkCount">0</strong>건 / <span id="bulkMsgCount">0</span>건 발송분</span>
+                    <button type="button" class="btn btn-outline btn-sm" id="bulkPatternBtn">동일 패턴 묶음 선택</button>
+                    <div class="bulk-actions">
+                        <button type="button" class="btn btn-outline btn-sm" id="bulkRejectBtn" disabled>선택 반려</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="bulkApproveBtn" disabled>선택 승인</button>
+                    </div>
+                </div>
+
+                <div class="table-container" id="pendingTableWrap">
+                    <table class="table" id="pendingTable">
+                        <thead>
+                            <tr>
+                                <th class="row-check"></th>
+                                <th>발송일시</th>
+                                <th>경과</th>
+                                <th>채널</th>
+                                <th>발신번호</th>
+                                <th class="template-cell">템플릿 · 패턴</th>
+                                <th>메시지</th>
+                                <th>건수</th>
+                                <th>구분</th>
+                                <th>처리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingBody"></tbody>
+                    </table>
+                    <div class="table-empty" id="pendingEmpty" style="display:none;">조회 조건에 해당하는 승인 대기 건이 없습니다.</div>
+                </div>
+            </div>
+
+            <!-- 내부통제 상태 -->
+            <div class="card" id="controlCard">
+                <div class="flex-between mb-2">
+                    <h3 class="card-title">내부통제 상태</h3>
+                    <span class="badge badge-muted">기업 고객사별 설정</span>
+                </div>
+
+                <div class="control-grid">
+                    <div class="control-item" id="controlNotify">
+                        <div class="control-item-head">
+                            <span class="control-item-title">미확인 알림</span>
+                            <label class="switch"><input type="checkbox" id="controlNotifyToggle" checked><span class="switch-slider"></span></label>
+                        </div>
+                        <span class="control-item-desc">발송 후 <strong>4시간</strong> 내 미확인 시 기업관리자에게 알림톡·메일 발송</span>
+                        <span class="control-item-value" id="controlNotifyCount">-</span>
+                    </div>
+
+                    <div class="control-item" id="controlRenotify">
+                        <div class="control-item-head">
+                            <span class="control-item-title">재알림</span>
+                            <label class="switch"><input type="checkbox" id="controlRenotifyToggle" checked><span class="switch-slider"></span></label>
+                        </div>
+                        <span class="control-item-desc"><strong>24시간</strong> 경과 미확인 건에 대해 4시간 주기 재알림</span>
+                        <span class="control-item-value" id="controlRenotifyCount">-</span>
+                    </div>
+
+                    <div class="control-item" id="controlAudit">
+                        <div class="control-item-head">
+                            <span class="control-item-title">반복 미확인 점검</span>
+                            <label class="switch"><input type="checkbox" id="controlAuditToggle" checked><span class="switch-slider"></span></label>
+                        </div>
+                        <span class="control-item-desc"><strong>3회</strong> 이상 재알림에도 미확인 시 운영팀 점검 대상으로 등록</span>
+                        <span class="control-item-value" id="controlAuditCount">-</span>
+                    </div>
+
+                    <div class="control-item" id="controlRestrict">
+                        <div class="control-item-head">
+                            <span class="control-item-title">고위험 발송 임시제한</span>
+                            <label class="switch"><input type="checkbox" id="controlRestrictToggle" checked><span class="switch-slider"></span></label>
+                        </div>
+                        <span class="control-item-desc">점검 대상 상태에서 <strong>대량·광고성 발송</strong>을 승인 시점까지 임시 제한</span>
+                        <span class="control-item-value" id="controlRestrictCount">-</span>
+                    </div>
+                </div>
+
+                <div class="approval-notice" id="controlNotice">
+                    · 24시간 내 사후승인이 지연되었다는 사유만으로 발송이 즉시 중지되지는 않습니다. 미확인 알림·재알림과 반복 미확인 점검을 통해 단계적으로 통제합니다.<br>
+                    · 임시 제한된 발송은 기업관리자가 <strong>2차 인증(알림톡)으로 본인 확인</strong>을 거친 뒤에만 승인할 수 있습니다.
+                </div>
+            </div>
+
+            <!-- 승인 이력 -->
+            <div class="card" id="historyCard">
+                <div class="flex-between mb-2">
+                    <h3 class="card-title">승인 이력</h3>
+                    <button type="button" class="btn btn-outline btn-sm" id="historyExportBtn">엑셀 다운로드</button>
+                </div>
+
+                <div class="filter-section" id="historyFilter">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="form-label">조회 기간</label>
+                            <select class="form-select" id="historyPeriod">
+                                <option value="7">최근 7일</option>
+                                <option value="30" selected>최근 30일</option>
+                                <option value="90">최근 90일</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">처리 구분</label>
+                            <select class="form-select" id="historyDecision">
+                                <option value="all">전체</option>
+                                <option value="approve">승인</option>
+                                <option value="reject">반려</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">발송 채널</label>
+                            <select class="form-select" id="historyChannel">
+                                <option value="all">전체</option>
+                                <option value="API">API</option>
+                                <option value="솔루션">솔루션</option>
+                                <option value="모듈">모듈</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">처리 방식</label>
+                            <select class="form-select" id="historyMethod">
+                                <option value="all">전체</option>
+                                <option value="single">개별 승인</option>
+                                <option value="bulk">패턴 일괄 승인</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container" id="historyTableWrap">
+                    <table class="table" id="historyTable">
+                        <thead>
+                            <tr>
+                                <th>처리일시</th>
+                                <th>처리 구분</th>
+                                <th>대상 발송</th>
+                                <th>채널</th>
+                                <th class="template-cell">템플릿 · 패턴</th>
+                                <th>건수</th>
+                                <th>처리 방식</th>
+                                <th>처리자</th>
+                                <th>사유</th>
+                                <th>접속 IP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody"></tbody>
+                    </table>
+                    <div class="table-empty" id="historyEmpty" style="display:none;">조회 조건에 해당하는 이력이 없습니다.</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 승인/반려 처리 모달 -->
+    <div class="modal-overlay" id="approvalModal" style="display:none;">
+        <div class="modal" style="max-width:560px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="approvalModalTitle">발송 사후승인 처리</h3>
+                <button class="modal-close" onclick="closeApprovalModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="approval-target" id="approvalTarget"></div>
+
+                <div class="decision-group" id="approvalDecision">
+                    <label class="decision-option selected" data-decision="approve">
+                        <input type="radio" name="approvalDecision" value="approve" checked>
+                        <span class="decision-option-label" style="color:var(--primary-color);">승인</span>
+                    </label>
+                    <label class="decision-option reject" data-decision="reject">
+                        <input type="radio" name="approvalDecision" value="reject">
+                        <span class="decision-option-label" style="color:var(--danger-color);">반려</span>
+                    </label>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" id="approvalReasonLabel">처리 사유</label>
+                    <textarea class="form-textarea" id="approvalReason" placeholder="처리 사유를 입력하세요. (반려 시 필수)"></textarea>
+                    <div class="form-error" id="approvalReasonError" style="display:none;">반려 사유를 입력해주세요.</div>
+                </div>
+
+                <div class="approval-notice" id="approvalNotice">
+                    처리 결과는 <strong>처리자 · 처리일시 · 사유 · 접속 IP</strong>와 함께 승인 이력에 기록되며 삭제할 수 없습니다.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeApprovalModal()">취소</button>
+                <button class="btn btn-primary" id="approvalSubmitBtn">처리 완료</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 발송 내용 상세 모달 -->
+    <div class="modal-overlay" id="detailModal" style="display:none;">
+        <div class="modal" style="max-width:520px;">
+            <div class="modal-header">
+                <h3 class="modal-title">발송 내용 확인</h3>
+                <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <dl class="detail-row" id="detailInfo"></dl>
+                <div class="detail-message" id="detailMessage"></div>
+                <div class="approval-notice">
+                    수신번호는 개인정보 보호를 위해 마스킹되어 표시됩니다. 전체 수신번호는 발송결과 화면에서 권한에 따라 조회할 수 있습니다.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeDetailModal()">닫기</button>
+                <button class="btn btn-primary" id="detailApproveBtn">이 건 처리하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ===== 발송 사후승인 콘솔 =====
+         * 보안심사 3.5-④ 대응: API·솔루션·모듈 발송 건을 기업 고객사의 기업관리자가
+         * 사후 확인·승인하고, 승인(확인) 사실을 이력으로 입증할 수 있게 한다.
+         *
+         * 프로토타입: 데이터는 localStorage 기반 데모이며 실제 연동 시 API 로 대체한다.
+         *   GET  /api/send-approval/pending          승인 대기 목록
+         *   GET  /api/send-approval/pending/{id}     발송 내용 상세
+         *   POST /api/send-approval/decision         승인·반려 처리(단건/일괄)
+         *   GET  /api/send-approval/history          승인 이력
+         *   GET  /api/send-approval/history/export   승인 이력 엑셀
+         *   GET/PUT /api/send-approval/control       내부통제 설정 조회·변경
+         */
+
+        var APPROVER = { name: '김담당', id: 'admin@ibank.co.kr', ip: '211.36.142.77' };
+        var OVERDUE_HOURS = 24;   // 사후승인 지연 기준
+        var NOTIFY_HOURS = 4;     // 미확인 알림 기준
+
+        var PENDING_KEY = 'sendApprovalPending';
+        var HISTORY_KEY = 'sendApprovalHistory';
+        var CONTROL_KEY = 'sendApprovalControl';
+
+        /* ---------- 유틸 ---------- */
+
+        function pad2(n) { return ('0' + n).slice(-2); }
+
+        function fmtStamp(date) {
+            return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate()) + ' ' +
+                   pad2(date.getHours()) + ':' + pad2(date.getMinutes());
+        }
+
+        function nowStamp() { return fmtStamp(new Date()); }
+
+        function fmtDateOnly(date) {
+            return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
+        }
+
+        function parseStamp(s) {
+            // 'YYYY-MM-DD HH:mm' → Date (Safari 호환을 위해 직접 파싱)
+            var m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(s || '');
+            if (!m) return new Date(NaN);
+            return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
+        }
+
+        function hoursSince(stamp) {
+            var diff = Date.now() - parseStamp(stamp).getTime();
+            return diff / 3600000;
+        }
+
+        function fmtElapsed(stamp) {
+            var h = hoursSince(stamp);
+            if (h < 1) return Math.max(0, Math.floor(h * 60)) + '분';
+            if (h < 48) return Math.floor(h) + '시간';
+            return Math.floor(h / 24) + '일';
+        }
+
+        function comma(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+        function maskPhone(value) {
+            var digits = String(value || '').replace(/\D/g, '');
+            if (digits.length < 7) return value || '-';
+            return digits.slice(0, 3) + '-****-' + digits.slice(-4);
+        }
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function toast(message, type) {
+            if (typeof showToast === 'function') showToast(message, type || 'info');
+        }
+
+        /* ---------- 데모 데이터 ----------
+         * hoursAgo 로 정의해 조회 시점 기준 경과시간이 자연스럽게 계산되도록 한다.
+         * (실제 연동 시 GET /api/send-approval/pending 응답의 sentAt 을 그대로 사용)
+         */
+
+        var DEMO_PENDING = [
+            { id: 'AP-0001', hoursAgo: 31.5, channel: 'API', caller: '02-1234-5678', msgType: '알림톡',
+              template: '주문 배송 안내', pattern: 'TPL-DELIV-01', count: 1240, risk: 'high',
+              riskReason: '대량 발송(1,000건 초과)', restricted: true, patternApproval: false,
+              sample: '01012345678',
+              content: '[아이뱅크] 고객님이 주문하신 상품이 오늘 출발했습니다.\n· 운송장번호: 1234-5678-9012\n· 배송조회는 아래 버튼을 눌러주세요.' },
+
+            { id: 'AP-0002', hoursAgo: 27.2, channel: '솔루션', caller: '1600-0000', msgType: '광고문자(LMS)',
+              template: '8월 정기 프로모션', pattern: 'TPL-PROMO-08', count: 8600, risk: 'high',
+              riskReason: '광고성 대량 발송', restricted: true, patternApproval: false,
+              sample: '01098761234',
+              content: '(광고)[아이뱅크] 8월 정기 프로모션 안내\n최대 30% 할인 쿠폰이 발급되었습니다.\n무료거부 080-123-4567' },
+
+            { id: 'AP-0003', hoursAgo: 25.1, channel: 'API', caller: '02-1234-5678', msgType: '알림톡',
+              template: '결제 완료 안내', pattern: 'TPL-PAY-01', count: 412, risk: 'normal',
+              riskReason: '', restricted: false, patternApproval: true,
+              sample: '01055557777',
+              content: '[아이뱅크] 결제가 정상 처리되었습니다.\n· 결제금액: 32,000원\n· 결제수단: 신용카드' },
+
+            { id: 'AP-0004', hoursAgo: 9.8, channel: 'API', caller: '02-1234-5678', msgType: '일반문자(SMS)',
+              template: '본인확인 인증번호', pattern: 'TPL-AUTH-01', count: 3182, risk: 'normal',
+              riskReason: '', restricted: false, patternApproval: true,
+              sample: '01033334444',
+              content: '[아이뱅크] 인증번호 [123456] 을 입력해주세요.' },
+
+            { id: 'AP-0005', hoursAgo: 6.4, channel: '모듈', caller: '1600-0000', msgType: '알림톡',
+              template: '결제 완료 안내', pattern: 'TPL-PAY-01', count: 197, risk: 'normal',
+              riskReason: '', restricted: false, patternApproval: true,
+              sample: '01077778888',
+              content: '[아이뱅크] 결제가 정상 처리되었습니다.\n· 결제금액: 15,900원\n· 결제수단: 계좌이체' },
+
+            { id: 'AP-0006', hoursAgo: 5.1, channel: '솔루션', caller: '010-1234-5678', msgType: '일반문자(SMS)',
+              template: '예약 확정 안내', pattern: 'TPL-RSV-01', count: 86, risk: 'normal',
+              riskReason: '', restricted: false, patternApproval: false,
+              sample: '01022221111',
+              content: '[아이뱅크] 8월 12일 14:00 상담 예약이 확정되었습니다.' },
+
+            { id: 'AP-0007', hoursAgo: 2.3, channel: 'API', caller: '02-1234-5678', msgType: '일반문자(SMS)',
+              template: '본인확인 인증번호', pattern: 'TPL-AUTH-01', count: 1547, risk: 'normal',
+              riskReason: '', restricted: false, patternApproval: true,
+              sample: '01099998888',
+              content: '[아이뱅크] 인증번호 [123456] 을 입력해주세요.' },
+
+            { id: 'AP-0008', hoursAgo: 0.7, channel: 'API', caller: '1600-0000', msgType: '광고문자(MMS)',
+              template: '신규 서비스 오픈 안내', pattern: 'TPL-PROMO-09', count: 2400, risk: 'high',
+              riskReason: '광고성 대량 발송', restricted: false, patternApproval: false,
+              sample: '01044445555',
+              content: '(광고)[아이뱅크] 신규 서비스가 오픈했습니다.\n지금 가입하면 첫 달 무료!\n무료거부 080-123-4567' }
+        ];
+
+        function demoPending() {
+            return DEMO_PENDING.map(function (p) {
+                var d = new Date(Date.now() - p.hoursAgo * 3600000);
+                var item = {};
+                Object.keys(p).forEach(function (k) { item[k] = p[k]; });
+                item.sentAt = fmtStamp(d);
+                delete item.hoursAgo;
+                return item;
+            });
+        }
+
+        function demoHistory() {
+            var out = [];
+            var seed = [
+                { hoursAgo: 3,   decision: 'approve', target: 'AP-0101', channel: 'API',    template: '결제 완료 안내',   pattern: 'TPL-PAY-01',   count: 508,  method: 'bulk',   reason: '정형 안내 메시지 패턴 일괄 승인' },
+                { hoursAgo: 5,   decision: 'approve', target: 'AP-0102', channel: 'API',    template: '본인확인 인증번호', pattern: 'TPL-AUTH-01',  count: 2914, method: 'bulk',   reason: '인증번호 발송 패턴 일괄 승인' },
+                { hoursAgo: 21,  decision: 'reject',  target: 'AP-0103', channel: '솔루션', template: '7월 프로모션',      pattern: 'TPL-PROMO-07', count: 9120, method: 'single', reason: '수신동의 확보 근거 미제출 — 재확인 후 재발송 요청' },
+                { hoursAgo: 27,  decision: 'approve', target: 'AP-0104', channel: '모듈',   template: '주문 배송 안내',    pattern: 'TPL-DELIV-01', count: 743,  method: 'single', reason: '발송 내용·건수 확인 완료' },
+                { hoursAgo: 49,  decision: 'approve', target: 'AP-0105', channel: 'API',    template: '예약 확정 안내',    pattern: 'TPL-RSV-01',   count: 122,  method: 'single', reason: '' },
+                { hoursAgo: 74,  decision: 'reject',  target: 'AP-0106', channel: 'API',    template: '이벤트 당첨 안내',  pattern: 'TPL-EVT-02',   count: 4300, method: 'single', reason: '사전 협의되지 않은 발신번호 사용' },
+                { hoursAgo: 122, decision: 'approve', target: 'AP-0107', channel: '솔루션', template: '결제 완료 안내',    pattern: 'TPL-PAY-01',   count: 331,  method: 'bulk',   reason: '정형 안내 메시지 패턴 일괄 승인' }
+            ];
+            seed.forEach(function (s) {
+                var d = new Date(Date.now() - s.hoursAgo * 3600000);
+                out.push({
+                    at: fmtStamp(d), decision: s.decision, target: s.target, channel: s.channel,
+                    template: s.template, pattern: s.pattern, count: s.count, method: s.method,
+                    actor: APPROVER.name + '(' + APPROVER.id + ')', reason: s.reason, ip: APPROVER.ip
+                });
+            });
+            return out;
+        }
+
+        /* ---------- 저장소 ---------- */
+
+        function loadPending() {
+            try {
+                var saved = JSON.parse(localStorage.getItem(PENDING_KEY));
+                if (Array.isArray(saved)) return saved;
+            } catch (e) {}
+            var fresh = demoPending();
+            localStorage.setItem(PENDING_KEY, JSON.stringify(fresh));
+            return fresh;
+        }
+
+        function savePending(list) { localStorage.setItem(PENDING_KEY, JSON.stringify(list)); }
+
+        function loadHistory() {
+            try {
+                var saved = JSON.parse(localStorage.getItem(HISTORY_KEY));
+                if (Array.isArray(saved)) return saved;
+            } catch (e) {}
+            var fresh = demoHistory();
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(fresh));
+            return fresh;
+        }
+
+        function saveHistory(list) { localStorage.setItem(HISTORY_KEY, JSON.stringify(list)); }
+
+        function loadControl() {
+            try {
+                var saved = JSON.parse(localStorage.getItem(CONTROL_KEY));
+                if (saved && typeof saved === 'object') return saved;
+            } catch (e) {}
+            return { notify: true, renotify: true, audit: true, restrict: true };
+        }
+
+        function saveControl(c) { localStorage.setItem(CONTROL_KEY, JSON.stringify(c)); }
+
+        /* ---------- 상태 ---------- */
+
+        var selectedIds = [];     // 체크된 발송 그룹 id
+        var modalTargets = [];    // 처리 모달이 다루는 대상 id 목록
+
+        function isOverdue(item) { return hoursSince(item.sentAt) >= OVERDUE_HOURS; }
+
+        function filteredPending() {
+            var list = loadPending();
+            var channel = document.getElementById('pendingChannel').value;
+            var caller = document.getElementById('pendingCaller').value;
+            var risk = document.getElementById('pendingRisk').value;
+            var start = document.getElementById('pendingStartDate').value;
+            var end = document.getElementById('pendingEndDate').value;
+
+            return list.filter(function (p) {
+                if (channel !== 'all' && p.channel !== channel) return false;
+                if (caller !== 'all' && p.caller !== caller) return false;
+                if (risk === 'high' && p.risk !== 'high') return false;
+                if (risk === 'overdue' && !isOverdue(p)) return false;
+                if (risk === 'restricted' && !p.restricted) return false;
+                var day = p.sentAt.slice(0, 10);
+                if (start && day < start) return false;
+                if (end && day > end) return false;
+                return true;
+            });
+        }
+
+        /* ---------- 대기 목록 렌더 ---------- */
+
+        function renderPending() {
+            var list = filteredPending();
+            var body = document.getElementById('pendingBody');
+            var empty = document.getElementById('pendingEmpty');
+
+            body.innerHTML = list.map(function (p) {
+                var overdue = isOverdue(p);
+                var elapsedClass = overdue ? 'elapsed-over' : (hoursSince(p.sentAt) >= NOTIFY_HOURS ? 'elapsed-warn' : '');
+                var checked = selectedIds.indexOf(p.id) >= 0 ? ' checked' : '';
+
+                var marks = [];
+                if (p.risk === 'high') marks.push('<span class="badge badge-warning" title="' + escapeHtml(p.riskReason) + '">고위험</span>');
+                if (p.restricted) marks.push('<span class="badge badge-danger">임시제한</span>');
+                if (p.patternApproval) marks.push('<span class="badge badge-success">패턴 승인 대상</span>');
+                if (!marks.length) marks.push('<span class="badge badge-muted">일반</span>');
+
+                return '<tr class="' + (overdue ? 'row-overdue' : '') + '" data-id="' + p.id + '">' +
+                    '<td class="row-check"><input type="checkbox" data-check-id="' + p.id + '"' + checked + '></td>' +
+                    '<td class="nowrap">' + p.sentAt + '</td>' +
+                    '<td class="nowrap ' + elapsedClass + '">' + fmtElapsed(p.sentAt) + '</td>' +
+                    '<td class="nowrap"><span class="badge badge-primary">' + p.channel + '</span></td>' +
+                    '<td class="nowrap">' + p.caller + '</td>' +
+                    '<td class="template-cell">' +
+                        '<div class="template-name">' + escapeHtml(p.template) + '</div>' +
+                        '<div class="template-pattern">' + p.pattern + ' · ' + p.msgType + '</div>' +
+                    '</td>' +
+                    '<td><div class="content-preview" data-detail-id="' + p.id + '" title="클릭 시 발송 내용 확인">' + escapeHtml(p.content.split('\n')[0]) + '</div></td>' +
+                    '<td class="nowrap">' + comma(p.count) + '건</td>' +
+                    '<td class="nowrap">' + marks.join(' ') + '</td>' +
+                    '<td class="nowrap"><button type="button" class="btn btn-outline btn-sm" data-open-id="' + p.id + '">승인/반려</button></td>' +
+                '</tr>';
+            }).join('');
+
+            body.style.display = list.length ? '' : 'none';
+            empty.style.display = list.length ? 'none' : 'block';
+
+            // 필터로 사라진 항목은 선택에서 제외
+            var visibleIds = list.map(function (p) { return p.id; });
+            selectedIds = selectedIds.filter(function (id) { return visibleIds.indexOf(id) >= 0; });
+
+            document.getElementById('pendingCheckAll').checked = list.length > 0 && selectedIds.length === list.length;
+            document.getElementById('pendingUpdatedAt').textContent = '조회 기준 ' + nowStamp();
+
+            renderBulkBar();
+            renderStats();
+            renderControl();
+        }
+
+        function renderBulkBar() {
+            var list = loadPending();
+            var picked = list.filter(function (p) { return selectedIds.indexOf(p.id) >= 0; });
+            var msgCount = picked.reduce(function (sum, p) { return sum + p.count; }, 0);
+
+            document.getElementById('bulkCount').textContent = picked.length;
+            document.getElementById('bulkMsgCount').textContent = comma(msgCount);
+            document.getElementById('bulkApproveBtn').disabled = picked.length === 0;
+            document.getElementById('bulkRejectBtn').disabled = picked.length === 0;
+            document.getElementById('bulkPatternBtn').disabled = picked.length === 0;
+        }
+
+        function renderStats() {
+            var list = loadPending();
+            document.getElementById('statPending').textContent = comma(list.length);
+            document.getElementById('statOverdue').textContent = comma(list.filter(isOverdue).length);
+            document.getElementById('statHighRisk').textContent = comma(list.filter(function (p) { return p.risk === 'high'; }).length);
+
+            var today = fmtDateOnly(new Date());
+            var history = loadHistory();
+            var todayRows = history.filter(function (h) { return h.at.slice(0, 10) === today; });
+            document.getElementById('statApproved').textContent = comma(todayRows.filter(function (h) { return h.decision === 'approve'; }).length);
+            document.getElementById('statRejected').textContent = comma(todayRows.filter(function (h) { return h.decision === 'reject'; }).length);
+        }
+
+        /* ---------- 내부통제 ---------- */
+
+        function renderControl() {
+            var control = loadControl();
+            var list = loadPending();
+
+            document.getElementById('controlNotifyToggle').checked = control.notify;
+            document.getElementById('controlRenotifyToggle').checked = control.renotify;
+            document.getElementById('controlAuditToggle').checked = control.audit;
+            document.getElementById('controlRestrictToggle').checked = control.restrict;
+
+            var notifyTargets = list.filter(function (p) { return hoursSince(p.sentAt) >= NOTIFY_HOURS; });
+            var renotifyTargets = list.filter(isOverdue);
+            var auditTargets = list.filter(function (p) { return hoursSince(p.sentAt) >= OVERDUE_HOURS + 12; });
+            var restricted = list.filter(function (p) { return p.restricted; });
+
+            document.getElementById('controlNotifyCount').textContent = control.notify ? notifyTargets.length + '건 발송' : '사용 안 함';
+            document.getElementById('controlRenotifyCount').textContent = control.renotify ? renotifyTargets.length + '건 대상' : '사용 안 함';
+            document.getElementById('controlAuditCount').textContent = control.audit ? auditTargets.length + '건 점검' : '사용 안 함';
+            document.getElementById('controlRestrictCount').textContent = control.restrict ? restricted.length + '건 제한' : '사용 안 함';
+        }
+
+        /* ---------- 승인 이력 렌더 ---------- */
+
+        function renderHistory() {
+            var list = loadHistory();
+            var days = parseInt(document.getElementById('historyPeriod').value, 10);
+            var decision = document.getElementById('historyDecision').value;
+            var channel = document.getElementById('historyChannel').value;
+            var method = document.getElementById('historyMethod').value;
+            var limit = Date.now() - days * 86400000;
+
+            var filtered = list.filter(function (h) {
+                if (parseStamp(h.at).getTime() < limit) return false;
+                if (decision !== 'all' && h.decision !== decision) return false;
+                if (channel !== 'all' && h.channel !== channel) return false;
+                if (method !== 'all' && h.method !== method) return false;
+                return true;
+            });
+
+            var body = document.getElementById('historyBody');
+            var empty = document.getElementById('historyEmpty');
+
+            body.innerHTML = filtered.map(function (h) {
+                var badge = h.decision === 'approve'
+                    ? '<span class="badge badge-success">승인</span>'
+                    : '<span class="badge badge-danger">반려</span>';
+                var methodLabel = h.method === 'bulk'
+                    ? '<span class="badge badge-primary">패턴 일괄</span>'
+                    : '<span class="badge badge-muted">개별</span>';
+                return '<tr>' +
+                    '<td class="nowrap">' + h.at + '</td>' +
+                    '<td class="nowrap">' + badge + '</td>' +
+                    '<td class="nowrap">' + h.target + '</td>' +
+                    '<td class="nowrap">' + h.channel + '</td>' +
+                    '<td class="template-cell">' +
+                        '<div class="template-name">' + escapeHtml(h.template) + '</div>' +
+                        '<div class="template-pattern">' + h.pattern + '</div>' +
+                    '</td>' +
+                    '<td class="nowrap">' + comma(h.count) + '건</td>' +
+                    '<td class="nowrap">' + methodLabel + '</td>' +
+                    '<td class="nowrap">' + escapeHtml(h.actor) + '</td>' +
+                    '<td>' + (h.reason ? escapeHtml(h.reason) : '<span style="color:var(--text-muted);">-</span>') + '</td>' +
+                    '<td class="nowrap">' + h.ip + '</td>' +
+                '</tr>';
+            }).join('');
+
+            body.style.display = filtered.length ? '' : 'none';
+            empty.style.display = filtered.length ? 'none' : 'block';
+        }
+
+        /* ---------- 발송 내용 상세 ---------- */
+
+        function openDetailModal(id) {
+            var item = loadPending().filter(function (p) { return p.id === id; })[0];
+            if (!item) return;
+
+            document.getElementById('detailInfo').innerHTML =
+                '<dt>발송번호</dt><dd>' + item.id + '</dd>' +
+                '<dt>발송일시</dt><dd>' + item.sentAt + ' <span style="color:var(--text-secondary);font-weight:500;">(' + fmtElapsed(item.sentAt) + ' 경과)</span></dd>' +
+                '<dt>발송 채널</dt><dd>' + item.channel + '</dd>' +
+                '<dt>발신번호</dt><dd>' + item.caller + '</dd>' +
+                '<dt>템플릿</dt><dd>' + escapeHtml(item.template) + ' <span style="color:var(--text-muted);font-weight:500;">(' + item.pattern + ')</span></dd>' +
+                '<dt>메시지 타입</dt><dd>' + item.msgType + '</dd>' +
+                '<dt>발송 건수</dt><dd>' + comma(item.count) + '건</dd>' +
+                '<dt>수신번호 예시</dt><dd>' + maskPhone(item.sample) + ' 외 ' + comma(item.count - 1) + '건</dd>';
+
+            document.getElementById('detailMessage').textContent = item.content;
+            document.getElementById('detailApproveBtn').dataset.id = item.id;
+            openModal('detailModal');
+        }
+
+        function closeDetailModal() { closeModal('detailModal'); }
+
+        /* ---------- 승인/반려 처리 ---------- */
+
+        function setDecision(decision) {
+            document.querySelectorAll('#approvalDecision .decision-option').forEach(function (opt) {
+                var on = opt.dataset.decision === decision;
+                opt.classList.toggle('selected', on);
+                opt.querySelector('input').checked = on;
+            });
+            document.getElementById('approvalReasonLabel').className = decision === 'reject' ? 'form-label required' : 'form-label';
+            document.getElementById('approvalSubmitBtn').className = decision === 'reject' ? 'btn btn-danger' : 'btn btn-primary';
+            document.getElementById('approvalReasonError').style.display = 'none';
+        }
+
+        function currentDecision() {
+            var picked = document.querySelector('#approvalDecision input:checked');
+            return picked ? picked.value : 'approve';
+        }
+
+        function openApprovalModal(ids) {
+            var list = loadPending();
+            modalTargets = list.filter(function (p) { return ids.indexOf(p.id) >= 0; }).map(function (p) { return p.id; });
+            if (!modalTargets.length) return;
+
+            var targets = list.filter(function (p) { return modalTargets.indexOf(p.id) >= 0; });
+            var totalCount = targets.reduce(function (sum, p) { return sum + p.count; }, 0);
+            var patterns = [];
+            targets.forEach(function (p) { if (patterns.indexOf(p.pattern) < 0) patterns.push(p.pattern); });
+            var restricted = targets.filter(function (p) { return p.restricted; });
+
+            var isBulk = targets.length > 1;
+            document.getElementById('approvalModalTitle').textContent = isBulk ? '발송 사후승인 일괄 처리' : '발송 사후승인 처리';
+
+            var rows = targets.slice(0, 6).map(function (p) {
+                return '· ' + p.sentAt + ' / ' + p.channel + ' / ' + escapeHtml(p.template) +
+                       ' (' + p.pattern + ') / ' + comma(p.count) + '건';
+            });
+            if (targets.length > 6) rows.push('· 외 ' + (targets.length - 6) + '건');
+
+            document.getElementById('approvalTarget').innerHTML =
+                '<strong>대상 ' + targets.length + '건 · 총 ' + comma(totalCount) + '건 발송분</strong><br>' +
+                '<span style="color:var(--text-secondary);">템플릿·패턴 ' + patterns.length + '종</span><br>' +
+                rows.join('<br>') +
+                (restricted.length ? '<br><span style="color:var(--danger-color);font-weight:600;">임시제한 ' + restricted.length + '건 포함 — 승인 시 2차 인증 필요</span>' : '');
+
+            document.getElementById('approvalReason').value = '';
+            setDecision('approve');
+            openModal('approvalModal');
+        }
+
+        function closeApprovalModal() { closeModal('approvalModal'); }
+
+        function submitApproval() {
+            var decision = currentDecision();
+            var reason = document.getElementById('approvalReason').value.trim();
+
+            if (decision === 'reject' && !reason) {
+                document.getElementById('approvalReasonError').style.display = 'block';
+                document.getElementById('approvalReason').focus();
+                return;
+            }
+
+            var list = loadPending();
+            var targets = list.filter(function (p) { return modalTargets.indexOf(p.id) >= 0; });
+            var needsAuth = decision === 'approve' && targets.some(function (p) { return p.restricted; });
+
+            // 임시제한 건 승인은 기업관리자 본인 확인(2차 인증) 후에만 처리 — 승인 사실의 입증력 확보
+            if (needsAuth && typeof openAlimtalkAuth === 'function') {
+                closeApprovalModal();
+                openAlimtalkAuth({
+                    title: '기업관리자 본인 확인',
+                    description: '임시제한된 고위험 발송을 승인하기 위해<br>등록된 번호로 카카오톡 알림톡을 보내드립니다.',
+                    confirmText: '확인 후 승인',
+                    phone: localStorage.getItem('mfaPhone') || '01098725784',
+                    onSuccess: function () { applyDecision(targets, decision, reason); },
+                    onCancel: function () { openModal('approvalModal'); }
+                });
+                return;
+            }
+
+            applyDecision(targets, decision, reason);
+        }
+
+        function applyDecision(targets, decision, reason) {
+            if (!targets.length) return;
+
+            var list = loadPending();
+            var history = loadHistory();
+            var method = targets.length > 1 ? 'bulk' : 'single';
+            var at = nowStamp();
+
+            targets.forEach(function (p) {
+                history.unshift({
+                    at: at,
+                    decision: decision,
+                    target: p.id,
+                    channel: p.channel,
+                    template: p.template,
+                    pattern: p.pattern,
+                    count: p.count,
+                    method: method,
+                    actor: APPROVER.name + '(' + APPROVER.id + ')',
+                    reason: reason,
+                    ip: APPROVER.ip
+                });
+            });
+
+            var doneIds = targets.map(function (p) { return p.id; });
+            var remain = list.filter(function (p) { return doneIds.indexOf(p.id) < 0; });
+
+            savePending(remain);
+            saveHistory(history);
+
+            selectedIds = selectedIds.filter(function (id) { return doneIds.indexOf(id) < 0; });
+            modalTargets = [];
+
+            closeApprovalModal();
+            renderPending();
+            renderHistory();
+
+            var totalMsg = targets.reduce(function (sum, p) { return sum + p.count; }, 0);
+            toast(
+                (decision === 'approve' ? '승인' : '반려') + ' 처리되었습니다. (' + targets.length + '건 · ' + comma(totalMsg) + '건 발송분)',
+                decision === 'approve' ? 'success' : 'warning'
+            );
+        }
+
+        /* ---------- 선택 처리 ---------- */
+
+        function toggleSelect(id, on) {
+            var idx = selectedIds.indexOf(id);
+            if (on && idx < 0) selectedIds.push(id);
+            if (!on && idx >= 0) selectedIds.splice(idx, 1);
+            document.getElementById('pendingCheckAll').checked =
+                filteredPending().length > 0 && selectedIds.length === filteredPending().length;
+            renderBulkBar();
+        }
+
+        function selectSamePattern() {
+            var list = loadPending();
+            var patterns = list
+                .filter(function (p) { return selectedIds.indexOf(p.id) >= 0; })
+                .map(function (p) { return p.pattern; });
+            if (!patterns.length) return;
+
+            var added = 0;
+            filteredPending().forEach(function (p) {
+                if (patterns.indexOf(p.pattern) >= 0 && selectedIds.indexOf(p.id) < 0) {
+                    selectedIds.push(p.id);
+                    added++;
+                }
+            });
+
+            renderPending();
+            toast(added ? '동일 패턴 ' + added + '건이 추가로 선택되었습니다.' : '이미 동일 패턴이 모두 선택되어 있습니다.', 'info');
+        }
+
+        /* ---------- 이벤트 바인딩 ---------- */
+
+        document.getElementById('pendingBody').addEventListener('click', function (e) {
+            var openBtn = e.target.closest('[data-open-id]');
+            if (openBtn) { openApprovalModal([openBtn.dataset.openId]); return; }
+
+            var detail = e.target.closest('[data-detail-id]');
+            if (detail) { openDetailModal(detail.dataset.detailId); return; }
+        });
+
+        document.getElementById('pendingBody').addEventListener('change', function (e) {
+            var box = e.target.closest('[data-check-id]');
+            if (box) toggleSelect(box.dataset.checkId, box.checked);
+        });
+
+        document.getElementById('pendingCheckAll').addEventListener('change', function () {
+            selectedIds = this.checked ? filteredPending().map(function (p) { return p.id; }) : [];
+            renderPending();
+        });
+
+        document.getElementById('bulkPatternBtn').addEventListener('click', selectSamePattern);
+        document.getElementById('bulkApproveBtn').addEventListener('click', function () { openApprovalModal(selectedIds.slice()); });
+        document.getElementById('bulkRejectBtn').addEventListener('click', function () {
+            openApprovalModal(selectedIds.slice());
+            setDecision('reject');
+        });
+
+        document.getElementById('approvalSubmitBtn').addEventListener('click', submitApproval);
+        document.querySelectorAll('#approvalDecision .decision-option').forEach(function (opt) {
+            opt.addEventListener('click', function () { setDecision(opt.dataset.decision); });
+        });
+
+        document.getElementById('detailApproveBtn').addEventListener('click', function () {
+            var id = this.dataset.id;
+            closeDetailModal();
+            if (id) openApprovalModal([id]);
+        });
+
+        ['pendingChannel', 'pendingCaller', 'pendingRisk', 'pendingStartDate', 'pendingEndDate'].forEach(function (id) {
+            document.getElementById(id).addEventListener('change', renderPending);
+        });
+
+        document.getElementById('pendingResetBtn').addEventListener('click', function () {
+            document.getElementById('pendingChannel').value = 'all';
+            document.getElementById('pendingCaller').value = 'all';
+            document.getElementById('pendingRisk').value = 'all';
+            setDefaultDates();
+            selectedIds = [];
+            renderPending();
+        });
+
+        ['historyPeriod', 'historyDecision', 'historyChannel', 'historyMethod'].forEach(function (id) {
+            document.getElementById(id).addEventListener('change', renderHistory);
+        });
+
+        document.getElementById('historyExportBtn').addEventListener('click', function () {
+            toast('승인 이력을 엑셀로 내려받습니다.', 'info');
+        });
+
+        [['controlNotifyToggle', 'notify'], ['controlRenotifyToggle', 'renotify'],
+         ['controlAuditToggle', 'audit'], ['controlRestrictToggle', 'restrict']].forEach(function (pair) {
+            document.getElementById(pair[0]).addEventListener('change', function () {
+                var control = loadControl();
+                control[pair[1]] = this.checked;
+                saveControl(control);
+                renderControl();
+                toast('내부통제 설정이 저장되었습니다.', 'success');
+            });
+        });
+
+        /* ---------- 초기화 ---------- */
+
+        function setDefaultDates() {
+            var end = new Date();
+            var start = new Date(Date.now() - 6 * 86400000);
+            document.getElementById('pendingStartDate').value = fmtDateOnly(start);
+            document.getElementById('pendingEndDate').value = fmtDateOnly(end);
+        }
+
+        setDefaultDates();
+        renderPending();
+        renderHistory();
+
+        document.addEventListener('DOMContentLoaded', function () { initDropdownMenus(); });
+    </script>
+    <script src="js/footer.js"></script>
+    <script>
+        document.write(createFloatingMenu());
+        document.write(createFooter());
+    </script>
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            {
+                selector: '#tabMenu',
+                title: '탭 메뉴',
+                position: { top: '-10px', left: '10px' },
+                function: '발송현황 메뉴 탭 전환',
+                behavior: ['예약내역 / 발송결과 / 발송 사후승인', '발송 사후승인이 현재 활성 탭']
+            },
+            {
+                selector: '#approvalGuide',
+                title: '기업관리자 사후승인 안내',
+                position: { top: '-5px', left: '-10px' },
+                function: '사후승인 제도의 대상·주체·기록 방식 고지',
+                behavior: [
+                    '사후승인 주체는 문자재판매사업자가 아니라 서비스를 이용하는 기업 고객사의 관리자·담당자임을 명시',
+                    '승인 사실이 이력으로 기록됨을 안내',
+                    '패턴 단위 일괄 승인 가능 범위 안내',
+                    '24시간 미확인 시 재알림·임시제한 등 내부통제 절차 안내'
+                ],
+                tags: [{ text: '심사 3.5-④', type: 'required' }]
+            },
+            {
+                selector: '#approverBar',
+                title: '승인 권한자 정보',
+                position: { top: '10px', left: '10px' },
+                function: '현재 로그인한 기업관리자와 승인 권한 범위 표시',
+                behavior: [
+                    '기업 고객사 / 기업관리자(성명·계정) / 승인 권한 / 연동 채널 표시',
+                    '승인 권한이 없는 계정은 목록 조회만 가능하고 처리 버튼이 비활성',
+                    '처리 이력의 "처리자"에 이 계정이 기록됨'
+                ],
+                api: 'GET /api/send-approval/approver',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#statSummary',
+                title: '승인 현황 요약',
+                position: { top: '-5px', left: '-10px' },
+                function: '사후승인 처리 현황 집계',
+                behavior: [
+                    '승인 대기 / 24시간 경과 / 고위험 발송 / 금일 승인 / 금일 반려',
+                    '24시간 경과 박스는 붉은 테두리로 강조',
+                    '처리 즉시 재집계'
+                ],
+                api: 'GET /api/send-approval/summary',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+
+            // ===== 승인 대기 목록 =====
+            {
+                selector: '#pendingCard',
+                title: '승인 대기 목록',
+                position: { top: '10px', left: '10px' },
+                function: 'API·솔루션·모듈로 발송된 건의 사후승인 큐',
+                behavior: [
+                    '발송 그룹(동일 요청 단위)으로 묶어 표시',
+                    '심사 증빙자료 "기업관리자 사후승인 화면"에 해당',
+                    '승인·반려 처리된 건은 목록에서 제외되고 승인 이력으로 이동'
+                ],
+                api: 'GET /api/send-approval/pending',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#pendingFilter',
+                title: '대기 목록 필터',
+                position: { top: '-5px', left: '-10px' },
+                function: '발송일시 · 채널 · 발신번호 · 위험도별 조회',
+                behavior: [
+                    '발송일시: 기본값 최근 7일',
+                    '발송 채널: 전체 / API / 솔루션 / 모듈',
+                    '발신번호: 등록된 발신번호 목록',
+                    '위험도: 전체 / 고위험만 / 24시간 경과만 / 임시제한만',
+                    '변경 즉시 재조회하며, 조회 결과에서 사라진 항목은 선택이 해제됨'
+                ]
+            },
+            {
+                selector: '#pendingResetBtn',
+                title: '필터 초기화',
+                position: { top: '-5px', right: '-10px' },
+                function: '필터 조건과 선택을 기본값으로 되돌림'
+            },
+            {
+                selector: '#bulkBar',
+                title: '일괄 처리 바',
+                position: { top: '-5px', left: '-10px' },
+                function: '선택 건 일괄 승인·반려',
+                behavior: [
+                    '전체 선택 체크박스는 현재 조회된 목록 전체를 선택',
+                    '선택 건수와 총 발송 건수를 함께 표시',
+                    '선택이 없으면 처리 버튼 비활성',
+                    '동일 템플릿·인증번호·정형 시스템 안내 메시지의 일괄 승인 근거 (심사 3.5-④)'
+                ],
+                tags: [{ text: '심사 3.5-④', type: 'required' }]
+            },
+            {
+                selector: '#bulkPatternBtn',
+                title: '동일 패턴 묶음 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '선택된 건과 같은 템플릿·패턴의 모든 건을 추가 선택',
+                behavior: [
+                    '선택된 건들의 패턴 코드(TPL-XXX)를 기준으로 조회 목록에서 동일 패턴을 모두 선택',
+                    '추가 선택된 건수를 토스트로 안내',
+                    '패턴 단위 승인은 이력에 "패턴 일괄"로 기록됨'
+                ]
+            },
+            {
+                selector: '#bulkApproveBtn',
+                title: '선택 승인',
+                position: { top: '-5px', right: '-10px' },
+                function: '선택한 발송 그룹을 일괄 승인',
+                behavior: [
+                    '처리 모달(#approvalModal)이 승인 상태로 열림',
+                    '대상 건수·총 발송 건수·패턴 종수를 요약 표시',
+                    '임시제한 건이 포함되면 2차 인증을 거쳐야 처리 완료'
+                ],
+                api: 'POST /api/send-approval/decision',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#bulkRejectBtn',
+                title: '선택 반려',
+                position: { top: '-5px', right: '-10px' },
+                function: '선택한 발송 그룹을 일괄 반려',
+                behavior: ['처리 모달이 반려 상태로 열리며 사유 입력이 필수']
+            },
+            {
+                selector: '#pendingTableWrap',
+                title: '대기 목록 테이블',
+                position: { top: '10px', left: '10px' },
+                function: '승인 대기 건 표시',
+                behavior: [
+                    '컬럼: 선택 / 발송일시 / 경과 / 채널 / 발신번호 / 템플릿·패턴 / 메시지 / 건수 / 구분 / 처리',
+                    '24시간 경과 행은 배경을 붉게 강조하고 경과시간을 붉은 굵은 글씨로 표시',
+                    '4시간 경과(미확인 알림 기준)는 주황색으로 표시',
+                    '구분 배지: 고위험(대량·광고성) / 임시제한 / 패턴 승인 대상 / 일반',
+                    '메시지 첫 줄을 클릭하면 발송 내용 확인 모달이 열림'
+                ]
+            },
+            {
+                selector: '#pendingEmpty',
+                title: '대기 건 없음 안내',
+                position: { top: '-5px', left: '-10px' },
+                function: '조회 조건에 해당하는 승인 대기 건이 없을 때 노출',
+                tags: [{ text: '조건부', type: 'info' }]
+            },
+
+            // ===== 내부통제 =====
+            {
+                selector: '#controlCard',
+                title: '내부통제 상태',
+                position: { top: '10px', left: '10px' },
+                function: '사후승인 지연에 대한 단계적 통제 설정·현황',
+                behavior: [
+                    '미확인 알림 → 재알림 → 반복 미확인 점검 → 고위험 임시제한의 4단계',
+                    '각 항목은 토글로 사용 여부를 설정하고 현재 대상 건수를 표시',
+                    '24시간 지연만으로 즉시 발송이 중지되지 않는다는 점을 함께 고지'
+                ],
+                api: 'GET/PUT /api/send-approval/control',
+                tags: [{ text: 'API', type: 'api' }, { text: '심사 3.5-④', type: 'required' }]
+            },
+            {
+                selector: '#controlNotify',
+                title: '미확인 알림',
+                position: { top: '-5px', left: '-10px' },
+                function: '발송 후 4시간 내 미확인 시 기업관리자에게 알림 발송',
+                behavior: ['알림 채널: 알림톡 + 메일', '현재 알림 대상 건수 표시']
+            },
+            {
+                selector: '#controlRenotify',
+                title: '재알림',
+                position: { top: '-5px', left: '-10px' },
+                function: '24시간 경과 미확인 건에 4시간 주기로 재알림',
+                behavior: ['재알림 횟수는 승인 이력과 별도로 알림 로그에 기록']
+            },
+            {
+                selector: '#controlAudit',
+                title: '반복 미확인 점검',
+                position: { top: '-5px', left: '-10px' },
+                function: '재알림 3회 이상에도 미확인 시 운영팀 점검 대상 등록',
+                behavior: ['점검 대상은 문자재판매사업자 운영팀에 전달됨']
+            },
+            {
+                selector: '#controlRestrict',
+                title: '고위험 발송 임시제한',
+                position: { top: '-5px', right: '-10px' },
+                function: '점검 대상 상태에서 대량·광고성 발송을 승인 시점까지 임시 제한',
+                behavior: [
+                    '임시제한된 건은 목록에 "임시제한" 배지로 표시',
+                    '승인 시 기업관리자 2차 인증(알림톡) 필수'
+                ]
+            },
+
+            // ===== 처리 모달 =====
+            {
+                selector: '#approvalModal',
+                title: '승인/반려 처리 모달',
+                position: { top: '60px', left: '20px' },
+                function: '선택한 발송 건의 승인·반려 처리',
+                behavior: [
+                    '대상 요약: 건수 / 총 발송 건수 / 패턴 종수 / 개별 목록(최대 6건, 초과 시 "외 N건")',
+                    '임시제한 건이 포함되면 2차 인증 필요 문구를 붉게 표시',
+                    '처리 결과는 처리자·처리일시·사유·접속 IP와 함께 이력에 기록',
+                    '단건은 "발송 사후승인 처리", 복수 건은 "일괄 처리"로 제목 변경'
+                ],
+                api: 'POST /api/send-approval/decision',
+                tags: [{ text: '모달', type: 'info' }, { text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#approvalDecision',
+                title: '처리 구분 선택',
+                position: { top: '-5px', left: '-10px' },
+                function: '승인 / 반려 선택',
+                behavior: [
+                    '승인 선택 시 처리 버튼이 파란색, 반려 선택 시 붉은색으로 전환',
+                    '반려 선택 시 사유 라벨에 필수 표시(*)가 붙음'
+                ]
+            },
+            {
+                selector: '#approvalReason',
+                title: '처리 사유',
+                position: { top: '-5px', right: '-10px' },
+                function: '승인·반려 사유 입력',
+                behavior: [
+                    '반려 시 필수 — 미입력 시 오류 메시지 노출 후 처리 중단',
+                    '승인 시 선택 입력이며 이력에 그대로 기록',
+                    '패턴 일괄 승인 시 대상 전 건에 동일 사유가 기록됨'
+                ],
+                tags: [{ text: '반려 시 필수', type: 'required' }]
+            },
+            {
+                selector: '#approvalSubmitBtn',
+                title: '처리 완료 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '승인·반려 확정',
+                behavior: [
+                    '임시제한 건 승인 시 알림톡 2차 인증 모달로 연결 (인증 취소 시 처리 모달로 복귀)',
+                    '처리 후 대기 목록에서 제외되고 승인 이력 최상단에 추가',
+                    '요약 통계·내부통제 현황이 즉시 재계산됨'
+                ],
+                api: 'POST /api/send-approval/decision',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+
+            // ===== 발송 내용 상세 =====
+            {
+                selector: '#detailModal',
+                title: '발송 내용 확인 모달',
+                position: { top: '60px', left: '20px' },
+                function: '승인 판단을 위한 발송 내용 확인',
+                behavior: [
+                    '발송번호 / 발송일시(경과시간) / 채널 / 발신번호 / 템플릿 / 메시지 타입 / 건수 / 수신번호 예시',
+                    '메시지 본문 전문 표시',
+                    '수신번호는 마스킹(010-****-5784) 노출',
+                    '"이 건 처리하기" 클릭 시 해당 건의 처리 모달로 연결'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+
+            // ===== 승인 이력 =====
+            {
+                selector: '#historyCard',
+                title: '승인 이력',
+                position: { top: '10px', left: '10px' },
+                function: '사후승인 처리 이력 조회',
+                behavior: [
+                    '심사 증빙자료 "기업관리자 사후승인 이력"에 해당',
+                    '컬럼: 처리일시 / 처리 구분 / 대상 발송 / 채널 / 템플릿·패턴 / 건수 / 처리 방식 / 처리자 / 사유 / 접속 IP',
+                    '처리 구분은 승인(녹색) · 반려(빨강) 배지로 구별',
+                    '처리 방식은 개별 / 패턴 일괄로 구별',
+                    '이력은 수정·삭제할 수 없음'
+                ],
+                api: 'GET /api/send-approval/history',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#historyFilter',
+                title: '이력 조회 필터',
+                position: { top: '-5px', left: '-10px' },
+                function: '기간 · 처리 구분 · 채널 · 처리 방식별 필터링',
+                behavior: [
+                    '기간: 최근 7일 / 30일(기본) / 90일',
+                    '처리 구분: 전체 / 승인 / 반려',
+                    '발송 채널: 전체 / API / 솔루션 / 모듈',
+                    '처리 방식: 전체 / 개별 승인 / 패턴 일괄 승인',
+                    '변경 즉시 목록 재조회'
+                ]
+            },
+            {
+                selector: '#historyExportBtn',
+                title: '엑셀 다운로드',
+                position: { top: '-5px', right: '-10px' },
+                function: '조회된 승인 이력을 엑셀로 내려받기',
+                behavior: ['심사 증빙자료 제출용'],
+                api: 'GET /api/send-approval/history/export',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#historyEmpty',
+                title: '이력 없음 안내',
+                position: { top: '-5px', left: '-10px' },
+                function: '조회 조건에 해당하는 이력이 없을 때 노출',
+                tags: [{ text: '조건부', type: 'info' }]
+            }
+        ];
+        // 오버레이는 첫 토글 때 마커를 한 번만 만든다 — 인증 모달을 미리 DOM 에 올려 마커 누락을 막는다
+        if (typeof mountAlimtalkAuth === 'function') mountAlimtalkAuth();
+        initSpecOverlay(specData);
+    </script>
+</body>
+</html>
