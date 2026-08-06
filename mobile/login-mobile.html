@@ -8,6 +8,20 @@
     <title>로그인 - 톡벨 (Mobile)</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/mobile-app.css">
+    <style>
+        /* 소셜 로그인 2차 인증 필수 안내 (보안심사 3.4-⑤) */
+        .social-mfa-notice {
+            margin-top: 14px;
+            padding: 10px 12px;
+            background: var(--primary-soft);
+            border-radius: 10px;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #2d6e0f;
+            text-align: center;
+        }
+        .social-mfa-notice strong { font-weight: 800; }
+    </style>
 </head>
 <body>
     <div class="mobile-frame no-tab">
@@ -56,13 +70,17 @@
                 <a href="signup-mobile.html" class="primary">회원가입</a>
             </div>
 
-            <div style="margin-top:32px;text-align:center;">
+            <div style="margin-top:32px;text-align:center;" id="socialLoginSection">
                 <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">소셜 계정으로 시작하기</div>
                 <div class="btn-row" style="justify-content:center;">
-                    <button class="btn btn-outline" style="flex:1;max-width:100px;">카카오</button>
-                    <button class="btn btn-outline" style="flex:1;max-width:100px;">네이버</button>
-                    <button class="btn btn-outline" style="flex:1;max-width:100px;">Google</button>
+                    <button class="btn btn-outline" style="flex:1;max-width:100px;" id="socialKakao" data-provider="카카오">카카오</button>
+                    <button class="btn btn-outline" style="flex:1;max-width:100px;" id="socialNaver" data-provider="네이버">네이버</button>
+                    <button class="btn btn-outline" style="flex:1;max-width:100px;" id="socialGoogle" data-provider="Google">Google</button>
                 </div>
+                <p class="social-mfa-notice" id="socialMfaNotice">
+                    소셜 계정으로 로그인해도 <strong>2차 인증</strong>이 필요합니다.<br>
+                    소셜 계정 확인만으로는 접근이 허용되지 않습니다.
+                </p>
             </div>
         </main>
     </div>
@@ -72,6 +90,26 @@
     <script>
         document.getElementById('drawerWrap').innerHTML = renderDrawer();
         initMobileDrawer();
+        /* 소셜 로그인 → 계정 연동 확인 후 반드시 알림톡 2차 인증 (보안심사 3.4-⑤)
+         * 소셜계정 정보만으로는 본인확인·다중인증 요건을 충족하지 않으므로
+         * 연동된 톡벨 계정에 등록·확인된 번호로 추가 인증을 수행한다.
+         * 실제 연동 시 소셜 OAuth 콜백 → GET /api/auth/social/link 로 연동 계정 확인 후 진행. */
+        function handleSocialLogin(provider) {
+            openAlimtalkAuth({
+                title: '2차 인증',
+                description: provider + ' 계정 확인이 완료되었습니다.<br>보안을 위해 등록된 번호로 추가 인증이 필요합니다.',
+                confirmText: '인증하고 로그인',
+                phone: localStorage.getItem('mfaPhone') || '01098725784',
+                onSuccess: () => { location.href = 'main-mobile.html'; }
+            });
+        }
+
+        ['socialKakao', 'socialNaver', 'socialGoogle'].forEach((id) => {
+            document.getElementById(id).addEventListener('click', function () {
+                handleSocialLogin(this.dataset.provider);
+            });
+        });
+
         // 로그인 → 2차 인증 진입
         document.getElementById('loginBtn').addEventListener('click', () => {
             const id = document.getElementById('loginId').value.trim();
@@ -182,12 +220,25 @@
                 ]
             },
             {
-                selector: '.btn-row',
+                selector: '#socialLoginSection',
                 title: '소셜 로그인',
                 position: { top: '-6px', left: '-6px' },
-                function: '카카오 · 네이버 · Google 간편 로그인',
-                behavior: ['프로토타입: 버튼만 배치되어 있으며 연동 동작은 미구현'],
-                tags: [{ text: '준비중', type: 'info' }]
+                function: '카카오 · 네이버 · Google 간편 로그인 (보안심사 3.4-⑤)',
+                behavior: [
+                    '소셜 계정 확인 후 반드시 알림톡 2차 인증을 거쳐야 로그인 완료',
+                    '소셜계정 정보만으로는 본인확인·다중인증 요건을 충족하지 않음',
+                    '2차 인증은 연동된 톡벨 계정에 등록·확인된 번호로 발송',
+                    '인증 성공 시에만 main-mobile.html 로 이동'
+                ],
+                api: 'GET /api/auth/social/link, POST /api/auth/mfa/send',
+                tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#socialMfaNotice',
+                title: '2차 인증 필수 안내',
+                position: { top: '-6px', left: '-6px' },
+                function: '소셜 로그인에도 2차 인증이 필요함을 사전 고지',
+                behavior: ['"소셜 계정 확인만으로는 접근이 허용되지 않습니다" 문구 상시 노출']
             },
 
             // ===== 2차 인증 =====
