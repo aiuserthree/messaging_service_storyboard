@@ -434,6 +434,76 @@
         setTimeout(function () { $('atkAuthSendBtn').focus(); }, 50);
     };
 
+    /* ===================================================================
+     * 발송 추가 인증 세션 (보안심사 3.5-⑤ 재인증 기준)
+     *
+     * 심사 항목해설상 매 발송 건마다 인증을 반복할 필요는 없으며,
+     * 동일 세션에서 일정 시간 인증 상태를 유지하되 위험 조건에서는
+     * 재인증하도록 운영할 수 있다. 아래 기준으로 판정한다.
+     *
+     *   1) 최초 발송            → 인증 필요
+     *   2) 인증 후 30분 경과    → 인증 필요 (유효시간 만료)
+     *   3) 발신번호 변경        → 인증 필요
+     *   4) 대량발송 임계 초과   → 인증 필요
+     *   5) 접속환경 변경        → 인증 필요
+     *
+     * 프로토타입: sessionStorage 기반이며 접속환경은 User-Agent 지문으로 대체한다.
+     * 실제 연동 시 서버 세션과 접속 IP 기준으로 판정한다.
+     * =================================================================== */
+
+    var SEND_AUTH_VALID_MINUTES = 30;   // 인증 유지 시간
+    var BULK_SEND_THRESHOLD = 1000;     // 대량발송 재인증 임계 건수 (사업자 자체 기준)
+
+    var SESSION_KEYS = { at: 'sendAuthAt', caller: 'sendAuthCaller', env: 'sendAuthEnv' };
+
+    function envFingerprint() {
+        return String(navigator.userAgent || '').slice(0, 120);
+    }
+
+    /* 재인증 필요 여부와 사유를 반환한다. */
+    window.getSendAuthState = function (ctx) {
+        ctx = ctx || {};
+        var count = Number(ctx.recipientCount || 0);
+        var caller = String(ctx.callerNumber || '');
+
+        if (count >= BULK_SEND_THRESHOLD) {
+            return { required: true, code: 'bulk',
+                     reason: '대량발송(' + BULK_SEND_THRESHOLD.toLocaleString() + '건 이상)은 매번 인증이 필요합니다.' };
+        }
+
+        var at = Number(sessionStorage.getItem(SESSION_KEYS.at) || 0);
+        if (!at) {
+            return { required: true, code: 'none', reason: '' };
+        }
+
+        var elapsedMin = (Date.now() - at) / 60000;
+        if (elapsedMin >= SEND_AUTH_VALID_MINUTES) {
+            return { required: true, code: 'expired',
+                     reason: '인증 유효시간(' + SEND_AUTH_VALID_MINUTES + '분)이 지나 다시 인증이 필요합니다.' };
+        }
+        if (sessionStorage.getItem(SESSION_KEYS.caller) !== caller) {
+            return { required: true, code: 'caller-changed',
+                     reason: '발신번호가 변경되어 다시 인증이 필요합니다.' };
+        }
+        if (sessionStorage.getItem(SESSION_KEYS.env) !== envFingerprint()) {
+            return { required: true, code: 'env-changed',
+                     reason: '접속환경이 변경되어 다시 인증이 필요합니다.' };
+        }
+
+        return { required: false, code: 'valid', remainMin: Math.max(1, Math.ceil(SEND_AUTH_VALID_MINUTES - elapsedMin)) };
+    };
+
+    /* 인증 성공 시 세션에 상태를 기록한다. */
+    window.markSendAuthenticated = function (ctx) {
+        ctx = ctx || {};
+        sessionStorage.setItem(SESSION_KEYS.at, String(Date.now()));
+        sessionStorage.setItem(SESSION_KEYS.caller, String(ctx.callerNumber || ''));
+        sessionStorage.setItem(SESSION_KEYS.env, envFingerprint());
+    };
+
+    window.SEND_AUTH_VALID_MINUTES = SEND_AUTH_VALID_MINUTES;
+    window.BULK_SEND_THRESHOLD = BULK_SEND_THRESHOLD;
+
     window.closeAlimtalkAuth = function () { close(); };
     window.mountAlimtalkAuth = mount;
 

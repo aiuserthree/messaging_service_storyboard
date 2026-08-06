@@ -489,6 +489,52 @@ function initAlimtalkAuth() {
     });
 }
 
+/* ===================================================================
+ * 발송 추가 인증 세션 (보안심사 3.5-⑤ 재인증 기준) — PC 와 동일 기준
+ *   최초 / 30분 경과 / 발신번호 변경 / 대량발송 / 접속환경 변경 시 재인증
+ * =================================================================== */
+const SEND_AUTH_VALID_MINUTES = 30;
+const BULK_SEND_THRESHOLD = 1000;
+const ATK_SESSION_KEYS = { at: 'sendAuthAt', caller: 'sendAuthCaller', env: 'sendAuthEnv' };
+
+function atkEnvFingerprint() {
+    return String(navigator.userAgent || '').slice(0, 120);
+}
+
+function getSendAuthState(ctx = {}) {
+    const count = Number(ctx.recipientCount || 0);
+    const caller = String(ctx.callerNumber || '');
+
+    if (count >= BULK_SEND_THRESHOLD) {
+        return { required: true, code: 'bulk',
+                 reason: `대량발송(${BULK_SEND_THRESHOLD.toLocaleString()}건 이상)은 매번 인증이 필요합니다.` };
+    }
+    const at = Number(sessionStorage.getItem(ATK_SESSION_KEYS.at) || 0);
+    if (!at) return { required: true, code: 'none', reason: '' };
+
+    const elapsedMin = (Date.now() - at) / 60000;
+    if (elapsedMin >= SEND_AUTH_VALID_MINUTES) {
+        return { required: true, code: 'expired',
+                 reason: `인증 유효시간(${SEND_AUTH_VALID_MINUTES}분)이 지나 다시 인증이 필요합니다.` };
+    }
+    if (sessionStorage.getItem(ATK_SESSION_KEYS.caller) !== caller) {
+        return { required: true, code: 'caller-changed', reason: '발신번호가 변경되어 다시 인증이 필요합니다.' };
+    }
+    if (sessionStorage.getItem(ATK_SESSION_KEYS.env) !== atkEnvFingerprint()) {
+        return { required: true, code: 'env-changed', reason: '접속환경이 변경되어 다시 인증이 필요합니다.' };
+    }
+    return { required: false, code: 'valid', remainMin: Math.max(1, Math.ceil(SEND_AUTH_VALID_MINUTES - elapsedMin)) };
+}
+
+window.SEND_AUTH_VALID_MINUTES = SEND_AUTH_VALID_MINUTES;
+window.BULK_SEND_THRESHOLD = BULK_SEND_THRESHOLD;
+
+function markSendAuthenticated(ctx = {}) {
+    sessionStorage.setItem(ATK_SESSION_KEYS.at, String(Date.now()));
+    sessionStorage.setItem(ATK_SESSION_KEYS.caller, String(ctx.callerNumber || ''));
+    sessionStorage.setItem(ATK_SESSION_KEYS.env, atkEnvFingerprint());
+}
+
 function openAlimtalkAuth(options = {}) {
     renderAlimtalkAuthSheet();
     atkReset();
