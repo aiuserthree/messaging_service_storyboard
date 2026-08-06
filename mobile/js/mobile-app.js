@@ -216,14 +216,15 @@ const atkState = {
 
 function atkEl(id) { return document.getElementById(id); }
 
-function atkFormatPhone(digits) {
-    if (digits.length <= 3) return digits;
-    if (digits.length <= 7) return digits.slice(0, 3) + '-' + digits.slice(3);
-    return digits.slice(0, 3) + '-' + digits.slice(3, 7) + '-' + digits.slice(7);
-}
-
 function atkSanitizePhone(value) {
     return String(value || '').replace(/\D/g, '').slice(0, 11);
+}
+
+/* 등록된 번호는 마스킹해 노출한다 (010-****-5678) */
+function atkMaskPhone(digits) {
+    if (!digits) return '-';
+    if (digits.length < 7) return digits;
+    return digits.slice(0, 3) + '-****-' + digits.slice(-4);
 }
 
 function atkShowError(id, show) {
@@ -276,12 +277,18 @@ function renderAlimtalkAuthSheet() {
                     <span id="atkDesc"></span>
                 </div>
                 <p class="atk-desc">카카오톡 미사용 또는 수신 불가 시<br>문자(SMS)로 자동 대체 발송됩니다.</p>
-                <div class="form-group">
-                    <label class="form-label required" for="atkPhone">휴대폰 번호</label>
-                    <input type="tel" inputmode="numeric" autocomplete="tel" class="form-input"
-                           id="atkPhone" placeholder="숫자만 입력 (예: 01012345678)" maxlength="11">
-                    <div class="atk-error" id="atkPhoneError">휴대폰 번호를 올바르게 입력해주세요.</div>
+                <div class="atk-link-box">
+                    <div class="atk-link-row" id="atkCallerRow">
+                        <span class="atk-link-label">발신번호</span>
+                        <span class="atk-link-value" id="atkCallerValue">-</span>
+                    </div>
+                    <div class="atk-link-row">
+                        <span class="atk-link-label">인증받을 번호</span>
+                        <span class="atk-link-value is-strong" id="atkPhoneMasked">-</span>
+                    </div>
                 </div>
+                <p class="form-help" id="atkLinkHelp"></p>
+                <div class="atk-error" id="atkPhoneError">등록된 인증 번호가 없습니다. 마이페이지에서 인증 수단을 먼저 등록해 주세요.</div>
                 <div class="atk-actions">
                     <button type="button" class="btn btn-primary btn-block" id="atkSendBtn">인증 번호 보내기</button>
                     <button type="button" class="btn btn-outline btn-block" id="atkCancelBtn">취소</button>
@@ -380,12 +387,10 @@ function atkReset() {
     clearInterval(atkState.timerInterval);
     atkState.timerInterval = null;
     atkState.channel = 'alimtalk';
-    atkState.phone = '';
     atkState.attempts = 0;
     atkUnlockCode();
     atkEl('atkStep1').style.display = '';
     atkEl('atkStep2').style.display = 'none';
-    atkEl('atkPhone').value = '';
     atkEl('atkCode').value = '';
     atkShowError('atkPhoneError', false);
     atkShowError('atkCodeError', false);
@@ -396,7 +401,7 @@ function atkShowStep2(phoneDigits) {
     atkState.phone = phoneDigits;
     atkEl('atkStep1').style.display = 'none';
     atkEl('atkStep2').style.display = '';
-    atkEl('atkPhoneDisplay').textContent = atkFormatPhone(phoneDigits);
+    atkEl('atkPhoneDisplay').textContent = atkMaskPhone(phoneDigits);   // 2단계도 동일하게 마스킹
     atkEl('atkCode').value = '';
     atkShowError('atkCodeError', false);
     atkStartTimer();
@@ -404,15 +409,13 @@ function atkShowStep2(phoneDigits) {
 }
 
 function atkHandleSend() {
-    const input = atkEl('atkPhone');
-    const digits = atkSanitizePhone(input.value);
-    input.value = digits;
-
-    const valid = /^01[0-9]{8,9}$/.test(digits);
-    atkShowError('atkPhoneError', !valid);
-    if (!valid) return;
-
-    atkShowStep2(digits);
+    // 사용자가 번호를 입력하지 않는다. 계정·발신번호에 등록·확인된 번호로만 발송한다.
+    if (!atkState.phone) {
+        atkShowError('atkPhoneError', true);
+        return;
+    }
+    atkShowError('atkPhoneError', false);
+    atkShowStep2(atkState.phone);
 }
 
 function atkHandleVerify() {
@@ -464,10 +467,6 @@ function initAlimtalkAuth() {
     if (atkState.mounted) return;
     atkState.mounted = true;
 
-    atkEl('atkPhone').addEventListener('input', function () {
-        this.value = atkSanitizePhone(this.value);
-        atkShowError('atkPhoneError', false);
-    });
     atkEl('atkCode').addEventListener('input', function () {
         this.value = this.value.replace(/\D/g, '').slice(0, 6);
         atkShowError('atkCodeError', false);
@@ -501,11 +500,26 @@ function openAlimtalkAuth(options = {}) {
         || '보안을 위해 등록된 휴대폰 번호로 카카오톡 알림톡을 보내드립니다.';
     atkEl('atkVerifyBtn').textContent = options.confirmText || '인증하기';
 
+    /* 인증 대상은 호출부가 주입한 '등록·확인된 번호'로 고정 (보안심사 3.4-②·3.5-①②) */
+    atkState.phone = atkSanitizePhone(options.phone || '');
+    atkEl('atkPhoneMasked').textContent = atkState.phone ? atkMaskPhone(atkState.phone) : '미등록';
+
+    const callerRow = atkEl('atkCallerRow');
+    if (options.callerNumber) {
+        callerRow.style.display = '';
+        atkEl('atkCallerValue').textContent = options.callerNumber;
+        atkEl('atkLinkHelp').innerHTML = '발신번호 등록 시 본인확인한 번호입니다.<br>번호 변경은 마이페이지 &gt; 발신번호 관리에서 가능합니다.';
+    } else {
+        callerRow.style.display = 'none';
+        atkEl('atkLinkHelp').innerHTML = '회원가입 시 본인확인한 번호입니다.<br>번호 변경은 마이페이지 &gt; 2차 인증 설정에서 가능합니다.';
+    }
+    atkEl('atkSendBtn').disabled = !atkState.phone;
+    atkShowError('atkPhoneError', !atkState.phone);
+
     atkState.onSuccess = options.onSuccess || null;
 
     atkEl('atkBackdrop').classList.add('open');
     atkEl('atkSheet').classList.add('open');
-    setTimeout(() => atkEl('atkPhone').focus(), 300);
 }
 
 

@@ -851,3 +851,15 @@ body {
     font-size: 12px; color: var(--text-muted);
 }
 .atk-help a { color: var(--primary); font-weight: 600; text-decoration: none; }
+/* 발신번호 ↔ 인증번호 연계 정보 */
+.atk-link-box {
+    border: 1px solid var(--border); border-radius: 10px;
+    background: #f8fafc; padding: 12px 14px; margin-bottom: 8px;
+}
+.atk-link-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; font-size: 13px; padding: 4px 0;
+}
+.atk-link-label { color: var(--text-sub); font-weight: 500; flex-shrink: 0; }
+.atk-link-value { color: var(--text); font-weight: 600; text-align: right; word-break: break-all; }
+.atk-link-value.is-strong { font-weight: 800; font-size: 15px; }

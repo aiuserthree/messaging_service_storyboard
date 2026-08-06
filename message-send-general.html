@@ -2701,12 +2701,25 @@ document.getElementById('confirmRecipientCount').textContent =
             requestSendAuth();
         }
 
+        /* 발신번호 등록 시 본인확인된 인증 대상 번호를 조회한다.
+         * 실제 연동 시 GET /api/caller-numbers/{id}/auth-phone 응답값으로 대체한다.
+         * 유선번호(02·0XX 등)는 알림톡·SMS 인증이 불가하므로 ARS 등 대체 인증 필요. */
+        function getCallerAuthPhone(caller) {
+            var digits = String(caller || '').replace(/\D/g, '');
+            if (/^01[0-9]{8,9}$/.test(digits)) return digits;   // 휴대폰 발신번호: 자기 자신
+            return '01098725784';                               // 그 외: 등록 담당자 번호(데모)
+        }
+
         /* 발송 전 추가 인증 — 알림톡 인증번호 */
         function requestSendAuth() {
+            var callerEl = document.getElementById('callerNumber');
+            var caller = callerEl ? callerEl.value : '';
             openAlimtalkAuth({
                 title: '발송 추가 인증',
-                description: '발송 전 확인을 위해 등록된 휴대폰 번호로<br>카카오톡 알림톡을 보내드립니다.',
+                description: '발신번호와 계정의 연계 확인을 위해<br>등록된 번호로 카카오톡 알림톡을 보내드립니다.',
                 confirmText: '인증하고 발송하기',
+                phone: getCallerAuthPhone(caller),
+                callerNumber: caller || '-',
                 onSuccess: function () {
                     closeModal('sendConfirmModal');
                     executeActualSend();
@@ -5427,7 +5440,9 @@ document.getElementById('confirmRecipientCount').textContent =
                 function: '발송 전 추가 인증 (카카오톡 알림톡 인증번호)',
                 behavior: [
                     '발송 확인 모달에서 "발송하기" 클릭 후 노출',
-                    '1단계: 휴대폰 번호 입력 → 알림톡으로 인증번호 6자리 발송',
+                    '1단계: 선택한 발신번호와 인증받을 번호(마스킹)를 함께 표시 → 알림톡 발송',
+                    '사용자가 번호를 직접 입력할 수 없음 (보안심사 3.5-①② 발신번호·계정 연계 확인)',
+                    '휴대폰 발신번호는 해당 번호로, 유선 발신번호는 등록 담당자 번호로 인증',
                     '2단계: 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
                     '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
                     '【실패 처리】',

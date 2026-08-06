@@ -234,14 +234,25 @@
             });
         });
 
+        /* 발신번호 등록 시 본인확인된 인증 대상 번호를 조회한다.
+         * 실제 연동 시 GET /api/caller-numbers/{id}/auth-phone 응답값으로 대체한다.
+         * 유선번호는 알림톡·SMS 인증이 불가하므로 ARS 등 대체 인증 필요. */
+        function getCallerAuthPhone(caller) {
+            const digits = String(caller || '').replace(/\D/g, '');
+            if (/^01[0-9]{8,9}$/.test(digits)) return digits;
+            return '01098725784';
+        }
+
         // 발송 → 알림톡 추가 인증 후 실행
         document.getElementById('sendBtn').addEventListener('click', () => {
             if (!callerSelect.value) { alert('발신번호를 선택해주세요.'); return; }
             if (!msgContent.value.trim()) { alert('메시지 내용을 입력해주세요.'); return; }
             openAlimtalkAuth({
                 title: '발송 추가 인증',
-                description: '발송 전 확인을 위해 등록된 휴대폰 번호로 카카오톡 알림톡을 보내드립니다.',
+                description: '발신번호와 계정의 연계 확인을 위해 등록된 번호로 카카오톡 알림톡을 보내드립니다.',
                 confirmText: '인증하고 발송하기',
+                phone: getCallerAuthPhone(callerSelect.value),
+                callerNumber: callerSelect.value || '-',
                 onSuccess: () => { location.href = 'send-complete-mobile.html?total=1500&fail=13'; }
             });
         });
@@ -466,7 +477,8 @@
                 function: '발송 전 추가 인증 (카카오톡 알림톡 인증번호)',
                 behavior: [
                     '"발송하기" 클릭 → 발신번호·메시지 내용 검증 통과 후 하단에서 슬라이드업',
-                    '1단계: 휴대폰 번호 입력 → 알림톡으로 인증번호 6자리 발송',
+                    '1단계: 선택한 발신번호와 인증받을 번호(마스킹)를 함께 표시 → 알림톡 발송',
+                    '사용자가 번호를 직접 입력할 수 없음 (보안심사 3.5-①②)',
                     '2단계: 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
                     '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
                     '【실패 처리】',
