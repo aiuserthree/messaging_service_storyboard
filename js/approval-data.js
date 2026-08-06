@@ -98,6 +98,42 @@
         return 'APV-' + String(at).replace(/[^0-9]/g, '').slice(2, 12) + '-' + String(seq).replace(/[^0-9]/g, '');
     };
 
+    /* ================= 승인 인증 세션 =================
+     * 문자 발송은 두 단계를 거친다.
+     *   1) 발송 추가 인증 — 알림톡(휴대폰 발신번호) / ARS(유선번호)
+     *      발신번호 소유·계정 연계 확인이 목적 (3.5-①②③)
+     *      → js/alimtalk-auth.js 의 getSendAuthState / markSendAuthenticated
+     *      → 발신번호가 바뀌면 재인증한다
+     *   2) 기업관리자 사후승인 — 승인 담당자 이메일 OTP (3.5-④)
+     *      담당자 본인 확인이 목적이므로 발신번호와 무관하게 30분 유지한다
+     *
+     * 프로토타입: sessionStorage 기반. 실제 연동 시 서버 세션으로 대체한다.
+     */
+    var APPROVAL_AUTH_KEY = 'approvalOtpAuthAt';
+
+    window.APPROVAL_AUTH_VALID_MINUTES = 30;
+
+    window.apvMarkApprovalAuth = function () {
+        sessionStorage.setItem(APPROVAL_AUTH_KEY, String(Date.now()));
+    };
+
+    window.apvApprovalAuthState = function () {
+        var at = Number(sessionStorage.getItem(APPROVAL_AUTH_KEY) || 0);
+        if (!at) return { required: true, reason: '' };
+
+        var elapsedMin = (Date.now() - at) / 60000;
+        if (elapsedMin >= window.APPROVAL_AUTH_VALID_MINUTES) {
+            return {
+                required: true,
+                reason: '승인 유효시간(' + window.APPROVAL_AUTH_VALID_MINUTES + '분)이 지나 다시 승인이 필요합니다.'
+            };
+        }
+        return {
+            required: false,
+            remainMin: Math.max(1, Math.ceil(window.APPROVAL_AUTH_VALID_MINUTES - elapsedMin))
+        };
+    };
+
     /* ================= 승인 이력 =================
      * 화면(메뉴)은 제공하지 않고 서버 이력으로만 보관한다.
      * 아래는 프로토타입에서 기록 항목을 확인하기 위한 localStorage 데모.

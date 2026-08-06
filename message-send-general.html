@@ -2711,8 +2711,14 @@ document.getElementById('confirmRecipientCount').textContent =
             return '01098725784';                               // 그 외: 등록 담당자 번호(데모)
         }
 
-        /* 발송 전 승인 인증 — 이메일 OTP (3.5-④)
-         * 재인증 기준(3.5-⑤): 최초 / 30분 경과 / 발신번호 변경 / 대량발송 / 접속환경 변경 */
+        /* 발송 전 인증 — 2단계
+         *   【1단계】 발송 추가 인증  : 발신번호 소유·계정 연계 확인 (3.5-①②③)
+         *                              휴대폰 발신번호 → 알림톡 / 유선·대표번호 → ARS
+         *                              재인증 기준(3.5-⑤): 최초 / 30분 경과 / 발신번호 변경 /
+         *                              대량발송 / 접속환경 변경
+         *   【2단계】 기업관리자 사후승인 : 승인 담당자 이메일 OTP (3.5-④)
+         *                              담당자 본인 확인이므로 발신번호와 무관하게 30분 유지
+         * 두 단계를 모두 통과해야 발송된다. */
         function requestSendAuth() {
             var callerEl = document.getElementById('callerNumber');
             var caller = callerEl ? callerEl.value : '';
@@ -2721,11 +2727,11 @@ document.getElementById('confirmRecipientCount').textContent =
 
             var state = getSendAuthState(ctx);
             if (!state.required) {
-                // 동일 세션에서 인증이 유효 → 재인증 없이 발송
+                // 동일 세션에서 추가 인증이 유효 → 2단계(사후승인)로 바로 진행
                 if (typeof showToast === 'function') {
-                    showToast('추가 인증이 유효합니다. (약 ' + state.remainMin + '분 남음) 재인증 없이 발송합니다.', 'info');
+                    showToast('추가 인증이 유효합니다. (약 ' + state.remainMin + '분 남음)', 'info');
                 }
-                executeActualSend();
+                requestSendApproval(ctx, caller);
                 return;
             }
 
@@ -2736,26 +2742,59 @@ document.getElementById('confirmRecipientCount').textContent =
                     arsNumber: '1600-0000',
                     onSuccess: function () {
                         markSendAuthenticated(ctx);
-                        closeModal('sendConfirmModal');
-                        executeActualSend();
+                        requestSendApproval(ctx, caller);
                     }
                 });
                 return;
             }
 
             var desc = state.reason
-                ? state.reason + '<br>등록된 담당자 이메일로 인증번호를 보내드립니다.'
-                : '발송 승인을 위해 등록된 담당자 이메일로<br>인증번호 6자리를 보내드립니다.';
+                ? state.reason + '<br>등록된 번호로 카카오톡 알림톡을 보내드립니다.'
+                : '발신번호와 계정의 연계 확인을 위해<br>등록된 번호로 카카오톡 알림톡을 보내드립니다.';
 
-            // 기업관리자 사후승인 — 이메일 OTP (3.5-④)
-            openEmailOtpAuth({
-                title: '발송 승인 인증',
+            openAlimtalkAuth({
+                title: '발송 추가 인증',
                 description: desc,
-                confirmText: '인증하고 발송하기',
-                email: getApprovalEmail(),
+                confirmText: '인증하기',
+                phone: getCallerAuthPhone(caller),
                 callerNumber: caller || '-',
                 onSuccess: function () {
                     markSendAuthenticated(ctx);
+                    requestSendApproval(ctx, caller);
+                }
+            });
+        }
+
+        /* 【2단계】 기업관리자 사후승인 요청 — 승인 담당자 이메일 OTP (3.5-④)
+         * 승인 담당자가 6자리를 입력하면 그 시점에 발송 승인이 완료되고 발송된다. */
+        function requestSendApproval(ctx, caller) {
+            var approval = (typeof apvApprovalAuthState === 'function')
+                ? apvApprovalAuthState()
+                : { required: true, reason: '' };
+
+            if (!approval.required) {
+                // 동일 세션에서 승인이 유효 → 재승인 없이 발송
+                if (typeof showToast === 'function') {
+                    showToast('발송 승인이 유효합니다. (약 ' + approval.remainMin + '분 남음) 재승인 없이 발송합니다.', 'info');
+                }
+                recordSendApproval(ctx);
+                closeModal('sendConfirmModal');
+                executeActualSend();
+                return;
+            }
+
+            var desc = approval.reason
+                ? approval.reason + '<br>승인 담당자 이메일로 인증번호를 보내드립니다.'
+                : '기업관리자 사후승인을 위해 승인 담당자 이메일로<br>인증번호 6자리를 보내드립니다.';
+
+            openEmailOtpAuth({
+                title: '발송 사후승인 요청',
+                description: desc,
+                confirmText: '승인하고 발송하기',
+                email: getApprovalEmail(),
+                callerNumber: caller || '-',
+                onSuccess: function () {
+                    if (typeof apvMarkApprovalAuth === 'function') apvMarkApprovalAuth();
                     recordSendApproval(ctx);
                     closeModal('sendConfirmModal');
                     executeActualSend();
@@ -5493,37 +5532,42 @@ document.getElementById('confirmRecipientCount').textContent =
             // 69. 알림톡 추가 인증 팝업
             {
                 selector: '#alimtalkAuthModal',
-                title: '발송 승인 인증 (이메일 OTP) 팝업',
+                title: '발송 인증 팝업 (추가 인증 → 사후승인)',
                 position: { top: '60px', left: '20px' },
-                function: '발송 전 기업관리자 승인 — 이메일 OTP 인증번호 (보안심사 3.5-④)',
+                function: '발송 전 2단계 인증 — 발송 추가 인증(3.5-①②③) → 기업관리자 사후승인(3.5-④)',
                 behavior: [
-                    '발송 확인 모달에서 "발송하기" 클릭 후 노출',
-                    '【사후승인 방식 — 이메일 승인 (3.5-④)】',
-                    '항목해설상 사후승인은 전자결재·관리자 콘솔 승인·이메일 승인·서면 결재 등',
-                    '승인(확인) 사실을 입증할 수 있는 방식이면 되며, 톡벨은 이메일 승인을 채택',
-                    '승인 주체는 문자재판매사업자가 아니라 서비스를 이용하는 기업 고객사의 관리자·담당자',
-                    '1단계: 선택한 발신번호와 승인 담당자 이메일(마스킹)을 함께 표시 → 인증번호 발송',
-                    '사용자가 이메일을 직접 입력할 수 없음 — 등록·확인된 담당자 이메일로만 발송',
-                    '2단계: 이메일로 받은 6자리 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
-                    '인증 통과 시 그 시점에 발송 승인이 완료되고 문자 발송이 실행됨',
-                    '별도의 승인 대기 큐·승인 콘솔 화면은 두지 않음',
-                    '승인 사실은 서버 이력으로 보관 — 승인번호 / 처리일시 / 처리자 / 발신번호 / 건수 / 본인확인 수단(이메일 OTP) / 접속 IP',
-                    '【유선·대표번호 — ARS 인증 (3.5-③)】',
-                    '발신번호가 01X 가 아니면 ARS 음성 인증 단계로 분기해 발신번호 소유를 확인',
+                    '발송 확인 모달에서 "발송하기" 클릭 후 노출되며, 두 단계를 모두 통과해야 발송된다',
+                    '【1단계 — 발송 추가 인증 (3.5-①②③)】',
+                    '목적: 발신번호 소유와 계정의 연계 확인',
+                    '선택한 발신번호와 인증받을 번호(마스킹)를 함께 표시 → 알림톡 인증번호 발송',
+                    '사용자가 번호를 직접 입력할 수 없음 — 발신번호 등록 시 본인확인한 번호로만 발송',
+                    '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
+                    '유선·대표번호(01X 아님)는 알림톡 대신 ARS 음성 인증으로 분기 (3.5-③)',
                     '지정된 인증 전화번호(1600-0000)로 해당 유선번호에서 전화를 걸면',
                     '시스템이 인입 번호와 등록 발신번호의 일치 여부를 확인해 인증 처리',
                     '수신 대기 05:00 카운트다운, 만료 시 재시도 안내 후 인증 버튼 비활성',
-                    '【재인증 기준 — 보안심사 3.5-⑤】',
-                    '인증 완료 후 동일 세션에서 30분간 재인증 없이 발송 가능',
-                    '아래 조건에서는 재인증: 유효시간 30분 경과 / 발신번호 변경 / 대량발송(1,000건 이상) / 접속환경 변경',
-                    '재인증 시 모달 상단에 사유를 명시 (예: "발신번호가 변경되어 다시 인증이 필요합니다")',
-                    '인증이 유효하면 모달 없이 발송되며 남은 시간을 토스트로 안내',
-                    '【실패 처리】',
+                    '【2단계 — 기업관리자 사후승인 요청 (3.5-④)】',
+                    '1단계 통과 후 이어서 노출됨',
+                    '항목해설상 사후승인은 전자결재·관리자 콘솔 승인·이메일 승인·서면 결재 등',
+                    '승인(확인) 사실을 입증할 수 있는 방식이면 되며, 톡벨은 이메일 승인을 채택',
+                    '승인 주체는 문자재판매사업자가 아니라 서비스를 이용하는 기업 고객사의 관리자·담당자',
+                    '선택한 발신번호와 승인 담당자 이메일(마스킹)을 함께 표시 → 인증번호 발송',
+                    '담당자 이메일을 직접 입력할 수 없음 — 마이페이지 > 2차 인증 설정에 등록·확인된 주소로만 발송',
+                    '6자리 인증번호 입력 시 그 시점에 발송 승인이 완료되고 문자 발송이 실행됨',
+                    '별도의 승인 대기 큐·승인 콘솔 화면은 두지 않음',
+                    '승인 사실은 서버 이력으로 보관 — 승인번호 / 처리일시 / 처리자 / 발신번호 / 건수 / 본인확인 수단(이메일 OTP) / 접속 IP',
+                    '【유효시간 — 보안심사 3.5-⑤】',
+                    '두 단계 모두 통과 후 30분간 재인증·재승인 없이 발송 가능',
+                    '추가 인증 재요구 조건: 30분 경과 / 발신번호 변경 / 대량발송(1,000건 이상) / 접속환경 변경',
+                    '사후승인 재요구 조건: 30분 경과 (담당자 본인 확인이 목적이라 발신번호와 무관)',
+                    '재요구 시 모달 상단에 사유를 명시 (예: "발신번호가 변경되어 다시 인증이 필요합니다")',
+                    '유효하면 해당 단계는 건너뛰고 남은 시간을 토스트로 안내',
+                    '【실패 처리 — 두 단계 공통】',
                     '자릿수 미달: "인증번호 6자리를 입력해주세요."',
                     '불일치: "인증번호가 일치하지 않습니다. (n/5회)" — 남은 시도 횟수 표시',
-                    '5회 초과 또는 유효시간 만료: 입력·인증 버튼 잠금, 재전송해야 재시도 가능',
+                    '5회 초과 또는 유효시간(3분) 만료: 입력·인증 버튼 잠금, 재전송해야 재시도 가능',
                     '재전송 시 입력값·오류 문구·시도 횟수 초기화',
-                    '인증 성공 시 발송 완료 페이지 이동 / "취소" 클릭 시 발송 확인 모달로 복귀'
+                    '"취소" 클릭 시 발송 확인 모달로 복귀 (발송되지 않음)'
                 ],
                 tags: [{ text: '모달', type: 'info' }, { text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },

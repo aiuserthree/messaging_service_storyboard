@@ -252,36 +252,66 @@
                 callerNumber: callerSelect.value,
                 recipientCount: parseInt((document.getElementById('recipientCount').textContent || '0').replace(/[^0-9]/g, ''), 10) || 0
             };
+            /* 【1단계】 발송 추가 인증 — 발신번호 소유·계정 연계 확인 (3.5-①②⑤) */
             const state = getSendAuthState(ctx);
             if (!state.required) {
-                // 동일 세션에서 인증이 유효 → 재인증 없이 발송
-                alert(`추가 인증이 유효합니다. (약 ${state.remainMin}분 남음)\n재인증 없이 발송합니다.`);
-                location.href = 'send-complete-mobile.html?total=1500&fail=13';
+                // 추가 인증이 유효 → 2단계(사후승인)로 바로 진행
+                requestSendApproval(ctx);
                 return;
             }
-            // 기업관리자 사후승인 — 이메일 OTP (3.5-④)
-            openEmailOtpAuth({
-                title: '발송 승인 인증',
+            openAlimtalkAuth({
+                title: '발송 추가 인증',
                 description: state.reason
-                    ? state.reason + ' 등록된 담당자 이메일로 인증번호를 보내드립니다.'
-                    : '발송 승인을 위해 등록된 담당자 이메일로 인증번호 6자리를 보내드립니다.',
-                confirmText: '인증하고 발송하기',
-                email: (typeof APPROVAL_ADMIN !== 'undefined' && APPROVAL_ADMIN.email) ? APPROVAL_ADMIN.email : 'admin@ibank.co.kr',
+                    ? state.reason + ' 등록된 번호로 카카오톡 알림톡을 보내드립니다.'
+                    : '발신번호와 계정의 연계 확인을 위해 등록된 번호로 카카오톡 알림톡을 보내드립니다.',
+                confirmText: '인증하기',
+                phone: getCallerAuthPhone(callerSelect.value),
                 callerNumber: callerSelect.value || '-',
                 onSuccess: () => {
                     markSendAuthenticated(ctx);
-                    if (typeof apvRecordSendApproval === 'function') {
-                        apvRecordSendApproval({
-                            channel: '웹 발송(모바일)',
-                            caller: ctx.callerNumber || '-',
-                            count: ctx.recipientCount || 0,
-                            template: '직접 작성'
-                        });
-                    }
-                    location.href = 'send-complete-mobile.html?total=1500&fail=13';
+                    requestSendApproval(ctx);
                 }
             });
         });
+
+        /* 【2단계】 기업관리자 사후승인 요청 — 승인 담당자 이메일 OTP (3.5-④)
+         * 승인 담당자가 6자리를 입력하면 그 시점에 발송 승인이 완료되고 발송된다. */
+        function requestSendApproval(ctx) {
+            const approval = (typeof apvApprovalAuthState === 'function')
+                ? apvApprovalAuthState()
+                : { required: true, reason: '' };
+
+            const done = () => {
+                if (typeof apvRecordSendApproval === 'function') {
+                    apvRecordSendApproval({
+                        channel: '웹 발송(모바일)',
+                        caller: ctx.callerNumber || '-',
+                        count: ctx.recipientCount || 0
+                    });
+                }
+                location.href = 'send-complete-mobile.html?total=1500&fail=13';
+            };
+
+            if (!approval.required) {
+                alert(`발송 승인이 유효합니다. (약 ${approval.remainMin}분 남음)\n재승인 없이 발송합니다.`);
+                done();
+                return;
+            }
+
+            openEmailOtpAuth({
+                title: '발송 사후승인 요청',
+                description: approval.reason
+                    ? approval.reason + ' 승인 담당자 이메일로 인증번호를 보내드립니다.'
+                    : '기업관리자 사후승인을 위해 승인 담당자 이메일로 인증번호 6자리를 보내드립니다.',
+                confirmText: '승인하고 발송하기',
+                email: (typeof APPROVAL_ADMIN !== 'undefined' && APPROVAL_ADMIN.email) ? APPROVAL_ADMIN.email : 'admin@ibank.co.kr',
+                callerNumber: ctx.callerNumber || '-',
+                onSuccess: () => {
+                    if (typeof apvMarkApprovalAuth === 'function') apvMarkApprovalAuth();
+                    done();
+                }
+            });
+        }
 
         updatePreview();
     </script>
@@ -480,7 +510,7 @@
                 behavior: [
                     '발신번호 미선택: "발신번호를 선택해주세요." 얼럿 후 중단',
                     '메시지 미입력: "메시지 내용을 입력해주세요." 얼럿 후 중단',
-                    '검증 통과 시 openEmailOtpAuth() 호출 → 이메일 OTP 승인 인증',
+                    '검증 통과 시 openAlimtalkAuth() → 통과 후 openEmailOtpAuth() 순으로 2단계 인증',
                     '인증 성공 시에만 send-complete-mobile.html 로 이동'
                 ],
                 api: 'POST /api/messages/send',
@@ -498,30 +528,33 @@
             // ===== 발송 추가 인증 =====
             {
                 selector: '#atkSheet',
-                title: '발송 승인 인증 바텀시트 (이메일 OTP)',
+                title: '발송 인증 바텀시트 (추가 인증 → 사후승인)',
                 position: { top: '10px', left: '10px' },
-                function: '발송 전 기업관리자 승인 — 이메일 OTP 인증번호 (보안심사 3.5-④)',
+                function: '발송 전 2단계 인증 — 발송 추가 인증(3.5-①②) → 기업관리자 사후승인(3.5-④)',
                 behavior: [
                     '"발송하기" 클릭 → 발신번호·메시지 내용 검증 통과 후 하단에서 슬라이드업',
-                    '【사후승인 방식 — 이메일 승인 (3.5-④)】',
+                    '두 단계를 모두 통과해야 발송된다',
+                    '【1단계 — 발송 추가 인증 (3.5-①②)】',
+                    '선택한 발신번호와 인증받을 번호(마스킹)를 함께 표시 → 알림톡 인증번호 발송',
+                    '사용자가 번호를 직접 입력할 수 없음 — 발신번호 등록 시 본인확인한 번호로만 발송',
+                    '카카오톡 미사용·수신 불가 시 문자(SMS) 대체 발송 제공',
+                    '【2단계 — 기업관리자 사후승인 요청 (3.5-④)】',
+                    '1단계 통과 후 이어서 노출됨',
                     '승인 주체는 문자재판매사업자가 아니라 서비스를 이용하는 기업 고객사의 관리자·담당자',
-                    '1단계: 선택한 발신번호와 승인 담당자 이메일(마스킹)을 함께 표시 → 인증번호 발송',
-                    '사용자가 이메일을 직접 입력할 수 없음 — 등록·확인된 담당자 이메일로만 발송',
-                    '2단계: 이메일로 받은 6자리 인증번호 입력 (유효시간 3분, 만료 시 재전송 활성화)',
-                    '인증 통과 시 그 시점에 발송 승인이 완료되고 문자 발송이 실행됨',
+                    '승인 담당자 이메일(마스킹)로 6자리 인증번호 발송',
+                    '입력 시 그 시점에 발송 승인이 완료되고 문자 발송이 실행됨',
                     '승인 사실은 서버 이력으로 보관(승인번호·처리자·본인확인 수단·접속 IP)',
-                    '【재인증 기준 — 보안심사 3.5-⑤】',
-                    '인증 완료 후 동일 세션에서 30분간 재인증 없이 발송 가능',
-                    '아래 조건에서는 재인증: 유효시간 30분 경과 / 발신번호 변경 / 대량발송(1,000건 이상) / 접속환경 변경',
-                    '재인증 시 모달 상단에 사유를 명시 (예: "발신번호가 변경되어 다시 인증이 필요합니다")',
-                    '인증이 유효하면 모달 없이 발송되며 남은 시간을 토스트로 안내',
-                    '【실패 처리】',
+                    '【유효시간 — 보안심사 3.5-⑤】',
+                    '두 단계 모두 통과 후 30분간 재인증·재승인 없이 발송 가능',
+                    '추가 인증 재요구: 30분 경과 / 발신번호 변경 / 대량발송(1,000건 이상) / 접속환경 변경',
+                    '사후승인 재요구: 30분 경과 (발신번호와 무관)',
+                    '재요구 시 모달 상단에 사유를 명시',
+                    '【실패 처리 — 두 단계 공통】',
                     '자릿수 미달: "인증번호 6자리를 입력해주세요."',
                     '불일치: "인증번호가 일치하지 않습니다. (n/5회)" — 남은 시도 횟수 표시',
-                    '5회 초과 또는 유효시간 만료: 입력·인증 버튼 잠금, 재전송해야 재시도 가능',
+                    '5회 초과 또는 유효시간(3분) 만료: 입력·인증 버튼 잠금, 재전송해야 재시도 가능',
                     '재전송 시 입력값·오류 문구·시도 횟수 초기화',
-                    '배경 탭·취소·ESC로 닫기 → 발송 중단',
-                    '인증 완료 시 send-complete-mobile.html로 이동'
+                    '배경 탭·취소·ESC로 닫기 → 발송 중단'
                 ],
                 api: 'POST /api/auth/mfa/send, POST /api/auth/mfa/verify',
                 tags: [{ text: '모달', type: 'info' }, { text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
