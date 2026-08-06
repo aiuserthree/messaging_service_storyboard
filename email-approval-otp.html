@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>발송 승인 인증번호 메일 - 톡벨</title>
+    <script src="js/approval-data.js"></script>
+    <style>
+/* 승인 담당자에게 발송되는 인증번호 메일 양식 (보안심사 3.5-④ 증빙자료).
+   실제 메일은 이 마크업을 인라인 스타일 HTML 메일로 변환해 발송한다. */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+    background: #e2e8f0; color: #1e293b; font-size: 14px; line-height: 1.6;
+    padding: 32px 16px 64px;
+}
+
+/* 미리보기 프레임 */
+.preview-head { max-width: 640px; margin: 0 auto 20px; }
+.preview-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.preview-desc { font-size: 13px; color: #64748b; line-height: 1.7; }
+
+.mail-meta {
+    max-width: 640px; margin: 0 auto 12px; background: #fff; border: 1px solid #cbd5e1;
+    border-radius: 10px 10px 0 0; padding: 16px 20px; font-size: 13px;
+}
+.mail-meta dl { display: grid; grid-template-columns: 58px 1fr; gap: 6px 12px; }
+.mail-meta dt { color: #64748b; font-weight: 500; }
+.mail-meta dd { color: #1e293b; font-weight: 600; word-break: break-all; }
+
+/* 메일 본문 */
+.mail-body {
+    max-width: 640px; margin: 0 auto; background: #f8fafc;
+    border: 1px solid #cbd5e1; border-top: none; border-radius: 0 0 10px 10px; padding: 28px 20px 32px;
+}
+.mail-inner { max-width: 520px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+
+.mail-header { background: #0f172a; padding: 22px 28px; text-align: center; }
+.mail-header img { height: 22px; filter: brightness(0) invert(1); }
+.mail-header-sub { color: #94a3b8; font-size: 12px; margin-top: 8px; letter-spacing: .02em; }
+
+.mail-content { padding: 30px 28px; }
+.mail-greeting { font-size: 14px; color: #475569; margin-bottom: 18px; line-height: 1.8; }
+.mail-greeting strong { color: #1e293b; }
+.mail-h1 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+.mail-lead { font-size: 13.5px; color: #64748b; line-height: 1.8; margin-bottom: 24px; }
+
+/* OTP 박스 */
+.otp-box {
+    background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 10px;
+    padding: 22px 20px; text-align: center; margin-bottom: 24px;
+}
+.otp-label { font-size: 12px; font-weight: 700; color: #4338ca; letter-spacing: .04em; margin-bottom: 10px; }
+.otp-code {
+    font-size: 34px; font-weight: 800; letter-spacing: .28em; color: #1e293b;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; margin-left: .28em;
+}
+.otp-valid { font-size: 12px; color: #64748b; margin-top: 10px; }
+.otp-valid strong { color: #4338ca; }
+
+/* 발송 요약 */
+.mail-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 22px; }
+.mail-table th, .mail-table td { padding: 11px 12px; border-bottom: 1px solid #e2e8f0; text-align: left; vertical-align: top; }
+.mail-table th { width: 106px; color: #64748b; font-weight: 500; background: #f8fafc; }
+.mail-table td { color: #1e293b; font-weight: 600; word-break: break-all; }
+.mail-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+.mail-badge.warn { background: #fef3c7; color: #b45309; }
+.mail-badge.info { background: #dbeafe; color: #1d4ed8; }
+
+.mail-msg {
+    border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc;
+    padding: 14px 16px; font-size: 13px; line-height: 1.8; white-space: pre-wrap; margin-bottom: 22px;
+}
+
+.mail-notice {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+    padding: 14px 16px; font-size: 12px; color: #64748b; line-height: 1.9;
+}
+.mail-notice strong { color: #1e293b; }
+
+.mail-footer {
+    background: #f1f5f9; padding: 20px 28px; text-align: center;
+    font-size: 11px; color: #94a3b8; line-height: 1.8;
+}
+.mail-footer a { color: #64748b; }
+
+@media (max-width: 600px) {
+    .mail-table th { width: 84px; }
+    .otp-code { font-size: 28px; }
+}
+    </style>
+</head>
+<body>
+    <div class="preview-head" id="previewHead">
+        <div class="preview-title">발송 승인 인증번호 메일</div>
+        <p class="preview-desc">
+            문자 발송 시 기업 고객사의 승인 담당자에게 발송되는 인증번호 메일 양식입니다.
+            담당자가 이 6자리를 발송 화면에 입력하면 그 시점에 발송 승인이 완료됩니다.
+            보안심사 3.5-④ 증빙자료(이메일 승인 방식)로 사용합니다.
+        </p>
+    </div>
+
+    <div class="mail-meta" id="mailMeta">
+        <dl>
+            <dt>보낸사람</dt><dd>톡벨 &lt;no-reply@tokbell.co.kr&gt;</dd>
+            <dt>받는사람</dt><dd id="mailTo">김담당 &lt;admin@ibank.co.kr&gt;</dd>
+            <dt>제목</dt><dd id="mailSubject">[톡벨] 발송 승인 인증번호 [123456]</dd>
+        </dl>
+    </div>
+
+    <div class="mail-body">
+        <div class="mail-inner" id="mailInner">
+            <div class="mail-header">
+                <img src="img/logo/tokbell_logo.png" alt="톡벨">
+                <div class="mail-header-sub">발송 승인 인증</div>
+            </div>
+
+            <div class="mail-content">
+                <p class="mail-greeting" id="mailGreeting">
+                    <strong>(주)아이뱅크</strong> 김담당님, 안녕하세요.
+                </p>
+
+                <h1 class="mail-h1">발송 승인 인증번호입니다</h1>
+                <p class="mail-lead">
+                    아래 발송 건에 대한 승인 인증번호입니다.<br>
+                    발송 화면에 6자리를 입력하시면 <strong>발송 승인이 완료</strong>됩니다.
+                </p>
+
+                <!-- 이메일 OTP -->
+                <div class="otp-box" id="mailOtpBox">
+                    <div class="otp-label">승인 인증번호</div>
+                    <div class="otp-code" id="mailOtpCode">123456</div>
+                    <div class="otp-valid">유효시간 <strong>3분</strong> · 한 번 인증하면 <strong>30분</strong> 동안 재인증 없이 발송할 수 있습니다</div>
+                </div>
+
+                <!-- 발송 요약 -->
+                <table class="mail-table" id="mailSummary">
+                    <tbody>
+                        <tr><th>요청일시</th><td id="sumAt">2026-08-06 11:20</td></tr>
+                        <tr><th>발송 채널</th><td id="sumChannel">웹 발송</td></tr>
+                        <tr><th>발신번호</th><td id="sumCaller">010-1234-5678</td></tr>
+                        <tr><th>메시지 타입</th><td id="sumType">일반문자(SMS)</td></tr>
+                        <tr><th>발송 건수</th><td id="sumCount">1,240건</td></tr>
+                        <tr><th>수신번호</th><td id="sumSample">010-****-5678 외 1,239건</td></tr>
+                        <tr><th>구분</th><td id="sumRisk"><span class="mail-badge warn">대량 발송(1,000건 초과)</span></td></tr>
+                    </tbody>
+                </table>
+
+                <div class="mail-msg" id="mailMsg">[아이뱅크] 고객님이 주문하신 상품이 오늘 출발했습니다.
+· 운송장번호: 1234-5678-9012
+· 배송조회는 아래 버튼을 눌러주세요.</div>
+
+                <div class="mail-notice" id="mailNotice">
+                    · 본 메일은 <strong>기업 고객사의 승인 담당자</strong>에게만 발송됩니다. 담당자 본인이 아니면 즉시 삭제해 주세요.<br>
+                    · 승인 인증번호는 <strong>타인에게 공유하지 마세요.</strong> 톡벨은 어떤 경우에도 인증번호를 묻지 않습니다.<br>
+                    · 요청하지 않은 발송이라면 인증번호를 입력하지 마시고 <strong>즉시 1:1 문의</strong>로 알려 주세요.<br>
+                    · 인증이 완료되면 <strong>승인번호 · 처리일시 · 처리자 · 본인확인 수단 · 접속 IP</strong>가 승인 이력에 기록되며 삭제할 수 없습니다.
+                </div>
+            </div>
+
+            <div class="mail-footer">
+                (주)아이뱅크 · 톡벨 문자 서비스<br>
+                본 메일은 발신 전용입니다. 문의는 <a href="support-inquiry.html">1:1 문의</a>를 이용해 주세요.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* 발송 승인 인증번호 메일 템플릿 (보안심사 3.5-④)
+         * 실제 연동 시 POST /api/send-approval/otp/send 가 이 메일을 발송한다.
+         * 프로토타입: 데모 인증번호(123456)와 예시 발송 정보를 표시한다.
+         */
+        (function fill() {
+            if (typeof APPROVAL_ADMIN === 'undefined') return;
+
+            document.getElementById('mailTo').textContent =
+                APPROVAL_ADMIN.name + ' <' + APPROVAL_ADMIN.email + '>';
+            document.getElementById('mailGreeting').innerHTML =
+                '<strong>' + apvEscape(APPROVAL_ADMIN.company) + '</strong> ' + apvEscape(APPROVAL_ADMIN.name) + '님, 안녕하세요.';
+
+            document.getElementById('mailOtpCode').textContent = APPROVAL_OTP_DEMO;
+            document.getElementById('mailSubject').textContent = '[톡벨] 발송 승인 인증번호 [' + APPROVAL_OTP_DEMO + ']';
+            document.getElementById('sumAt').textContent = apvNow();
+            document.getElementById('sumSample').textContent = apvMaskPhone('01012345678') + ' 외 1,239건';
+        })();
+    </script>
+
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            {
+                selector: '#previewHead',
+                title: '인증번호 메일 미리보기',
+                position: { top: '-5px', left: '-10px' },
+                function: '실제 발송되는 메일 양식을 화면설계서에서 확인',
+                behavior: [
+                    '심사 증빙자료(이메일 승인 방식)로 사용',
+                    '실제 메일은 이 마크업을 인라인 스타일 HTML 메일로 변환해 발송',
+                    '미리보기 전용 영역이며 수신자에게는 보이지 않음'
+                ],
+                tags: [{ text: '심사 3.5-④', type: 'required' }]
+            },
+            {
+                selector: '#mailMeta',
+                title: '메일 헤더',
+                position: { top: '-5px', left: '-10px' },
+                function: '보낸사람 · 받는사람 · 제목',
+                behavior: [
+                    '보낸사람: 발신 전용 주소(no-reply@tokbell.co.kr)',
+                    '받는사람: 기업 고객사에 등록·확인된 승인 담당자 (발송 화면에서 직접 입력 불가)',
+                    '제목에 인증번호를 포함해 메일 목록에서도 확인 가능'
+                ],
+                api: 'POST /api/send-approval/otp/send',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#mailOtpBox',
+                title: '승인 인증번호 (이메일 OTP)',
+                position: { top: '-5px', right: '-10px' },
+                function: '발송 승인을 완료하는 6자리 인증번호',
+                behavior: [
+                    '담당자가 발송 화면에 입력하면 그 시점에 발송 승인 완료',
+                    '유효시간 3분, 한 번 인증하면 30분간 재인증 없이 발송 가능',
+                    '인증번호 공유 금지 안내를 하단에 함께 표기'
+                ],
+                tags: [{ text: '심사 3.5-④', type: 'required' }]
+            },
+            {
+                selector: '#mailSummary',
+                title: '발송 요약',
+                position: { top: '10px', left: '10px' },
+                function: '승인 판단에 필요한 발송 정보',
+                behavior: [
+                    '요청일시 / 발송 채널 / 발신번호 / 메시지 타입 / 발송 건수 / 수신번호 / 구분',
+                    '수신번호는 마스킹 노출',
+                    '대량 발송·광고성 등 위험 요소를 배지로 표시'
+                ]
+            },
+            {
+                selector: '#mailMsg',
+                title: '발송 메시지 본문',
+                position: { top: '-5px', left: '-10px' },
+                function: '발송될 메시지 전문',
+                behavior: ['담당자가 내용을 직접 확인하고 인증번호 입력 여부를 판단']
+            },
+            {
+                selector: '#mailNotice',
+                title: '보안·이력 안내',
+                position: { top: '-5px', left: '-10px' },
+                function: '수신자 확인 · 인증번호 보호 · 이력 보관 고지',
+                behavior: [
+                    '담당자 본인이 아니면 삭제 안내',
+                    '인증번호 공유 금지 및 톡벨이 인증번호를 묻지 않음을 명시',
+                    '요청하지 않은 발송이면 인증하지 말고 문의하도록 안내',
+                    '인증 완료 시 승인번호·처리자·본인확인 수단·접속 IP가 이력에 기록됨을 명시'
+                ],
+                tags: [{ text: '심사 3.5-④', type: 'required' }]
+            }
+        ];
+        initSpecOverlay(specData);
+    </script>
+</body>
+</html>

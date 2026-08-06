@@ -662,7 +662,7 @@ function openEmailOtpAuth(options = {}) {
     atkEl('atkTargetLabel').textContent = '승인 담당자';
     atkEl('atkPhoneMasked').textContent = atkState.email ? atkMaskEmail(atkState.email) : '미등록';
     atkEl('atkLinkHelp').innerHTML = options.linkHelp
-        || '기업 고객사에 등록·확인된 승인 담당자 이메일입니다.<br>변경은 마이페이지 &gt; 발송 사후승인에서 가능합니다.';
+        || '기업 고객사에 등록·확인된 승인 담당자 이메일입니다.<br>변경은 담당 매니저를 통해 요청해 주세요.';
 
     atkEl('atkPhoneError').textContent = '등록된 승인 담당자 이메일이 없습니다. 마이페이지에서 먼저 등록해 주세요.';
     atkEl('atkSendBtn').disabled = !atkState.email;
