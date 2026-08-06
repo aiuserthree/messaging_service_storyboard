@@ -447,6 +447,8 @@ function atkMaskEmail(value) {
 
 /* 이메일 OTP 모드로 바뀐 라벨·안내를 기본(알림톡) 상태로 되돌린다. */
 function atkRestorePhoneLabels() {
+    const cbox0 = atkEl('atkChannelBox');
+    if (cbox0) cbox0.classList.remove('is-email');
     const badge = atkEl('atkChannelBadge');
     if (badge) {
         badge.className = 'atk-badge';
@@ -639,6 +641,8 @@ function openEmailOtpAuth(options = {}) {
         || '발송 승인을 위해 등록된 담당자 이메일로 인증번호를 보내드립니다.';
     atkEl('atkVerifyBtn').textContent = options.confirmText || '인증하고 발송하기';
 
+    const cbox = atkEl('atkChannelBox');
+    if (cbox) cbox.classList.add('is-email');
     const badge = atkEl('atkChannelBadge');
     if (badge) {
         badge.className = 'atk-badge atk-badge-mail';

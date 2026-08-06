@@ -83,6 +83,7 @@
             /* 유선번호 ARS 인증 */
             '.atk-auth-ars-badge{display:inline-flex;align-items:center;gap:5px;background:#e0f2fe;color:#0369a1;border-radius:6px;padding:4px 9px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;}',
             '.atk-auth-mail-badge{display:inline-flex;align-items:center;gap:5px;background:#eef2ff;color:#4338ca;border-radius:6px;padding:4px 9px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;}',
+            '.atk-auth-channel.is-email{background:#f5f7ff;border-color:#c7d2fe;}',
             '.atk-auth-mail-badge svg{width:13px;height:13px;}',
             '.atk-auth-ars-guide{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:14px 16px;margin-top:16px;font-size:13px;line-height:1.7;color:#0c4a6e;}',
             '.atk-auth-ars-number{display:block;text-align:center;font-size:24px;font-weight:800;color:#0f172a;letter-spacing:0.02em;margin:10px 0 4px;}',
@@ -247,7 +248,10 @@
 
     function restorePhoneLabels() {
         var box = $('atkAuthChannelBox');
-        if (box) box.innerHTML = PHONE_CHANNEL_HTML;
+        if (box) {
+            box.classList.remove('is-email');
+            box.innerHTML = PHONE_CHANNEL_HTML;
+        }
         var label = $('atkAuthTargetLabel');
         if (label) label.textContent = '인증받을 번호';
         var err = $('atkAuthPhoneError');
@@ -600,6 +604,7 @@
         $('atkAuthVerifyBtn').textContent = opts.confirmText || '인증하고 발송하기';
 
         // 채널 안내를 이메일로 교체
+        $('atkAuthChannelBox').classList.add('is-email');
         $('atkAuthChannelBox').innerHTML =
             '<span class="atk-auth-mail-badge">' +
               '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6z"/></svg>' +

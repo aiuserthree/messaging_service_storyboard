@@ -816,6 +816,7 @@ body {
 .atk-badge svg { width: 12px; height: 12px; }
 /* 이메일 OTP 승인 인증 배지 (보안심사 3.5-④) */
 .atk-badge.atk-badge-mail { background: #eef2ff; color: #4338ca; }
+.atk-channel.is-email { background: #f5f7ff; border-color: #c7d2fe; }
 .atk-error {
     display: none;
     font-size: 12px; color: var(--danger); font-weight: 600;
