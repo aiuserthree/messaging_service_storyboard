@@ -605,6 +605,26 @@ body {
     letter-spacing: -0.02em;
 }
 
+/* 로그인 실패 경고 */
+.login-fail-notice {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+}
+.login-fail-notice.show { display: block; }
+.login-fail-notice strong { font-weight: 800; }
+.login-fail-notice.is-warning {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #b45309;
+}
+
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
@@ -702,6 +722,8 @@ body {
                         <label for="rememberId">아이디 저장</label>
             </div>
 
+                    <div class="login-fail-notice" id="loginFailNotice" role="alert"></div>
+
                     <button type="submit" class="btn btn-primary login-button" id="loginBtn">로그인</button>
                 </form>
 
@@ -716,6 +738,27 @@ body {
                 </div>
             </div>
         </main>
+
+        <!-- 로그인 실패 횟수 초과 계정 잠금 안내 -->
+        <div id="loginLockModal" class="ban-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="loginLockTitle">
+            <div class="ban-modal-box">
+                <h2 id="loginLockTitle">계정이 잠겼습니다</h2>
+                <p class="ban-modal-body">
+                    비밀번호를 <strong id="loginLockCount">5</strong>회 연속 잘못 입력하여<br>
+                    계정이 일시적으로 잠겼습니다.
+                </p>
+                <div class="ban-modal-remain" aria-live="polite">
+                    <div>잠금 해제까지 <strong id="loginLockRemain">10:00</strong> 남았습니다.</div>
+                    <div style="margin-top: 10px; font-size: 12px; color: var(--text-muted); font-weight: 500;">
+                        비밀번호가 기억나지 않으면 비밀번호 찾기로 재설정해 주세요.
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                    <a href="find-password.html" class="btn btn-outline" style="flex: 1;" id="loginLockFindPwBtn">비밀번호 찾기</a>
+                    <button type="button" class="btn btn-primary" style="flex: 1;" id="loginLockOkBtn">확인</button>
+                </div>
+            </div>
+        </div>
 
         <!-- 계정 제재 안내: 영구정지·일시정지 (데모 아이디: permanent_ban_demo, temp_suspend_demo) -->
         <div id="accountRestrictionModal" class="ban-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="restrictionModalTitle">
@@ -913,6 +956,99 @@ body {
         }
 
         // 로그인 처리
+        /* ===== 로그인 실패 횟수 제한 · 계정 잠금 (보안심사 3.4-④) =====
+         * 프로토타입: 데모 비밀번호(1234)만 성공하며 카운트는 localStorage 에 보관한다.
+         * 실제 연동 시 POST /api/auth/login 응답의 실패 횟수·잠금 상태를 사용한다.
+         *   응답 예: { success:false, failCount:3, maxAttempts:5, locked:false, lockUntil:null }
+         */
+        var LOGIN_MAX_ATTEMPTS = 5;   // 초과 시 잠금
+        var LOGIN_WARN_FROM = 3;      // 이 횟수부터 남은 시도 경고
+        var LOGIN_LOCK_MINUTES = 10;  // 잠금 지속 시간
+        var DEMO_PASSWORD = '1234';   // 데모: 이 값만 로그인 성공
+        var loginLockInterval = null;
+
+        function loginFailKey(userId) { return 'loginFail:' + String(userId || '').toLowerCase(); }
+        function loginLockKey(userId) { return 'loginLock:' + String(userId || '').toLowerCase(); }
+
+        function getLoginFailCount(userId) {
+            return parseInt(localStorage.getItem(loginFailKey(userId)) || '0', 10);
+        }
+
+        /* 잠금 상태와 남은 시간(초)을 반환한다. 만료되면 자동 해제한다. */
+        function getLoginLock(userId) {
+            var until = parseInt(localStorage.getItem(loginLockKey(userId)) || '0', 10);
+            if (!until) return { locked: false, remainSec: 0 };
+            var remain = Math.ceil((until - Date.now()) / 1000);
+            if (remain <= 0) {
+                clearLoginFail(userId);
+                return { locked: false, remainSec: 0 };
+            }
+            return { locked: true, remainSec: remain };
+        }
+
+        function clearLoginFail(userId) {
+            localStorage.removeItem(loginFailKey(userId));
+            localStorage.removeItem(loginLockKey(userId));
+        }
+
+        function recordLoginFail(userId) {
+            var count = getLoginFailCount(userId) + 1;
+            localStorage.setItem(loginFailKey(userId), String(count));
+            if (count >= LOGIN_MAX_ATTEMPTS) {
+                localStorage.setItem(loginLockKey(userId), String(Date.now() + LOGIN_LOCK_MINUTES * 60 * 1000));
+            }
+            return count;
+        }
+
+        function showLoginFailNotice(count) {
+            var el = document.getElementById('loginFailNotice');
+            var remain = LOGIN_MAX_ATTEMPTS - count;
+            var msg = '아이디 또는 비밀번호가 일치하지 않습니다.';
+            if (count >= LOGIN_WARN_FROM) {
+                msg += ' (' + count + '/' + LOGIN_MAX_ATTEMPTS + '회)<br>' +
+                       '<strong>' + remain + '회</strong> 더 실패하면 계정이 ' + LOGIN_LOCK_MINUTES + '분간 잠깁니다.';
+            }
+            el.innerHTML = msg;
+            el.classList.toggle('is-warning', count >= LOGIN_WARN_FROM);
+            el.classList.add('show');
+        }
+
+        function hideLoginFailNotice() {
+            document.getElementById('loginFailNotice').classList.remove('show');
+        }
+
+        function formatRemain(sec) {
+            var m = Math.floor(sec / 60), s2 = sec % 60;
+            return ('0' + m).slice(-2) + ':' + ('0' + s2).slice(-2);
+        }
+
+        function openLoginLockModal(userId) {
+            var modal = document.getElementById('loginLockModal');
+            document.getElementById('loginLockCount').textContent = LOGIN_MAX_ATTEMPTS;
+            modal.classList.add('is-open');
+            document.getElementById('loginBtn').disabled = true;
+
+            clearInterval(loginLockInterval);
+            var tick = function () {
+                var lock = getLoginLock(userId);
+                if (!lock.locked) {
+                    clearInterval(loginLockInterval);
+                    loginLockInterval = null;
+                    document.getElementById('loginLockRemain').textContent = '00:00';
+                    document.getElementById('loginBtn').disabled = false;
+                    hideLoginFailNotice();
+                    return;
+                }
+                document.getElementById('loginLockRemain').textContent = formatRemain(lock.remainSec);
+            };
+            tick();
+            loginLockInterval = setInterval(tick, 1000);
+        }
+
+        function closeLoginLockModal() {
+            document.getElementById('loginLockModal').classList.remove('is-open');
+        }
+
         function handleLogin(event) {
             event.preventDefault();
 
@@ -926,6 +1062,28 @@ body {
                 return;
             }
 
+            // 잠금 상태면 인증 진행 없이 안내
+            var lock = getLoginLock(userId);
+            if (lock.locked) {
+                openLoginLockModal(userId);
+                return;
+            }
+
+            // 비밀번호 검증 (프로토타입: 데모 비밀번호만 성공)
+            var password = document.getElementById('password').value;
+            if (password !== DEMO_PASSWORD) {
+                var count = recordLoginFail(userId);
+                if (count >= LOGIN_MAX_ATTEMPTS) {
+                    hideLoginFailNotice();
+                    openLoginLockModal(userId);
+                } else {
+                    showLoginFailNotice(count);
+                }
+                return;
+            }
+
+            hideLoginFailNotice();
+            clearLoginFail(userId);
             pendingLoginRedirect = getLoginRedirect();
 
             var rememberId = document.getElementById('rememberId').checked;
@@ -950,6 +1108,24 @@ body {
 
             // 드롭다운 메뉴 초기화
             initDropdownMenus();
+
+            var lockOk = document.getElementById('loginLockOkBtn');
+            if (lockOk) lockOk.addEventListener('click', closeLoginLockModal);
+            var lockModal = document.getElementById('loginLockModal');
+            if (lockModal) {
+                lockModal.addEventListener('click', function (e) {
+                    if (e.target === lockModal) closeLoginLockModal();
+                });
+            }
+            // 아이디 입력이 바뀌면 이전 경고를 지우고 잠금 여부를 다시 확인한다
+            var userIdInput = document.getElementById('userId');
+            if (userIdInput) {
+                userIdInput.addEventListener('input', function () {
+                    hideLoginFailNotice();
+                    var l = getLoginLock(this.value.trim());
+                    document.getElementById('loginBtn').disabled = l.locked;
+                });
+            }
 
             var banModal = document.getElementById('accountRestrictionModal');
             var banOk = document.getElementById('restrictionModalOkBtn');
@@ -1083,8 +1259,12 @@ body {
                     '아이디/비밀번호 빈 값 검증',
                     '검증 통과 시 2단계 인증 모달 표시',
                     'MFA 인증 완료 후 main.html로 리다이렉트',
-                    '실패 시 "아이디 또는 비밀번호가 일치하지 않습니다" 에러',
-                    '5회 실패 시 계정 잠금 안내'
+                    '【실패 처리 — 보안심사 3.4-④】',
+                    '1~2회 실패: "아이디 또는 비밀번호가 일치하지 않습니다."',
+                    '3회부터: "(n/5회) n회 더 실패하면 계정이 10분간 잠깁니다" 경고 노출',
+                    '5회 실패: 계정 잠금 모달 표시, 로그인 버튼 비활성',
+                    '잠금 중에는 올바른 비밀번호를 입력해도 로그인·2차 인증 진입 차단',
+                    '실패 카운트는 계정(아이디)별로 관리되며 로그인 성공 시 초기화'
                 ],
                 api: 'POST /api/auth/login',
                 tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
@@ -1136,6 +1316,36 @@ body {
                     '임시 비밀번호 발급 또는 재설정 링크 발송'
                 ],
                 api: 'POST /api/auth/find-password'
+            },
+            // 13-1. 로그인 실패 경고
+            {
+                selector: '#loginFailNotice',
+                title: '로그인 실패 경고',
+                position: { top: '-5px', left: '-10px' },
+                function: '로그인 실패 횟수 및 잠금 예고 안내',
+                behavior: [
+                    '1~2회: 일반 오류 문구(빨강)',
+                    '3회부터: 남은 시도 횟수와 잠금 예고를 함께 표시(주황 경고)',
+                    '아이디를 변경하면 경고가 초기화됨',
+                    '5회 도달 시 경고 대신 잠금 모달로 전환'
+                ],
+                tags: [{ text: '조건부', type: 'info' }]
+            },
+            // 13-2. 계정 잠금 모달
+            {
+                selector: '#loginLockModal',
+                title: '계정 잠금 안내 모달',
+                position: { top: '10px', left: '10px' },
+                function: '로그인 5회 실패 시 계정 잠금 고지 (보안심사 3.4-④)',
+                behavior: [
+                    '"비밀번호를 5회 연속 잘못 입력하여 계정이 일시적으로 잠겼습니다" 안내',
+                    '잠금 해제까지 남은 시간 10:00 부터 1초 단위 카운트다운',
+                    '만료 시 자동 해제되고 로그인 버튼이 다시 활성화됨',
+                    '비밀번호 찾기 버튼으로 재설정 유도',
+                    '잠금 중 재시도 시 인증 진행 없이 본 모달을 다시 노출'
+                ],
+                api: 'POST /api/auth/login (응답: failCount, locked, lockUntil)',
+                tags: [{ text: '모달', type: 'info' }, { text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
             // 14. 2차 인증 모달 (알림톡)
             {
