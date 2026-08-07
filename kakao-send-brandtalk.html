@@ -1259,6 +1259,16 @@ body {
                                     </div>
 
                                     <!-- 발송 대상 선택 옵션 -->
+                                    <!-- M,N 타깃 미승인 안내 -->
+                                    <div class="alert alert-warning" id="targetLockNotice" style="margin-bottom: 16px;">
+                                        <strong>현재는 채널친구(I) 타깃만 발송하실 수 있습니다</strong>
+                                        <p style="margin-top: 6px; font-size: 13px; line-height: 1.7;">
+                                            전체(M)·채널친구 제외(N) 타깃은 카카오 승인이 필요합니다.
+                                            <a href="kakao-profile-manage.html" style="color: var(--primary-color); font-weight: 600; text-decoration: underline;">발신 프로필 관리</a>에서
+                                            브랜드메시지(M,N타깃) 사용신청을 하시면 승인 후 선택하실 수 있습니다.
+                                        </p>
+                                    </div>
+
                                     <div style="display: flex; flex-direction: column; gap: 16px;">
                                         <!-- 옵션 I -->
                                         <label style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 2px solid #8b5cf6; border-radius: 12px; background: #faf5ff; cursor: pointer; transition: all 0.2s;">
@@ -1272,9 +1282,9 @@ body {
                                             </div>
                                         </label>
 
-                                        <!-- 옵션 N -->
-                                        <label style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 2px solid #e5e7eb; border-radius: 12px; background: white; cursor: pointer; transition: all 0.2s;">
-                                            <input type="radio" name="targetType" value="N" style="margin-top: 2px; width: 20px; height: 20px; cursor: pointer; flex-shrink: 0;">
+                                        <!-- 옵션 N — M,N 타깃 승인 전에는 선택 불가 -->
+                                        <label id="targetOptionN" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 2px solid #e5e7eb; border-radius: 12px; background: white; cursor: pointer; transition: all 0.2s;">
+                                            <input type="radio" name="targetType" value="N" id="targetTypeN" style="margin-top: 2px; width: 20px; height: 20px; cursor: pointer; flex-shrink: 0;">
                                             <div style="flex: 1;">
                                                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                                     <span style="font-weight: 600; font-size: 16px; color: var(--text-primary);">N: 마케팅 수신 동의한 채널 비친구</span>
@@ -1284,9 +1294,9 @@ body {
                                             </div>
                                         </label>
 
-                                        <!-- 옵션 M -->
-                                        <label style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 2px solid #e5e7eb; border-radius: 12px; background: white; cursor: pointer; transition: all 0.2s;">
-                                            <input type="radio" name="targetType" value="M" style="margin-top: 2px; width: 20px; height: 20px; cursor: pointer; flex-shrink: 0;">
+                                        <!-- 옵션 M — M,N 타깃 승인 전에는 선택 불가 -->
+                                        <label id="targetOptionM" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 2px solid #e5e7eb; border-radius: 12px; background: white; cursor: pointer; transition: all 0.2s;">
+                                            <input type="radio" name="targetType" value="M" id="targetTypeM" style="margin-top: 2px; width: 20px; height: 20px; cursor: pointer; flex-shrink: 0;">
                                             <div style="flex: 1;">
                                                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                                     <span style="font-weight: 600; font-size: 16px; color: var(--text-primary);">M: 마케팅 수신 동의 회원</span>
@@ -2292,6 +2302,52 @@ document.addEventListener('DOMContentLoaded', function() {
             reader.readAsDataURL(file);
         }
 
+        document.addEventListener('DOMContentLoaded', function () { applyTargetTypeLock(); });
+
+        /* ===== 발송 타깃 제어 (M,N 타깃 승인 여부) =====
+         * M,N 타깃(비친구 발송)은 카카오 승인이 필요하다. 승인 전에는
+         * 채널친구(I) 타깃만 선택할 수 있고, 승인이 완료되면 M·N 도 열린다.
+         * 실제 연동 시 GET /api/kakao/brand-message/channel/:profileId 의
+         * 승인 상태(mnApproved)로 판정한다.
+         */
+        var isMnTargetApproved = false;   // 프로토타입 데모: 미승인 상태
+
+        function applyTargetTypeLock() {
+            [['targetTypeN', 'targetOptionN'], ['targetTypeM', 'targetOptionM']].forEach(function (pair) {
+                var input = document.getElementById(pair[0]);
+                var label = document.getElementById(pair[1]);
+                if (!input || !label) return;
+
+                input.disabled = !isMnTargetApproved;
+                label.style.opacity = isMnTargetApproved ? '' : '0.5';
+                label.style.cursor = isMnTargetApproved ? 'pointer' : 'not-allowed';
+
+                // 미승인 안내 배지 (중복 삽입 방지)
+                var badgeId = pair[1] + 'Lock';
+                var badge = document.getElementById(badgeId);
+                if (!isMnTargetApproved && !badge) {
+                    badge = document.createElement('span');
+                    badge.id = badgeId;
+                    badge.style.cssText = 'padding:4px 10px;background:#fef3c7;color:#b45309;border-radius:12px;font-size:12px;font-weight:700;white-space:nowrap;';
+                    badge.textContent = 'M,N 타깃 승인 필요';
+                    var head = label.querySelector('div > div');
+                    if (head) head.appendChild(badge);
+                } else if (isMnTargetApproved && badge) {
+                    badge.remove();
+                }
+            });
+
+            var notice = document.getElementById('targetLockNotice');
+            if (notice) notice.style.display = isMnTargetApproved ? 'none' : '';
+
+            // 잠긴 항목이 선택돼 있으면 I 로 되돌린다
+            var checked = document.querySelector('input[name="targetType"]:checked');
+            if (checked && checked.disabled) {
+                document.querySelector('input[name="targetType"][value="I"]').checked = true;
+                if (typeof updatePreview === 'function') updatePreview();
+            }
+        }
+
         function updatePreview() {
             const content = document.getElementById('messageContent').value;
             const selectedType = document.querySelector('input[name="targetType"]:checked')?.value || 'I';
@@ -3112,6 +3168,42 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#sendTimeGroup', title: '발송 시간', position: { top: '5px', left: '-15px' }, function: '즉시/예약 발송 설정', tags: [{ text: '필수', type: 'required' }] },
             { selector: '.cost-info', title: '발송 비용 정보', position: { top: '10px', left: '-15px' }, function: '수신번호 기준 비용 자동 계산' },
             { selector: 'button[onclick="testSend()"]', title: '테스트 발송', position: { top: '-5px', left: '-10px' }, function: '소량 테스트 발송', behavior: ['테스트 발송 모달 노출'], api: 'POST /api/kakao/brand/test' },
+            {
+                selector: '#targetLockNotice',
+                title: '발송 타깃 제한 안내',
+                position: { top: '-5px', left: '-10px' },
+                function: 'M,N 타깃 미승인 상태 고지',
+                behavior: [
+                    'M,N 타깃(비친구 발송)은 카카오 승인이 필요해 승인 전에는 채널친구(I)만 선택 가능',
+                    '"발신 프로필 관리" 링크로 브랜드메시지(M,N타깃) 사용신청 화면 이동',
+                    '승인 완료 시 이 안내는 사라지고 전체(M)·채널친구 제외(N)가 활성화됨'
+                ],
+                api: 'GET /api/kakao/brand-message/channel/:profileId (mnApproved)',
+                tags: [{ text: 'API', type: 'api' }, { text: '조건부', type: 'info' }]
+            },
+            {
+                selector: '#targetOptionN',
+                title: 'N 타깃 (채널친구 제외)',
+                position: { top: '-5px', right: '-10px' },
+                function: '마케팅 수신 동의한 채널 비친구 발송',
+                behavior: [
+                    'M,N 타깃 승인 전에는 비활성 — 반투명 처리 + "M,N 타깃 승인 필요" 배지',
+                    '승인 완료 시 선택 가능해지고 배지가 사라짐',
+                    '잠긴 상태에서 선택돼 있으면 자동으로 I 타깃으로 되돌림'
+                ],
+                tags: [{ text: '조건부', type: 'info' }]
+            },
+            {
+                selector: '#targetOptionM',
+                title: 'M 타깃 (전체)',
+                position: { top: '-5px', right: '-10px' },
+                function: '마케팅 수신 동의 회원 전체 발송 (친구 여부 무관)',
+                behavior: [
+                    'M,N 타깃 승인 전에는 비활성 — 반투명 처리 + "M,N 타깃 승인 필요" 배지',
+                    '승인 완료 시 선택 가능해지고 배지가 사라짐'
+                ],
+                tags: [{ text: '조건부', type: 'info' }]
+            },
             {
                 selector: '#brandPrepareNotice',
                 title: '브랜드메시지 준비 안내',
