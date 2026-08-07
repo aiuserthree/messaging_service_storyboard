@@ -1183,17 +1183,6 @@ body {
 
                 <!-- 템플릿이 있는 경우 발송 폼 -->
                 <div id="sendFormArea" style="display: none;">
-                    <!-- 브랜드메시지 준비 안내 — 채널 인증까지만 열려 있고 실제 발송은 담당자 연동 후 -->
-                    <div class="alert alert-info" style="margin-bottom: 16px;" id="brandPrepareNotice">
-                        <strong>브랜드메시지는 채널 연동 준비 후 발송됩니다</strong>
-                        <p style="margin-top: 8px; font-size: 13px; line-height: 1.7;">
-                            브랜드메시지는 <strong>채널 친구 수 5만 명 이상</strong>인 채널만 이용할 수 있어 사전 준비가 필요합니다.<br>
-                            발송을 요청하시면 접수 후 담당자가 채널 연동과 발송 테스트를 진행하며, <strong>2~3일</strong> 정도 소요됩니다.
-                            준비가 완료되면 담당자가 연락드립니다.
-                            <a href="kakao-profile-manage.html" style="color: var(--primary-color); font-weight: 600; text-decoration: underline;">이용 신청하기</a>
-                        </p>
-                    </div>
-
                     <!-- 광고성 메시지 안내 -->
                     <div class="alert alert-warning" style="margin-bottom: 24px;">
                         <strong>⚠️ 브랜드 메시지는 광고성 메시지입니다</strong>
@@ -2896,73 +2885,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            /* 브랜드메시지는 채널 친구 수 5만명 이상 조건 때문에 사전 테스트가 불가능하다.
-             * 발송은 즉시 실행하지 않고 **접수만** 받은 뒤, 담당자가 고객 채널로
-             * 연동·발송 테스트를 진행한다. (2~3일 소요)
-             * 실제 연동 시 POST /api/kakao/brand/send 가 접수 상태로 응답한다. */
-            openBrandSendRequestedModal();
+            /* 채널친구(I) 타깃은 승인 없이 바로 발송된다.
+             * 전체(M)·채널친구 제외(N) 타깃은 카카오 승인 후에만 선택할 수 있다. */
+            showToast('발송이 완료되었습니다.', 'success');
         });
-
-        /* 발송 요청 접수 안내 */
-        function openBrandSendRequestedModal() {
-            var profileEl = document.getElementById('brandChannel');
-            var profile = profileEl ? profileEl.value : '';
-            var countEl = document.getElementById('recipientCount');
-            var count = countEl ? countEl.textContent : '0';
-
-            document.getElementById('brandSendReqProfile').textContent = profile || '-';
-            document.getElementById('brandSendReqCount').textContent = count;
-            document.getElementById('brandSendReqAt').textContent = new Date().toLocaleString('ko-KR', {
-                year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
-            });
-            openModal('brandSendRequestedModal');
-        }
-
-        function closeBrandSendRequested() {
-            closeModal('brandSendRequestedModal');
-        }
     </script>
 
-    <!-- 브랜드메시지 발송 요청 접수 모달 -->
-    <div class="modal-overlay" id="brandSendRequestedModal">
-        <div class="modal" style="max-width: 500px;">
-            <div class="modal-header">
-                <h3 class="modal-title">발송 요청이 접수되었습니다</h3>
-                <button class="modal-close" onclick="closeBrandSendRequested()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div style="text-align: center; padding: 4px 0 20px;">
-                    <div style="width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; background: rgba(37,99,235,.1); color: var(--primary-color);">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width: 30px; height: 30px;"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-                    </div>
-                    <p style="font-size: 15px; line-height: 1.8; color: var(--text-primary);">
-                        브랜드메시지 발송 요청이 접수되었습니다.
-                    </p>
-                </div>
-
-                <dl style="display: grid; grid-template-columns: 100px 1fr; gap: 10px 16px; font-size: 13px; margin-bottom: 20px; padding: 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px;">
-                    <dt style="color: var(--text-secondary);">발신 프로필</dt>
-                    <dd style="font-weight: 600;" id="brandSendReqProfile">-</dd>
-                    <dt style="color: var(--text-secondary);">발송 대상</dt>
-                    <dd style="font-weight: 600;" id="brandSendReqCount">0</dd>
-                    <dt style="color: var(--text-secondary);">접수일시</dt>
-                    <dd style="font-weight: 600;" id="brandSendReqAt">-</dd>
-                    <dt style="color: var(--text-secondary);">상태</dt>
-                    <dd><span class="badge badge-warning">담당자 연동 대기</span></dd>
-                </dl>
-
-                <div class="alert alert-warning" style="margin-bottom: 0;">
-                    브랜드메시지는 <strong>사전 준비가 필요해 2~3일 정도 소요</strong>됩니다.<br>
-                    담당자가 채널 연동과 발송 테스트를 진행한 뒤 <strong>준비가 완료되면 연락</strong>드리겠습니다.
-                    준비 완료 전까지 실제 발송은 보류됩니다.
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" onclick="closeBrandSendRequested()">확인</button>
-            </div>
-        </div>
-    </div>
-    
     <!-- 템플릿 저장 모달 -->
     <div class="modal-overlay" id="saveTemplateModal">
         <div class="modal" style="width: 450px;">
@@ -3206,33 +3134,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '조건부', type: 'info' }]
             },
-            {
-                selector: '#brandPrepareNotice',
-                title: '브랜드메시지 준비 안내',
-                position: { top: '-5px', left: '-10px' },
-                function: '브랜드메시지가 신청 방식으로 운영됨을 고지',
-                behavior: [
-                    '채널 친구 수 5만 명 이상인 채널만 이용 가능함을 명시',
-                    '발송 요청 시 접수 후 담당자가 채널 연동·발송 테스트를 진행하며 2~3일 소요',
-                    '준비 완료 시 담당자가 연락함을 안내',
-                    '"이용 신청하기" 클릭 시 카카오톡 발신 프로필 화면으로 이동'
-                ],
-                tags: [{ text: '신청 방식 운영', type: 'info' }]
-            },
-            {
-                selector: '#brandSendRequestedModal',
-                title: '발송 요청 접수 모달',
-                position: { top: '60px', left: '20px' },
-                function: '발송 요청 접수 결과 안내',
-                behavior: [
-                    '발송하기 클릭 후 노출 — 실제 발송은 실행되지 않음',
-                    '발신 프로필 / 발송 대상 / 접수일시 / 상태(담당자 연동 대기) 표시',
-                    '사전 준비 2~3일 소요 및 준비 완료 시 연락 안내',
-                    '준비 완료 전까지 실제 발송은 보류됨을 명시'
-                ],
-                api: 'POST /api/kakao/brand/send (접수 상태로 응답)',
-                tags: [{ text: '모달', type: 'info' }, { text: 'API', type: 'api' }]
-            },
             { 
                 selector: '#sendForm button[type="submit"]', 
                 title: '발송하기', 
@@ -3248,12 +3149,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     '예약 시간 미선택: "예약 발송 시간을 선택해주세요"',
                     '과거 시간 선택: "예약 시간은 현재 시간 이후로 설정해주세요"',
                     '[ 유효성 검증 통과 시 ]',
-                    '즉시 발송하지 않고 발송 요청 접수 모달(#brandSendRequestedModal) 노출',
-                    '브랜드메시지는 채널 친구 수 5만 명 이상 조건 때문에 사전 테스트가 불가능하므로,',
-                    '접수 후 담당자가 고객 채널로 연동·발송 테스트를 수동 진행한다 (2~3일 소요)',
-                    '접수 모달에 발신 프로필 / 발송 대상 / 접수일시 / 상태(담당자 연동 대기) 표시',
-                    '[ 연동 완료 후 ]',
-                    '담당자 연동이 완료되면 실제 발송이 실행되고 발송결과에서 확인 가능',
+                    '채널친구(I) 타깃은 승인 없이 즉시 발송',
+                    '전체(M)·채널친구 제외(N) 타깃은 카카오 승인 후에만 선택 가능하므로,',
+                    '미승인 상태에서는 애초에 선택할 수 없어 발송 시점에 별도 검증이 없음',
+                    '[ 발송 결과 ]',
+                    '발송 성공: "발송이 완료되었습니다" 토스트',
+                    '예약 발송 성공: "예약 발송이 등록되었습니다" 토스트',
                     '서버 오류: "발송에 실패했습니다. 잠시 후 다시 시도해주세요"',
                     '네트워크 오류: "네트워크 연결을 확인해주세요"',
                     '카카오 API 오류: "카카오 서버 연결에 실패했습니다"'
