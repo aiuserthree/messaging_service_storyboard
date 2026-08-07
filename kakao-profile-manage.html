@@ -876,7 +876,10 @@ body {
                                 <td>@조도람</td>
                                 <td>조도람</td>
                                 <td><span class="status-badge status-active">활성</span></td>
-                                <td>Y</td>
+                                <td>
+                                    <span style="margin-right: 8px;">Y</span>
+                                    <button class="btn btn-sm btn-outline" id="brandApplyBtn" onclick="openBrandMessageApplicationModal()" style="padding: 6px 14px; font-size: 12px;">M,N 신청</button>
+                                </td>
                                 <td>2025-11-18</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline" onclick="viewProfileDetail('1')">상세</button>
@@ -889,7 +892,7 @@ body {
                                 <td><span class="status-badge status-pending">검수중</span></td>
                                 <td>
                                     <span style="margin-right: 8px;">N</span>
-                                    <button class="btn btn-sm btn-primary" id="brandApplyBtn" onclick="openBrandMessageApplicationModal()" style="padding: 6px 16px; font-size: 13px; background-color: white; color: black; border: 1px solid var(--border-color);">신청</button>
+                                    <button class="btn btn-sm btn-primary" id="brandChannelAuthBtn" onclick="openBrandChannelAuthModal('@테스트')" style="padding: 6px 16px; font-size: 13px;">채널 인증</button>
                                 </td>
                                 <td>2025-11-15</td>
                                 <td>
@@ -901,7 +904,7 @@ body {
                                 <td>@마케팅팀</td>
                                 <td>마케팅팀</td>
                                 <td><span class="status-badge status-active">활성</span></td>
-                                <td>Y</td>
+                                <td><span class="status-badge status-pending" id="brandPendingBadge">연동 대기</span></td>
                                 <td>2025-11-10</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline" onclick="viewProfileDetail('3')">상세</button>
@@ -1130,43 +1133,12 @@ body {
     <div class="modal-overlay" id="brandMessageApplicationModal">
         <div class="modal" style="max-width: 600px;">
             <div class="modal-header">
-                <h3 class="modal-title">브랜드메시지 이용 신청</h3>
+                <h3 class="modal-title">브랜드메시지 M,N 타깃 사용신청</h3>
                 <button class="modal-close" onclick="closeModal('brandMessageApplicationModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <!-- 신청 방식 안내 — 브랜드메시지는 즉시 이용이 아니라 신청 후 담당자 연동 -->
-                <div class="alert alert-info" style="margin-bottom: 24px;" id="brandApplyNotice">
-                    <strong>브랜드메시지는 신청 후 이용하실 수 있습니다.</strong><br>
-                    이용할 채널을 인증해 신청하시면 담당자가 채널 연동과 발송 테스트를 진행합니다.
-                    준비에는 <strong>2~3일</strong> 정도 소요되며, 완료되면 담당자가 연락드립니다.
-                </div>
-
-                <!-- 이용할 채널 인증 -->
-                <div id="brandChannelAuthSection" style="border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 24px;">
-                    <h4 style="font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">이용할 채널 인증</h4>
-
-                    <div class="form-group">
-                        <label class="form-label required">카카오톡 채널 (발신 프로필)</label>
-                        <input type="text" class="form-input" id="brandChannelId" placeholder="@채널명" value="@테스트">
-                        <div class="form-help">브랜드메시지를 이용할 카카오톡 채널을 입력해주세요.</div>
-                        <div class="form-error" id="brandChannelIdError"></div>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label class="form-label required">채널 관리자 휴대폰 번호</label>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="text" class="form-input" id="brandChannelPhone" placeholder="- 없이 숫자만 입력해주세요" style="flex: 1;">
-                            <button type="button" class="btn btn-primary" id="brandChannelVerifyBtn" onclick="requestBrandChannelVerification()">인증요청</button>
-                        </div>
-                        <div class="form-help" id="brandChannelPhoneHelp" style="margin-top: 8px;">
-                            카카오톡 채널 관리자(마스터 또는 매니저) 휴대폰번호를 입력해주세요.
-                        </div>
-                        <div class="form-error" id="brandChannelPhoneError"></div>
-                    </div>
-                </div>
-
-                <p style="margin-bottom: 16px; color: var(--text-secondary); line-height: 1.6;">
-                    브랜드메시지(M,N 타깃)는 카카오에서 승인된 발신프로필에서만 발송하실 수 있으며 아래 조건이 모두 충족되어야 신청이 가능합니다.
+                <p style="margin-bottom: 24px; color: var(--text-secondary); line-height: 1.6;">
+                    M,N 타깃은 카카오에서 승인된 발신프로필에서만 발송하실 수 있으며 아래 조건이 모두 충족되어야 신청이 가능합니다.
                 </p>
 
                 <!-- 조건 목록 -->
@@ -1232,12 +1204,59 @@ body {
         </div>
     </div>
 
-    <!-- 브랜드메시지 이용 신청 완료 안내 모달 -->
-    <div class="modal-overlay" id="brandMessageApplyDoneModal">
+    <!-- 브랜드메시지 채널 인증 모달 -->
+    <div class="modal-overlay" id="brandChannelAuthModal">
+        <div class="modal" style="max-width: 540px;">
+            <div class="modal-header">
+                <h3 class="modal-title">브랜드메시지 채널 인증</h3>
+                <button class="modal-close" onclick="closeModal('brandChannelAuthModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 신청 방식 안내 — 인증이 곧 이용 신청 접수 -->
+                <div class="alert alert-info" style="margin-bottom: 24px;" id="brandChannelAuthNotice">
+                    <strong>브랜드메시지는 채널 인증 후 이용하실 수 있습니다.</strong><br>
+                    이용할 채널을 인증하시면 담당자가 채널 연동과 발송 테스트를 진행합니다.
+                    준비에는 <strong>2~3일</strong> 정도 소요되며, 완료되면 담당자가 연락드립니다.
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">브랜드메시지를 이용할 채널</label>
+                    <input type="text" class="form-input" id="brandChannelId" placeholder="@채널명">
+                    <div class="form-help">카카오톡 발신 프로필(채널) ID를 입력해주세요.</div>
+                    <div class="form-error" id="brandChannelIdError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">채널 관리자 휴대폰 번호</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" class="form-input" id="brandChannelPhone" placeholder="- 없이 숫자만 입력해주세요" style="flex: 1;">
+                        <button type="button" class="btn btn-primary" id="brandChannelVerifyBtn" onclick="requestBrandChannelVerification()">인증요청</button>
+                    </div>
+                    <div class="form-help" id="brandChannelPhoneHelp" style="margin-top: 8px;">
+                        카카오톡 채널 관리자(마스터 또는 매니저) 휴대폰번호를 입력해주세요.
+                    </div>
+                    <div class="form-error" id="brandChannelPhoneError"></div>
+                </div>
+
+                <div style="padding: 14px 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; line-height: 1.8; color: var(--text-secondary);" id="brandChannelCondition">
+                    · 브랜드메시지는 <strong style="color: var(--text-primary);">채널 친구 수 5만 명 이상</strong>인 채널만 이용할 수 있습니다.<br>
+                    · 조건을 충족하지 않으면 연동이 반려될 수 있습니다.<br>
+                    · 연동이 완료되기 전까지 발송을 시도하시면 접수만 되고 실제 발송은 보류됩니다.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('brandChannelAuthModal')">취소</button>
+                <button class="btn btn-primary" id="brandChannelSubmitBtn" onclick="submitBrandChannelAuth()">인증하고 신청</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 브랜드메시지 채널 인증 완료 안내 모달 -->
+    <div class="modal-overlay" id="brandRequestDoneModal">
         <div class="modal" style="max-width: 480px;">
             <div class="modal-header">
                 <h3 class="modal-title">채널 인증이 완료되었습니다</h3>
-                <button class="modal-close" onclick="closeBrandApplyDone()">&times;</button>
+                <button class="modal-close" onclick="closeBrandRequestDone()">&times;</button>
             </div>
             <div class="modal-body">
                 <div style="text-align: center; padding: 4px 0 20px;">
@@ -1245,7 +1264,7 @@ body {
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 30px; height: 30px;"><path d="M5 13l4 4L19 7"/></svg>
                     </div>
                     <p style="font-size: 15px; line-height: 1.8; color: var(--text-primary);">
-                        <strong id="brandApplyDoneChannel">@테스트</strong> 채널 인증이 완료되었습니다.
+                        <strong id="brandRequestDoneChannel">@테스트</strong> 채널 인증이 완료되었습니다.
                     </p>
                 </div>
 
@@ -1255,13 +1274,12 @@ body {
                 </div>
 
                 <div style="margin-top: 16px; padding: 14px 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; line-height: 1.8; color: var(--text-secondary);">
-                    · 브랜드메시지는 <strong style="color: var(--text-primary);">채널 친구 수 5만 명 이상</strong>인 채널만 이용할 수 있습니다.<br>
-                    · 준비가 완료되기 전까지 발송을 시도하시면 접수만 되고 실제 발송은 보류됩니다.<br>
-                    · 진행 상황은 카카오톡 발신 프로필 목록의 브랜드메시지 상태에서 확인하실 수 있습니다.
+                    · 진행 상황은 발신 프로필 목록의 브랜드메시지 상태에서 확인하실 수 있습니다.<br>
+                    · 연동 완료 전까지 발송을 시도하시면 접수만 되고 실제 발송은 보류됩니다.
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" onclick="closeBrandApplyDone()">확인</button>
+                <button class="btn btn-primary" onclick="closeBrandRequestDone()">확인</button>
             </div>
         </div>
     </div>
@@ -1566,26 +1584,29 @@ document.addEventListener('DOMContentLoaded', function() {
             openModal('deleteModal');
         }
 
-        /* ===== 브랜드메시지 이용 신청 =====
+        /* ===== 브랜드메시지 채널 인증 =====
          * 브랜드메시지는 채널 친구 수 5만명 이상 조건 때문에 사전 테스트가 불가능하다.
-         * 따라서 화면에서는 **채널 인증까지만** 받고, 실제 연동·발송 테스트는
-         * 신청 접수 후 담당자가 고객 계정으로 수동 진행한다. (2~3일 소요)
+         * 기능은 열어두되 화면에서는 **채널 인증까지만** 받고, 실제 연동·발송 테스트는
+         * 담당자가 고객 채널로 수동 진행한다. (2~3일 소요)
+         * 채널 인증이 곧 이용 신청 접수다.
          *   POST /api/kakao/brand-message/channel/verify  채널 관리자 휴대폰 인증
-         *   POST /api/kakao/brand-message/apply           이용 신청 접수
+         *   POST /api/kakao/brand-message/apply           인증 완료 시 이용 신청 접수
          */
 
         var isBrandChannelVerified = false;
 
-        function openBrandMessageApplicationModal() {
+        function openBrandChannelAuthModal(channelId) {
             isBrandChannelVerified = false;
-            var help = document.getElementById('brandChannelPhoneHelp');
-            if (help) help.innerHTML = '카카오톡 채널 관리자(마스터 또는 매니저) 휴대폰번호를 입력해주세요.';
-            var err = document.getElementById('brandChannelPhoneError');
-            if (err) err.textContent = '';
-            openModal('brandMessageApplicationModal');
+            document.getElementById('brandChannelId').value = channelId || '';
+            document.getElementById('brandChannelPhone').value = '';
+            document.getElementById('brandChannelIdError').textContent = '';
+            document.getElementById('brandChannelPhoneError').textContent = '';
+            document.getElementById('brandChannelPhoneHelp').innerHTML =
+                '카카오톡 채널 관리자(마스터 또는 매니저) 휴대폰번호를 입력해주세요.';
+            openModal('brandChannelAuthModal');
         }
 
-        /* 채널 관리자 휴대폰 인증 — 발신 프로필 등록과 동일 기준 */
+        /* 채널 관리자 휴대폰 인증 — 발신 프로필 등록과 동일 기준으로 채널 소유를 확인한다 */
         function requestBrandChannelVerification() {
             var channelId = document.getElementById('brandChannelId').value.trim();
             var phone = document.getElementById('brandChannelPhone').value.trim();
@@ -1597,7 +1618,7 @@ document.addEventListener('DOMContentLoaded', function() {
             errorDiv.textContent = '';
 
             if (!channelId) {
-                idErrorDiv.textContent = '브랜드메시지를 이용할 채널을 입력해주세요.';
+                idErrorDiv.textContent = '브랜드메시지를 이용할 채널을 먼저 입력해주세요.';
                 isBrandChannelVerified = false;
                 return;
             }
@@ -1614,30 +1635,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // 프로토타입: 실제로는 카카오 채널 관리자 여부를 API 로 대조한다
-            helpDiv.innerHTML = '<span style="color: var(--success-color);">✓ 채널 인증이 완료되었습니다</span>';
+            // 프로토타입: 실제로는 채널 관리자 여부를 카카오 API 로 대조한다
+            helpDiv.innerHTML = '<span style="color: var(--success-color);">✓ 인증되었습니다</span>';
             isBrandChannelVerified = true;
-            showToast('채널 인증이 완료되었습니다.', 'success');
+            showToast('인증되었습니다.', 'success');
         }
 
-        /* 이용 신청 접수 — 즉시 사용이 아니라 담당자 연동 대기 상태가 된다 */
-        function submitBrandApplication() {
+        /* 인증 완료 = 이용 신청 접수. 담당자 연동 대기 상태가 된다. */
+        function submitBrandChannelAuth() {
             if (!isBrandChannelVerified) {
                 document.getElementById('brandChannelPhoneError').textContent =
-                    '채널 인증을 먼저 완료해주세요.';
+                    '채널 관리자 휴대폰 인증을 먼저 완료해주세요.';
                 return;
             }
 
             // API 호출: POST /api/kakao/brand-message/apply
             var channelId = document.getElementById('brandChannelId').value.trim();
-            closeModal('brandMessageApplicationModal');
-
-            document.getElementById('brandApplyDoneChannel').textContent = channelId;
-            openModal('brandMessageApplyDoneModal');
+            closeModal('brandChannelAuthModal');
+            document.getElementById('brandRequestDoneChannel').textContent = channelId;
+            openModal('brandRequestDoneModal');
         }
 
-        function closeBrandApplyDone() {
-            closeModal('brandMessageApplyDoneModal');
+        function closeBrandRequestDone() {
+            closeModal('brandRequestDoneModal');
         }
 
         // 채널·휴대폰 입력이 바뀌면 인증 상태를 초기화한다
@@ -1651,6 +1671,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     '카카오톡 채널 관리자(마스터 또는 매니저) 휴대폰번호를 입력해주세요.';
             });
         });
+
+        /* M,N 타깃 사용신청 — 브랜드메시지 연동이 끝난 채널에만 노출되는 별개 절차 */
+        function openBrandMessageApplicationModal() {
+            openModal('brandMessageApplicationModal');
+        }
+
+        function submitBrandApplication() {
+            // API 호출: POST /api/kakao/brand-message/apply (M,N 타깃)
+            closeModal('brandMessageApplicationModal');
+            showToast('브랜드메시지 M,N 타깃 사용신청이 완료되었습니다.', 'success');
+        }
 
         // 광고성 정보 수신동의 증적자료 파일 업로드 처리
         function handleConsentFileUpload(event) {
@@ -1840,62 +1871,111 @@ document.addEventListener('DOMContentLoaded', function() {
                 tags: [{ text: 'API', type: 'api' }]
             },
             
-            // ===== 브랜드메시지 신청 버튼 (테이블) =====
-            { 
-                selector: '#brandApplyBtn', 
-                title: '브랜드메시지 이용 신청 버튼', 
-                position: { top: '-5px', right: '-10px' }, 
-                function: '브랜드메시지 이용 신청 모달 열기',
+            // ===== 브랜드메시지 채널 인증 (테이블) =====
+            {
+                selector: '#brandChannelAuthBtn',
+                title: '브랜드메시지 채널 인증 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '브랜드메시지 채널 인증 모달 열기',
                 behavior: [
-                    '브랜드메시지는 채널 친구 수 5만 명 이상 조건 때문에 즉시 이용이 아니라 신청 방식으로 운영',
-                    '클릭 시 brandMessageApplicationModal 모달 열림',
-                    '모달에서 이용할 채널을 인증하고 조건 충족 여부를 확인한 뒤 신청',
-                    '신청 후 담당자가 채널 연동·발송 테스트를 진행 (2~3일 소요)'
+                    '브랜드메시지 미사용(N) 채널에 노출',
+                    '브랜드메시지는 채널 친구 수 5만 명 이상 조건 때문에 사전 테스트가 불가능해',
+                    '화면에서는 채널 인증까지만 받고 실제 연동은 담당자가 수동 진행 (2~3일 소요)',
+                    '클릭 시 채널 인증 모달(#brandChannelAuthModal) 열림'
                 ],
-                api: 'GET /api/kakao/brand-message/channel/:profileId',
-                tags: [{ text: 'API', type: 'api' }]
+                tags: [{ text: '신청 방식 운영', type: 'info' }]
             },
-            
-            // ===== 브랜드메시지 M,N 타깃 사용신청 모달 =====
-            { 
-                selector: '#brandMessageApplicationModal', 
-                title: '브랜드메시지 이용 신청 모달', 
-                position: { top: '60px', left: '20px' }, 
-                function: '이용할 채널 인증 + 이용 신청 접수',
+            {
+                selector: '#brandChannelAuthModal',
+                title: '브랜드메시지 채널 인증 모달',
+                position: { top: '60px', left: '20px' },
+                function: '이용할 채널 입력 + 채널 관리자 휴대폰 인증',
                 behavior: [
-                    '상단에 신청 방식 안내 — 즉시 이용이 아니라 담당자 연동 후 이용 (2~3일 소요)',
-                    '이용할 채널 인증: 카카오톡 채널(발신 프로필) + 채널 관리자 휴대폰 인증',
-                    '화면에서는 채널 인증까지만 처리하고 실제 발송 연동은 담당자가 수동 진행',
-                    '신청 조건 충족 여부 표시 — 채널 친구 수 5만명 이상 / 비즈니스 채널 인증 /',
-                    '채널정보 등록 / 3개월 이내 알림톡 발송 이력 / 광고성 수신동의 증적자료'
+                    '상단에 안내 — 인증 후 담당자가 채널 연동·발송 테스트 진행 (2~3일 소요)',
+                    '브랜드메시지를 이용할 채널(발신 프로필 ID) 입력',
+                    '채널 관리자(마스터·매니저) 휴대폰 번호로 채널 소유 인증',
+                    '채널 친구 수 5만 명 이상 조건과 반려 가능성을 함께 고지',
+                    '인증이 곧 이용 신청 접수이며, 별도 신청 절차는 없음'
                 ],
                 tags: [{ text: '모달', type: 'info' }, { text: '신청 방식 운영', type: 'info' }]
             },
             {
-                selector: '#brandApplyNotice',
-                title: '신청 방식 안내',
-                position: { top: '-5px', left: '-10px' },
-                function: '브랜드메시지가 신청 후 이용 가능함을 고지',
+                selector: '#brandChannelPhone',
+                title: '채널 관리자 휴대폰 인증',
+                position: { top: '-5px', right: '-10px' },
+                function: '채널 소유(관리자 여부) 확인',
                 behavior: [
-                    '채널 친구 수 5만 명 이상 조건 때문에 사전 테스트가 불가능해 신청 방식으로 운영',
-                    '담당자가 채널 연동·발송 테스트 진행, 2~3일 소요',
-                    '준비 완료 시 담당자가 연락'
-                ]
-            },
-            {
-                selector: '#brandChannelAuthSection',
-                title: '이용할 채널 인증',
-                position: { top: '10px', left: '10px' },
-                function: '브랜드메시지를 이용할 카카오톡 채널 입력 및 인증',
-                behavior: [
-                    '카카오톡 채널(발신 프로필) 입력',
-                    '채널 관리자(마스터·매니저) 휴대폰 번호로 인증',
-                    '인증 성공 시 "✓ 채널 인증이 완료되었습니다" 표시',
-                    '채널·번호를 수정하면 인증 상태가 초기화됨',
-                    '인증을 완료해야 신청하기 버튼이 동작함'
+                    '카카오톡 채널 관리자(마스터 또는 매니저) 번호만 인증 가능',
+                    '인증 성공 시 "✓ 인증되었습니다" 표시',
+                    '채널 또는 번호를 수정하면 인증 상태가 초기화됨',
+                    '인증을 완료해야 "인증하고 신청" 버튼이 동작함'
                 ],
                 api: 'POST /api/kakao/brand-message/channel/verify',
                 tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#brandChannelSubmitBtn',
+                title: '인증하고 신청 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '채널 인증 결과를 이용 신청으로 접수',
+                behavior: [
+                    '휴대폰 인증 미완료: "채널 관리자 휴대폰 인증을 먼저 완료해주세요"',
+                    '접수 후 완료 안내 모달(#brandRequestDoneModal) 노출',
+                    '발신 프로필 목록의 브랜드메시지 상태가 "연동 대기"로 변경'
+                ],
+                api: 'POST /api/kakao/brand-message/apply',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            {
+                selector: '#brandRequestDoneModal',
+                title: '채널 인증 완료 안내 모달',
+                position: { top: '60px', left: '20px' },
+                function: '인증 완료와 후속 절차 안내',
+                behavior: [
+                    '인증된 채널명과 함께 "채널 인증이 완료되었습니다" 표시',
+                    '브랜드메시지 연결에 사전 준비가 필요해 2~3일 소요됨을 안내',
+                    '담당자가 채널 연동·발송 테스트 후 연락함을 안내',
+                    '진행 상황은 목록의 브랜드메시지 상태에서 확인 가능함을 안내'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
+            },
+            {
+                selector: '#brandPendingBadge',
+                title: '연동 대기 상태',
+                position: { top: '-5px', right: '-10px' },
+                function: '채널 인증 접수 후 담당자 연동을 기다리는 상태',
+                behavior: [
+                    'N(미인증) → 연동 대기 → Y(사용중) 순으로 상태가 바뀜',
+                    '연동 대기 중 발송을 시도하면 접수만 되고 실제 발송은 보류'
+                ],
+                tags: [{ text: '조건부', type: 'info' }]
+            },
+
+            // ===== 브랜드메시지 M,N 타깃 사용신청 (연동 완료 채널 전용) =====
+            {
+                selector: '#brandApplyBtn',
+                title: 'M,N 타깃 신청 버튼',
+                position: { top: '-5px', right: '-10px' },
+                function: '브랜드메시지 M,N 타깃(비친구 발송) 사용 신청 모달 열기',
+                behavior: [
+                    '브랜드메시지 연동이 완료된(Y) 채널에만 노출',
+                    '카카오 정책상 조건 5가지를 충족해야 신청 가능한 별개 절차',
+                    '채널 인증(이용 신청)과는 다른 단계임'
+                ],
+                api: 'GET /api/kakao/brand-message/channel/:profileId',
+                tags: [{ text: 'API', type: 'api' }]
+            },
+            { 
+                selector: '#brandMessageApplicationModal', 
+                title: 'M,N 타깃 신청 모달', 
+                position: { top: '60px', left: '20px' }, 
+                function: '브랜드메시지 M,N 타깃 사용 신청',
+                behavior: [
+                    '신청 조건 충족 여부 표시',
+                    '채널 친구 수 5만명 이상 / 비즈니스 채널 인증 / 채널정보 등록 /',
+                    '3개월 이내 알림톡 발송 이력 / 광고성 수신동의 증적자료 업로드'
+                ],
+                tags: [{ text: '모달', type: 'info' }]
             },
             { selector: '#brandMessageApplicationModal .modal-close', title: '닫기 버튼 (X)', position: { top: '5px', right: '5px' }, function: '모달 닫기' },
             { selector: '#consentFileInput', title: '증적자료 첨부', position: { top: '-5px', left: '-10px' }, function: '광고성 수신동의 증적자료 업로드', behavior: ['jpg, png, 최대 5MB'] },
@@ -1906,33 +1986,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 selector: '#brandApplySubmitBtn', 
                 title: '신청하기 버튼', 
                 position: { top: '-5px', right: '-10px' }, 
-                function: '브랜드메시지 이용 신청 접수',
+                function: 'M,N 타깃 사용 신청 실행',
                 behavior: [
                     '[ 유효성 검증 ]',
-                    '채널 인증 미완료: "채널 인증을 먼저 완료해주세요"',
+                    '조건 미충족: "신청 조건을 모두 충족해야 합니다"',
                     '증적자료 미첨부: "광고성 정보 수신동의 증적자료를 첨부해주세요"',
-                    '[ 신청 처리 ]',
-                    '접수만 되고 즉시 이용은 불가 — 담당자가 채널 연동·발송 테스트를 수동 진행',
                     '[ 신청 결과 ]',
-                    '완료 안내 모달(#brandMessageApplyDoneModal) 노출',
-                    '발신 프로필 목록의 브랜드메시지 상태가 "검토중"으로 변경',
+                    '신청 성공: "브랜드메시지 M,N 타깃 사용신청이 완료되었습니다" 토스트',
                     '서버 오류: "신청에 실패했습니다. 잠시 후 다시 시도해주세요"'
                 ],
                 api: 'POST /api/kakao/brand-message/apply',
                 tags: [{ text: 'API', type: 'api' }]
-            },
-            {
-                selector: '#brandMessageApplyDoneModal',
-                title: '이용 신청 완료 안내 모달',
-                position: { top: '60px', left: '20px' },
-                function: '채널 인증 완료와 후속 절차 안내',
-                behavior: [
-                    '인증된 채널명과 함께 "채널 인증이 완료되었습니다" 표시',
-                    '브랜드메시지 연결에 사전 준비가 필요해 2~3일 소요됨을 안내',
-                    '담당자가 채널 연동·발송 테스트 후 연락함을 안내',
-                    '채널 친구 수 5만 명 이상 조건, 준비 완료 전 발송은 접수만 됨을 함께 고지'
-                ],
-                tags: [{ text: '모달', type: 'info' }, { text: '신청 방식 운영', type: 'info' }]
             }
         ];
         initSpecOverlay(specData);
