@@ -21,6 +21,23 @@ body {
 .preview-head { max-width: 640px; margin: 0 auto 20px; }
 .preview-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
 .preview-desc { font-size: 13px; color: #64748b; line-height: 1.7; }
+.preview-switch { display: flex; gap: 8px; margin-top: 12px; }
+.preview-switch a {
+    padding: 6px 14px; border-radius: 999px; border: 1px solid #cbd5e1; background: #fff;
+    font-size: 12.5px; font-weight: 600; color: #64748b; text-decoration: none;
+}
+.preview-switch a.is-active { background: #0f172a; border-color: #0f172a; color: #fff; }
+
+/* 탐지된 차단정보 — 보류 검토 메일 */
+.mail-chip {
+    display: inline-block; padding: 2px 9px; border-radius: 6px; margin: 2px 3px 2px 0;
+    font-size: 12px; font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.mail-chip.word { background: #fef3c7; color: #92400e; }
+.mail-chip.url { background: #dbeafe; color: #1e40af; }
+.mail-chip.phone { background: #e2e8f0; color: #475569; }
+.mail-mark { padding: 1px 3px; border-radius: 3px; font-weight: 800; background: #fef3c7; color: #92400e; }
 
 .mail-meta {
     max-width: 640px; margin: 0 auto 12px; background: #fff; border: 1px solid #cbd5e1;
@@ -94,12 +111,16 @@ body {
 </head>
 <body>
     <div class="preview-head" id="previewHead">
-        <div class="preview-title">발송 승인 인증번호 메일</div>
-        <p class="preview-desc">
+        <div class="preview-title" id="previewTitle">발송 승인 인증번호 메일</div>
+        <p class="preview-desc" id="previewDesc">
             문자 발송 시 기업 고객사의 승인 담당자에게 발송되는 인증번호 메일 양식입니다.
             담당자가 이 6자리를 발송 화면에 입력하면 그 시점에 발송 승인이 완료됩니다.
             보안심사 3.5-④ 증빙자료(이메일 승인 방식)로 사용합니다.
         </p>
+        <div class="preview-switch" id="previewSwitch">
+            <a href="email-approval-otp.html">발송 승인</a>
+            <a href="email-approval-otp.html?type=hold">보류 검토 승인</a>
+        </div>
     </div>
 
     <div class="mail-meta" id="mailMeta">
@@ -114,7 +135,7 @@ body {
         <div class="mail-inner" id="mailInner">
             <div class="mail-header">
                 <img src="img/logo/tokbell_logo.png" alt="톡벨">
-                <div class="mail-header-sub">발송 승인 인증</div>
+                <div class="mail-header-sub" id="mailHeaderSub">발송 승인 인증</div>
             </div>
 
             <div class="mail-content">
@@ -122,22 +143,22 @@ body {
                     <strong>(주)아이뱅크</strong> 김담당님, 안녕하세요.
                 </p>
 
-                <h1 class="mail-h1">발송 승인 인증번호입니다</h1>
-                <p class="mail-lead">
+                <h1 class="mail-h1" id="mailH1">발송 승인 인증번호입니다</h1>
+                <p class="mail-lead" id="mailLead">
                     아래 발송 건에 대한 승인 인증번호입니다.<br>
                     발송 화면에 6자리를 입력하시면 <strong>발송 승인이 완료</strong>됩니다.
                 </p>
 
                 <!-- 이메일 OTP -->
                 <div class="otp-box" id="mailOtpBox">
-                    <div class="otp-label">승인 인증번호</div>
+                    <div class="otp-label" id="otpLabel">승인 인증번호</div>
                     <div class="otp-code" id="mailOtpCode">123456</div>
-                    <div class="otp-valid">유효시간 <strong>3분</strong> · 한 번 인증하면 <strong>30분</strong> 동안 재인증 없이 발송할 수 있습니다</div>
+                    <div class="otp-valid" id="otpValid">유효시간 <strong>3분</strong> · 한 번 인증하면 <strong>30분</strong> 동안 재인증 없이 발송할 수 있습니다</div>
                 </div>
 
                 <!-- 발송 요약 -->
                 <table class="mail-table" id="mailSummary">
-                    <tbody>
+                    <tbody id="mailSummaryBody">
                         <tr><th>요청일시</th><td id="sumAt">2026-08-06 11:20</td></tr>
                         <tr><th>발송 채널</th><td id="sumChannel">웹 발송</td></tr>
                         <tr><th>발신번호</th><td id="sumCaller">010-1234-5678</td></tr>
@@ -184,7 +205,68 @@ body {
             document.getElementById('mailSubject').textContent = '[톡벨] 발송 승인 인증번호 [' + APPROVAL_OTP_DEMO + ']';
             document.getElementById('sumAt').textContent = apvNow();
             document.getElementById('sumSample').textContent = apvMaskPhone('01012345678') + ' 외 1,239건';
+
+            var isHold = new URLSearchParams(location.search).get('type') === 'hold';
+            document.querySelectorAll('#previewSwitch a').forEach(function (a) {
+                var target = a.getAttribute('href').indexOf('type=hold') > -1;
+                if (target === isHold) a.classList.add('is-active');
+            });
+            if (isHold) fillHold();
         })();
+
+        /* 보류 검토 승인 메일 (전송자격인증제 5.2)
+         * 금칙어 등 차단정보가 탐지되어 보류된 발송 건을 담당자가 검토·승인하는 메일.
+         * 발송 승인 메일과 같은 이메일 OTP 방식이며, 탐지 내역과 원문을 함께 제시한다.
+         * 실제 연동 시 POST /api/send/hold/{id}/request 가 이 메일을 발송한다. */
+        function fillHold() {
+            var set = function (id, html) {
+                var el = document.getElementById(id);
+                if (el) el.innerHTML = html;
+            };
+
+            document.title = '보류 검토 승인 인증번호 메일 - 톡벨';
+            set('previewTitle', '보류 검토 승인 인증번호 메일');
+            set('previewDesc',
+                '금칙어·URL 등 차단정보가 탐지되어 <strong>보류</strong>된 발송 건을 승인 담당자가 검토하는 메일 양식입니다. ' +
+                '탐지 내역과 메시지 원문을 함께 제시하며, 담당자가 6자리를 발송 화면에 입력하면 그 시점에 보류가 해제되어 발송됩니다. ' +
+                '전송자격인증제 5.2 증빙자료로 사용합니다.');
+
+            set('mailSubject', '[톡벨] 발송 보류 — 검토 승인 인증번호 [' + APPROVAL_OTP_DEMO + ']');
+            set('mailHeaderSub', '발송 보류 검토 승인');
+            set('mailH1', '차단정보가 탐지되어 발송이 보류되었습니다');
+            set('mailLead',
+                '아래 발송 건에서 차단 대상이 될 수 있는 표현이 확인되어 발송을 보류했습니다.<br>' +
+                '내용을 확인하신 뒤 문제가 없다면 발송 화면에 6자리를 입력해 <strong>승인</strong>해 주세요.');
+            set('otpLabel', '보류 해제 승인 인증번호');
+            set('otpValid',
+                '유효시간 <strong>3분</strong> · 승인하지 않으면 <strong>발송되지 않습니다</strong>');
+
+            // 요약을 탐지 정보 중심으로 교체
+            set('mailSummaryBody', [
+                '<tr><th>탐지일시</th><td>' + apvNow() + '</td></tr>',
+                '<tr><th>탐지번호</th><td>D-20260811-0042</td></tr>',
+                '<tr><th>발신번호</th><td>1588-0000</td></tr>',
+                '<tr><th>메시지 타입</th><td>광고문자(LMS)</td></tr>',
+                '<tr><th>발송 건수</th><td>4,200건</td></tr>',
+                '<tr><th>탐지 차단정보</th><td>' +
+                    '<span class="mail-chip word">무료</span>' +
+                    '<span class="mail-chip word">당첨</span>' +
+                    '<span class="mail-chip url">bit.ly</span></td></tr>',
+                '<tr><th>적용 규칙</th><td>R01 도박 유인 조합</td></tr>',
+                '<tr><th>조치</th><td><span class="mail-badge warn">보류 — 승인 담당자 검토 필요</span></td></tr>'
+            ].join(''));
+
+            set('mailMsg',
+                '(광고) <mark class="mail-mark">무료</mark> 여름 이벤트 <mark class="mail-mark">당첨</mark> 안내드립니다.\n' +
+                '자세히 보기 ▶ https://<mark class="mail-mark">bit.ly</mark>/abcd12\n' +
+                '무료거부 08012345678');
+
+            set('mailNotice',
+                '· 본 메일은 <strong>기업 고객사의 승인 담당자</strong>에게만 발송됩니다. 담당자 본인이 아니면 즉시 삭제해 주세요.<br>' +
+                '· 탐지된 표현이 <strong>실제 위반이라면 승인하지 마세요.</strong> 승인하지 않으면 발송되지 않고 차단으로 확정됩니다.<br>' +
+                '· 승인 인증번호는 <strong>타인에게 공유하지 마세요.</strong> 톡벨은 어떤 경우에도 인증번호를 묻지 않습니다.<br>' +
+                '· 승인이 완료되면 <strong>승인번호 · 처리일시 · 처리자 · 본인확인 수단 · 접속 IP</strong>가 탐지·차단 이력에 기록되며 삭제할 수 없습니다.');
+        }
     </script>
 
     <!-- 화면설계 오버레이 -->
