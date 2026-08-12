@@ -325,13 +325,44 @@ body {
 }
 
 /* 테이블 */
+/* 변수1~8 까지 늘어나 표가 넘치므로 열을 짓누르는 대신 가로 스크롤로 처리한다.
+   macOS 기본값인 오버레이 스크롤바는 스크롤하기 전까지 보이지 않아 명시적으로 노출한다 */
 .table-container {
     overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.table-container::-webkit-scrollbar {
+    height: 10px;
+    -webkit-appearance: none;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f3f5;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #bcc3cc;
+    border-radius: 5px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #98a1ac;
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    white-space: nowrap;
+}
+
+/* 변수1~8 (4~11번째 열) */
+.table th:nth-child(n+4):nth-child(-n+11) {
+    min-width: 100px;
 }
 
 .table th,
@@ -944,6 +975,11 @@ body {
             grid-template-columns: 250px 1fr;
             gap: 24px;
         }
+        /* 그리드 아이템의 기본 min-width: auto 를 풀어야 주소록 표가 넓어질 때
+           페이지 전체가 늘어나지 않고 표 안에서 가로 스크롤이 생긴다 */
+        .addressbook-layout > * {
+            min-width: 0;
+        }
         .group-sidebar {
             background: var(--surface-color);
             border: 1px solid var(--border-color);
@@ -1231,6 +1267,11 @@ body {
                                     <th>변수1</th>
                                     <th>변수2</th>
                                     <th>변수3</th>
+                                    <th>변수4</th>
+                                    <th>변수5</th>
+                                    <th>변수6</th>
+                                    <th>변수7</th>
+                                    <th>변수8</th>
                                     <th>등록일</th>
                                     <th>상태</th>
                                     <th>관리</th>
@@ -1244,6 +1285,11 @@ body {
                                     <td>홍길동</td>
                                     <td>서울시 강남구</td>
                                     <td>VIP</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td>2024-01-15</td>
                                     <td><span class="badge badge-success">정상</span></td>
                                     <td class="actions-cell">
@@ -1258,6 +1304,11 @@ body {
                                     <td>김철수</td>
                                     <td>서울시 서초구</td>
                                     <td>일반</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td>2024-01-14</td>
                                     <td><span class="badge badge-success">정상</span></td>
                                     <td class="actions-cell">
@@ -1272,6 +1323,11 @@ body {
                                     <td>이영희</td>
                                     <td>부산시 해운대구</td>
                                     <td>신규</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td>2024-01-13</td>
                                     <td><span class="badge badge-danger">수신거부</span></td>
                                     <td class="actions-cell">
@@ -1337,6 +1393,26 @@ body {
                     <div class="form-group">
                         <label class="form-label">변수3</label>
                         <input type="text" class="form-input" id="addressVar3">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">변수4</label>
+                        <input type="text" class="form-input" id="addressVar4">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">변수5</label>
+                        <input type="text" class="form-input" id="addressVar5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">변수6</label>
+                        <input type="text" class="form-input" id="addressVar6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">변수7</label>
+                        <input type="text" class="form-input" id="addressVar7">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">변수8</label>
+                        <input type="text" class="form-input" id="addressVar8">
                     </div>
                 </form>
             </div>
@@ -1414,6 +1490,11 @@ body {
                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수1</th>
                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수2</th>
                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수3</th>
+                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수4</th>
+                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수5</th>
+                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수6</th>
+                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수7</th>
+                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수8</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="groupDataTableBody">
@@ -1540,6 +1621,11 @@ body {
                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수1</th>
                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수2</th>
                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수3</th>
+                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수4</th>
+                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수5</th>
+                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수6</th>
+                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수7</th>
+                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수8</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="addressBookDataTableBody">
@@ -2143,7 +2229,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const nameIndex = headers.findIndex(h => h === '이름' || h === 'Name' || h === 'name');
                     const phoneIndex = headers.findIndex(h => h === '전화번호' || h === '휴대폰' || h === 'Phone' || h === 'phone');
                     const varIndices = [];
-                    for (let i = 1; i <= 3; i++) {
+                    for (let i = 1; i <= 8; i++) {
                         const varIndex = headers.findIndex(h => h === `변수${i}` || h === `Variable ${i}` || h === `변수 ${i}`);
                         varIndices.push(varIndex);
                     }
@@ -2155,7 +2241,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             index: index,
                             name: nameIndex >= 0 ? (row[nameIndex] || '') : '',
                             phone: phoneIndex >= 0 ? (row[phoneIndex] || '') : '',
-                            variables: varIndices.map(idx => idx >= 0 ? (row[idx] || '') : '').slice(0, 3)
+                            variables: varIndices.map(idx => idx >= 0 ? (row[idx] || '') : '').slice(0, 8)
                         };
                         groupTableData.push(rowData);
                     });
@@ -2205,7 +2291,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                onblur="updateGroupTableData(${i}, 'phone', this.value); updateGroupCount();"
                                onkeypress="if(event.key==='Enter') { event.preventDefault(); moveToNextGroupCell(this); }">
                     </td>
-                    ${[1,2,3].map(v => `
+                    ${[1,2,3,4,5,6,7,8].map(v => `
                         <td style="padding: 4px; border-bottom: 1px solid var(--border-color);">
                             <input type="text" class="form-input group-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;" 
                                    data-row="${i}" data-field="var${v}"
@@ -2226,7 +2312,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     index: groupTableData.length,
                     name: '',
                     phone: '',
-                    variables: ['', '', '']
+                    variables: ['', '', '', '', '', '', '', '']
                 });
             }
             
@@ -2236,7 +2322,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     index: index,
                     name: '',
                     phone: '',
-                    variables: ['', '', '']
+                    variables: ['', '', '', '', '', '', '', '']
                 };
             }
             
@@ -2247,8 +2333,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 finalRow.phone = value;
             } else if (field.startsWith('var')) {
                 const varIndex = parseInt(field.replace('var', '')) - 1;
-                if (varIndex >= 0 && varIndex < 3) {
-                    if (!finalRow.variables) finalRow.variables = ['', '', ''];
+                if (varIndex >= 0 && varIndex < 8) {
+                    if (!finalRow.variables) finalRow.variables = ['', '', '', '', '', '', '', ''];
                     finalRow.variables[varIndex] = value;
                 }
             }
@@ -2295,7 +2381,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 index: groupTableData.length,
                 name: '',
                 phone: '',
-                variables: ['', '', '']
+                variables: ['', '', '', '', '', '', '', '']
             });
             renderGroupTable();
             
@@ -2441,9 +2527,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // 그룹 추가 모달용 샘플 파일 다운로드
         function downloadGroupSampleFile() {
             const sampleData = [
-                ['이름', '전화번호', '변수1', '변수2', '변수3'],
-                ['홍길동', '010-1234-5678', '홍길동', '서울시 강남구', 'VIP'],
-                ['김철수', '010-9876-5432', '김철수', '서울시 서초구', '일반']
+                ['이름', '전화번호', '변수1', '변수2', '변수3', '변수4', '변수5', '변수6', '변수7', '변수8'],
+                ['홍길동', '010-1234-5678', '홍길동', '서울시 강남구', 'VIP', '', '', '', '', ''],
+                ['김철수', '010-9876-5432', '김철수', '서울시 서초구', '일반', '', '', '', '', '']
             ];
             
             const wb = XLSX.utils.book_new();
@@ -2547,7 +2633,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const nameIndex = headers.findIndex(h => h === '이름' || h === 'Name' || h === 'name');
                     const phoneIndex = headers.findIndex(h => h === '전화번호' || h === '휴대폰' || h === 'Phone' || h === 'phone');
                     const varIndices = [];
-                    for (let i = 1; i <= 3; i++) {
+                    for (let i = 1; i <= 8; i++) {
                         const varIndex = headers.findIndex(h => h === `변수${i}` || h === `Variable ${i}` || h === `변수 ${i}`);
                         varIndices.push(varIndex);
                     }
@@ -2559,7 +2645,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             index: index,
                             name: nameIndex >= 0 ? (row[nameIndex] || '') : '',
                             phone: phoneIndex >= 0 ? (row[phoneIndex] || '') : '',
-                            variables: varIndices.map(idx => idx >= 0 ? (row[idx] || '') : '').slice(0, 3)
+                            variables: varIndices.map(idx => idx >= 0 ? (row[idx] || '') : '').slice(0, 8)
                         };
                         addressBookTableData.push(rowData);
                     });
@@ -2615,7 +2701,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                onblur="updateAddressBookTableData(${i}, 'phone', this.value); updateAddressBookCount();"
                                onkeypress="if(event.key==='Enter') { event.preventDefault(); moveToNextAddressBookCell(this); }">
                     </td>
-                    ${[1,2,3].map(v => `
+                    ${[1,2,3,4,5,6,7,8].map(v => `
                         <td style="padding: 4px; border-bottom: 1px solid var(--border-color);">
                             <input type="text" class="form-input address-book-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;" 
                                    data-row="${i}" data-field="var${v}"
@@ -2636,7 +2722,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     index: addressBookTableData.length,
                     name: '',
                     phone: '',
-                    variables: ['', '', '']
+                    variables: ['', '', '', '', '', '', '', '']
                 });
             }
             
@@ -2646,7 +2732,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     index: index,
                     name: '',
                     phone: '',
-                    variables: ['', '', '']
+                    variables: ['', '', '', '', '', '', '', '']
                 };
             }
             
@@ -2657,8 +2743,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 finalRow.phone = value;
             } else if (field.startsWith('var')) {
                 const varIndex = parseInt(field.replace('var', '')) - 1;
-                if (varIndex >= 0 && varIndex < 3) {
-                    if (!finalRow.variables) finalRow.variables = ['', '', ''];
+                if (varIndex >= 0 && varIndex < 8) {
+                    if (!finalRow.variables) finalRow.variables = ['', '', '', '', '', '', '', ''];
                     finalRow.variables[varIndex] = value;
                 }
             }
@@ -2705,7 +2791,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 index: addressBookTableData.length,
                 name: '',
                 phone: '',
-                variables: ['', '', '']
+                variables: ['', '', '', '', '', '', '', '']
             });
             renderAddressBookTable();
             
@@ -2826,9 +2912,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // 주소록 샘플 파일 다운로드
         function downloadAddressBookSampleFile() {
             const sampleData = [
-                ['이름', '전화번호', '변수1', '변수2', '변수3'],
-                ['홍길동', '010-1234-5678', '홍길동', '서울시 강남구', 'VIP'],
-                ['김철수', '010-9876-5432', '김철수', '서울시 서초구', '일반']
+                ['이름', '전화번호', '변수1', '변수2', '변수3', '변수4', '변수5', '변수6', '변수7', '변수8'],
+                ['홍길동', '010-1234-5678', '홍길동', '서울시 강남구', 'VIP', '', '', '', '', ''],
+                ['김철수', '010-9876-5432', '김철수', '서울시 서초구', '일반', '', '', '', '', '']
             ];
             
             const wb = XLSX.utils.book_new();
@@ -2915,8 +3001,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // 샘플 파일 다운로드 (변경된 형식)
             const sampleData = [
                 ['이름', '전화번호', '변수 1', '변수 2', '변수 3'],
-                ['홍길동', '010-1234-5678', '홍길동', '서울시 강남구', 'VIP'],
-                ['김철수', '010-9876-5432', '김철수', '서울시 서초구', '일반']
+                ['홍길동', '010-1234-5678', '홍길동', '서울시 강남구', 'VIP', '', '', '', '', ''],
+                ['김철수', '010-9876-5432', '김철수', '서울시 서초구', '일반', '', '', '', '', '']
             ];
             
             // 워크북 생성
@@ -3124,7 +3210,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // ===== 주소 테이블 =====
             // 22. 주소 테이블
-            { selector: '.table', title: '22. 주소록 테이블', position: { top: '10px', left: '10px' }, description: '주소 목록', function: '연락처 표시', behavior: ['이름, 전화번호, 변수1-3, 등록일, 상태, 관리', '【상태 컬럼 값】 정상(녹색), 수신거부(빨간색)'] },
+            { selector: '.table', title: '22. 주소록 테이블', position: { top: '10px', left: '10px' }, description: '주소 목록', function: '연락처 표시', behavior: ['이름, 전화번호, 변수1-8, 등록일, 상태, 관리', '【상태 컬럼 값】 정상(녹색), 수신거부(빨간색)'] },
             // 23. 전체 선택 체크박스
             { selector: 'thead input[type="checkbox"]', title: '23. 전체 선택', position: { top: '-5px', left: '-10px' }, description: '모든 주소 선택', function: 'toggleAll(this) 호출', behavior: ['전체 선택/해제 토글'] },
             // 24. 수정 버튼
@@ -3168,7 +3254,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     '【모달 구성】',
                     '• 이름 입력 필드 (필수)',
                     '• 전화번호 입력 필드 (필수)',
-                    '• 변수1~3 입력 필드 (선택)',
+                    '• 변수1~8 입력 필드 (선택)',
                     '• 취소/저장 버튼'
                 ],
                 tags: [{ text: '모달', type: 'info' }]
@@ -3215,32 +3301,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 31. 변수1 입력 필드
-            { 
-                selector: '#addressVar1', 
-                title: '31. 변수1 입력', 
-                position: { top: '-5px', left: '-10px' }, 
-                description: '텍스트 입력 필드 (Text Input)',
-                function: '변수1 데이터 입력',
-                behavior: ['선택 입력 항목']
-            },
-            // 32. 변수2 입력 필드
-            { 
-                selector: '#addressVar2', 
-                title: '32. 변수2 입력', 
-                position: { top: '-5px', left: '-10px' }, 
-                description: '텍스트 입력 필드 (Text Input)',
-                function: '변수2 데이터 입력',
-                behavior: ['선택 입력 항목']
-            },
-            // 33. 변수3 입력 필드
-            { 
-                selector: '#addressVar3', 
-                title: '33. 변수3 입력', 
-                position: { top: '-5px', left: '-10px' }, 
-                description: '텍스트 입력 필드 (Text Input)',
-                function: '변수3 데이터 입력',
-                behavior: ['선택 입력 항목']
+            // 31. 변수 입력 필드 (변수1~8)
+            {
+                selector: '#addressVar1',
+                title: '31. 변수1~8 입력',
+                position: { top: '-5px', left: '-10px' },
+                description: '텍스트 입력 필드 (Text Input) 8개',
+                function: '변수1~8 데이터 입력',
+                behavior: ['선택 입력 항목', '발송 화면의 #{변수1}~#{변수8} 에 대응', '각 100바이트 제한']
             },
             // 34. 취소 버튼
             { 
@@ -3350,15 +3418,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     '• 순번 (자동 부여)',
                     '• 이름 (편집 가능, 100바이트 제한)',
                     '• 전화번호 (편집 가능, 필수, 숫자만 입력)',
-                    '• 변수1~3 (편집 가능, 선택, 100바이트 제한)',
+                    '• 변수1~8 (편집 가능, 선택, 100바이트 제한)',
                     '【기본 상태】',
                     '• 모달 열림 시 5개 빈 행 제공',
                     '【입력 필드】',
                     '• 각 셀에 input 필드 제공',
-                    '• 이름/변수1~3: 100바이트 제한',
+                    '• 이름/변수1~8: 100바이트 제한',
                     '• 전화번호: oninput으로 숫자만 허용',
                     '【바이트 제한】',
-                    '• 이름/변수1~3 입력 시 100바이트 초과 불가',
+                    '• 이름/변수1~8 입력 시 100바이트 초과 불가',
                     '• 초과 시 자동 잘림 및 Toast 알림',
                     '• Toast: "입력 가능한 글자수(100바이트)를 초과했습니다."'
                 ]

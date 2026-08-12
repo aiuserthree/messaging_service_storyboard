@@ -1808,7 +1808,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 행 추가
         function addRecipientRow() {
-            recipientTableData.push({ index: recipientTableData.length, name: '', phone: '', variables: ['', '', ''] });
+            recipientTableData.push({ index: recipientTableData.length, name: '', phone: '', variables: ['', '', '', '', '', '', '', ''] });
             renderRecipientTable();
             updateRecipientCount();
         }
@@ -1901,15 +1901,15 @@ document.addEventListener('DOMContentLoaded', function() {
             // 그룹 선택에 따른 주소록 데이터 가져오기 (실제로는 API 호출)
             const addressBookData = {
                 'group1': [
-                    { name: '홍길동', phone: '01012345678', variables: ['VIP', '서울', ''] },
-                    { name: '김철수', phone: '01023456789', variables: ['VIP', '부산', ''] }
+                    { name: '홍길동', phone: '01012345678', variables: ['VIP', '서울', '', '', '', '', '', ''] },
+                    { name: '김철수', phone: '01023456789', variables: ['VIP', '부산', '', '', '', '', '', ''] }
                 ],
                 'group2': [
-                    { name: '이영희', phone: '01034567890', variables: ['일반', '대구', ''] },
-                    { name: '박민수', phone: '01045678901', variables: ['일반', '광주', ''] }
+                    { name: '이영희', phone: '01034567890', variables: ['일반', '대구', '', '', '', '', '', ''] },
+                    { name: '박민수', phone: '01045678901', variables: ['일반', '광주', '', '', '', '', '', ''] }
                 ],
                 'group3': [
-                    { name: '최신규', phone: '01056789012', variables: ['신규', '인천', ''] }
+                    { name: '최신규', phone: '01056789012', variables: ['신규', '인천', '', '', '', '', '', ''] }
                 ]
             };
             
