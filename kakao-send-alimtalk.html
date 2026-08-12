@@ -1122,6 +1122,10 @@ body {
                                 <!-- 수신번호 입력 -->
                                 <div class="form-group" id="recipientGroup">
                                     <label class="form-label required">수신번호</label>
+                                    <div class="form-help" id="recipientVariableHelp" style="margin-bottom: 12px; color: var(--text-secondary); font-size: 13px; line-height: 1.65;">
+                                        - 사용 가능한 변수: #{이름}, #{전화번호}, #{변수1}, #{변수2}, #{변수3}<br>
+                                        - 템플릿의 변수는 아래 표의 해당 컬럼 값으로 치환되어 발송됩니다.
+                                    </div>
                                     <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
                                         <!-- 상단 탭 및 주소록 버튼 영역 -->
                                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
@@ -1297,17 +1301,17 @@ body {
                                 <td>AT001</td>
                                 <td>주문 확인</td>
                                 <td>주문/배송</td>
-                                <td>#{주문번호}, #{상품명}</td>
+                                <td>#{이름}, #{변수1}, #{변수2}</td>
                                 <td><span class="badge badge-success">승인완료</span></td>
-                                <td><button class="btn btn-sm btn-primary template-select-btn" onclick="selectTemplate('AT001', '주문 확인', ['주문번호', '상품명'], '주문이 접수되었습니다.\n주문번호: #{주문번호}\n상품명: #{상품명}')">선택</button></td>
+                                <td><button class="btn btn-sm btn-primary template-select-btn" onclick="selectTemplate('AT001', '주문 확인', ['이름', '변수1', '변수2'], '#{이름}님, 주문이 접수되었습니다.\n주문번호: #{변수1}\n상품명: #{변수2}')">선택</button></td>
                             </tr>
                             <tr>
                                 <td>AT002</td>
                                 <td>배송 안내</td>
                                 <td>주문/배송</td>
-                                <td>#{운송장번호}</td>
+                                <td>#{이름}, #{변수1}</td>
                                 <td><span class="badge badge-success">승인완료</span></td>
-                                <td><button class="btn btn-sm btn-primary template-select-btn" onclick="selectTemplate('AT002', '배송 안내', ['운송장번호'], '배송이 시작되었습니다.\n운송장번호: #{운송장번호}')">선택</button></td>
+                                <td><button class="btn btn-sm btn-primary template-select-btn" onclick="selectTemplate('AT002', '배송 안내', ['이름', '변수1'], '#{이름}님, 배송이 시작되었습니다.\n운송장번호: #{변수1}')">선택</button></td>
                             </tr>
                         </tbody>
                     </table>
