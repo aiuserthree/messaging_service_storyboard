@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <title>선거문자 발송 - 메시징 서비스</title>
     <script src="js/header.js"></script>
+    <script src="js/variable-guard.js"></script>
     <script src="js/alimtalk-auth.js"></script>
     <script src="js/approval-data.js"></script>
     <script src="js/spam-filter.js"></script>
@@ -1275,6 +1276,11 @@ body {
                                                             <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수1</th>
                                                             <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수2</th>
                                                             <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수3</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수4</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수5</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수6</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수7</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수8</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="recipientDataTableBody">
@@ -1331,12 +1337,17 @@ body {
                         <!-- 메시지 내용 -->
                         <div class="form-group" id="messageContentGroup">
                             <label class="form-label required">메시지 내용</label>
-                            <div class="flex gap-2 mb-1" id="variableButtons" style="align-items: center;">
+                            <div class="flex gap-2 mb-1" id="variableButtons" style="align-items: center; flex-wrap: wrap;">
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{이름}')">#{이름}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{전화번호}')">#{전화번호}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수1}')">#{변수1}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수2}')">#{변수2}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수3}')">#{변수3}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수4}')">#{변수4}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수5}')">#{변수5}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수6}')">#{변수6}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수7}')">#{변수7}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수8}')">#{변수8}</button>
                                 <button type="button" class="btn btn-sm btn-outline" id="templateSelectBtn" onclick="openModal('templateSelectModal')">템플릿 선택</button>
                             </div>
                             <textarea class="form-textarea" id="messageContent" rows="6" placeholder="메시지 내용을 입력하세요" required oninput="updatePreview(); checkForbiddenWords(); updateByteCounter();"></textarea>
@@ -3295,19 +3306,16 @@ if (document.readyState === 'loading') {
                     
                     // 변수값 가져오기
                     const cells = row.querySelectorAll('td');
-                    if (cells.length < 8) return; // 체크박스, 순번, 이름, 전화번호, 변수1, 변수2, 변수3 (총 7개) 필요
+                    if (cells.length < 12) return; // 체크박스, 순번, 이름, 전화번호, 변수1~8 (총 12개) 필요
 
-                    const var1 = cells[4]?.querySelector('input')?.value || '';
-                    const var2 = cells[5]?.querySelector('input')?.value || '';
-                    const var3 = cells[6]?.querySelector('input')?.value || '';
+                    const rowVars = [];
+                    for (let v = 0; v < 8; v++) rowVars.push(cells[4 + v]?.querySelector('input')?.value || '');
 
                     // 변수 치환
                     let replacedContent = messageContent;
                     replacedContent = replacedContent.replace(/#\{이름\}/g, cells[2]?.querySelector('input')?.value || '');
                     replacedContent = replacedContent.replace(/#\{전화번호\}/g, cells[3]?.querySelector('input')?.value || '');
-                    replacedContent = replacedContent.replace(/#\{변수1\}/g, var1);
-                    replacedContent = replacedContent.replace(/#\{변수2\}/g, var2);
-                    replacedContent = replacedContent.replace(/#\{변수3\}/g, var3);
+                    for (let v = 0; v < 8; v++) replacedContent = replacedContent.replace(new RegExp('#\\{변수' + (v + 1) + '\\}', 'g'), rowVars[v]);
 
                     // 바이트 계산
                     let totalBytes = calculateByteLength(replacedContent);
@@ -3328,6 +3336,10 @@ if (document.readyState === 'loading') {
                 }
             }
             
+            // 본문에 허용되지 않은 변수가 있으면 발송하지 않는다 (js/variable-guard.js)
+            if (typeof assertAllowedVariables === 'function' &&
+                !assertAllowedVariables(document.getElementById('messageContent')?.value || '')) return;
+
             // 검증 통과 → 발송 요청 시점 차단정보 검사 (인증기준 5.2) → 발송 전 추가 인증
             // 차단·보류면 js/spam-filter.js 가 안내 화면을 띄우고 발송을 진행하지 않는다.
             screenSendContent(collectScreenContext(), requestSendAuth);
@@ -3521,9 +3533,9 @@ if (document.readyState === 'loading') {
         // 샘플 파일 다운로드 (주소록 관리와 동일)
         function downloadSampleFile() {
             const sampleData = [
-                ['이름', '전화번호', '변수1', '변수2', '변수3'],
-                ['홍길동', '010-1234-5678', '2024-04-10', '서울 강남구 갑', '기호 1번'],
-                ['김철수', '010-9876-5432', '2024-04-10', '서울 서초구 을', '기호 2번']
+                ['이름', '전화번호', '변수1', '변수2', '변수3', '변수4', '변수5', '변수6', '변수7', '변수8'],
+                ['홍길동', '010-1234-5678', '2024-04-10', '서울 강남구 갑', '기호 1번', '', '', '', '', ''],
+                ['김철수', '010-9876-5432', '2024-04-10', '서울 서초구 을', '기호 2번', '', '', '', '', '']
             ];
             
             const wb = XLSX.utils.book_new();
@@ -3645,7 +3657,7 @@ if (document.readyState === 'loading') {
                     const phoneIndex = headers.findIndex(h => h === '전화번호' || h === '휴대폰' || h === 'Phone' || h === 'phone');
                     
                     const varIndices = [];
-                    for (let i = 1; i <= 3; i++) {
+                    for (let i = 1; i <= 8; i++) {
                         varIndices.push(headers.findIndex(h => h === `변수${i}` || h === `Variable ${i}` || h === `변수 ${i}`));
                     }
 
@@ -3877,7 +3889,7 @@ if (document.readyState === 'loading') {
                         index: recipientTableData.length,
                         name: item.name || '',
                         phone: item.phone || '',
-                        variables: (item.variables || []).slice(0, 3)
+                        variables: (item.variables || []).slice(0, 8)
                     });
                 } else {
                     recipientTableData[existingIndex].name = item.name || recipientTableData[existingIndex].name;
@@ -4031,7 +4043,7 @@ if (document.readyState === 'loading') {
                     const phoneIndex = headers.findIndex(h => h === '전화번호' || h === '휴대폰' || h === 'Phone' || h === 'phone');
                     
                     const varIndices = [];
-                    for (let i = 1; i <= 3; i++) {
+                    for (let i = 1; i <= 8; i++) {
                         varIndices.push(headers.findIndex(h => h === `변수${i}` || h === `Variable ${i}` || h === `변수 ${i}`));
                     }
 
@@ -4127,7 +4139,7 @@ if (document.readyState === 'loading') {
                                onblur="updateRecipientTableData(${i}, 'phone', this.value); updateRecipientCount();"
                                onkeydown="if(event.key==='Enter'||(event.key==='Tab'&&!event.shiftKey)){ event.preventDefault(); moveToNextCell(this); } if(event.key==='Tab'&&event.shiftKey){ event.preventDefault(); moveToPrevRowPhone(this); }">
                     </td>
-                    ${[1,2,3].map(v => `
+                    ${[1,2,3,4,5,6,7,8].map(v => `
                         <td style="padding: 4px; border-bottom: 1px solid var(--border-color);">
                             <input type="text" class="form-input recipient-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;"
                                    data-row="${i}" data-field="var${v}"
@@ -4334,7 +4346,7 @@ if (document.readyState === 'loading') {
                 finalRow.phone = value;
             } else if (field.startsWith('var')) {
                 const varIndex = parseInt(field.replace('var', '')) - 1;
-                if (varIndex >= 0 && varIndex < 3) {
+                if (varIndex >= 0 && varIndex < 8) {
                     if (!finalRow.variables) finalRow.variables = ['', '', ''];
                     finalRow.variables[varIndex] = value;
                 }
@@ -4804,7 +4816,7 @@ if (document.readyState === 'loading') {
                     '【클릭 동작】',
                     '• "수신번호_샘플.xlsx" 파일 다운로드',
                     '【파일 구성】',
-                    '• 컬럼: 이름, 전화번호, 변수1, 변수2, 변수3',
+                    '• 컬럼: 이름, 전화번호, 변수1~8',
                     '【Toast 메시지】',
                     '• 성공: "샘플 파일 다운로드가 시작되었습니다."'
                 ]

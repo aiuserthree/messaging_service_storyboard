@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <title>브랜드 메시지 템플릿 등록 - 메시징 서비스</title>
     <script src="js/header.js"></script>
+    <script src="js/variable-guard.js"></script>
     <style>/* 공통 스타일 */
 * {
     margin: 0;
@@ -2482,7 +2483,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 6. 텍스트 유형 영역
             { selector: '#textTypeGroup', title: '텍스트 유형 입력', position: { top: '10px', left: '10px' }, function: '텍스트형 메시지 입력 영역' },
             // 7. 텍스트 변수 삽입 버튼
-            { selector: '#textTypeGroup .flex', title: '변수 삽입', position: { top: '-5px', left: '-10px' }, function: '메시지에 변수 삽입', behavior: ['#{이름}', '#{전화번호}', '#{변수1~3}'] },
+            { selector: '#textTypeGroup .flex', title: '변수 삽입', position: { top: '-5px', left: '-10px' }, function: '메시지에 변수 삽입', behavior: ['#{이름}', '#{전화번호}', '#{변수1~8}'] },
             // 8. 텍스트 메시지 내용
             { selector: '#textMessageContent', title: '메시지 입력', position: { top: '5px', right: '5px' }, function: '텍스트 메시지 본문', behavior: ['최대 1,300자', '줄바꿈 최대 99개'], tags: [{ text: '필수', type: 'required' }] },
             // 9. 텍스트 글자수 카운터

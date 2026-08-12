@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <title>선거문자 템플릿 관리 - 메시징 서비스</title>
     <script src="js/header.js"></script>
+    <script src="js/variable-guard.js"></script>
     <style>/* 공통 스타일 */
 * {
     margin: 0;
@@ -1428,12 +1429,17 @@ body {
                             </div>
                             <div class="form-group">
                                 <label class="form-label required">메시지 내용</label>
-                                <div class="flex gap-2 mb-1">
+                                <div class="flex gap-2 mb-1" style="flex-wrap: wrap;">
                                     <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{이름}')">#{이름}</button>
                                     <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{전화번호}')">#{전화번호}</button>
                                     <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수1}')">#{변수1}</button>
                                     <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수2}')">#{변수2}</button>
                                     <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수3}')">#{변수3}</button>
+                                    <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수4}')">#{변수4}</button>
+                                    <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수5}')">#{변수5}</button>
+                                    <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수6}')">#{변수6}</button>
+                                    <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수7}')">#{변수7}</button>
+                                    <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수8}')">#{변수8}</button>
                                 </div>
                                 <textarea class="form-textarea" id="templateContent" rows="8" placeholder="메시지 내용을 입력하세요" required oninput="checkForbiddenWords(); updatePreview(); updateByteCounter();"></textarea>
                                 <div class="byte-counter" id="byteCounter">0 / 90 바이트</div>

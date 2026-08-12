@@ -7,6 +7,7 @@
     <title>일반문자 발송 - Tokbell</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/header.js"></script>
+    <script src="js/variable-guard.js"></script>
     <script src="js/alimtalk-auth.js"></script>
     <script src="js/approval-data.js"></script>
     <script src="js/spam-filter.js"></script>
@@ -1310,7 +1311,7 @@ body {
                         <div class="form-group">
                             <label class="form-label required">수신번호</label>
                             <div class="form-help" style="margin-bottom: 12px; color: var(--text-secondary); font-size: 13px; line-height: 1.65;">
-                                - 변수 사용 안내: 이름, 변수1~3은 각 100바이트까지 입력됩니다.<br>
+                                - 변수 사용 안내: 이름, 변수1~8은 각 100바이트까지 입력됩니다.<br>
                                 - 변수 길이로 인해 90바이트를 초과하는 SMS 메시지는 LMS로 변경 후 발송하시기 바랍니다.
                             </div>
                             <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); background: white;">
@@ -1349,6 +1350,11 @@ body {
                                                             <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수1</th>
                                                             <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수2</th>
                                                             <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수3</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수4</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수5</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수6</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수7</th>
+                                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수8</th>
                                                         </tr>
                                                     </thead>
                                                                     <tbody id="recipientDataTableBody">
@@ -1411,6 +1417,11 @@ body {
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수1}')">#{변수1}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수2}')">#{변수2}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수3}')">#{변수3}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수4}')">#{변수4}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수5}')">#{변수5}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수6}')">#{변수6}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수7}')">#{변수7}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수8}')">#{변수8}</button>
                                 <button type="button" class="btn btn-sm btn-outline" id="templateSelectBtn" onclick="openModal('templateSelectModal')">템플릿 선택</button>
                             </div>
                             <textarea class="form-textarea" id="messageContent" rows="8" placeholder="메시지 내용을 입력하세요" required></textarea>
@@ -1817,6 +1828,11 @@ body {
                                         <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수1</th>
                                         <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수2</th>
                                         <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수3</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수4</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수5</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수6</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수7</th>
+                                        <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수8</th>
                                     </tr>
                                 </thead>
                                 <tbody id="addRecipientModalTableBody">
@@ -2578,13 +2594,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 convertedContent = convertedContent.replace(new RegExp(oldVar.replace(/[{}]/g, '\\$&'), 'g'), newVar);
             }
             
-            // 매핑되지 않은 변수 패턴을 순서대로 변수1, 변수2, 변수3으로 변환
+            // 매핑되지 않은 변수 패턴을 순서대로 변수1~8 로 변환
             const variablePattern = /#\{[^}]+\}/g;
+            const allowed = window.ALLOWED_VARIABLES || [];
             const foundVariables = [...new Set(convertedContent.match(variablePattern) || [])];
-            const unmappedVars = foundVariables.filter(v => !Object.values(variableMap).includes(v));
-            
+            const unmappedVars = foundVariables.filter(v => !allowed.includes(v.slice(2, -1)));
+
             unmappedVars.forEach((varName, index) => {
-                if (index < 3) {
+                if (index < (window.VARIABLE_MAX_INDEX || 8)) {
                     const replacement = `#{변수${index + 1}}`;
                     convertedContent = convertedContent.replace(new RegExp(varName.replace(/[{}]/g, '\\$&'), 'g'), replacement);
                 }
@@ -2700,6 +2717,10 @@ document.getElementById('confirmRecipientCount').textContent =
 
         function confirmSend() {
             if (!validateSendBeforeAuth()) return;
+            // 본문에 허용되지 않은 변수가 있으면 발송하지 않는다 (js/variable-guard.js)
+            if (typeof assertAllowedVariables === 'function' &&
+                !assertAllowedVariables(document.getElementById('messageContent')?.value || '')) return;
+
             // 발송 요청 시점에 금칙어·URL·전화번호 차단정보를 검사한다 (인증기준 5.2).
             // 차단·보류면 js/spam-filter.js 가 안내 화면을 띄우고 발송을 진행하지 않는다.
             screenSendContent(collectScreenContext(), requestSendAuth);
@@ -2873,18 +2894,15 @@ document.getElementById('confirmRecipientCount').textContent =
                     if (!checkbox || !checkbox.checked) return;
 
                     const cells = row.querySelectorAll('td');
-                    if (cells.length < 8) return;
+                    if (cells.length < 12) return;
 
-                    const var1 = cells[4]?.querySelector('input')?.value || '';
-                    const var2 = cells[5]?.querySelector('input')?.value || '';
-                    const var3 = cells[6]?.querySelector('input')?.value || '';
+                    const rowVars = [];
+                    for (let v = 0; v < 8; v++) rowVars.push(cells[4 + v]?.querySelector('input')?.value || '');
 
                     let replacedContent = messageContent;
                     replacedContent = replacedContent.replace(/#\{이름\}/g, cells[2]?.querySelector('input')?.value || '');
                     replacedContent = replacedContent.replace(/#\{전화번호\}/g, cells[3]?.querySelector('input')?.value || '');
-                    replacedContent = replacedContent.replace(/#\{변수1\}/g, var1);
-                    replacedContent = replacedContent.replace(/#\{변수2\}/g, var2);
-                    replacedContent = replacedContent.replace(/#\{변수3\}/g, var3);
+                    for (let v = 0; v < 8; v++) replacedContent = replacedContent.replace(new RegExp('#\\{변수' + (v + 1) + '\\}', 'g'), rowVars[v]);
 
                     let totalBytes = calculateByteLength(replacedContent);
                     if (messageTitle) {
@@ -3135,9 +3153,9 @@ document.getElementById('confirmRecipientCount').textContent =
         // 샘플 파일 다운로드 (주소록 관리와 동일)
         function downloadSampleFile() {
             const sampleData = [
-                ['이름', '전화번호', '변수1', '변수2', '변수3'],
-                ['홍길동', '010-1234-5678', '홍길동', '서울시 강남구', 'VIP'],
-                ['김철수', '010-9876-5432', '김철수', '서울시 서초구', '일반']
+                ['이름', '전화번호', '변수1', '변수2', '변수3', '변수4', '변수5', '변수6', '변수7', '변수8'],
+                ['홍길동', '010-1234-5678', '홍길동', '서울시 강남구', 'VIP', '', '', '', '', ''],
+                ['김철수', '010-9876-5432', '김철수', '서울시 서초구', '일반', '', '', '', '', '']
             ];
             
             const wb = XLSX.utils.book_new();
@@ -3666,7 +3684,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     const nameIndex = headers.findIndex(h => h === '이름' || h === 'Name' || h === 'name');
                     const phoneIndex = headers.findIndex(h => h === '전화번호' || h === '휴대폰' || h === 'Phone' || h === 'phone');
                     const varIndices = [];
-                    for (let i = 1; i <= 3; i++) {
+                    for (let i = 1; i <= 8; i++) {
                         const varIndex = headers.findIndex(h => h === `변수${i}` || h === `Variable ${i}` || h === `변수 ${i}`);
                         varIndices.push(varIndex);
                     }
@@ -3678,7 +3696,7 @@ document.getElementById('confirmRecipientCount').textContent =
                             index: index,
                             name: nameIndex >= 0 ? (row[nameIndex] || '') : '',
                             phone: phoneIndex >= 0 ? (row[phoneIndex] || '') : '',
-                            variables: varIndices.map(idx => idx >= 0 ? (row[idx] || '') : '').slice(0, 3)
+                            variables: varIndices.map(idx => idx >= 0 ? (row[idx] || '') : '').slice(0, 8)
                         };
                         recipientTableData.push(rowData);
                     });
@@ -3764,7 +3782,7 @@ document.getElementById('confirmRecipientCount').textContent =
                                onblur="updateRecipientTableData(${i}, 'phone', this.value); updateRecipientCount();"
                                onkeydown="if(event.key==='Enter'||(event.key==='Tab'&&!event.shiftKey)){ event.preventDefault(); moveToNextCell(this); } if(event.key==='Tab'&&event.shiftKey){ event.preventDefault(); moveToPrevRowPhone(this); }">
                     </td>
-                    ${[1,2,3].map(v => `
+                    ${[1,2,3,4,5,6,7,8].map(v => `
                         <td style="padding: 4px; border-bottom: 1px solid var(--border-color);">
                             <input type="text" class="form-input recipient-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;" 
                                    data-row="${i}" data-field="var${v}"
@@ -3986,7 +4004,7 @@ document.getElementById('confirmRecipientCount').textContent =
                         value = row.phone || '';
                     } else                     if (field.startsWith('var')) {
                         const varIndex = parseInt(field.replace('var', '')) - 1;
-                        if (varIndex >= 0 && varIndex < 3) {
+                        if (varIndex >= 0 && varIndex < 8) {
                             value = row.variables && row.variables[varIndex] ? row.variables[varIndex] : '';
                         }
                     }
@@ -4028,7 +4046,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 finalRow.phone = value;
             } else if (field.startsWith('var')) {
                 const varIndex = parseInt(field.replace('var', '')) - 1;
-                if (varIndex >= 0 && varIndex < 3) {
+                if (varIndex >= 0 && varIndex < 8) {
                     if (!finalRow.variables) finalRow.variables = ['', '', ''];
                     finalRow.variables[varIndex] = value;
                 }
@@ -4379,7 +4397,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 behavior: [
                     '【클릭 동작】',
                     '• "수신번호_샘플.xlsx" 파일 다운로드',
-                    '• 컬럼: 이름, 전화번호, 변수1, 변수2, 변수3'
+                    '• 컬럼: 이름, 전화번호, 변수1~8'
                 ]
             },
             // 7. 주소록 불러오기 버튼
@@ -4447,9 +4465,9 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 순번 (자동 부여)',
                     '• 이름 (편집 가능, 100바이트 제한)',
                     '• 전화번호 (편집 가능, 필수, 숫자만 입력)',
-                    '• 변수1~3 (편집 가능, 선택, 각 100바이트 제한)',
+                    '• 변수1~8 (편집 가능, 선택, 각 100바이트 제한)',
                     '【바이트 제한】',
-                    '• 이름, 변수1~3 입력 시 100바이트 초과 불가',
+                    '• 이름, 변수1~8 입력 시 100바이트 초과 불가',
                     '• 초과 시 자동 잘림 및 Toast 알림 표시',
                     '• Toast: "입력 가능한 글자수(100바이트)를 초과했습니다."',
                     '【표시 방식 - 수신번호 개수별】',
@@ -4591,7 +4609,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 버튼 그룹 우측에 "?" 아이콘 표시',
                     '• 마우스 hover 시 툴팁 표시',
                     '• 툴팁 내용:',
-                    '  - "변수 사용 안내: 이름, 변수1~3은 각 100바이트까지 입력됩니다."',
+                    '  - "변수 사용 안내: 이름, 변수1~8은 각 100바이트까지 입력됩니다."',
                     '  - "변수 길이로 인해 90바이트를 초과하는 SMS 메시지는 LMS로 변경 후 발송하시기 바랍니다."'
                 ]
             },
@@ -4859,7 +4877,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 function: '수신번호 직접 입력하여 추가',
                 behavior: [
                     '【모달 구성】',
-                    '• 테이블 형태: 순번, 이름, 전화번호, 변수1, 변수2, 변수3',
+                    '• 테이블 형태: 순번, 이름, 전화번호, 변수1~8',
                     '• 기본 5개 빈 행 제공',
                     '• 하단에 총 N명 카운트 표시',
                     '• 취소/추가하기 버튼',
@@ -4922,10 +4940,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 모달 열림 시 5개 빈 행 제공',
                     '【입력 필드】',
                     '• 각 셀에 input 필드 제공',
-                    '• 이름, 변수1~3 셀: 100바이트 제한 (한글 약 33자, 영문 100자)',
+                    '• 이름, 변수1~8 셀: 100바이트 제한 (한글 약 33자, 영문 100자)',
                     '• 전화번호 셀: oninput으로 숫자만 허용',
                     '【바이트 제한】',
-                    '• 이름, 변수1~3 입력 시 100바이트 초과 불가',
+                    '• 이름, 변수1~8 입력 시 100바이트 초과 불가',
                     '• 초과 시 자동 잘림 및 Toast 알림',
                     '• Toast: "입력 가능한 글자수(100바이트)를 초과했습니다."'
                 ]

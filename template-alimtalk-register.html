@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <title>알림톡 템플릿 등록 - 메시징 서비스</title>
     <script src="js/header.js"></script>
+    <script src="js/variable-guard.js"></script>
     <style>/* 공통 스타일 */
 * {
     margin: 0;
@@ -1152,7 +1153,7 @@ body {
                             </div>
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label class="form-label required">강조표기 문구</label>
-                                <div class="flex gap-2 mb-1">
+                                <div class="flex gap-2 mb-1" style="flex-wrap: wrap;">
                                     <button type="button" class="btn btn-sm btn-outline" onclick="insertEmphasisVariable('#{이름}')">#{이름}</button>
                                     <button type="button" class="btn btn-sm btn-outline" onclick="insertEmphasisVariable('#{전화번호}')">#{전화번호}</button>
                                 </div>
@@ -1169,12 +1170,17 @@ body {
                         <!-- 메시지 내용 -->
                         <div class="form-group">
                             <label class="form-label required">템플릿 내용</label>
-                            <div class="flex gap-2 mb-1">
+                            <div class="flex gap-2 mb-1" style="flex-wrap: wrap;">
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{이름}')">#{이름}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{전화번호}')">#{전화번호}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수1}')">#{변수1}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수2}')">#{변수2}</button>
                                 <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수3}')">#{변수3}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수4}')">#{변수4}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수5}')">#{변수5}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수6}')">#{변수6}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수7}')">#{변수7}</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수8}')">#{변수8}</button>
                             </div>
                             <textarea class="form-textarea" id="messageContent" rows="8" placeholder="내용을 입력해주세요." maxlength="1000" required oninput="updateCharCounter(); updatePreview();"></textarea>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
@@ -1949,6 +1955,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            // 본문에 허용되지 않은 변수가 있으면 검수 신청하지 않는다 (js/variable-guard.js)
+            if (typeof assertAllowedVariables === 'function' &&
+                !assertAllowedVariables(document.getElementById('messageContent')?.value || '')) return;
+
             // 최종 확인 정보 설정
             const channelSelect = document.getElementById('channelSelect');
             const templateNameInput = form.querySelector('input[placeholder="템플릿 관리용 이름"]');
@@ -1983,7 +1993,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 1. 페이지 헤더
             { selector: '.page-header', title: '페이지 헤더', position: { top: '10px', left: '-15px' }, function: '알림톡 템플릿 등록 페이지 제목' },
             // 2. 작성 가이드 섹션
-            { selector: '.guide-section', title: '작성 가이드', position: { top: '10px', left: '10px' }, function: '템플릿 작성 규정 안내', behavior: ['정보성 메시지만 가능', '변수는 #{이름}, #{전화번호}, #{변수1~3}', '검수 소요 2~3시간'] },
+            { selector: '.guide-section', title: '작성 가이드', position: { top: '10px', left: '10px' }, function: '템플릿 작성 규정 안내', behavior: ['정보성 메시지만 가능', '변수는 #{이름}, #{전화번호}, #{변수1~8}', '검수 소요 2~3시간'] },
             // 3. 템플릿 폼
             { selector: '#templateForm', title: '템플릿 폼', position: { top: '10px', right: '10px' }, function: '알림톡 템플릿 등록 폼', api: 'POST /api/templates/alimtalk' },
             // 4. 카카오 채널 선택
@@ -1999,7 +2009,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 9. 강조표기 문구
             { selector: '#emphasisText', title: '강조표기 문구', position: { top: '-5px', right: '-10px' }, function: '강조 영역 메인 텍스트', behavior: ['최대 23자', '변수 사용 가능'] },
             // 10. 변수 삽입 버튼 영역
-            { selector: '#templateForm .form-group:nth-child(6) .flex', title: '변수 삽입 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 내용에 변수 삽입', behavior: ['#{이름}', '#{전화번호}', '#{변수1~3}'] },
+            { selector: '#templateForm .form-group:nth-child(6) .flex', title: '변수 삽입 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 내용에 변수 삽입', behavior: ['#{이름}', '#{전화번호}', '#{변수1~8}'] },
             // 11. 템플릿 내용 입력
             { selector: '#messageContent', title: '템플릿 내용', position: { top: '5px', right: '5px' }, function: '알림톡 메시지 본문 입력', behavior: ['최대 1,000자', '변수 사용 가능'], tags: [{ text: '필수', type: 'required' }] },
             // 12. 글자수 카운터

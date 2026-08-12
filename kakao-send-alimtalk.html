@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <title>알림톡 발송 - 메시징 서비스</title>
     <script src="js/header.js"></script>
+    <script src="js/variable-guard.js"></script>
     <style>/* 공통 스타일 */
 * {
     margin: 0;
@@ -1163,6 +1164,11 @@ body {
                                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수1</th>
                                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수2</th>
                                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수3</th>
+                                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수4</th>
+                                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수5</th>
+                                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수6</th>
+                                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수7</th>
+                                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수8</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="recipientDataTableBody">
@@ -1681,9 +1687,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     const headers = jsonData[0];
                     const nameIndex = headers.findIndex(h => h === '이름' || h === 'Name' || h === 'name');
                     const phoneIndex = headers.findIndex(h => h === '전화번호' || h === '휴대폰' || h === 'Phone' || h === 'phone');
-                    const var1Index = headers.findIndex(h => h === '변수1' || h === 'var1');
-                    const var2Index = headers.findIndex(h => h === '변수2' || h === 'var2');
-                    const var3Index = headers.findIndex(h => h === '변수3' || h === 'var3');
+                    const varIndices = [];
+                    for (let v = 1; v <= 8; v++) {
+                        varIndices.push(headers.findIndex(h => h === `변수${v}` || h === `var${v}`));
+                    }
                     
                     recipientTableData = [];
                     const rows = jsonData.slice(1);
@@ -1692,11 +1699,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             index: index,
                             name: nameIndex >= 0 ? (row[nameIndex] || '') : '',
                             phone: phoneIndex >= 0 ? (row[phoneIndex] || '') : '',
-                            variables: [
-                                var1Index >= 0 ? (row[var1Index] || '') : '',
-                                var2Index >= 0 ? (row[var2Index] || '') : '',
-                                var3Index >= 0 ? (row[var3Index] || '') : ''
-                            ]
+                            variables: varIndices.map(idx => idx >= 0 ? (row[idx] || '') : '')
                         };
                         recipientTableData.push(rowData);
                     });
@@ -1743,24 +1746,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                onblur="updateRecipientTableData(${i}, 'phone', this.value); updateRecipientCount();">
                     </td>
-                    <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">
-                        <input type="text" class="form-input" style="width: 100%; padding: 6px; font-size: 13px;" 
-                               data-row="${i}" data-field="var1"
-                               value="${variables[0] || ''}" 
-                               onblur="updateRecipientTableData(${i}, 'var1', this.value)">
-                    </td>
-                    <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">
-                        <input type="text" class="form-input" style="width: 100%; padding: 6px; font-size: 13px;" 
-                               data-row="${i}" data-field="var2"
-                               value="${variables[1] || ''}" 
-                               onblur="updateRecipientTableData(${i}, 'var2', this.value)">
-                    </td>
-                    <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">
-                        <input type="text" class="form-input" style="width: 100%; padding: 6px; font-size: 13px;" 
-                               data-row="${i}" data-field="var3"
-                               value="${variables[2] || ''}" 
-                               onblur="updateRecipientTableData(${i}, 'var3', this.value)">
-                    </td>
+                    ${[1,2,3,4,5,6,7,8].map(v => `
+                        <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">
+                            <input type="text" class="form-input" style="width: 100%; padding: 6px; font-size: 13px;"
+                                   data-row="${i}" data-field="var${v}"
+                                   value="${variables[v-1] || ''}"
+                                   onblur="updateRecipientTableData(${i}, 'var${v}', this.value)">
+                        </td>
+                    `).join('')}
                 `;
                 tbody.appendChild(tr);
             }
@@ -1769,18 +1762,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // 테이블 데이터 업데이트
         function updateRecipientTableData(index, field, value) {
             while (index >= recipientTableData.length) {
-                recipientTableData.push({ index: recipientTableData.length, name: '', phone: '', variables: ['', '', ''] });
+                recipientTableData.push({ index: recipientTableData.length, name: '', phone: '', variables: new Array(8).fill('') });
             }
             const row = recipientTableData[index];
-            if (field === 'var1') {
-                if (!row.variables) row.variables = ['', '', ''];
-                row.variables[0] = value;
-            } else if (field === 'var2') {
-                if (!row.variables) row.variables = ['', '', ''];
-                row.variables[1] = value;
-            } else if (field === 'var3') {
-                if (!row.variables) row.variables = ['', '', ''];
-                row.variables[2] = value;
+            if (/^var[1-8]$/.test(field)) {
+                if (!row.variables) row.variables = new Array(8).fill('');
+                row.variables[parseInt(field.slice(3), 10) - 1] = value;
             } else {
                 row[field] = value;
             }
@@ -1962,7 +1949,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function selectTemplate(code, name, variables, content) {
             document.getElementById('selectedTemplate').value = `${name} (${code})`;
 
-            // 미리보기 업데이트 (변수 값은 수신번호 영역의 변수1~3 으로 입력한다)
+            // 미리보기 업데이트 (변수 값은 수신번호 영역의 변수1~8 으로 입력한다)
             updatePreviewContent(content);
             closeModal('templateSelectModal');
         }
@@ -2324,7 +2311,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 12. 수신번호 영역
             { selector: '#recipientGroup', title: '수신번호 영역', position: { top: '5px', left: '-15px' }, function: '수신번호 등록', tags: [{ text: '필수', type: 'required' }] },
             // 13. 엑셀 업로드 버튼
-            { selector: '#excelUploadBtn', title: '엑셀 업로드 버튼', position: { top: '-5px', left: '-10px' }, function: '엑셀 파일에서 수신번호 불러오기', behavior: ['xlsx, xls, csv 형식 지원', '이름, 전화번호, 변수1~3 컬럼 인식'] },
+            { selector: '#excelUploadBtn', title: '엑셀 업로드 버튼', position: { top: '-5px', left: '-10px' }, function: '엑셀 파일에서 수신번호 불러오기', behavior: ['xlsx, xls, csv 형식 지원', '이름, 전화번호, 변수1~8 컬럼 인식'] },
             // 14. 엑셀샘플 다운로드 버튼
             { selector: 'button[onclick="downloadExcelSample()"]', title: '엑셀샘플 다운로드', position: { top: '-5px', left: '-10px' }, function: '수신번호 입력용 엑셀 샘플 다운로드' },
             // 15. 주소록 불러오기 버튼
@@ -2334,7 +2321,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 17. 주소록에 추가 버튼
             { selector: '#addToAddressBookBtn', title: '주소록에 추가', position: { top: '-5px', right: '-10px' }, function: '현재 수신번호를 주소록에 저장', api: 'POST /api/addressbook' },
             // 18. 수신번호 테이블
-            { selector: '#recipientDataTable', title: '수신번호 테이블', position: { top: '5px', left: '5px' }, function: '수신자 정보 입력 및 편집', behavior: ['직접 셀 클릭하여 편집', '체크박스로 다중 선택', '순번, 이름, 전화번호, 변수1~3 컬럼'] },
+            { selector: '#recipientDataTable', title: '수신번호 테이블', position: { top: '5px', left: '5px' }, function: '수신자 정보 입력 및 편집', behavior: ['직접 셀 클릭하여 편집', '체크박스로 다중 선택', '순번, 이름, 전화번호, 변수1~8 컬럼'] },
             // 19. 행 추가 버튼
             { selector: 'button[onclick="addRecipientRow()"]', title: '행 추가', position: { top: '-5px', left: '-10px' }, function: '수신번호 입력 행 추가' },
             // 20. 선택 행 삭제 버튼
@@ -2413,7 +2400,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 39. 템플릿 테이블 본문
             { selector: '#templateTableBody', title: '템플릿 목록 본문', position: { top: '10px', left: '10px' }, function: '템플릿 데이터 행' },
             // 40. 템플릿 선택 버튼 (테이블 내)
-            { selector: '.template-select-btn', title: '템플릿 선택 버튼', position: { top: '-5px', right: '-10px' }, function: '해당 템플릿 선택 및 적용', behavior: ['변수 값은 수신번호 테이블의 변수1~3 으로 입력'] },
+            { selector: '.template-select-btn', title: '템플릿 선택 버튼', position: { top: '-5px', right: '-10px' }, function: '해당 템플릿 선택 및 적용', behavior: ['변수 값은 수신번호 테이블의 변수1~8 으로 입력'] },
             // 41. 템플릿 모달 취소 버튼
             { selector: '#templateModalCancelBtn', title: '취소 버튼', position: { top: '-5px', left: '-10px' }, function: '템플릿 선택 취소' },
             

@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <title>브랜드 메시지 발송 - 메시징 서비스</title>
     <script src="js/header.js"></script>
+    <script src="js/variable-guard.js"></script>
     <style>/* 공통 스타일 */
 * {
     margin: 0;
@@ -1320,12 +1321,17 @@ body {
                                 <!-- 메시지 내용 -->
                                 <div class="form-group">
                                     <label class="form-label required">메시지 내용</label>
-                                    <div class="flex gap-2 mb-1">
+                                    <div class="flex gap-2 mb-1" style="flex-wrap: wrap;">
                                         <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{이름}')">#{이름}</button>
                                         <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{전화번호}')">#{전화번호}</button>
                                         <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수1}')">#{변수1}</button>
                                         <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수2}')">#{변수2}</button>
                                         <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수3}')">#{변수3}</button>
+                                        <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수4}')">#{변수4}</button>
+                                        <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수5}')">#{변수5}</button>
+                                        <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수6}')">#{변수6}</button>
+                                        <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수7}')">#{변수7}</button>
+                                        <button type="button" class="btn btn-sm btn-outline" onclick="insertVariable('#{변수8}')">#{변수8}</button>
                                     </div>
                                     <textarea class="form-textarea" id="messageContent" rows="6" placeholder="메시지 내용을 입력하세요" required oninput="updatePreview()"></textarea>
                                 </div>
@@ -1391,6 +1397,11 @@ body {
                                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수1</th>
                                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수2</th>
                                                                     <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수3</th>
+                                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수4</th>
+                                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수5</th>
+                                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수6</th>
+                                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수7</th>
+                                                                    <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); min-width: 100px;">변수8</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="recipientDataTableBody">
@@ -1989,18 +2000,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <input type="text" class="form-input recipient-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;" 
                             value="${row?.phone || ''}" data-row="${i}" data-field="phone" onchange="updateRecipientTableData(${i}, 'phone', this.value)">
                     </td>
-                    <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">
-                        <input type="text" class="form-input recipient-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;" 
-                            value="${row?.variables?.[0] || ''}" data-row="${i}" data-field="var1" onchange="updateRecipientTableData(${i}, 'var1', this.value)">
-                    </td>
-                    <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">
-                        <input type="text" class="form-input recipient-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;" 
-                            value="${row?.variables?.[1] || ''}" data-row="${i}" data-field="var2" onchange="updateRecipientTableData(${i}, 'var2', this.value)">
-                    </td>
-                    <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">
-                        <input type="text" class="form-input recipient-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;" 
-                            value="${row?.variables?.[2] || ''}" data-row="${i}" data-field="var3" onchange="updateRecipientTableData(${i}, 'var3', this.value)">
-                    </td>
+                    ${[1,2,3,4,5,6,7,8].map(v => `
+                        <td style="padding: 8px; border-bottom: 1px solid var(--border-color);">
+                            <input type="text" class="form-input recipient-input" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px;"
+                                value="${row?.variables?.[v-1] || ''}" data-row="${i}" data-field="var${v}" onchange="updateRecipientTableData(${i}, 'var${v}', this.value)">
+                        </td>
+                    `).join('')}
                 `;
                 tbody.appendChild(tr);
             }
@@ -2010,15 +2015,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // 수신번호 테이블 데이터 업데이트
         function updateRecipientTableData(index, field, value) {
             while (index >= recipientTableData.length) {
-                recipientTableData.push({ index: recipientTableData.length, name: '', phone: '', variables: ['', '', ''] });
+                recipientTableData.push({ index: recipientTableData.length, name: '', phone: '', variables: ['', '', '', '', '', '', '', ''] });
             }
-            
+
             const row = recipientTableData[index];
             if (field === 'name') row.name = value;
             else if (field === 'phone') row.phone = value;
-            else if (field === 'var1') row.variables[0] = value;
-            else if (field === 'var2') row.variables[1] = value;
-            else if (field === 'var3') row.variables[2] = value;
+            else if (/^var[1-8]$/.test(field)) {
+                if (!row.variables) row.variables = [];
+                row.variables[parseInt(field.slice(3), 10) - 1] = value;
+            }
             
             updateRecipientCount();
         }
