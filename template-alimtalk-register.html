@@ -1088,6 +1088,7 @@ body {
                             <label class="form-label required">카카오 채널</label>
                             <select class="form-select" id="channelSelect" required onchange="updatePreviewChannelName()">
                                 <option value="">카카오 채널을 선택해주세요</option>
+                                <option value="조드럼닷컴" selected>조드럼닷컴 (채널 ID: @조드럼)</option>
                                 <option value="마케팅팀">마케팅팀 (채널 ID: @marketing)</option>
                                 <option value="고객센터">고객센터 (채널 ID: @support)</option>
                             </select>
@@ -1097,26 +1098,23 @@ body {
                         <div class="form-group">
                             <label class="form-label required">템플릿명</label>
                             <input type="text" class="form-input" placeholder="템플릿 관리용 이름" maxlength="200" required>
+                            <div class="alert alert-info" id="templateCodeNotice" style="margin-top: 12px;">
+                                💡 템플릿 코드는 검수 신청 시 <strong>자동으로 생성</strong>되어 카카오에 등록됩니다. 별도로 입력할 필요가 없습니다.
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label required">카테고리</label>
-                            <div class="flex gap-2">
-                                <select class="form-select" required>
-                                    <option>쇼핑/배송</option>
-                                    <option>예약/티켓</option>
-                                    <option>금융/보험</option>
-                                    <option>생활/레저</option>
-                                    <option>교육</option>
-                                    <option>기타</option>
-                                </select>
-                                <select class="form-select" required>
-                                    <option>주문/결제</option>
-                                    <option>배송</option>
-                                    <option>반품/교환</option>
-                                    <option>상품 문의</option>
-                                </select>
-                            </div>
+                            <select class="form-select" id="categorySelect" required>
+                                <option>회원 &gt; 회원가입</option>
+                                <option>회원 &gt; 회원정보</option>
+                                <option>구매 &gt; 주문/결제</option>
+                                <option>구매 &gt; 배송</option>
+                                <option>구매 &gt; 반품/교환</option>
+                                <option>예약 &gt; 예약확인</option>
+                                <option>서비스이용 &gt; 이용안내</option>
+                                <option>기타 &gt; 기타</option>
+                            </select>
                         </div>
 
                         <!-- 메시지 유형 -->
@@ -1181,7 +1179,7 @@ body {
                             <textarea class="form-textarea" id="messageContent" rows="8" placeholder="내용을 입력해주세요." maxlength="1000" required oninput="updateCharCounter(); updatePreview();"></textarea>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
                                 <div></div>
-                                <div class="byte-counter" id="charCounter">0 / 1000자</div>
+                                <div class="byte-counter" id="charCounter">0 / 1,000자</div>
                             </div>
                         </div>
 
@@ -1196,7 +1194,11 @@ body {
                         <!-- 보조문구 -->
                         <div class="form-group">
                             <label class="form-label">보조문구</label>
-                            <textarea class="form-textarea" rows="3" placeholder="부가 안내 정보 입력 (선택사항, 최대 500자)" maxlength="500"></textarea>
+                            <textarea class="form-textarea" id="extraText" rows="3" placeholder="부가 안내 정보 입력 (선택사항, 최대 500자)" maxlength="500" oninput="updateExtraCharCounter();"></textarea>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                <div></div>
+                                <div class="byte-counter" id="extraCharCounter">0 / 500자</div>
+                            </div>
                         </div>
 
                         <!-- 버튼 설정 -->
@@ -1267,7 +1269,7 @@ body {
                 <div class="flex gap-2">
                     <button class="btn btn-outline" onclick="saveDraft()">임시 저장</button>
                     <button class="btn btn-outline" onclick="cancel()">취소</button>
-                    <button class="btn btn-primary" style="margin-left: auto;" onclick="submitRegister()">등록하기</button>
+                    <button class="btn btn-primary" id="submitReviewBtn" style="margin-left: auto; background: var(--success-color); border-color: var(--success-color);" onclick="submitRegister()">검수 신청</button>
                 </div>
             </div>
         </main>
@@ -1277,15 +1279,15 @@ body {
     <div class="modal-overlay" id="registerConfirmModal">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">템플릿 등록 확인</h3>
+                <h3 class="modal-title">템플릿 검수 신청 확인</h3>
                 <button class="modal-close" onclick="closeModal('registerConfirmModal')">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-info">
-                    <strong>템플릿 등록 안내</strong>
+                    <strong>템플릿 검수 신청 안내</strong>
                     <p style="margin-top: 8px; font-size: 12px;">
-                        템플릿이 등록되면 템플릿 목록에 표시됩니다.<br>
-                        등록 후 심사요청을 통해 검수를 신청할 수 있습니다.
+                        검수를 신청하면 템플릿 코드가 자동 생성되어 카카오에 등록됩니다.<br>
+                        검수 결과는 템플릿 목록에서 확인할 수 있습니다 (평균 2~3시간, 영업일 기준).
                     </p>
                 </div>
                 <div class="card">
@@ -1308,12 +1310,12 @@ body {
                     </div>
                 </div>
                 <div class="alert alert-warning" style="margin-top: 16px;">
-                    등록 후 내용을 다시 한번 확인해주세요.
+                    검수 신청 후에는 수정이 어려우니 내용을 다시 한번 확인해주세요.
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('registerConfirmModal')">취소</button>
-                <button class="btn btn-primary" onclick="confirmRegister()">등록하기</button>
+                <button class="btn btn-primary" style="background: var(--success-color); border-color: var(--success-color);" onclick="confirmRegister()">검수 신청</button>
             </div>
         </div>
     </div>
@@ -1641,12 +1643,28 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCharCounter();
         });
 
+        // 초기 선택된 채널을 미리보기에 반영
+        updatePreviewChannelName();
+
         function updateCharCounter() {
             const content = document.getElementById('messageContent').value;
             const counter = document.getElementById('charCounter');
             counter.textContent = `${content.length} / 1,000자`;
             
             if (content.length > 900) {
+                counter.classList.add('warning');
+            } else {
+                counter.classList.remove('warning');
+            }
+        }
+
+        function updateExtraCharCounter() {
+            const extraText = document.getElementById('extraText');
+            const counter = document.getElementById('extraCharCounter');
+            if (!extraText || !counter) return;
+            counter.textContent = `${extraText.value.length} / 500자`;
+
+            if (extraText.value.length > 450) {
                 counter.classList.add('warning');
             } else {
                 counter.classList.remove('warning');
@@ -1945,7 +1963,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function confirmRegister() {
             // 실제로는 API 호출로 템플릿 등록
-            showToast('템플릿이 등록되었습니다.', 'success');
+            showToast('템플릿 검수를 신청했습니다.', 'success');
             closeModal('registerConfirmModal');
             setTimeout(() => {
                 window.location.href = 'template-alimtalk.html';
@@ -2008,8 +2026,8 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '.card:last-of-type .btn-outline:first-child', title: '임시 저장', position: { top: '-5px', left: '-10px' }, function: '작성 중 임시 저장' },
             // 23. 취소 버튼
             { selector: '.card:last-of-type .btn-outline:nth-child(2)', title: '취소', position: { top: '-5px', left: '-10px' }, function: '작성 취소 및 목록 이동' },
-            // 24. 등록하기 버튼
-            { selector: '.card:last-of-type .btn-primary', title: '등록하기', position: { top: '-5px', right: '-10px' }, function: '템플릿 등록 확인 모달 열기', tags: [{ text: '필수', type: 'required' }] },
+            // 24. 검수 신청 버튼
+            { selector: '.card:last-of-type .btn-primary', title: '검수 신청 버튼', position: { top: '-5px', right: '-10px' }, function: '템플릿 검수 신청 확인 모달 열기', tags: [{ text: '필수', type: 'required' }] },
             // === 등록 확인 모달 ===
             // 25. 등록 확인 모달
             { selector: '#registerConfirmModal', title: '등록 확인 모달', position: { top: '60px', left: '20px' }, function: '템플릿 등록 전 최종 확인', api: 'POST /api/templates/alimtalk' },
@@ -2025,8 +2043,8 @@ document.addEventListener('DOMContentLoaded', function() {
             { selector: '#confirmCategory', title: '카테고리 확인', position: { top: '-5px', right: '-10px' }, function: '선택된 카테고리 표시' },
             // 31. 취소 버튼 (모달)
             { selector: '#registerConfirmModal .modal-footer .btn-outline', title: '취소', position: { top: '-5px', left: '-10px' }, function: '등록 취소' },
-            // 32. 등록 확인 버튼
-            { selector: '#registerConfirmModal .modal-footer .btn-primary', title: '등록하기', position: { top: '-5px', right: '-10px' }, function: '템플릿 최종 등록', api: 'POST /api/templates/alimtalk', tags: [{ text: 'API', type: 'api' }] }
+            // 32. 검수 신청 확인 버튼
+            { selector: '#registerConfirmModal .modal-footer .btn-primary', title: '검수 신청', position: { top: '-5px', right: '-10px' }, function: '템플릿 검수 신청 실행', api: 'POST /api/templates/alimtalk', tags: [{ text: 'API', type: 'api' }] }
         ];
         initSpecOverlay(specData);
     </script>
