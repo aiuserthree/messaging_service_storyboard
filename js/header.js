@@ -1009,31 +1009,10 @@ function handleLogout() {
     window.location.href = resolveSpecPageUrl('index.html');
 }
 
-function isKakaoMenuUrl(url) {
-    var u = String(url || '').trim();
-    return [
-        'kakao-send-alimtalk.html',
-        'kakao-send-brandtalk.html',
-        'kakao-profile-manage.html',
-        'template-alimtalk.html',
-        'template-brandtalk.html'
-    ].some(function(page) {
-        return u.indexOf(page) !== -1;
-    });
-}
-
-function showKakaoPreparingAlert() {
-    alert('보다 나은 서비스 제공을 위하여 페이지 준비중에 있습니다.\n빠른 시일내에 준비하여 찾아뵙겠습니다.');
-}
-
 // 로그인 상태 확인 및 네비게이션 함수 (로그인 체크 제거)
 function checkLoginAndNavigate(url, event) {
     if (event) {
         event.preventDefault();
-    }
-    if (isKakaoMenuUrl(url)) {
-        showKakaoPreparingAlert();
-        return false;
     }
     window.location.href = resolveSpecPageUrl(url);
     return false;
