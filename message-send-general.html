@@ -4300,7 +4300,7 @@ document.getElementById('confirmRecipientCount').textContent =
             // 1. 페이지 헤더
             {
                 selector: '.page-header',
-                title: '1. 페이지 헤더',
+                title: '페이지 헤더',
                 position: { top: '10px', right: '10px' },
                 description: '텍스트 (Text)',
                 function: '일반문자 발송 페이지의 타이틀 및 설명 표시',
@@ -4313,7 +4313,7 @@ document.getElementById('confirmRecipientCount').textContent =
             // 2. 탭 메뉴
             {
                 selector: '.tab-list',
-                title: '2. 탭 메뉴',
+                title: '탭 메뉴',
                 position: { top: '5px', left: '10px' },
                 description: '탭 메뉴 (Tab Navigation)',
                 function: '문자 발송 관련 페이지 전환',
@@ -4330,7 +4330,7 @@ document.getElementById('confirmRecipientCount').textContent =
             // 3. 발신번호 선택
             {
                 selector: '#callerNumberGroup',
-                title: '3. 발신번호 선택',
+                title: '발신번호 선택',
                 position: { top: '5px', right: '10px' },
                 description: '콤보박스 (Select/Dropdown)',
                 function: '등록된 발신번호 중 선택 - 메시지 발송 시 발신자로 표시',
@@ -4352,7 +4352,7 @@ document.getElementById('confirmRecipientCount').textContent =
             // 4. 새 발신번호 등록 버튼
             {
                 selector: '#newCallerNumberBtn',
-                title: '4. 새 발신번호 등록하기',
+                title: '새 발신번호 등록하기',
                 position: { top: '-5px', left: '-10px' },
                 description: '텍스트 링크 (Text Link)',
                 function: '발신번호 관리 페이지로 이동',
@@ -4366,7 +4366,7 @@ document.getElementById('confirmRecipientCount').textContent =
             // 5. 전화번호만 입력 버튼
             {
                 selector: '#phoneOnlyInputBtn',
-                title: '5. 전화번호만 입력',
+                title: '전화번호만 입력',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '전화번호만 빠르게 입력하는 모달 팝업 열기',
@@ -4396,7 +4396,7 @@ document.getElementById('confirmRecipientCount').textContent =
             // 6. 엑셀 업로드 버튼
             {
                 selector: '#excelUploadBtn',
-                title: '6. 엑셀 업로드',
+                title: '엑셀 업로드',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '엑셀 파일로 수신번호 대량 등록',
@@ -4416,7 +4416,7 @@ document.getElementById('confirmRecipientCount').textContent =
             // 7. 엑셀샘플 다운로드 버튼
             {
                 selector: '#excelSampleBtn',
-                title: '7. 엑셀샘플 다운로드',
+                title: '엑셀샘플 다운로드',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '업로드용 엑셀 양식 파일 다운로드',
@@ -4426,10 +4426,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 컬럼: 이름, 전화번호, 변수1~8'
                 ]
             },
-            // 7. 주소록 불러오기 버튼
+            // 8. 주소록 불러오기 버튼
             {
                 selector: '#loadAddressBookBtn',
-                title: '7. 주소록 불러오기',
+                title: '주소록 불러오기',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '저장된 주소록에서 수신번호 불러오기',
@@ -4444,10 +4444,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 api: 'GET /api/addressbook'
             },
-            // 8. 그룹 선택
+            // 9. 그룹 선택
             {
-                selector: '#recipientGroupSelect',
-                title: '8. 그룹 선택',
+                selector: '#excelGroupSelect',
+                title: '그룹 선택',
                 position: { top: '-5px', right: '-10px' },
                 description: '콤보박스 (Select/Dropdown)',
                 function: '주소록 그룹 필터링',
@@ -4460,10 +4460,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 api: 'GET /api/addressbook/groups'
             },
-            // 9. 주소록에 추가 버튼
+            // 10. 주소록에 추가 버튼
             {
                 selector: '#addToAddressBookBtn',
-                title: '9. 주소록에 추가',
+                title: '주소록에 추가',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button)',
                 function: '현재 수신번호를 주소록에 저장',
@@ -4478,10 +4478,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 api: 'POST /api/addressbook'
             },
-            // 10. 수신번호 테이블
+            // 11. 수신번호 테이블
             {
                 selector: '#recipientDataTable',
-                title: '10. 수신번호 테이블',
+                title: '수신번호 테이블',
                 position: { top: '5px', left: '5px' },
                 description: '데이터 테이블 (Editable Table)',
                 function: '수신자 정보 입력 및 편집',
@@ -4517,10 +4517,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 빈 값: "전화번호를 입력해주세요."'
                 ]
             },
-            // 11. +추가 버튼
+            // 12. +추가 버튼
             {
                 selector: '#addRowBtn',
-                title: '11. +추가',
+                title: '+추가',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '수신번호 추가 모달 열기',
@@ -4530,10 +4530,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 모달에서 수신번호 입력 후 추가하기 클릭 시 메인 테이블에 반영'
                 ]
             },
-            // 12. 선택 행 삭제 버튼
+            // 13. 선택 행 삭제 버튼
             {
                 selector: '#deleteSelectedBtn',
-                title: '12. 선택 행 삭제',
+                title: '선택 행 삭제',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '체크된 행 삭제',
@@ -4546,10 +4546,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 미선택 시: "삭제할 항목을 선택해주세요."'
                 ]
             },
-            // 13. 전체삭제 버튼
+            // 14. 전체삭제 버튼
             {
                 selector: '#deleteAllBtn',
-                title: '13. 전체삭제',
+                title: '전체삭제',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '모든 수신번호 삭제',
@@ -4562,10 +4562,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 취소 클릭 시 동작 취소'
                 ]
             },
-            // 14. 중복번호 삭제 버튼
+            // 15. 중복번호 삭제 버튼
             {
                 selector: '#removeDuplicateBtn',
-                title: '14. 중복번호 삭제',
+                title: '중복번호 삭제',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '중복된 전화번호 자동 제거',
@@ -4577,10 +4577,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 중복 없음: "중복된 번호가 없습니다."'
                 ]
             },
-            // 15. 수신거부번호 삭제 버튼
+            // 16. 수신거부번호 삭제 버튼
             {
                 selector: '#removeRejectBtn',
-                title: '15. 수신거부번호 삭제',
+                title: '수신거부번호 삭제',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button)',
                 function: '수신거부 등록된 번호 자동 제거',
@@ -4595,10 +4595,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 api: 'GET /api/reject-numbers'
             },
             // ===== 메시지 작성 영역 =====
-            // 16. 메시지 타입 선택
+            // 17. 메시지 타입 선택
             {
                 selector: '#messageTypeGroup',
-                title: '16. 메시지 타입',
+                title: '메시지 타입',
                 position: { top: '5px', right: '10px' },
                 description: '라디오 버튼 그룹 (Radio Button Group)',
                 function: 'SMS/LMS/MMS 메시지 유형 선택',
@@ -4615,10 +4615,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 17. 변수 버튼 그룹
+            // 18. 변수 버튼 그룹
             {
                 selector: '#variableBtnGroup',
-                title: '17. 변수 삽입 버튼',
+                title: '변수 삽입 버튼',
                 position: { top: '-5px', left: '10px' },
                 description: '버튼 그룹 (Button Group)',
                 function: '메시지에 개인화 변수 삽입',
@@ -4639,10 +4639,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '  - "변수 길이로 인해 90바이트를 초과하는 SMS 메시지는 LMS로 변경 후 발송하시기 바랍니다."'
                 ]
             },
-            // 18. 템플릿 선택 버튼
+            // 19. 템플릿 선택 버튼
             {
                 selector: '#templateSelectBtn',
-                title: '18. 템플릿 선택',
+                title: '템플릿 선택',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button)',
                 function: '저장된 템플릿 불러오기',
@@ -4654,10 +4654,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 메시지 타입도 템플릿에 맞게 자동 변경'
                 ]
             },
-            // 19. 메시지 내용 입력
+            // 20. 메시지 내용 입력
             {
                 selector: '#messageContent',
-                title: '19. 메시지 내용',
+                title: '메시지 내용',
                 position: { top: '5px', right: '5px' },
                 description: '텍스트 영역 (Textarea)',
                 function: '발송할 메시지 본문 작성',
@@ -4682,10 +4682,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 20. 바이트 카운터
+            // 21. 바이트 카운터
             {
                 selector: '#byteCounter',
-                title: '20. 바이트 카운터',
+                title: '바이트 카운터',
                 position: { top: '-3px', left: '-10px' },
                 description: '텍스트 (Text)',
                 function: '입력된 메시지 바이트 수 실시간 표시',
@@ -4707,10 +4707,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 한 번만 표시 (플래그 사용)'
                 ]
             },
-            // 21. 발송 시간 설정
+            // 22. 발송 시간 설정
             {
                 selector: '#sendTimeGroup',
-                title: '21. 발송 시간',
+                title: '발송 시간',
                 position: { top: '5px', right: '10px' },
                 description: '라디오 버튼 그룹 + 날짜/시간 선택 (Radio + DateTime)',
                 function: '즉시/예약 발송 선택',
@@ -4729,10 +4729,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 과거 시간: "예약 시간은 현재 시간 이후로 설정해주세요."'
                 ]
             },
-            // 22. 발송 비용 정보
+            // 23. 발송 비용 정보
             {
                 selector: '.cost-info',
-                title: '22. 발송 비용 정보',
+                title: '발송 비용 정보',
                 position: { top: '5px', right: '5px' },
                 description: '텍스트 영역 (Info Box)',
                 function: '예상 비용 실시간 계산 및 표시',
@@ -4748,10 +4748,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ]
             },
             // ===== 하단 버튼 영역 =====
-            // 23. 테스트 발송 버튼
+            // 24. 테스트 발송 버튼
             {
                 selector: '#testSendBtn',
-                title: '23. 테스트 발송',
+                title: '테스트 발송',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button - Secondary)',
                 function: '테스트 번호로 메시지 1건 발송',
@@ -4766,10 +4766,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 메시지 미입력: "메시지 내용을 입력해주세요."'
                 ]
             },
-            // 24. 템플릿으로 저장 버튼
+            // 25. 템플릿으로 저장 버튼
             {
                 selector: '#saveTemplateBtn',
-                title: '24. 템플릿으로 저장',
+                title: '템플릿으로 저장',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button - Secondary)',
                 function: '현재 메시지를 템플릿으로 저장',
@@ -4784,10 +4784,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 api: 'POST /api/templates'
             },
-            // 25. 발송하기 버튼
+            // 26. 발송하기 버튼
             {
                 selector: '#submitSendBtn',
-                title: '25. 발송하기',
+                title: '발송하기',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button - Primary)',
                 function: '메시지 발송 실행',
@@ -4833,10 +4833,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 api: 'POST /api/messages/send',
                 tags: [{ text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
-            // 26. MMS 이미지 첨부
+            // 27. MMS 이미지 첨부
             {
-                selector: '#mmsImageGroup',
-                title: '26. MMS 이미지 첨부',
+                selector: '#imageGroup',
+                title: 'MMS 이미지 첨부',
                 position: { top: '5px', left: '5px' },
                 description: '파일 업로드 (File Upload)',
                 function: 'MMS 발송 시 이미지 첨부',
@@ -4856,10 +4856,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: 'MMS전용', type: 'info' }]
             },
-            // 27. LMS/MMS 제목 입력
+            // 28. LMS/MMS 제목 입력
             {
                 selector: '#titleGroup',
-                title: '27. 메시지 제목',
+                title: '메시지 제목',
                 position: { top: '5px', left: '5px' },
                 description: '텍스트 입력 (Text Input) + 안내 문구',
                 function: 'LMS/MMS 메시지 제목 입력',
@@ -4874,10 +4874,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: 'LMS/MMS', type: 'info' }]
             },
-            // 28. 미리보기 영역
+            // 29. 미리보기 영역
             {
                 selector: '#previewPhone',
-                title: '28. 메시지 미리보기',
+                title: '메시지 미리보기',
                 position: { top: '5px', left: '5px' },
                 description: '미리보기 영역 (Preview)',
                 function: '실제 수신 화면 미리보기',
@@ -4894,10 +4894,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ]
             },
             // ===== 모달 팝업 영역 =====
-            // 26. 수신번호 추가 모달
+            // 30. 수신번호 추가 모달
             {
                 selector: '#addRecipientModal',
-                title: '26. 수신번호 추가 모달',
+                title: '수신번호 추가 모달',
                 position: { top: '10px', right: '50px' },
                 description: '모달 (Modal)',
                 function: '수신번호 직접 입력하여 추가',
@@ -5023,10 +5023,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 27. 템플릿 선택 모달
+            // 37. 템플릿 선택 모달
             {
                 selector: '#templateSelectModal',
-                title: '27. 템플릿 선택 모달',
+                title: '템플릿 선택 모달',
                 position: { top: '10px', right: '50px' },
                 description: '모달 (Modal)',
                 function: '저장된 템플릿 목록에서 선택하여 메시지 내용 불러오기',
@@ -5043,10 +5043,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 api: 'GET /api/templates',
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 28. 템플릿으로 저장 모달
+            // 38. 템플릿으로 저장 모달
             {
                 selector: '#templateSaveModal',
-                title: '28. 템플릿으로 저장 모달',
+                title: '템플릿으로 저장 모달',
                 position: { top: '10px', right: '50px' },
                 description: '모달 (Modal)',
                 function: '현재 작성된 메시지를 템플릿으로 저장',
@@ -5065,10 +5065,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 api: 'POST /api/templates',
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 31. 엑셀 업로드 모달
+            // 39. 엑셀 업로드 모달
             {
                 selector: '#excelUploadModal',
-                title: '31. 수신번호 관리 모달',
+                title: '수신번호 관리 모달',
                 position: { top: '10px', right: '50px' },
                 description: '모달 (Modal)',
                 function: '엑셀 파일 업로드 또는 주소록에서 수신번호 대량 등록',
@@ -5094,10 +5094,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 30. 발송 확인 모달
+            // 40. 발송 확인 모달
             {
                 selector: '#sendConfirmModal',
-                title: '30. 발송 확인 모달',
+                title: '발송 확인 모달',
                 position: { top: '10px', right: '50px' },
                 description: '모달 (Modal)',
                 function: '메시지 발송 전 최종 확인',
@@ -5117,10 +5117,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 api: 'POST /api/messages/send',
                 tags: [{ text: '모달', type: 'info' }, { text: '필수확인', type: 'warning' }]
             },
-            // 31. 주소록에 추가 모달
+            // 41. 주소록에 추가 모달
             {
                 selector: '#addToAddressBookModal',
-                title: '31. 주소록에 추가 모달',
+                title: '주소록에 추가 모달',
                 position: { top: '10px', right: '50px' },
                 description: '모달 (Modal)',
                 function: '현재 입력된 수신번호를 주소록에 저장',
@@ -5144,10 +5144,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 api: 'POST /api/addressbook',
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 32. 테스트 발송 모달
+            // 42. 테스트 발송 모달
             {
                 selector: '#testSendModal',
-                title: '32. 테스트 발송 모달',
+                title: '테스트 발송 모달',
                 position: { top: '10px', right: '50px' },
                 description: '모달 (Modal)',
                 function: '실제 발송 전 테스트 번호로 메시지 확인',
@@ -5170,10 +5170,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 tags: [{ text: '모달', type: 'info' }]
             },
             // ===== 테스트 발송 모달 내부 요소 =====
-            // 33. 테스트 수신번호 입력 영역
+            // 43. 테스트 수신번호 입력 영역
             {
                 selector: '#testPhoneInputGroup',
-                title: '33. 테스트 수신번호 입력',
+                title: '테스트 수신번호 입력',
                 position: { top: '5px', left: '5px' },
                 description: '입력 필드 그룹 (Input Group)',
                 function: '테스트 발송할 수신번호 입력',
@@ -5188,10 +5188,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 34. 번호 추가 버튼
+            // 44. 번호 추가 버튼
             {
                 selector: '#addTestPhoneBtn',
-                title: '34. 번호 추가 버튼',
+                title: '번호 추가 버튼',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button)',
                 function: '테스트 수신번호 입력 필드 추가',
@@ -5201,10 +5201,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 3개 도달 시 버튼 비활성화/숨김'
                 ]
             },
-            // 35. 메시지 미리보기 영역
+            // 45. 메시지 미리보기 영역
             {
                 selector: '#testPreviewBox',
-                title: '35. 메시지 미리보기',
+                title: '메시지 미리보기',
                 position: { top: '5px', right: '5px' },
                 description: '미리보기 영역 (Preview Box)',
                 function: '발송될 메시지 내용 미리보기',
@@ -5216,7 +5216,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '이미지 표시 (MMS인 경우)'
                 ]
             },
-            // 36. 비용 안내 영역
+            // 46. 비용 안내 영역
             {
                 selector: '#testCostGroup',
                 title: '테스트 발송 비용 안내',
@@ -5228,7 +5228,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '현재 잔액 표시'
                 ]
             },
-            // 37. 발송 결과 영역
+            // 47. 발송 결과 영역
             {
                 selector: '#testSendResult',
                 title: '발송 결과 표시',
@@ -5240,7 +5240,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '발송 완료 후 버튼 상태 변경'
                 ]
             },
-            // 38. 취소 버튼
+            // 48. 취소 버튼
             {
                 selector: '#testSendCancelBtn',
                 title: '취소 버튼',
@@ -5251,7 +5251,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '입력 내용 초기화'
                 ]
             },
-            // 39. 테스트 발송 버튼
+            // 49. 테스트 발송 버튼
             {
                 selector: '#testSendSubmitBtn',
                 title: '테스트 발송 실행 버튼',
@@ -5274,7 +5274,7 @@ document.getElementById('confirmRecipientCount').textContent =
             },
             
             // ===== 템플릿 선택 모달 =====
-            // 40. 템플릿 선택 모달
+            // 50. 템플릿 선택 모달
             {
                 selector: '#templateSelectModal',
                 title: '템플릿 선택 모달',
@@ -5287,7 +5287,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 41. 템플릿 검색 입력
+            // 51. 템플릿 검색 입력
             {
                 selector: '#templateSearchInput',
                 title: '템플릿 검색',
@@ -5298,7 +5298,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '검색어와 일치하는 템플릿만 표시'
                 ]
             },
-            // 42. 템플릿 목록 테이블
+            // 52. 템플릿 목록 테이블
             {
                 selector: '#templateSelectTable',
                 title: '템플릿 목록',
@@ -5310,7 +5310,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '선택 시 메시지 입력창에 내용 자동 입력'
                 ]
             },
-            // 43. 템플릿 선택 버튼
+            // 53. 템플릿 선택 버튼
             {
                 selector: '.templateSelectBtn',
                 title: '템플릿 선택 버튼',
@@ -5322,7 +5322,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '"템플릿이 적용되었습니다" 토스트'
                 ]
             },
-            // 44. 템플릿 선택 취소 버튼
+            // 54. 템플릿 선택 취소 버튼
             {
                 selector: '#templateSelectCancelBtn',
                 title: '취소 버튼',
@@ -5332,7 +5332,7 @@ document.getElementById('confirmRecipientCount').textContent =
             },
             
             // ===== 템플릿 저장 모달 =====
-            // 45. 템플릿 저장 모달
+            // 55. 템플릿 저장 모달
             {
                 selector: '#templateSaveModal',
                 title: '템플릿으로 저장 모달',
@@ -5344,7 +5344,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 46. 템플릿명 입력
+            // 56. 템플릿명 입력
             {
                 selector: '#templateNameInput',
                 title: '템플릿명 입력',
@@ -5356,14 +5356,14 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 47. 템플릿 저장 취소 버튼
+            // 57. 템플릿 저장 취소 버튼
             {
                 selector: '#templateSaveCancelBtn',
                 title: '취소 버튼',
                 position: { top: '-5px', left: '-10px' },
                 function: '모달 닫기'
             },
-            // 48. 템플릿 저장 버튼
+            // 58. 템플릿 저장 버튼
             {
                 selector: '#templateSaveSubmitBtn',
                 title: '저장 버튼',
@@ -5381,7 +5381,7 @@ document.getElementById('confirmRecipientCount').textContent =
             },
             
             // ===== 엑셀 업로드(수신번호 관리) 모달 =====
-            // 49. 엑셀 업로드 모달
+            // 59. 엑셀 업로드 모달
             {
                 selector: '#excelUploadModal',
                 title: '수신번호 관리 모달',
@@ -5393,21 +5393,21 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 50. 엑셀업로드 탭
+            // 60. 엑셀업로드 탭
             {
                 selector: '#excelUploadTab',
                 title: '엑셀업로드 탭',
                 position: { top: '-5px', left: '-10px' },
                 function: '엑셀 파일 업로드 화면으로 전환'
             },
-            // 51. 엑셀샘플 다운로드 탭
+            // 61. 엑셀샘플 다운로드 탭
             {
                 selector: '#excelSampleTab',
                 title: '엑셀샘플 다운로드 탭',
                 position: { top: '-5px', right: '-10px' },
                 function: '샘플 파일 다운로드 화면으로 전환'
             },
-            // 52. 주소록 불러오기 버튼
+            // 62. 주소록 불러오기 버튼
             {
                 selector: '#excelLoadAddressBtn',
                 title: '주소록 불러오기',
@@ -5418,7 +5418,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '폴더/그룹 선택 후 불러오기'
                 ]
             },
-            // 53. 파일 업로드 영역
+            // 63. 파일 업로드 영역
             {
                 selector: '#excelFileDropZone',
                 title: '파일 업로드 영역',
@@ -5434,7 +5434,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '건수 초과: "최대 10,000건까지 등록 가능합니다"'
                 ]
             },
-            // 54. 데이터 테이블
+            // 64. 데이터 테이블
             {
                 selector: '#excelDataArea',
                 title: '데이터 테이블',
@@ -5445,14 +5445,14 @@ document.getElementById('confirmRecipientCount').textContent =
                     '체크박스로 행 선택 가능'
                 ]
             },
-            // 55. 전체선택 버튼
+            // 65. 전체선택 버튼
             {
                 selector: '#excelSelectAllBtn',
                 title: '전체선택',
                 position: { top: '-5px', left: '-10px' },
                 function: '모든 행 선택'
             },
-            // 56. 복사 버튼
+            // 66. 복사 버튼
             {
                 selector: '#excelCopyBtn',
                 title: '복사',
@@ -5463,7 +5463,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '복사 성공: "{n}건이 복사되었습니다" 토스트'
                 ]
             },
-            // 57. 전체삭제 버튼
+            // 67. 전체삭제 버튼
             {
                 selector: '#excelDeleteAllBtn',
                 title: '전체삭제',
@@ -5474,7 +5474,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '확인 시 모든 행 삭제'
                 ]
             },
-            // 58. 삭제 버튼
+            // 68. 삭제 버튼
             {
                 selector: '#excelDeleteBtn',
                 title: '삭제',
@@ -5485,7 +5485,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '삭제 성공: "{n}건이 삭제되었습니다" 토스트'
                 ]
             },
-            // 59. 중복번호 삭제 버튼
+            // 69. 중복번호 삭제 버튼
             {
                 selector: '#excelRemoveDuplicateBtn',
                 title: '중복번호 삭제',
@@ -5496,7 +5496,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '중복 제거 시: "중복번호 {n}건이 삭제되었습니다" 토스트'
                 ]
             },
-            // 60. 수신거부번호 삭제 버튼
+            // 70. 수신거부번호 삭제 버튼
             {
                 selector: '#excelRemoveRejectBtn',
                 title: '수신거부번호 삭제',
@@ -5508,7 +5508,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 api: 'GET /api/reject-numbers'
             },
-            // 61. 샘플 파일 다운로드 버튼
+            // 71. 샘플 파일 다운로드 버튼
             {
                 selector: '#excelSampleDownloadBtn',
                 title: '샘플 파일 다운로드',
@@ -5516,14 +5516,14 @@ document.getElementById('confirmRecipientCount').textContent =
                 function: '엑셀 양식 파일 다운로드',
                 behavior: ['클릭 시 sample.xlsx 다운로드']
             },
-            // 62. 닫기 버튼
+            // 72. 닫기 버튼
             {
                 selector: '#excelUploadCloseBtn',
                 title: '닫기',
                 position: { top: '-5px', left: '-10px' },
                 function: '모달 닫기'
             },
-            // 63. 추가 버튼
+            // 73. 추가 버튼
             {
                 selector: '#excelUploadAddBtn',
                 title: '추가 버튼',
@@ -5536,7 +5536,7 @@ document.getElementById('confirmRecipientCount').textContent =
             },
             
             // ===== 발송 확인 모달 =====
-            // 64. 발송 확인 모달
+            // 74. 발송 확인 모달
             {
                 selector: '#sendConfirmModal',
                 title: '발송 확인 모달',
@@ -5548,7 +5548,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 65. 발송 정보 영역
+            // 75. 발송 정보 영역
             {
                 selector: '#sendConfirmInfo',
                 title: '발송 정보',
@@ -5560,7 +5560,7 @@ document.getElementById('confirmRecipientCount').textContent =
                     '예상 발송 비용 표시'
                 ]
             },
-            // 66. 경고 메시지
+            // 76. 경고 메시지
             {
                 selector: '#sendConfirmWarning',
                 title: '경고 안내',
@@ -5568,14 +5568,14 @@ document.getElementById('confirmRecipientCount').textContent =
                 function: '발송 취소 불가 안내',
                 behavior: ['"발송 후에는 취소할 수 없습니다" 경고 표시']
             },
-            // 67. 발송 확인 취소 버튼
+            // 77. 발송 확인 취소 버튼
             {
                 selector: '#sendConfirmCancelBtn',
                 title: '취소 버튼',
                 position: { top: '-5px', left: '-10px' },
                 function: '모달 닫기'
             },
-            // 68. 발송 확인 발송하기 버튼
+            // 78. 발송 확인 발송하기 버튼
             {
                 selector: '#sendConfirmSubmitBtn',
                 title: '발송하기 버튼',
@@ -5589,7 +5589,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: 'API', type: 'api' }]
             },
-            // 69. 알림톡 추가 인증 팝업
+            // 79. 알림톡 추가 인증 팝업
             {
                 selector: '#alimtalkAuthModal',
                 title: '발송 인증 팝업 (추가 인증 → 사후승인)',
@@ -5631,7 +5631,7 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '모달', type: 'info' }, { text: '필수', type: 'required' }, { text: 'API', type: 'api' }]
             },
-            // 70. 금칙어 차단·보류 안내 팝업
+            // 80. 금칙어 차단·보류 안내 팝업
             {
                 selector: '#spamFilterModal',
                 title: '금칙어 차단 안내 팝업',
@@ -5670,10 +5670,10 @@ document.getElementById('confirmRecipientCount').textContent =
             },
 
             // ===== 전화번호만 입력 모달 =====
-            // 69. 전화번호만 입력 모달
+            // 81. 전화번호만 입력 모달
             {
                 selector: '#phoneOnlyInputModal',
-                title: '69. 전화번호만 입력 모달',
+                title: '전화번호만 입력 모달',
                 position: { top: '60px', left: '20px' },
                 description: '모달 팝업 (Modal Popup)',
                 function: '전화번호만 빠르게 입력하는 모달 팝업',
@@ -5690,10 +5690,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 70. 전화번호 입력 텍스트 영역
+            // 82. 전화번호 입력 텍스트 영역
             {
                 selector: '#phoneOnlyInputTextarea',
-                title: '70. 전화번호 입력 영역',
+                title: '전화번호 입력 영역',
                 position: { top: '20px', left: '20px' },
                 description: '텍스트 영역 (Textarea)',
                 function: '여러 전화번호를 입력하는 텍스트 영역',
@@ -5710,10 +5710,10 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• resize: vertical (세로 크기 조절 가능)'
                 ]
             },
-            // 71. 번호추가 버튼
+            // 83. 번호추가 버튼
             {
                 selector: '#phoneOnlyInputModal .btn-primary[onclick*="addPhoneNumbers"]',
-                title: '71. 번호추가 버튼',
+                title: '번호추가 버튼',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button - Primary)',
                 function: '입력된 전화번호를 파싱하고 검증하여 수신번호 테이블에 추가',
@@ -5744,10 +5744,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 tags: [{ text: '신규', type: 'info' }]
             },
             // ===== 주소록에 추가 모달 =====
-            // 72. 주소록에 추가 모달
+            // 84. 주소록에 추가 모달
             {
                 selector: '#addToAddressBookModal',
-                title: '72. 주소록에 추가 모달',
+                title: '주소록에 추가 모달',
                 position: { top: '60px', left: '20px' },
                 description: '모달 팝업 (Modal Popup)',
                 function: '현재 입력된 수신번호를 주소록에 저장',
@@ -5763,19 +5763,19 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '모달', type: 'info' }]
             },
-            // 73. 모달 닫기 버튼 (X)
+            // 85. 모달 닫기 버튼 (X)
             {
                 selector: '#addToAddressBookModal .modal-close',
-                title: '73. 모달 닫기 (X)',
+                title: '모달 닫기 (X)',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button)',
                 function: '주소록 추가 모달 닫기',
                 behavior: ['클릭 시 모달 닫기']
             },
-            // 74. 추가 방식 선택
+            // 86. 추가 방식 선택
             {
                 selector: '#addressBookAddTypeGroup',
-                title: '74. 추가 방식 선택',
+                title: '추가 방식 선택',
                 position: { top: '10px', left: '10px' },
                 description: '라디오 버튼 그룹 (Radio Group)',
                 function: '기존 그룹/새 그룹 선택',
@@ -5788,28 +5788,28 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• "새 그룹 생성" 선택: 그룹명 입력 필드 표시'
                 ]
             },
-            // 75. 기존 그룹에 추가 라디오
+            // 87. 기존 그룹에 추가 라디오
             {
                 selector: 'input[name="addressBookAddType"][value="existing"]',
-                title: '75. 기존 그룹에 추가',
+                title: '기존 그룹에 추가',
                 position: { top: '-5px', left: '-10px' },
                 description: '라디오 버튼 (Radio Button)',
                 function: '기존 주소록 그룹에 추가 선택',
                 behavior: ['선택 시 기존 그룹 선택 드롭다운 표시']
             },
-            // 76. 새 그룹 생성 라디오
+            // 88. 새 그룹 생성 라디오
             {
                 selector: 'input[name="addressBookAddType"][value="new"]',
-                title: '76. 새 그룹 생성',
+                title: '새 그룹 생성',
                 position: { top: '-5px', left: '-10px' },
                 description: '라디오 버튼 (Radio Button)',
                 function: '새로운 그룹 생성 후 추가 선택',
                 behavior: ['선택 시 새 그룹명 입력 필드 표시']
             },
-            // 77. 그룹 선택 드롭다운
+            // 89. 그룹 선택 드롭다운
             {
                 selector: '#addressBookGroupSelect',
-                title: '77. 그룹 선택',
+                title: '그룹 선택',
                 position: { top: '-5px', right: '-10px' },
                 description: '콤보박스 (Select/Dropdown)',
                 function: '기존 그룹 목록에서 선택',
@@ -5824,10 +5824,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 78. 새 그룹명 입력
+            // 90. 새 그룹명 입력
             {
                 selector: '#newGroupNameInput',
-                title: '78. 새 그룹명 입력',
+                title: '새 그룹명 입력',
                 position: { top: '-5px', right: '-10px' },
                 description: '텍스트 입력 필드 (Text Input)',
                 function: '새로 생성할 그룹 이름 입력',
@@ -5854,10 +5854,10 @@ document.getElementById('confirmRecipientCount').textContent =
                 ],
                 tags: [{ text: '필수', type: 'required' }]
             },
-            // 79. 추가할 데이터 정보
+            // 91. 추가할 데이터 정보
             {
                 selector: '#addressBookDataInfo',
-                title: '79. 추가할 데이터 정보',
+                title: '추가할 데이터 정보',
                 position: { top: '10px', right: '10px' },
                 description: '정보 표시 영역 (Info Box)',
                 function: '추가할 데이터 개수 표시',
@@ -5867,19 +5867,19 @@ document.getElementById('confirmRecipientCount').textContent =
                     '• 현재 수신번호 테이블의 유효한 데이터 개수 반영'
                 ]
             },
-            // 80. 취소 버튼
+            // 92. 취소 버튼
             {
                 selector: '#addToAddressBookModal .btn-outline',
-                title: '80. 취소 버튼',
+                title: '취소 버튼',
                 position: { top: '-5px', left: '-10px' },
                 description: '버튼 (Button - Outline)',
                 function: '모달 닫기',
                 behavior: ['클릭 시 모달 닫기, 입력 내용 초기화']
             },
-            // 81. 추가 버튼
+            // 93. 추가 버튼
             {
                 selector: '#addToAddressBookModal .btn-primary',
-                title: '81. 추가 버튼',
+                title: '추가 버튼',
                 position: { top: '-5px', right: '-10px' },
                 description: '버튼 (Button - Primary)',
                 function: '주소록에 데이터 추가',
