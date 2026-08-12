@@ -984,6 +984,32 @@ body {
             grid-template-columns: 1fr 400px;
             gap: 24px;
         }
+        /* 그리드 아이템의 기본 min-width: auto 를 풀어야 수신자 표가 열 폭을 넘길 때
+           페이지 전체가 늘어나지 않고 표 안에서 가로 스크롤이 생긴다 */
+        .send-form-container > * {
+            min-width: 0;
+        }
+        /* 수신자 표는 변수1~8 까지 펼치면 가로로 넘치므로 스크롤바를 항상 보이게 둔다
+           (macOS 기본값인 오버레이 스크롤바는 스크롤하기 전까지 보이지 않는다) */
+        .recipient-table-scroll {
+            overflow-x: auto;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+        .recipient-table-scroll::-webkit-scrollbar {
+            height: 10px;
+            -webkit-appearance: none;
+        }
+        .recipient-table-scroll::-webkit-scrollbar-track {
+            background: #f1f3f5;
+        }
+        .recipient-table-scroll::-webkit-scrollbar-thumb {
+            background: #bcc3cc;
+            border-radius: 5px;
+        }
+        .recipient-table-scroll::-webkit-scrollbar-thumb:hover {
+            background: #98a1ac;
+        }
         .preview-section {
             position: sticky;
             top: 80px;
@@ -1384,7 +1410,7 @@ body {
                                         <div id="recipientUploadContent" style="display: block;">
                                             <div style="padding: 20px;">
                                                 <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
-                                                    <div style="overflow-x: auto; overflow-y: auto; max-height: 400px;">
+                                                    <div class="recipient-table-scroll" style="overflow-x: auto; overflow-y: auto; max-height: 400px;">
                                                         <table class="data-table" id="recipientDataTable" style="width: 100%; border-collapse: collapse;">
                                                             <thead style="background-color: var(--bg-color); position: sticky; top: 0; z-index: 10;">
                                                                 <tr>
