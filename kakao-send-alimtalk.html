@@ -1807,6 +1807,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function updateRecipientCount() {
             const phoneCount = recipientTableData.filter(row => row.phone && row.phone.trim()).length;
             document.getElementById('recipientCount').textContent = phoneCount;
+            updateCost();
         }
         
         // 행 추가
@@ -1972,14 +1973,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('reservedTimeGroup').style.display = 
                     this.value === 'reserved' ? 'block' : 'none';
             });
-        });
-
-        // 수신번호 입력 처리
-        document.getElementById('recipientNumbers').addEventListener('input', function() {
-            const numbers = this.value.split(/[,\n]/).map(n => n.trim()).filter(n => n);
-            const uniqueNumbers = [...new Set(numbers)];
-            document.getElementById('recipientCount').textContent = uniqueNumbers.length;
-            updateCost();
         });
 
         // 템플릿 선택
