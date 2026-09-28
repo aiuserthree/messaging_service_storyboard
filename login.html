@@ -398,6 +398,11 @@ body {
 .login-page .btn-primary:hover:not(:disabled) {
     background-color: var(--brand-green-hover);
 }
+.login-page .btn-primary:disabled {
+    background-color: #cbd5e1;
+    color: #ffffff;
+    cursor: not-allowed;
+}
 .login-page .btn-outline {
     background-color: #ffffff;
     border: 1px solid #dde3ea;
@@ -648,6 +653,11 @@ body {
 }
 .mfa-notice-title svg { flex-shrink: 0; }
 .mfa-notice-text { word-break: keep-all; }
+.mfa-notice-guide {
+    margin-top: 6px;
+    font-weight: 600;
+    color: #1e293b;
+}
 .mfa-notice-more {
     display: inline-flex;
     align-items: center;
@@ -678,6 +688,7 @@ body {
     letter-spacing: 0.2em;
     font-weight: 600;
 }
+.otp-input-wrap .form-input:disabled { background-color: #f1f5f9; cursor: not-allowed; }
 .otp-input-wrap .form-input::placeholder { letter-spacing: normal; font-weight: 400; }
 .otp-timer {
     position: absolute;
@@ -778,6 +789,7 @@ body {
                             보안 로그인(다중 인증) 적용 안내
                         </div>
                         <p class="mfa-notice-text">강화된 개인정보 보호법 및 전기통신사업법(전송자격인증제) 고시에 따라, 서비스 보안 강화 및 계정 도용 방지를 위해 보안 로그인(다중 인증) 기능이 추가되었습니다.</p>
+                        <p class="mfa-notice-text mfa-notice-guide">'인증번호 받기'를 누르시면 이메일(아이디)로 인증번호 6자리가 전송됩니다.</p>
                         <button type="button" class="mfa-notice-more" id="mfaDetailBtn">자세히 보기</button>
                     </div>
 
@@ -1409,6 +1421,7 @@ body {
                 function: '다중 인증 도입 배경 고지 (아이디 입력 바로 위, 박스 처리)',
                 behavior: [
                     '문구: "강화된 개인정보 보호법 및 전기통신사업법(전송자격인증제) 고시에 따라, 서비스 보안 강화 및 계정 도용 방지를 위해 보안 로그인(다중 인증) 기능이 추가되었습니다."',
+                    '문구: "\'인증번호 받기\'를 누르시면 이메일(아이디)로 인증번호 6자리가 전송됩니다." (굵게)',
                     '연녹색 배경 + 방패 아이콘 + 제목',
                     '항상 노출 (닫기 없음)'
                 ],
