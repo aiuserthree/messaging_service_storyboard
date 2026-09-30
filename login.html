@@ -653,11 +653,6 @@ body {
 }
 .mfa-notice-title svg { flex-shrink: 0; }
 .mfa-notice-text { word-break: keep-all; }
-.mfa-notice-guide {
-    margin-top: 6px;
-    font-weight: 600;
-    color: #1e293b;
-}
 .mfa-notice-more {
     display: inline-flex;
     align-items: center;
@@ -789,7 +784,6 @@ body {
                             보안 로그인(다중 인증) 적용 안내
                         </div>
                         <p class="mfa-notice-text">강화된 개인정보 보호법 및 전기통신사업법(전송자격인증제) 고시에 따라, 서비스 보안 강화 및 계정 도용 방지를 위해 보안 로그인(다중 인증) 기능이 추가되었습니다.</p>
-                        <p class="mfa-notice-text mfa-notice-guide">'인증번호 받기'를 누르시면 이메일(아이디)로 인증번호 6자리가 전송됩니다.</p>
                         <button type="button" class="mfa-notice-more" id="mfaDetailBtn">자세히 보기</button>
                     </div>
 
@@ -871,7 +865,7 @@ body {
                     계정이 일시적으로 잠겼습니다.
                 </p>
                 <div class="ban-modal-remain" aria-live="polite">
-                    <div>잠금 해제까지 <strong id="loginLockRemain">10:00</strong> 남았습니다.</div>
+                    <div>잠금 해제까지 <strong id="loginLockRemain">30:00</strong> 남았습니다.</div>
                     <div style="margin-top: 10px; font-size: 12px; color: var(--text-muted); font-weight: 500;">
                         비밀번호가 기억나지 않으면 비밀번호 찾기로 재설정해 주세요.
                     </div>
@@ -1188,7 +1182,7 @@ body {
          */
         var LOGIN_MAX_ATTEMPTS = 5;   // 초과 시 잠금
         var LOGIN_WARN_FROM = 3;      // 이 횟수부터 남은 시도 경고
-        var LOGIN_LOCK_MINUTES = 10;  // 잠금 지속 시간
+        var LOGIN_LOCK_MINUTES = 30;  // 잠금 지속 시간
         var DEMO_PASSWORD = '1234';   // 데모: 이 값만 로그인 성공
         var loginLockInterval = null;
 
@@ -1421,7 +1415,6 @@ body {
                 function: '다중 인증 도입 배경 고지 (아이디 입력 바로 위, 박스 처리)',
                 behavior: [
                     '문구: "강화된 개인정보 보호법 및 전기통신사업법(전송자격인증제) 고시에 따라, 서비스 보안 강화 및 계정 도용 방지를 위해 보안 로그인(다중 인증) 기능이 추가되었습니다."',
-                    '문구: "\'인증번호 받기\'를 누르시면 이메일(아이디)로 인증번호 6자리가 전송됩니다." (굵게)',
                     '연녹색 배경 + 방패 아이콘 + 제목',
                     '항상 노출 (닫기 없음)'
                 ],
@@ -1563,7 +1556,7 @@ body {
                     '발송 후 인증번호 입력칸 노출, 본 버튼은 로그인 버튼으로 교체',
                     '【실패 처리 — 보안심사 3.4-④】',
                     '1~2회 실패: "아이디 또는 비밀번호가 일치하지 않습니다."',
-                    '3회부터: "(n/5회) n회 더 실패하면 계정이 10분간 잠깁니다" 경고 노출',
+                    '3회부터: "(n/5회) n회 더 실패하면 계정이 30분간 잠깁니다" 경고 노출',
                     '5회 실패: 계정 잠금 모달 표시, 버튼 비활성',
                     '잠금 중에는 올바른 비밀번호를 입력해도 인증번호 발송 차단',
                     '실패 카운트는 계정(아이디)별로 관리되며 비밀번호 확인 시 초기화'
@@ -1656,7 +1649,7 @@ body {
                 function: '로그인 5회 실패 시 계정 잠금 고지 (보안심사 3.4-④)',
                 behavior: [
                     '"비밀번호를 5회 연속 잘못 입력하여 계정이 일시적으로 잠겼습니다" 안내',
-                    '잠금 해제까지 남은 시간 10:00 부터 1초 단위 카운트다운',
+                    '잠금 해제까지 남은 시간 30:00 부터 1초 단위 카운트다운',
                     '만료 시 자동 해제되고 로그인 버튼이 다시 활성화됨',
                     '비밀번호 찾기 버튼으로 재설정 유도',
                     '잠금 중 재시도 시 인증 진행 없이 본 모달을 다시 노출'
