@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>타겟 광고 메시지 - 톡벨</title>
+    <script src="js/header.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* ===== 공통 섹션 ===== */
+        .ta-section { margin-bottom: 64px; }
+        .ta-section-head { text-align: center; margin-bottom: 28px; }
+        .ta-eyebrow { display: inline-block; font-size: 12px; font-weight: 700; color: var(--primary-color); background: rgba(37,99,235,.08); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+        .ta-section-head h3 { font-size: 26px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 8px; }
+        .ta-section-head p { font-size: 15px; color: var(--text-secondary); }
+
+        /* ===== 히어로 ===== */
+        .ta-hero {
+            display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: center;
+            background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 55%, #f5f3ff 100%);
+            border: 1px solid #dbeafe; border-radius: 24px; padding: 48px 52px; margin-bottom: 28px;
+        }
+        .ta-hero-badge { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; font-weight: 700; color: #4338ca; background: #fff; border: 1px solid #c7d2fe; padding: 5px 12px; border-radius: 999px; margin-bottom: 16px; }
+        .ta-hero h2 { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; color: #0f172a; margin-bottom: 14px; }
+        .ta-hero-lead { font-size: 18px; line-height: 1.6; color: #334155; margin-bottom: 24px; }
+        .ta-hero-lead strong { color: var(--primary-color); }
+        .ta-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .ta-hero-note { margin-top: 14px; font-size: 13px; color: var(--text-secondary); }
+
+        .ta-phone { width: 280px; margin: 0 auto; background: #0f172a; border-radius: 34px; padding: 12px; box-shadow: 0 20px 40px rgba(15,23,42,.25); }
+        .ta-phone-screen { background: #f1f5f9; border-radius: 24px; padding: 18px 14px 22px; min-height: 360px; }
+        .ta-phone-top { text-align: center; font-size: 11px; color: #64748b; margin-bottom: 14px; }
+        .ta-sms { background: #fff; border-radius: 14px; padding: 12px 14px; font-size: 12px; line-height: 1.6; color: #1e293b; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+        .ta-sms-from { font-weight: 700; color: #475569; margin-bottom: 4px; }
+        .ta-ph { background: repeating-linear-gradient(45deg, #e2e8f0, #e2e8f0 8px, #eef2f7 8px, #eef2f7 16px); border-radius: 10px; color: #64748b; font-size: 12px; display: flex; align-items: center; justify-content: center; text-align: center; }
+
+        /* ===== 핵심 3가지 ===== */
+        .ta-points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 64px; }
+        .ta-point { background: #fff; border: 1px solid var(--border-color); border-radius: 16px; padding: 22px 24px; }
+        .ta-point-num { font-size: 13px; font-weight: 800; color: var(--primary-color); margin-bottom: 6px; }
+        .ta-point-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+        .ta-point-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+        /* ===== 매체 ===== */
+        .ta-media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .ta-media-card { background: #fff; border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 10px; }
+        .ta-media-name { font-size: 17px; font-weight: 700; }
+        .ta-media-sub { font-size: 13px; color: var(--text-muted); }
+        .ta-media-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.55; flex: 1; }
+        .ta-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ta-tag { font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 6px; background: #f1f5f9; color: #475569; }
+        .ta-tag.blue { background: rgba(37,99,235,.08); color: var(--primary-color); }
+        .ta-tag.purple { background: rgba(124,92,219,.1); color: #6d28d9; }
+        .ta-tag.amber { background: #fffbeb; color: #b45309; }
+
+        /* ===== 최소 건수 표 ===== */
+        .ta-min-wrap { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+        .ta-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; }
+        .ta-table th, .ta-table td { padding: 16px 18px; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 14px; }
+        .ta-table th { background: #f8fafc; font-size: 13px; color: #475569; }
+        .ta-table tr:last-child td { border-bottom: none; }
+        .ta-min-qty { font-size: 20px; font-weight: 800; color: var(--primary-color); white-space: nowrap; }
+        .ta-side-note { background: #fff; border: 1px dashed #cbd5e1; border-radius: 16px; padding: 20px; font-size: 13.5px; color: #475569; line-height: 1.7; }
+        .ta-side-note strong { color: var(--text-primary); }
+
+        /* ===== 메시지 형태 ===== */
+        .ta-format-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .ta-format { background: #fff; border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start; }
+        .ta-format h4 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+        .ta-format ul { padding-left: 18px; font-size: 14px; color: var(--text-secondary); line-height: 1.75; }
+        .ta-mini-phone { background: #f1f5f9; border-radius: 16px; padding: 12px; }
+        .ta-app-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+        .ta-app-card .ta-ph { height: 120px; border-radius: 0; }
+        .ta-app-card-body { padding: 10px 12px; font-size: 12px; color: #334155; }
+        .ta-app-btn { margin: 0 12px 12px; padding: 8px; text-align: center; font-size: 12px; font-weight: 700; border-radius: 8px; background: #f1f5f9; color: #1e293b; }
+
+        /* ===== 진행 절차 ===== */
+        .ta-steps { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; counter-reset: step; }
+        .ta-step { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; padding: 18px 14px; text-align: center; position: relative; }
+        .ta-step-no { width: 32px; height: 32px; margin: 0 auto 10px; border-radius: 50%; background: var(--primary-color); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .ta-step-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; word-break: keep-all; }
+        .ta-step-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; word-break: keep-all; }
+        .ta-step-who { margin-top: 10px; font-size: 11px; font-weight: 700; color: #6d28d9; background: rgba(124,92,219,.08); border-radius: 999px; padding: 3px 8px; display: inline-block; }
+        .ta-step-who.me { color: #b45309; background: #fffbeb; }
+
+        /* ===== 알아 둘 점 ===== */
+        .ta-notice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .ta-notice { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; }
+        .ta-notice-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; display: flex; gap: 8px; align-items: center; }
+        .ta-notice-title i { font-style: normal; width: 22px; height: 22px; border-radius: 6px; background: #fef3c7; color: #b45309; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .ta-notice-desc { font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; }
+
+        /* ===== 레퍼런스 ===== */
+        .ta-ref-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+        .ta-ref { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; }
+        .ta-ref .ta-ph { height: 200px; border-radius: 0; }
+        .ta-ref-body { padding: 12px 14px; }
+        .ta-ref-media { font-size: 14px; font-weight: 700; }
+        .ta-ref-type { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+        /* ===== 가격 ===== */
+        .ta-price { display: flex; gap: 20px; align-items: center; justify-content: space-between; background: #0f172a; color: #e2e8f0; border-radius: 20px; padding: 28px 32px; margin-bottom: 64px; }
+        .ta-price h4 { font-size: 20px; color: #fff; margin-bottom: 6px; }
+        .ta-price p { font-size: 14px; color: #cbd5e1; line-height: 1.6; }
+
+        /* ===== FAQ ===== */
+        .ta-faq { max-width: 860px; margin: 0 auto; }
+        .ta-faq details { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 10px; }
+        .ta-faq summary { list-style: none; cursor: pointer; padding: 18px 48px 18px 20px; font-size: 15px; font-weight: 600; position: relative; }
+        .ta-faq summary::-webkit-details-marker { display: none; }
+        .ta-faq summary::before { content: 'Q'; color: var(--primary-color); font-weight: 800; margin-right: 10px; }
+        .ta-faq summary::after { content: '+'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--text-muted); }
+        .ta-faq details[open] summary::after { content: '−'; }
+        .ta-faq-a { padding: 0 20px 18px 42px; font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+        /* ===== 하단 CTA ===== */
+        .ta-bottom-cta { text-align: center; background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%); color: #fff; border-radius: 24px; padding: 44px 24px; }
+        .ta-bottom-cta h3 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+        .ta-bottom-cta p { font-size: 15px; opacity: .9; margin-bottom: 22px; }
+        .ta-bottom-cta .btn { background: #fff; color: var(--primary-color); }
+
+        /* ===== 반응형 ===== */
+        @media (max-width: 1100px) {
+            .ta-steps { grid-template-columns: repeat(4, 1fr); }
+            .ta-ref-grid { grid-template-columns: repeat(3, 1fr); }
+            .ta-format { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            html, body, .app-container, .main-content, .header-content { min-width: 0 !important; }
+            .header-content { padding: 0 16px; gap: 8px; }
+            .header-content .main-nav { display: none; }
+            .header-actions .btn { white-space: nowrap; padding: 6px 10px; font-size: 12px; }
+            .main-content { padding: 20px 16px; }
+            .ta-hero { grid-template-columns: 1fr; padding: 28px 20px; gap: 24px; }
+            .ta-hero h2 { font-size: 28px; }
+            .ta-hero-lead { font-size: 16px; }
+            .ta-hero-actions .btn { flex: 1; }
+            .ta-phone { width: 240px; }
+            .ta-points, .ta-media-grid, .ta-notice-grid, .ta-format-grid, .ta-min-wrap { grid-template-columns: 1fr; }
+            .ta-steps { grid-template-columns: repeat(2, 1fr); }
+            .ta-ref-grid { grid-template-columns: repeat(2, 1fr); }
+            .ta-section-head h3 { font-size: 22px; }
+            .ta-table th, .ta-table td { padding: 12px; font-size: 13px; }
+            .ta-price { flex-direction: column; align-items: stretch; padding: 24px 20px; }
+            .ta-section { margin-bottom: 48px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader(''));
+        </script>
+
+        <main class="main-content">
+            <!-- 히어로 -->
+            <section class="ta-hero" id="taHero">
+                <div>
+                    <span class="ta-hero-badge">NEW · 타겟 광고 메시지</span>
+                    <h2>원하는 고객에게만<br>광고 메시지를 보내세요</h2>
+                    <p class="ta-hero-lead">통신사·카드사·멤버십·앱 회원 중 <strong>광고 수신에 동의한 분들</strong>에게 조건을 골라 보내는 광고 메시지입니다.</p>
+                    <div class="ta-hero-actions" id="taHeroCta">
+                        <a href="target-ad-chat.html" class="btn btn-primary btn-lg">상담 시작</a>
+                        <a href="#taProcess" class="btn btn-outline btn-lg" style="background:#fff;">진행 절차 보기</a>
+                    </div>
+                    <p class="ta-hero-note">상담 챗봇이 24시간 접수합니다. 대상 인원과 견적은 영업일 기준으로 안내드립니다.</p>
+                </div>
+                <div class="ta-phone" aria-hidden="true">
+                    <div class="ta-phone-screen">
+                        <div class="ta-phone-top">메시지 예시 (가상)</div>
+                        <div class="ta-sms">
+                            <div class="ta-sms-from">[Web발신] (광고)[매체명]</div>
+                            ○○ 신축 아파트 잔여세대 안내<br>
+                            생활권·평형 소개 문구가 들어갑니다.<br>
+                            모델하우스: ○○역 도보 5분<br>
+                            분양 문의 1600-0000<br>
+                            <span style="color:#94a3b8;">○○에서 광고 수신에 동의한 고객께 발송<br>무료 수신거부 080-000-0000</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 핵심 3가지 -->
+            <div class="ta-points" id="taPoints">
+                <div class="ta-point">
+                    <div class="ta-point-num">01</div>
+                    <div class="ta-point-title">광고 수신 동의 고객에게만</div>
+                    <div class="ta-point-desc">매체 회원 중 광고 수신에 동의한 분들 가운데서 지역·연령·성별·관심사 조건으로 대상을 고릅니다.</div>
+                </div>
+                <div class="ta-point">
+                    <div class="ta-point-num">02</div>
+                    <div class="ta-point-title">성공 건 기준 정산</div>
+                    <div class="ta-point-desc">실제로 발송에 성공한 건 기준으로 정산합니다. 금액은 모두 부가세 별도입니다.</div>
+                </div>
+                <div class="ta-point">
+                    <div class="ta-point-num">03</div>
+                    <div class="ta-point-title">발송 후 결과 리포트</div>
+                    <div class="ta-point-desc">발송 건수·성공 건수·클릭 수를 담은 리포트를 발송 후 영업일 4일 안에 마이페이지로 드립니다.</div>
+                </div>
+            </div>
+
+            <!-- 매체 소개 -->
+            <section class="ta-section" id="taMedia">
+                <div class="ta-section-head">
+                    <span class="ta-eyebrow">매체</span>
+                    <h3>어디의 고객에게 보낼 수 있나요?</h3>
+                    <p>여러 매체를 함께 고를 수 있고, 매체마다 따로 발송됩니다.</p>
+                </div>
+                <div class="ta-media-grid">
+                    <div class="ta-media-card">
+                        <div><div class="ta-media-name">통신사</div><div class="ta-media-sub">SKT · KT · LGU+</div></div>
+                        <div class="ta-media-desc">지역·연령과 앱 이용, 통화 이력 같은 조건으로 대상을 고릅니다.</div>
+                        <div class="ta-tags"><span class="ta-tag blue">장문 문자</span><span class="ta-tag">클릭 수 제공</span></div>
+                    </div>
+                    <div class="ta-media-card">
+                        <div><div class="ta-media-name">카드사</div><div class="ta-media-sub">신한 · KB국민 · 하나 · 롯데 · 삼성 · BC · 현대</div></div>
+                        <div class="ta-media-desc">결제 업종과 결제 금액 같은 소비 이력으로 대상을 고릅니다. 준법감시 심의가 있어 일정이 더 걸릴 수 있습니다.</div>
+                        <div class="ta-tags"><span class="ta-tag blue">장문 문자</span><span class="ta-tag amber">일부 카드사 클릭 수 미제공</span></div>
+                    </div>
+                    <div class="ta-media-card">
+                        <div><div class="ta-media-name">멤버십</div><div class="ta-media-sub">CJ ONE · 롯데멤버스 · 신세계포인트 · OK캐쉬백</div></div>
+                        <div class="ta-media-desc">구매·이용 이력이 있는 멤버십 회원에게 보냅니다.</div>
+                        <div class="ta-tags"><span class="ta-tag">형태는 상담 때 안내</span></div>
+                    </div>
+                    <div class="ta-media-card">
+                        <div><div class="ta-media-name">T-MAP</div><div class="ta-media-sub">내비게이션</div></div>
+                        <div class="ta-media-desc">이동·방문 이력으로 특정 지역을 오가는 분들을 고릅니다.</div>
+                        <div class="ta-tags"><span class="ta-tag">형태는 상담 때 안내</span></div>
+                    </div>
+                    <div class="ta-media-card">
+                        <div><div class="ta-media-name">직방 · 호갱노노</div><div class="ta-media-sub">부동산 앱</div></div>
+                        <div class="ta-media-desc">부동산에 관심 있는 앱 이용자에게 보냅니다. 분양 광고에 많이 씁니다.</div>
+                        <div class="ta-tags"><span class="ta-tag purple">앱 메시지 (이미지 + 버튼)</span></div>
+                    </div>
+                    <div class="ta-media-card">
+                        <div><div class="ta-media-name">카카오페이</div><div class="ta-media-sub">간편결제 앱</div></div>
+                        <div class="ta-media-desc">카카오페이 이용 고객에게 앱 메시지로 보냅니다.</div>
+                        <div class="ta-tags"><span class="ta-tag purple">앱 메시지 (이미지 + 버튼)</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 최소 건수 -->
+            <section class="ta-section" id="taMinimum">
+                <div class="ta-section-head">
+                    <span class="ta-eyebrow">최소 건수</span>
+                    <h3>매체마다 최소 발송 건수가 있어요</h3>
+                    <p>가장 적은 기준은 2만 건입니다.</p>
+                </div>
+                <div class="ta-min-wrap">
+                    <table class="ta-table" id="taMinTable">
+                        <thead><tr><th style="width:120px;">최소 건수</th><th>매체</th></tr></thead>
+                        <tbody>
+                            <tr><td class="ta-min-qty">2만 건</td><td>KT · SKT · 직방 · 호갱노노</td></tr>
+                            <tr><td class="ta-min-qty">3만 건</td><td>KB국민카드 · 삼성카드 · BC카드 · CJ ONE · 롯데멤버스 · OK캐쉬백 · T-MAP</td></tr>
+                            <tr><td class="ta-min-qty">5만 건</td><td>LGU+ · 신한카드 · 하나카드 · 롯데카드 · 현대카드 · 신세계포인트 · 카카오페이</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="ta-side-note">
+                        <strong>매체마다 따로 채워야 합니다.</strong><br>
+                        두 매체를 고르면 매체마다 최소 건수를 채워야 하고, 다른 광고주와 합쳐서 기준을 채울 수는 없습니다.<br><br>
+                        <strong>건수가 모자라면?</strong><br>
+                        상담 챗봇이 최소 건수가 낮은 매체나 건수 조정안을 바로 알려 드립니다.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 메시지 형태 -->
+            <section class="ta-section" id="taFormats">
+                <div class="ta-section-head">
+                    <span class="ta-eyebrow">메시지 형태</span>
+                    <h3>매체에 따라 두 가지 형태로 나갑니다</h3>
+                    <p>발신은 매체 명의로 나가고, 광고주 문의 번호는 본문에 넣습니다.</p>
+                </div>
+                <div class="ta-format-grid">
+                    <div class="ta-format">
+                        <div class="ta-mini-phone">
+                            <div class="ta-sms">
+                                <div class="ta-sms-from">(광고)[SKT]</div>
+                                본문 문구<br>문의 번호 1600-0000<br>
+                                <span style="color:#94a3b8;">수신거부 080-000-0000</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>장문 문자</h4>
+                            <ul>
+                                <li>통신사·카드사</li>
+                                <li>"(광고)[매체명]"으로 시작하고 매체 번호로 발신</li>
+                                <li>카드사는 준법감시 심의필 번호가 붙습니다</li>
+                                <li>링크를 넣으면 클릭 수를 집계합니다 (일부 카드사 제외)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="ta-format">
+                        <div class="ta-mini-phone">
+                            <div class="ta-app-card">
+                                <div class="ta-ph">광고 이미지</div>
+                                <div class="ta-app-card-body">이미지 아래 짧은 안내 문구</div>
+                                <div class="ta-app-btn">상담 신청하기</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>앱 메시지 (이미지 + 버튼)</h4>
+                            <ul>
+                                <li>직방·호갱노노·카카오페이</li>
+                                <li>이미지 카드와 버튼 1개로 구성</li>
+                                <li>버튼은 홈페이지·상담 신청 페이지로 연결</li>
+                                <li>이미지 파일이 꼭 필요합니다</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 진행 절차 -->
+            <section class="ta-section" id="taProcess">
+                <div class="ta-section-head">
+                    <span class="ta-eyebrow">진행 절차</span>
+                    <h3>상담부터 리포트까지 톡벨이 함께합니다</h3>
+                    <p>진행 상태는 마이페이지 &gt; 타겟 광고 신청 내역에서 볼 수 있습니다.</p>
+                </div>
+                <div class="ta-steps">
+                    <div class="ta-step"><div class="ta-step-no">1</div><div class="ta-step-title">상담·접수</div><div class="ta-step-desc">챗봇과 대화로 조건을 정리하고 접수</div><span class="ta-step-who me">고객</span></div>
+                    <div class="ta-step"><div class="ta-step-no">2</div><div class="ta-step-title">대상 인원·견적 안내</div><div class="ta-step-desc">매체별 가능 인원과 견적을 안내</div><span class="ta-step-who">톡벨</span></div>
+                    <div class="ta-step"><div class="ta-step-no">3</div><div class="ta-step-title">확정·결제</div><div class="ta-step-desc">견적 확정 후 선불 결제 (가상계좌)</div><span class="ta-step-who me">고객</span></div>
+                    <div class="ta-step"><div class="ta-step-no">4</div><div class="ta-step-title">문구 검토·심의</div><div class="ta-step-desc">매체 심의, 필요하면 수정 요청</div><span class="ta-step-who">톡벨·매체</span></div>
+                    <div class="ta-step"><div class="ta-step-no">5</div><div class="ta-step-title">테스트 발송 확인</div><div class="ta-step-desc">테스트 문자를 받고 이상 없는지 확인</div><span class="ta-step-who me">고객</span></div>
+                    <div class="ta-step"><div class="ta-step-no">6</div><div class="ta-step-title">발송</div><div class="ta-step-desc">확정한 발송일에 매체가 발송</div><span class="ta-step-who">매체</span></div>
+                    <div class="ta-step"><div class="ta-step-no">7</div><div class="ta-step-title">리포트</div><div class="ta-step-desc">발송 후 영업일 4일 안에 결과 리포트</div><span class="ta-step-who">톡벨</span></div>
+                </div>
+            </section>
+
+            <!-- 알아 둘 점 -->
+            <section class="ta-section" id="taNotice">
+                <div class="ta-section-head">
+                    <span class="ta-eyebrow">알아 둘 점</span>
+                    <h3>신청 전에 확인해 주세요</h3>
+                </div>
+                <div class="ta-notice-grid">
+                    <div class="ta-notice"><div class="ta-notice-title"><i>1</i>성공 건 기준 정산</div><div class="ta-notice-desc">실제로 발송에 성공한 건 기준으로 정산합니다. 발송 결과와 방문·문의 수는 미리 약속드릴 수 없습니다.</div></div>
+                    <div class="ta-notice"><div class="ta-notice-title"><i>2</i>부가세 별도 · 선불</div><div class="ta-notice-desc">안내하는 금액은 모두 부가세 별도이며, 견적을 확정하면 발송 전에 결제합니다.</div></div>
+                    <div class="ta-notice"><div class="ta-notice-title"><i>3</i>매체 명의로 발신</div><div class="ta-notice-desc">문자는 매체 이름과 번호로 나갑니다. 광고주 문의 번호는 본문에 넣어 주세요.</div></div>
+                    <div class="ta-notice"><div class="ta-notice-title"><i>4</i>매체 결합·중복 제거 불가</div><div class="ta-notice-desc">여러 매체를 합쳐서 보내거나 겹치는 분을 빼 드릴 수 없습니다. 두 매체에 모두 있는 분은 두 번 받을 수 있습니다.</div></div>
+                    <div class="ta-notice"><div class="ta-notice-title"><i>5</i>업종·문구 심의</div><div class="ta-notice-desc">업종과 문구는 매체 심의를 거칩니다. 일부 업종(지역주택조합, 2금융 등)은 진행할 수 있는 매체가 제한되고, 문구 일부가 바뀔 수 있습니다.</div></div>
+                    <div class="ta-notice"><div class="ta-notice-title"><i>6</i>일부 카드사 클릭 수 미제공</div><div class="ta-notice-desc">신한·BC·하나·삼성·현대카드 등은 리포트에 클릭 수가 나오지 않습니다. 링크가 없으면 클릭 수는 집계되지 않습니다.</div></div>
+                </div>
+            </section>
+
+            <!-- 레퍼런스 -->
+            <section class="ta-section" id="taReference">
+                <div class="ta-section-head">
+                    <span class="ta-eyebrow">발송 사례</span>
+                    <h3>분양 광고는 이렇게 나갔어요</h3>
+                    <p>실제 발송 사례의 형태입니다. 이미지는 준비 중입니다.</p>
+                </div>
+                <div class="ta-ref-grid">
+                    <div class="ta-ref"><div class="ta-ph">발송 화면 이미지</div><div class="ta-ref-body"><div class="ta-ref-media">SKT</div><div class="ta-ref-type">아파트 분양 · 장문 문자</div></div></div>
+                    <div class="ta-ref"><div class="ta-ph">발송 화면 이미지</div><div class="ta-ref-body"><div class="ta-ref-media">BC카드</div><div class="ta-ref-type">아파트 분양 · 장문 문자</div></div></div>
+                    <div class="ta-ref"><div class="ta-ph">발송 화면 이미지</div><div class="ta-ref-body"><div class="ta-ref-media">삼성카드</div><div class="ta-ref-type">민간임대 · 장문 문자</div></div></div>
+                    <div class="ta-ref"><div class="ta-ph">발송 화면 이미지</div><div class="ta-ref-body"><div class="ta-ref-media">직방</div><div class="ta-ref-type">민간임대 · 앱 메시지</div></div></div>
+                    <div class="ta-ref"><div class="ta-ph">발송 화면 이미지</div><div class="ta-ref-body"><div class="ta-ref-media">카카오페이</div><div class="ta-ref-type">아파트 분양 · 앱 메시지</div></div></div>
+                </div>
+            </section>
+
+            <!-- 가격 -->
+            <div class="ta-price" id="taPrice">
+                <div>
+                    <h4>비용은 견적 단계에서 안내드립니다</h4>
+                    <p>단가는 매체·건수·메시지 형태에 따라 달라집니다. 상담을 접수하시면 매체별 가능 인원과 함께 견적(부가세 별도)을 안내드립니다.</p>
+                </div>
+                <a href="target-ad-chat.html" class="btn btn-primary btn-lg" style="white-space:nowrap;">견적 받으러 가기</a>
+            </div>
+
+            <!-- FAQ -->
+            <section class="ta-section" id="taFaq">
+                <div class="ta-section-head">
+                    <span class="ta-eyebrow">자주 묻는 질문</span>
+                    <h3>궁금한 점</h3>
+                </div>
+                <div class="ta-faq">
+                    <details open>
+                        <summary>1만 건만 보낼 수는 없나요?</summary>
+                        <div class="ta-faq-a">매체마다 최소 발송 건수가 있어 가장 적은 기준이 2만 건입니다(KT·SKT·직방·호갱노노). 다른 광고주와 합쳐서 기준을 채울 수는 없습니다.</div>
+                    </details>
+                    <details>
+                        <summary>접수하고 발송까지 얼마나 걸리나요?</summary>
+                        <div class="ta-faq-a">대상 인원 확인, 문구 검토, 매체 심의, 테스트 발송 확인을 거칩니다. 발송 희망일 약 일주일 전 접수를 권하고, 카드사는 심의 때문에 더 걸릴 수 있습니다. 상담 때 발송 희망일을 2·3순위까지 알려 주시면 일정 잡기가 쉬워집니다.</div>
+                    </details>
+                    <details>
+                        <summary>무주택자처럼 특정 조건만 골라 보낼 수 있나요?</summary>
+                        <div class="ta-faq-a">매체마다 고를 수 있는 조건이 다릅니다. 상담 때 원하는 조건을 말씀해 주시면 가능한 매체와 비슷한 조건을 확인해 안내드립니다.</div>
+                    </details>
+                    <details>
+                        <summary>보내면 몇 명이 반응하나요?</summary>
+                        <div class="ta-faq-a">방문·문의 수는 미리 약속드릴 수 없습니다. 대신 성공 건 기준으로 정산하고, 발송 후 영업일 4일 안에 발송·성공·클릭 수 리포트를 드립니다.</div>
+                    </details>
+                    <details>
+                        <summary>접수한 뒤 일정이나 문구를 바꿀 수 있나요?</summary>
+                        <div class="ta-faq-a">마이페이지 &gt; 타겟 광고 신청 내역의 상세 화면에서 조건 변경이나 문구 수정을 요청할 수 있습니다. 결제 전에는 신청을 취소할 수도 있습니다.</div>
+                    </details>
+                </div>
+            </section>
+
+            <!-- 하단 CTA -->
+            <div class="ta-bottom-cta" id="taBottomCta">
+                <h3>지금 상담을 시작해 보세요</h3>
+                <p>현장·타겟·매체·일정을 대화로 정리하면 대상 인원과 견적을 안내드립니다.</p>
+                <a href="target-ad-chat.html" class="btn btn-lg">상담 시작</a>
+            </div>
+        </main>
+
+        <!-- 푸터 -->
+        <script src="js/footer.js"></script>
+        <script>
+            document.write(createFooter());
+        </script>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initDropdownMenus === 'function') {
+                initDropdownMenus();
+            }
+        });
+    </script>
+
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. 히어로
+            {
+                selector: '#taHero',
+                title: '1. 히어로 (서비스 한 줄 소개)',
+                position: { top: '12px', right: '12px' },
+                description: '배너 (Hero)',
+                function: '타겟 광고 메시지 서비스를 한 줄로 소개하고 상담으로 이끈다',
+                behavior: [
+                    '【표시 조건】',
+                    '• 비로그인·로그인 모두 접근 가능 (상담 시작은 로그인 필요)',
+                    '• 서비스명은 미정 → "타겟 광고 메시지"로 표기 (확정 시 문구 교체)',
+                    '【표시 내용】',
+                    '• 한 줄 소개: "통신사·카드사·멤버십·앱 회원 중 광고 수신에 동의한 분들에게 조건을 골라 보내는 광고 메시지"',
+                    '• 우측 휴대폰 목업: 가상 문구의 장문 문자 예시 (매체 명의 발신 형태)',
+                    '• 하단 안내: 챗봇 24시간 접수, 회신은 영업일 기준'
+                ]
+            },
+            // 2. 상담 시작 CTA
+            {
+                selector: '#taHeroCta',
+                title: '2. 상담 시작 버튼',
+                position: { top: '-12px', left: '-12px' },
+                description: '버튼 (Button)',
+                function: '상담 챗봇 화면으로 이동',
+                behavior: [
+                    '【상담 시작】',
+                    '• 클릭 시 target-ad-chat.html 이동',
+                    '• 비로그인: 로그인 화면으로 이동 → 로그인 후 상담 화면으로 복귀 (returnUrl)',
+                    '• 이어 할 상담 세션이 있으면 챗봇 화면 상단에 이어하기 배너 표시 (POST /target-ad/chat/sessions 가 기존 세션을 돌려줌)',
+                    '【진행 절차 보기】',
+                    '• 같은 페이지의 진행 절차 섹션(#taProcess)으로 스크롤'
+                ]
+            },
+            // 3. 핵심 3가지
+            {
+                selector: '#taPoints',
+                title: '3. 핵심 안내 3가지',
+                position: { top: '-12px', left: '-12px' },
+                description: '카드 목록 (Card List)',
+                function: '서비스 특징을 세 가지로 요약',
+                behavior: [
+                    '【표시 내용】',
+                    '• 광고 수신 동의 고객에게만 / 성공 건 기준 정산(부가세 별도) / 발송 후 리포트(영업일 4일 내)',
+                    '【문구 원칙】',
+                    '• CJ에서 확인된 수치만 표기 (최소 건수, 성공 건 정산, 부가세 별도, 리포트 영업일 4일)',
+                    '• 보장 표현 금지: "반드시", "보장", "성과가 납니다" 등 사용하지 않음'
+                ]
+            },
+            // 4. 매체 소개
+            {
+                selector: '#taMedia',
+                title: '4. 매체 소개',
+                position: { top: '0px', left: '0px' },
+                description: '카드 그리드 (Card Grid)',
+                function: '고를 수 있는 매체 6종과 메시지 형태·클릭 수 제공 여부 안내',
+                behavior: [
+                    '【매체】',
+                    '• 통신사(SKT·KT·LGU+) / 카드사(7개사) / 멤버십(CJ ONE·롯데멤버스·신세계포인트·OK캐쉬백) / T-MAP / 직방·호갱노노 / 카카오페이',
+                    '【데이터】',
+                    '• GET /target-ad/media 로 매체 이름·그룹·최소 건수·형태·클릭 수 제공 여부를 받아 그림 (수수료율은 응답에 없음)',
+                    '• 형태·클릭 수가 미확인(null)인 매체는 "형태는 상담 때 안내"로 표시',
+                    '【안내】',
+                    '• 매체끼리는 결합하지 않고 매체마다 따로 발송'
+                ]
+            },
+            // 5. 최소 건수 표
+            {
+                selector: '#taMinimum',
+                title: '5. 매체별 최소 건수 표',
+                position: { top: '0px', left: '0px' },
+                description: '테이블 (Table)',
+                function: '매체별 최소 발송 건수(2만/3만/5만) 안내',
+                behavior: [
+                    '【표시 내용】 (11/2 CJ 테이블 기준, target_ad_media_rule.min_qty)',
+                    '• 2만 건: KT·SKT·직방·호갱노노',
+                    '• 3만 건: KB국민·삼성·BC카드, CJ ONE, 롯데멤버스, OK캐쉬백, T-MAP',
+                    '• 5만 건: LGU+, 신한·하나·롯데·현대카드, 신세계포인트, 카카오페이',
+                    '【안내】',
+                    '• 매체마다 최소 건수를 각각 채워야 함, 다른 광고주와 합산 불가',
+                    '• 어드민 매체 규칙표가 바뀌면 이 표도 같이 바뀜 (같은 API)'
+                ]
+            },
+            // 6. 메시지 형태
+            {
+                selector: '#taFormats',
+                title: '6. 메시지 형태',
+                position: { top: '0px', left: '0px' },
+                description: '카드 (Card)',
+                function: '장문 문자 / 앱 메시지(이미지 + 버튼) 두 형태를 비교',
+                behavior: [
+                    '【장문 문자】 통신사·카드사, "(광고)[매체명]"으로 시작, 매체 번호 발신, 카드사는 준법감시 심의필 표기',
+                    '【앱 메시지】 직방·호갱노노·카카오페이, 이미지 카드 + 버튼 1개, 이미지 파일 필요',
+                    '【공통】 발신은 매체 명의, 광고주 문의 번호는 본문에 넣음'
+                ]
+            },
+            // 7. 진행 절차
+            {
+                selector: '#taProcess',
+                title: '7. 진행 절차',
+                position: { top: '0px', left: '0px' },
+                description: '스텝 (Step)',
+                function: '접수부터 리포트까지 7단계와 단계별 주체 표시',
+                behavior: [
+                    '【단계】',
+                    '• 상담·접수 → 대상 인원·견적 안내 → 확정·결제(선불) → 문구 검토·심의 → 테스트 발송 확인 → 발송 → 리포트(영업일 4일 내)',
+                    '【주체 표시】',
+                    '• 고객이 할 일(주황): 상담·접수, 확정·결제, 테스트 발송 확인',
+                    '• 톡벨·매체가 할 일(보라): 나머지',
+                    '【연결】',
+                    '• 마이페이지 신청 상세의 진행 단계 표시(스텝퍼)와 같은 단계 이름 사용'
+                ]
+            },
+            // 8. 알아 둘 점
+            {
+                selector: '#taNotice',
+                title: '8. 알아 둘 점',
+                position: { top: '0px', left: '0px' },
+                description: '안내 카드 (Notice)',
+                function: '신청 전 반드시 알아야 할 제약 6가지',
+                behavior: [
+                    '• 성공 건 기준 정산 (성과·방문 수 약속 없음)',
+                    '• 부가세 별도, 선불',
+                    '• 매체 명의 발신, 문의 번호는 본문',
+                    '• 매체 결합·중복 제거 불가 (두 매체 모두 있는 분은 두 번 받을 수 있음)',
+                    '• 업종·문구 매체 심의 (지역주택조합, 2금융 등 일부 매체 제한)',
+                    '• 일부 카드사(신한·BC·하나·삼성·현대) 클릭 수 미제공'
+                ]
+            },
+            // 9. 레퍼런스
+            {
+                selector: '#taReference',
+                title: '9. 발송 사례 (레퍼런스)',
+                position: { top: '0px', left: '0px' },
+                description: '이미지 카드 (Image Card)',
+                function: '분양 업종 실제 발송 사례의 매체·형태를 보여 줌',
+                behavior: [
+                    '【현재】',
+                    '• 이미지 자리는 회색 박스, 매체명과 업종·형태만 표기',
+                    '【운영 시】',
+                    '• CJ 첨부 사례 5건(SKT·BC카드·삼성카드·직방·카카오페이)을 광고주·현장명·번호를 가린 이미지로 교체',
+                    '• 이미지 사용 가능 여부는 CJ·광고주 확인 후 결정',
+                    '• 클릭 시 이미지 확대 (라이트박스)'
+                ]
+            },
+            // 10. 가격 안내
+            {
+                selector: '#taPrice',
+                title: '10. 비용 안내',
+                position: { top: '-12px', left: '-12px' },
+                description: '배너 (Banner)',
+                function: '단가를 표시하지 않고 견적 단계에서 안내한다는 점만 알림',
+                behavior: [
+                    '【표시 원칙】',
+                    '• 단가·최소 금액은 화면에 표시하지 않음 (판매가 미정, 매체·건수·형태별로 다름)',
+                    '• "견적 단계에서 안내", "부가세 별도" 문구 고정',
+                    '【견적 받으러 가기】',
+                    '• 클릭 시 target-ad-chat.html 이동 (상담 시작과 같음)'
+                ]
+            },
+            // 11. FAQ
+            {
+                selector: '#taFaq',
+                title: '11. 자주 묻는 질문',
+                position: { top: '0px', left: '0px' },
+                description: '아코디언 (Accordion)',
+                function: '최소 건수, 소요 기간, 특정 조건, 성과, 접수 후 변경 질문에 답함',
+                behavior: [
+                    '【동작】',
+                    '• details/summary 아코디언, 첫 항목만 펼친 상태로 시작',
+                    '【내용 관리】',
+                    '• 고객센터 FAQ(support-faq.html)에 "타겟 광고" 분류를 추가해 같은 데이터를 쓰는 방안 검토',
+                    '• 소요 기간 답변은 CJ 모수 회신·부킹 기간 확인 후 수치 보완'
+                ]
+            },
+            // 12. 하단 CTA
+            {
+                selector: '#taBottomCta',
+                title: '12. 하단 상담 시작',
+                position: { top: '12px', left: '12px' },
+                description: '배너 버튼 (CTA)',
+                function: '페이지 끝에서 상담 시작으로 이동',
+                behavior: [
+                    '• 클릭 시 target-ad-chat.html 이동 (2번과 같은 로그인 처리)'
+                ]
+            }
+        ];
+
+        initSpecOverlay(specData);
+    </script>
+</body>
+</html>

@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>타겟 광고 신청 상세 - 톡벨</title>
+    <script src="js/header.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* 마이페이지 LNB + 콘텐츠 */
+        .mypage-layout { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; }
+        .mypage-lnb { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 12px 0; position: sticky; top: 88px; }
+        .mypage-lnb-item { display: block; width: 100%; padding: 12px 20px; text-align: left; font-size: 14px; font-weight: 500; color: var(--text-primary); text-decoration: none; border-left: 3px solid transparent; transition: all 0.2s; }
+        .mypage-lnb-item:hover { background: var(--bg-color); color: var(--primary-color); }
+        .mypage-lnb-item.active { background: rgba(37, 99, 235, 0.08); color: var(--primary-color); border-left-color: var(--primary-color); font-weight: 600; }
+        .mypage-lnb-new { font-size: 10px; font-weight: 800; color: #fff; background: var(--danger-color); border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: 1px; }
+        .mypage-content { min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+
+        .ta-select {
+            appearance: none; -webkit-appearance: none; cursor: pointer;
+            padding: 8px 36px 8px 12px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-family: inherit;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23777' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center / 10px 6px;
+        }
+        .ta-select:focus, .ta-textarea:focus, .ta-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+        .ta-textarea { width: 100%; min-height: 96px; resize: vertical; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 13.5px; font-family: inherit; line-height: 1.6; }
+        .ta-input { padding: 9px 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13.5px; font-family: inherit; min-width: 0; }
+
+        /* 설계 보기용 상태 전환 */
+        .state-switcher { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border: 1px dashed #a78bfa; background: #faf5ff; border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #6d28d9; }
+        .state-switcher strong { font-weight: 700; }
+        .state-switcher span { color: #7c3aed; font-size: 12px; }
+
+        /* 섹션 카드 */
+        .sec { background: #fff; border: 1px solid var(--border-color); border-radius: 16px; padding: 22px 24px; }
+        .sec-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+        .sec-title { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .sec-title .num { font-size: 11px; font-weight: 700; color: #6d28d9; background: rgba(124,92,219,.08); border-radius: 4px; padding: 1px 6px; }
+        .sec-sub { font-size: 12.5px; color: var(--text-secondary); }
+        .sec.highlight { border-color: #fdba74; box-shadow: 0 0 0 3px rgba(251,146,60,.12); }
+
+        /* 상단 요약 */
+        .detail-top { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+        .detail-no { font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: var(--text-secondary); }
+        .detail-name { font-size: 22px; font-weight: 800; margin: 2px 0 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .detail-meta { font-size: 13px; color: var(--text-secondary); }
+        .detail-actions { display: flex; gap: 8px; }
+        .next-action { margin-top: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 12px 16px; }
+        .next-action-text { font-size: 14px; color: #9a3412; font-weight: 600; }
+        .next-action-text small { display: block; font-size: 12.5px; font-weight: 400; color: #c2410c; margin-top: 2px; }
+
+        .st { display: inline-flex; align-items: center; padding: 4px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .st-received { background: #f1f5f9; color: #475569; }
+        .st-audience { background: #e0f2fe; color: #0369a1; }
+        .st-quoted, .st-test { background: #ffedd5; color: #c2410c; }
+        .st-payment { background: #fef3c7; color: #b45309; }
+        .st-review { background: #ede9fe; color: #6d28d9; }
+        .st-fix { background: #fee2e2; color: #b91c1c; }
+        .st-scheduled { background: #dbeafe; color: #1d4ed8; }
+        .st-sent { background: #dcfce7; color: #15803d; }
+        .st-reported { background: #d1fae5; color: #047857; }
+        .st-hold { background: #f1f5f9; color: #64748b; border: 1px dashed #94a3b8; }
+        .st-canceled { background: #f8fafc; color: #94a3b8; }
+
+        /* 스텝퍼 */
+        .stepper { display: grid; grid-template-columns: repeat(8, 1fr); position: relative; }
+        .stp { text-align: center; position: relative; padding-top: 4px; }
+        .stp::before { content: ''; position: absolute; top: 18px; left: -50%; width: 100%; height: 3px; background: #e2e8f0; z-index: 0; }
+        .stp:first-child::before { display: none; }
+        .stp.done::before, .stp.cur::before { background: var(--primary-color); }
+        .stp-dot { width: 30px; height: 30px; margin: 0 auto 8px; border-radius: 50%; background: #fff; border: 2px solid #cbd5e1; color: #94a3b8; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
+        .stp.done .stp-dot { background: var(--primary-color); border-color: var(--primary-color); color: #fff; }
+        .stp.cur .stp-dot { border-color: var(--primary-color); color: var(--primary-color); box-shadow: 0 0 0 4px rgba(37,99,235,.15); }
+        .stp-name { font-size: 12.5px; font-weight: 600; color: var(--text-muted); word-break: keep-all; }
+        .stp.done .stp-name { color: var(--text-primary); }
+        .stp.cur .stp-name { color: var(--primary-color); font-weight: 800; }
+        .stp-date { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* 정리본 */
+        .sum-grid { display: grid; grid-template-columns: 120px 1fr; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+        .sum-grid dt { background: #f8fafc; color: #475569; font-weight: 600; padding: 10px 14px; border-bottom: 1px solid var(--border-color); }
+        .sum-grid dd { padding: 10px 14px; border-bottom: 1px solid var(--border-color); line-height: 1.6; }
+        .sum-grid dt:nth-last-of-type(1), .sum-grid dd:last-of-type { border-bottom: none; }
+        .flag { font-size: 11px; font-weight: 700; color: #b45309; background: #fef3c7; border-radius: 4px; padding: 0 5px; margin-left: 4px; }
+        .draft-box { white-space: pre-line; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 12px; font-size: 13px; margin-top: 4px; }
+
+        /* 표 */
+        .tbl-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 12px; }
+        .tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 640px; }
+        .tbl th { background: #f8fafc; color: #475569; font-size: 12.5px; font-weight: 600; padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .tbl th:first-child, .tbl td:first-child { text-align: left; }
+        .tbl td { padding: 12px; text-align: right; border-bottom: 1px solid #eef2f7; white-space: nowrap; }
+        .tbl tr:last-child td { border-bottom: none; }
+        .tbl tfoot td { background: #f8fafc; font-weight: 800; border-top: 1px solid var(--border-color); }
+        .tbl .left { text-align: left; white-space: normal; }
+        .media-name { font-weight: 700; }
+        .media-name small { display: block; font-weight: 400; font-size: 11.5px; color: var(--text-muted); }
+        .expand-note { font-size: 12.5px; color: #0369a1; background: #e0f2fe; border-radius: 6px; padding: 2px 7px; white-space: normal; display: inline-block; text-align: left; }
+        .muted { color: var(--text-muted); }
+        .na { font-size: 12px; color: #94a3b8; background: #f1f5f9; border-radius: 4px; padding: 1px 6px; }
+        .note-list { margin-top: 12px; padding-left: 18px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
+
+        .btn-row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+        .btn-row .btn { min-width: 140px; }
+        .inline-form { display: none; margin-top: 14px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; }
+        .inline-form.show { display: block; }
+        .inline-form label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .inline-form .btn-row { margin-top: 10px; justify-content: flex-end; }
+
+        /* 견적 */
+        .quote-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 14px; padding: 14px 16px; background: #eff6ff; border-radius: 12px; }
+        .quote-total span { font-size: 13.5px; color: #1e40af; font-weight: 600; }
+        .quote-total strong { font-size: 22px; color: var(--primary-color); font-weight: 800; }
+        .quote-meta { font-size: 12.5px; color: var(--text-secondary); }
+
+        /* 결제 */
+        .va-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; background: #f4f6f9; border-radius: 12px; padding: 18px 20px; }
+        .va-label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 2px; }
+        .va-value { font-size: 15px; font-weight: 700; }
+        .va-mono { font-family: ui-monospace, Menlo, monospace; letter-spacing: .02em; }
+        .va-blue { color: var(--primary-color); }
+        .va-red { color: var(--danger-color); }
+        .va-sms { display: flex; gap: 8px; margin-top: 12px; }
+        .va-sms .ta-input { flex: 1; }
+        .warn-box { margin-top: 14px; padding: 12px 14px; background: #fffbeb; border: 1px solid #fbbf24; border-radius: 10px; }
+        .warn-box ul { padding-left: 18px; color: #92400e; font-size: 12.5px; line-height: 1.7; }
+
+        /* 문구 수정 */
+        .fix-item { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border: 1px solid #fecaca; background: #fef2f2; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; font-size: 13px; }
+        .fix-item .k { font-size: 11.5px; color: #b91c1c; font-weight: 700; display: block; margin-bottom: 2px; }
+        .fix-item s { color: #7f1d1d; }
+        .fix-form { margin-top: 14px; }
+        .fix-form label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .file-line { display: flex; gap: 8px; align-items: center; margin-top: 8px; font-size: 13px; color: var(--text-secondary); flex-wrap: wrap; }
+
+        /* 테스트 발송 */
+        .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .test-card { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .test-img { height: 220px; background: repeating-linear-gradient(45deg,#e2e8f0,#e2e8f0 8px,#eef2f7 8px,#eef2f7 16px); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12.5px; color: #64748b; padding: 10px; }
+        .test-meta { padding: 10px 12px; font-size: 12.5px; }
+        .test-meta strong { display: block; font-size: 13.5px; }
+        .test-meta span { color: var(--text-muted); }
+        .resp-box { margin-top: 14px; display: flex; gap: 10px; align-items: flex-start; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #991b1b; line-height: 1.6; }
+        .resp-box b { font-weight: 800; }
+        .agree-line { display: flex; gap: 8px; align-items: center; margin-top: 12px; font-size: 13.5px; cursor: pointer; }
+        .agree-line input { width: 18px; height: 18px; accent-color: var(--primary-color); }
+
+        /* 리포트 */
+        .report-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+        .kpi { background: #f8fafc; border-radius: 12px; padding: 14px; }
+        .kpi .t { font-size: 12px; color: var(--text-secondary); }
+        .kpi .n { font-size: 20px; font-weight: 800; margin-top: 2px; }
+        .report-files { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+        /* 타임라인 */
+        .timeline { list-style: none; padding: 0; margin: 0; position: relative; }
+        .timeline::before { content: ''; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: #e2e8f0; }
+        .tl { position: relative; padding: 0 0 16px 28px; }
+        .tl::before { content: ''; position: absolute; left: 1px; top: 5px; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid #93c5fd; }
+        .tl.me::before { border-color: #fdba74; }
+        .tl-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); }
+        .ch { font-size: 11px; font-weight: 700; border-radius: 4px; padding: 1px 6px; background: #eff6ff; color: #1d4ed8; }
+        .ch.me { background: #fff7ed; color: #c2410c; }
+        .tl-body { font-size: 13.5px; margin-top: 3px; line-height: 1.55; }
+        .question-box { display: flex; gap: 8px; margin-top: 6px; }
+        .question-box .ta-input { flex: 1; }
+
+        .hold-box { background: #f8fafc; border: 1px dashed #94a3b8; border-radius: 12px; padding: 14px 16px; font-size: 13.5px; color: #475569; line-height: 1.6; }
+        .hold-box strong { color: var(--text-primary); }
+
+        /* 취소 모달 */
+        .cancel-modal { max-width: 460px; }
+        .cancel-modal .modal-body { display: flex; flex-direction: column; gap: 12px; }
+        .cancel-modal .ta-select { width: 100%; font-size: 14px; padding: 10px 36px 10px 12px; }
+
+        @media (max-width: 1100px) {
+            .mypage-layout { grid-template-columns: 1fr; }
+            .mypage-lnb { position: static; display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; }
+            .mypage-lnb-item { width: auto; border-left: none; border-bottom: 3px solid transparent; padding: 8px 12px; }
+            .mypage-lnb-item.active { border-bottom-color: var(--primary-color); }
+        }
+        @media (max-width: 768px) {
+            html, body, .app-container, .main-content, .header-content { min-width: 0 !important; }
+            .header-content { padding: 0 16px; gap: 8px; }
+            .header-content .main-nav { display: none; }
+            .header-actions .btn { white-space: nowrap; padding: 6px 10px; font-size: 12px; }
+            .main-content { padding: 20px 16px; }
+            .page-header h2 { font-size: 22px; }
+            .mypage-lnb { flex-wrap: nowrap; overflow-x: auto; }
+            .mypage-lnb-item { white-space: nowrap; }
+            .sec { padding: 18px 16px; }
+            .detail-name { font-size: 19px; }
+            .detail-actions { width: 100%; }
+            .detail-actions .btn { flex: 1; }
+            .stepper { grid-template-columns: repeat(4, 1fr); row-gap: 14px; }
+            .stp:nth-child(5)::before { display: none; }
+            .sum-grid { grid-template-columns: 88px 1fr; }
+            .va-grid { grid-template-columns: 1fr; }
+            .fix-item { grid-template-columns: 1fr; }
+            .test-grid { grid-template-columns: 1fr; }
+            .report-kpis { grid-template-columns: repeat(2, 1fr); }
+            .btn-row .btn { flex: 1; min-width: 0; }
+            .question-box, .va-sms { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>document.write(createHeader());</script>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h2>마이페이지</h2>
+                <p class="page-description">타겟 광고 신청의 진행 상태를 확인하고, 견적 확정·문구 수정·테스트 확인을 진행합니다</p>
+            </div>
+
+            <div class="mypage-layout">
+                <nav class="mypage-lnb" id="mypageLnb">
+                    <a href="mypage.html" class="mypage-lnb-item">마이페이지</a>
+                    <a href="mypage-profile.html" class="mypage-lnb-item">내정보수정</a>
+                    <a href="mypage-password.html" class="mypage-lnb-item">비밀번호변경</a>
+                    <a href="mypage-mfa.html" class="mypage-lnb-item">2차 인증 설정</a>
+                    <a href="mypage-caller-number.html" class="mypage-lnb-item">발신번호관리</a>
+                    <a href="mypage.html#history" class="mypage-lnb-item">이용내역</a>
+                    <a href="mypage-target-ad.html" class="mypage-lnb-item active">타겟 광고 신청 내역<span class="mypage-lnb-new">4</span></a>
+                </nav>
+
+                <div class="mypage-content">
+                    <!-- 설계 보기용 상태 전환 -->
+                    <div class="state-switcher" id="stateSwitcher">
+                        <strong>설계 보기용 상태 전환</strong>
+                        <select class="ta-select" id="stateSelect" aria-label="상태 전환">
+                            <option value="ALL">전체 섹션 보기</option>
+                            <option value="RECEIVED">접수</option>
+                            <option value="CJ_REQUESTED">모수 확인 중</option>
+                            <option value="QUOTED">견적 안내</option>
+                            <option value="PAYMENT_WAIT">결제 대기</option>
+                            <option value="CREATIVE_REVIEW">문구 검토</option>
+                            <option value="CREATIVE_FIX">문구 수정 필요</option>
+                            <option value="TEST_CHECK">테스트 확인 필요</option>
+                            <option value="SCHEDULED">발송 예정</option>
+                            <option value="SENT">발송 완료</option>
+                            <option value="REPORTED">리포트 완료</option>
+                            <option value="ON_HOLD">보류</option>
+                            <option value="CANCELED">취소</option>
+                        </select>
+                        <span>실제 화면에는 없음. 상태마다 보이는 섹션을 확인하는 용도</span>
+                    </div>
+
+                    <!-- 상단 요약 -->
+                    <section class="sec" id="detailHeader">
+                        <div class="detail-top">
+                            <div>
+                                <div class="detail-no">TA-20261104-001</div>
+                                <div class="detail-name">동탄 한빛 오피스텔 <span class="st st-test" id="statusBadge">테스트 확인 필요</span></div>
+                                <div class="detail-meta">분양(오피스텔) · SKT, 직방, 삼성카드 · 접수 2026.11.04 15:02</div>
+                            </div>
+                            <div class="detail-actions">
+                                <a href="mypage-target-ad.html" class="btn btn-outline btn-sm">목록</a>
+                                <button type="button" class="btn btn-outline btn-sm" id="cancelBtn" onclick="openModal('cancelModal')">신청 취소</button>
+                            </div>
+                        </div>
+                        <div class="next-action" id="nextAction">
+                            <div class="next-action-text"><span id="nextActionText">테스트 발송본을 확인해 주세요</span><small id="nextActionSub">11/17(화) 17시까지 확인하면 11/18(수) 발송 일정이 유지됩니다.</small></div>
+                            <a href="#testCheckSection" class="btn btn-primary btn-sm">확인하러 가기</a>
+                        </div>
+                    </section>
+
+                    <!-- 진행 단계 -->
+                    <section class="sec" id="stepperSection">
+                        <div class="stepper" id="stepper">
+                            <div class="stp done"><div class="stp-dot">1</div><div class="stp-name">접수</div><div class="stp-date">11/04</div></div>
+                            <div class="stp done"><div class="stp-dot">2</div><div class="stp-name">모수 확인</div><div class="stp-date">11/06</div></div>
+                            <div class="stp done"><div class="stp-dot">3</div><div class="stp-name">견적</div><div class="stp-date">11/07</div></div>
+                            <div class="stp done"><div class="stp-dot">4</div><div class="stp-name">결제</div><div class="stp-date">11/10</div></div>
+                            <div class="stp done"><div class="stp-dot">5</div><div class="stp-name">문구 검토</div><div class="stp-date">11/12</div></div>
+                            <div class="stp cur"><div class="stp-dot">6</div><div class="stp-name">테스트 확인</div><div class="stp-date">진행 중</div></div>
+                            <div class="stp"><div class="stp-dot">7</div><div class="stp-name">발송</div><div class="stp-date">11/18 예정</div></div>
+                            <div class="stp"><div class="stp-dot">8</div><div class="stp-name">리포트</div><div class="stp-date">&nbsp;</div></div>
+                        </div>
+                    </section>
+
+                    <!-- 보류·취소 안내 -->
+                    <section class="sec" id="holdSection" data-show="ON_HOLD CANCELED">
+                        <div class="sec-head"><div class="sec-title">보류·취소 안내</div></div>
+                        <div class="hold-box">
+                            <strong>보류 예시</strong> · 지역주택조합 업종은 일부 매체 확인이 필요해 진행을 잠시 멈췄습니다. 확인되면 다시 안내드립니다. (사유: 톡벨 안내)<br>
+                            <strong>취소 예시</strong> · 2026.11.05 고객 요청으로 취소되었습니다. (사유: 일정 변경) 결제 전 취소라 비용이 발생하지 않았습니다.
+                        </div>
+                    </section>
+
+                    <!-- 신청 정리본 -->
+                    <section class="sec" id="summarySection" data-show="ALL">
+                        <div class="sec-head">
+                            <div class="sec-title">신청 내용</div>
+                            <span class="sec-sub">상담 챗봇에서 접수한 내용 (접수 시점 기준)</span>
+                        </div>
+                        <dl class="sum-grid">
+                            <dt>광고주</dt><dd>(주)한빛분양마케팅 · 법인 · 김민수 · 010-****-0000 · 오후 연락 희망</dd>
+                            <dt>광고</dt><dd>부동산·분양(오피스텔) · 동탄 한빛 오피스텔 (경기 화성시 오산동) · 시공 한빛건설</dd>
+                            <dt>목적</dt><dd>모델하우스 방문, 홈페이지·상담 신청</dd>
+                            <dt>타겟</dt><dd>경기 화성시·오산시·평택시 · 25~49세 · 전체 · 부족하면 지역 확대 가능, 연령 확대 불가<br>부동산 앱 이용 · 1인 가구<span class="flag">확인 필요</span></dd>
+                            <dt>매체·규모</dt><dd>SKT 2만 건 · 직방 2만 건 · 삼성카드 3만 건 · 예산 조정 가능</dd>
+                            <dt>발송 희망일</dt><dd>1순위 11/18(수) · 2순위 11/20(금) · 3순위 11/24(화) · 오전</dd>
+                            <dt>메시지</dt><dd>장문 문자(SKT·삼성카드) · 앱 메시지(직방) · 이미지 1장 · 링크 있음 · 문의 1600-0000
+                                <div class="draft-box">(광고) 동탄 한빛 오피스텔 회사보유분 특별 공급
+동탄역 생활권, 전용 59㎡ 선착순 계약
+모델하우스: 동탄역 3번 출구
+분양 문의 1600-0000</div>
+                            </dd>
+                            <dt>테스트 수신</dt><dd>010-****-0000, 010-****-1111</dd>
+                            <dt>기타</dt><dd>타겟 광고 이용 경험 있음 · 추가 요청 없음</dd>
+                        </dl>
+                    </section>
+
+                    <!-- 매체별 표 -->
+                    <section class="sec" id="mediaSection" data-show="ALL">
+                        <div class="sec-head">
+                            <div class="sec-title">매체별 진행</div>
+                            <span class="sec-sub">매체마다 따로 발송됩니다 (매체 결합·중복 제거 불가)</span>
+                        </div>
+                        <div class="tbl-wrap">
+                            <table class="tbl">
+                                <thead><tr><th>매체</th><th>희망 건수</th><th>가능 인원</th><th>확대안</th><th>확정 건수</th><th>발송일</th></tr></thead>
+                                <tbody>
+                                    <tr><td><span class="media-name">SKT<small>장문 문자</small></span></td><td>20,000</td><td>20,000</td><td class="muted">—</td><td><strong>20,000</strong></td><td>11/18(수)</td></tr>
+                                    <tr><td><span class="media-name">직방<small>앱 메시지</small></span></td><td>20,000</td><td>15,000</td><td class="left"><span class="expand-note">지역 확대 시 20,000 (경기 수원시 영통구 추가)</span></td><td><strong>20,000</strong><br><small class="muted">확대안 선택</small></td><td>11/18(수)</td></tr>
+                                    <tr><td><span class="media-name">삼성카드<small>장문 문자 · 준법감시 심의</small></span></td><td>30,000</td><td>30,000</td><td class="muted">—</td><td><strong>30,000</strong></td><td>11/20(금)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="note-list">
+                            <li>가능 인원은 매체가 조건에 맞춰 확인한 인원입니다. 모자라면 접수 때 허용한 범위(지역 확대) 안에서 확대안을 함께 안내합니다.</li>
+                            <li>확정 건수와 발송일은 견적 확정 후 매체 부킹이 끝나면 채워집니다.</li>
+                        </ul>
+                    </section>
+
+                    <!-- 견적 -->
+                    <section class="sec" id="quoteSection" data-show="QUOTED PAYMENT_WAIT CREATIVE_REVIEW CREATIVE_FIX TEST_CHECK SCHEDULED SENT REPORTED">
+                        <div class="sec-head">
+                            <div class="sec-title">견적</div>
+                            <span class="quote-meta">안내 2026.11.06 · 유효기간 11/09(월)까지</span>
+                        </div>
+                        <div class="tbl-wrap">
+                            <table class="tbl">
+                                <thead><tr><th>매체</th><th>확정 건수</th><th>공급가</th><th>부가세</th><th>합계</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="media-name">SKT</td><td>20,000건</td><td>0,000,000원</td><td>000,000원</td><td>0,000,000원</td></tr>
+                                    <tr><td class="media-name">직방</td><td>20,000건</td><td>0,000,000원</td><td>000,000원</td><td>0,000,000원</td></tr>
+                                    <tr><td class="media-name">삼성카드</td><td>30,000건</td><td>0,000,000원</td><td>000,000원</td><td>0,000,000원</td></tr>
+                                </tbody>
+                                <tfoot><tr><td>합계</td><td>70,000건</td><td>0,000,000원</td><td>000,000원</td><td>0,000,000원</td></tr></tfoot>
+                            </table>
+                        </div>
+                        <div class="quote-total"><span>결제할 금액 (부가세 포함)</span><strong>0,000,000원</strong></div>
+                        <ul class="note-list">
+                            <li>단가는 부가세 별도이며, 정산은 실제로 발송에 성공한 건 기준입니다.</li>
+                            <li>견적을 확정하면 선불 결제(가상계좌)를 진행합니다. 입금이 확인되어야 매체 부킹과 문구 검토가 시작됩니다.</li>
+                            <li>대상 인원·심의 결과·발송 성과는 미리 약속드릴 수 없습니다.</li>
+                        </ul>
+                        <div class="btn-row" id="quoteActions">
+                            <button type="button" class="btn btn-primary" onclick="alert('견적을 확정했습니다. 가상계좌가 발급됩니다. (목업)')">견적 확정</button>
+                            <button type="button" class="btn btn-outline" onclick="toggleForm('changeForm')">조건 변경 요청</button>
+                        </div>
+                        <div class="inline-form" id="changeForm">
+                            <label for="changeText">바꾸고 싶은 조건</label>
+                            <textarea class="ta-textarea" id="changeText" placeholder="예: 직방은 확대안 말고 15,000건으로 할게요. 삼성카드 발송일을 11/24로 바꿀 수 있나요?"></textarea>
+                            <div class="btn-row"><button type="button" class="btn btn-outline btn-sm" onclick="toggleForm('changeForm')">닫기</button><button type="button" class="btn btn-primary btn-sm">변경 요청 보내기</button></div>
+                        </div>
+                    </section>
+
+                    <!-- 결제 -->
+                    <section class="sec" id="paymentSection" data-show="PAYMENT_WAIT">
+                        <div class="sec-head">
+                            <div class="sec-title">결제 (가상계좌)</div>
+                            <span class="sec-sub">발급 2026.11.07 11:12</span>
+                        </div>
+                        <div class="va-grid">
+                            <div><span class="va-label">입금은행</span><span class="va-value">하나은행</span></div>
+                            <div><span class="va-label">계좌번호</span><span class="va-value va-mono">000-000000-00000</span></div>
+                            <div><span class="va-label">예금주</span><span class="va-value">아이뱅크</span></div>
+                            <div><span class="va-label">입금자명</span><span class="va-value">(주)한빛분양마케팅</span></div>
+                            <div><span class="va-label">입금금액</span><span class="va-value va-blue">0,000,000원</span></div>
+                            <div><span class="va-label">입금기한</span><span class="va-value va-red">2026.11.09 23:59</span></div>
+                        </div>
+                        <div class="va-sms">
+                            <input type="tel" class="ta-input" placeholder="휴대폰 번호 (- 없이 입력)" aria-label="휴대폰 번호">
+                            <button type="button" class="btn btn-outline btn-sm">계좌번호 문자로 받기</button>
+                        </div>
+                        <div class="warn-box">
+                            <ul>
+                                <li>입금기한 안에 정확한 금액을 입금해 주세요. 입금이 확인되면 자동으로 다음 단계(문구 검토)로 넘어갑니다.</li>
+                                <li>입금기한이 지나면 계좌가 만료됩니다. 견적 유효기간 안이면 다시 발급할 수 있습니다.</li>
+                                <li>세금계산서는 회원 사업자 정보로 발행됩니다. (결제 관리 &gt; 세금계산서)</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- 문구 수정 요청 -->
+                    <section class="sec highlight" id="creativeFixSection" data-show="CREATIVE_FIX">
+                        <div class="sec-head">
+                            <div class="sec-title">문구 수정 요청</div>
+                            <span class="sec-sub">삼성카드 심의 · 2026.11.12 10:05</span>
+                        </div>
+                        <div class="fix-item">
+                            <div><span class="k">현재 표현</span><s>"동탄 최저 분양가"</s></div>
+                            <div><span class="k">수정 이유</span>최상급·비교 표현은 쓸 수 없습니다. 근거를 밝히거나 표현을 빼 주세요.</div>
+                        </div>
+                        <div class="fix-item">
+                            <div><span class="k">현재 표현</span><s>"입주 즉시 시세 차익 보장"</s></div>
+                            <div><span class="k">수정 이유</span>수익을 약속하는 표현은 쓸 수 없습니다.</div>
+                        </div>
+                        <div class="fix-form">
+                            <label for="fixText">수정한 문구</label>
+                            <textarea class="ta-textarea" id="fixText">(광고) 동탄 한빛 오피스텔 회사보유분 특별 공급
+동탄역 생활권, 전용 59㎡ 선착순 계약
+모델하우스: 동탄역 3번 출구
+분양 문의 1600-0000</textarea>
+                            <div class="file-line">
+                                <button type="button" class="btn btn-outline btn-sm">이미지 바꾸기</button>
+                                <span>현재 이미지: 동탄한빛_카드.jpg</span>
+                            </div>
+                            <div class="btn-row"><button type="button" class="btn btn-primary">수정본 제출</button></div>
+                            <ul class="note-list">
+                                <li>11/14(금)까지 제출하면 11/20(금) 발송 일정을 유지할 수 있습니다.</li>
+                                <li>수정본은 다시 심의를 거칩니다. 일부 표현이 더 바뀔 수 있습니다.</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- 테스트 발송 확인 -->
+                    <section class="sec highlight" id="testCheckSection" data-show="TEST_CHECK SCHEDULED SENT REPORTED">
+                        <div class="sec-head">
+                            <div class="sec-title">테스트 발송 확인</div>
+                            <span class="sec-sub">테스트 수신 010-****-0000 · 2026.11.13 15:20</span>
+                        </div>
+                        <div class="test-grid">
+                            <div class="test-card"><div class="test-img">SKT 테스트 발송본<br>(받은 문자 캡처 이미지)</div><div class="test-meta"><strong>SKT · 장문 문자</strong><span>11/13 15:12 수신</span></div></div>
+                            <div class="test-card"><div class="test-img">직방 테스트 발송본<br>[테스트발송] 앱 메시지 캡처</div><div class="test-meta"><strong>직방 · 앱 메시지</strong><span>11/13 15:18 수신</span></div></div>
+                            <div class="test-card"><div class="test-img">삼성카드 테스트 발송본<br>(심의필 번호 포함)</div><div class="test-meta"><strong>삼성카드 · 장문 문자</strong><span>11/13 15:20 수신</span></div></div>
+                        </div>
+                        <div class="resp-box">
+                            <span>⚠</span>
+                            <div><b>문구와 데이터(전화번호·링크·날짜·금액) 오류 확인은 광고주 책임입니다.</b><br>발송을 진행한 뒤에는 고칠 수 없으니 받은 테스트 문자를 꼭 확인해 주세요.</div>
+                        </div>
+                        <label class="agree-line"><input type="checkbox" id="testAgree" onchange="document.getElementById('testOkBtn').disabled = !this.checked">테스트 발송본을 확인했고, 오류 확인 책임이 광고주에게 있음을 이해했습니다.</label>
+                        <div class="btn-row" id="testActions">
+                            <button type="button" class="btn btn-primary" id="testOkBtn" disabled onclick="alert('발송 진행을 요청했습니다. (목업)')">이상 없음, 발송 진행</button>
+                            <button type="button" class="btn btn-outline" onclick="toggleForm('testFixForm')">수정 요청</button>
+                        </div>
+                        <div class="inline-form" id="testFixForm">
+                            <label for="testFixText">고칠 내용</label>
+                            <textarea class="ta-textarea" id="testFixText" placeholder="예: 직방 이미지의 모델하우스 위치가 예전 주소입니다. 새 이미지로 바꿔 주세요."></textarea>
+                            <div class="file-line"><button type="button" class="btn btn-outline btn-sm">파일 첨부</button><span>수정한 문구나 이미지가 있으면 첨부해 주세요.</span></div>
+                            <div class="btn-row"><button type="button" class="btn btn-outline btn-sm" onclick="toggleForm('testFixForm')">닫기</button><button type="button" class="btn btn-primary btn-sm">수정 요청 보내기</button></div>
+                        </div>
+                    </section>
+
+                    <!-- 리포트 -->
+                    <section class="sec" id="reportSection" data-show="SENT REPORTED">
+                        <div class="sec-head">
+                            <div class="sec-title">발송 결과 리포트</div>
+                            <span class="sec-sub">리포트 도착 2026.11.24 · 발송 후 영업일 4일 안에 드립니다</span>
+                        </div>
+                        <div class="report-kpis">
+                            <div class="kpi"><div class="t">발송 건수</div><div class="n">70,000</div></div>
+                            <div class="kpi"><div class="t">성공 건수</div><div class="n">70,000</div></div>
+                            <div class="kpi"><div class="t">클릭 수</div><div class="n">0,000</div></div>
+                            <div class="kpi"><div class="t">클릭률</div><div class="n">0.0%</div></div>
+                        </div>
+                        <div class="tbl-wrap">
+                            <table class="tbl">
+                                <thead><tr><th>매체</th><th>발송일</th><th>발송 건수</th><th>성공 건수</th><th>클릭 수</th><th>클릭률</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="media-name">SKT</td><td>11/18(수)</td><td>20,000</td><td>20,000</td><td>0,000</td><td>0.0%</td></tr>
+                                    <tr><td class="media-name">직방</td><td>11/18(수)</td><td>20,000</td><td>20,000</td><td>0,000</td><td>0.0%</td></tr>
+                                    <tr><td class="media-name">삼성카드</td><td>11/20(금)</td><td>30,000</td><td>30,000</td><td><span class="na">미제공</span></td><td><span class="na">미제공</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="note-list">
+                            <li>삼성카드는 매체에서 클릭 수를 제공하지 않습니다. 클릭 수·클릭률 합계는 제공 매체만 더한 값입니다.</li>
+                            <li>정산은 성공 건수 기준입니다.</li>
+                        </ul>
+                        <div class="report-files">
+                            <button type="button" class="btn btn-outline btn-sm">리포트 엑셀 받기 (.xlsx)</button>
+                            <button type="button" class="btn btn-outline btn-sm">테스트 발송본·발송 증빙 이미지 받기 (.zip)</button>
+                        </div>
+                    </section>
+
+                    <!-- 톡벨 안내 타임라인 -->
+                    <section class="sec" id="timelineSection" data-show="ALL">
+                        <div class="sec-head">
+                            <div class="sec-title">톡벨 안내</div>
+                            <span class="sec-sub">이 신청으로 받은 안내와 내 답변 (최신순)</span>
+                        </div>
+                        <ul class="timeline">
+                            <li class="tl"><div class="tl-head"><span class="ch">알림톡</span><span class="ch">마이페이지</span>2026.11.13 15:21</div><div class="tl-body">테스트 발송본 3건이 도착했습니다. 확인 후 [이상 없음, 발송 진행]을 눌러 주세요.</div></li>
+                            <li class="tl me"><div class="tl-head"><span class="ch me">내 답변</span>2026.11.12 14:02</div><div class="tl-body">수정본 제출 (삼성카드): "최저 분양가", "시세 차익 보장" 표현 삭제</div></li>
+                            <li class="tl"><div class="tl-head"><span class="ch">알림톡</span>2026.11.12 10:05</div><div class="tl-body">삼성카드 심의에서 문구 수정 요청이 있습니다. 마이페이지에서 수정본을 제출해 주세요.</div></li>
+                            <li class="tl"><div class="tl-head"><span class="ch">메일</span>2026.11.10 09:31</div><div class="tl-body">입금이 확인되었습니다. 매체 부킹과 문구 검토를 시작합니다.</div></li>
+                            <li class="tl"><div class="tl-head"><span class="ch">알림톡</span>2026.11.07 11:12</div><div class="tl-body">가상계좌가 발급되었습니다. 11/09(월) 23:59까지 입금해 주세요.</div></li>
+                            <li class="tl me"><div class="tl-head"><span class="ch me">내 답변</span>2026.11.07 11:10</div><div class="tl-body">견적 확정 (직방은 지역 확대안 선택)</div></li>
+                            <li class="tl"><div class="tl-head"><span class="ch">알림톡</span><span class="ch">메일</span>2026.11.06 17:45</div><div class="tl-body">매체별 가능 인원과 견적을 안내드립니다. 직방은 조건대로 15,000명, 지역을 넓히면 20,000명까지 가능합니다.</div></li>
+                            <li class="tl"><div class="tl-head"><span class="ch">메일</span>2026.11.04 15:02</div><div class="tl-body">접수되었습니다. 접수번호 TA-20261104-001</div></li>
+                        </ul>
+                        <div class="question-box">
+                            <input type="text" class="ta-input" placeholder="이 신청에 대해 궁금한 점을 남겨 주세요" aria-label="질문">
+                            <button type="button" class="btn btn-primary btn-sm">질문 보내기</button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <script src="js/footer.js"></script>
+        <script>document.write(createFooter());</script>
+    </div>
+
+    <!-- 취소 모달 -->
+    <div class="modal-overlay" id="cancelModal">
+        <div class="modal cancel-modal" id="cancelModalBox">
+            <div class="modal-header">
+                <h3 class="modal-title">신청 취소</h3>
+                <button type="button" class="modal-close" onclick="closeModal('cancelModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:14px;color:#475569;line-height:1.6;">TA-20261104-001 동탄 한빛 오피스텔 신청을 취소할까요? 취소한 신청은 되돌릴 수 없습니다.</p>
+                <select class="ta-select" aria-label="취소 사유">
+                    <option value="">취소 사유를 골라 주세요</option>
+                    <option>일정이 맞지 않음</option>
+                    <option>견적이 예산과 맞지 않음</option>
+                    <option>대상 인원이 부족함</option>
+                    <option>다른 방법으로 진행</option>
+                    <option>기타</option>
+                </select>
+                <textarea class="ta-textarea" placeholder="자세한 사유 (선택)"></textarea>
+                <p style="font-size:12.5px;color:#94a3b8;">결제 전까지만 직접 취소할 수 있습니다. 결제 후에는 아래 질문으로 요청해 주세요.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('cancelModal')">닫기</button>
+                <button type="button" class="btn btn-danger">취소 요청</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.openModal = function(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        window.closeModal = function(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        document.getElementById('cancelModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal('cancelModal');
+        });
+
+        function toggleForm(id) {
+            document.getElementById(id).classList.toggle('show');
+        }
+
+        // ===== 설계 보기용 상태 전환 =====
+        const STATE = {
+            RECEIVED:        { name: '접수',            cls: 'st-received',  step: 0, todo: '톡벨이 대상 인원 확인을 요청하고 있어요', sub: '다음 영업일까지 대상 인원과 견적을 안내드립니다.', cancel: true },
+            CJ_REQUESTED:    { name: '모수 확인 중',     cls: 'st-audience',  step: 1, todo: '매체에서 대상 인원을 확인하고 있어요', sub: '보통 영업일 2일 안에 회신이 옵니다.', cancel: true },
+            QUOTED:          { name: '견적 안내',        cls: 'st-quoted',    step: 2, todo: '견적을 확인해 주세요', sub: '11/09(월)까지 확정하거나 조건 변경을 요청해 주세요.', cancel: true, hot: true },
+            PAYMENT_WAIT:    { name: '결제 대기',        cls: 'st-payment',   step: 3, todo: '가상계좌로 입금해 주세요', sub: '입금기한 11/09(월) 23:59', cancel: true, hot: true },
+            CREATIVE_REVIEW: { name: '문구 검토',        cls: 'st-review',    step: 4, todo: '매체가 문구를 심의하고 있어요', sub: '수정 요청이 오면 바로 알려 드립니다.' },
+            CREATIVE_FIX:    { name: '문구 수정 필요',   cls: 'st-fix',       step: 4, todo: '수정본을 제출해 주세요', sub: '11/14(금)까지 제출하면 발송 일정이 유지됩니다.', hot: true },
+            TEST_CHECK:      { name: '테스트 확인 필요', cls: 'st-test',      step: 5, todo: '테스트 발송본을 확인해 주세요', sub: '11/17(화) 17시까지 확인하면 11/18(수) 발송 일정이 유지됩니다.', hot: true },
+            SCHEDULED:       { name: '발송 예정',        cls: 'st-scheduled', step: 6, todo: '11/18(수) 발송 예정입니다', sub: '삼성카드는 11/20(금)에 발송됩니다.' },
+            SENT:            { name: '발송 완료',        cls: 'st-sent',      step: 7, todo: '발송을 마쳤어요', sub: '리포트는 발송 후 영업일 4일 안에 드립니다.' },
+            REPORTED:        { name: '리포트 완료',      cls: 'st-reported',  step: 8, todo: '결과 리포트가 도착했어요', sub: '아래에서 발송·성공·클릭 수를 확인하세요.' },
+            ON_HOLD:         { name: '보류',             cls: 'st-hold',      step: -1, todo: '확인이 필요해 잠시 멈췄어요', sub: '확인되면 다시 안내드립니다.' },
+            CANCELED:        { name: '취소',             cls: 'st-canceled',  step: -1, todo: '취소된 신청입니다', sub: '' }
+        };
+
+        function applyState(code) {
+            const view = code === 'ALL' ? 'TEST_CHECK' : code;
+            const s = STATE[view];
+
+            // 섹션 표시
+            document.querySelectorAll('[data-show]').forEach(function(sec) {
+                const list = sec.dataset.show.split(' ');
+                const show = code === 'ALL' || list.indexOf('ALL') > -1 || list.indexOf(code) > -1;
+                sec.style.display = show ? '' : 'none';
+            });
+
+            // 상태 배지 (#detailHeader 안의 자식만 바꿈)
+            const badge = document.getElementById('statusBadge');
+            badge.className = 'st ' + s.cls;
+            badge.textContent = s.name;
+            document.getElementById('nextActionText').textContent = s.todo;
+            document.getElementById('nextActionSub').textContent = s.sub;
+            document.getElementById('nextAction').style.display = (code === 'ALL' || s.hot || ['RECEIVED','CJ_REQUESTED','CREATIVE_REVIEW','SCHEDULED','SENT','REPORTED'].indexOf(view) > -1) ? '' : 'none';
+            document.getElementById('cancelBtn').style.display = s.cancel || code === 'ALL' ? '' : 'none';
+
+            // 스텝퍼
+            document.querySelectorAll('#stepper .stp').forEach(function(el, i) {
+                el.classList.remove('done', 'cur');
+                if (s.step < 0) return;
+                if (i < s.step) el.classList.add('done');
+                else if (i === s.step) el.classList.add('cur');
+            });
+
+            // 버튼은 해당 상태일 때만 누를 수 있음
+            document.getElementById('quoteActions').style.display = (code === 'ALL' || code === 'QUOTED') ? '' : 'none';
+            document.getElementById('testActions').style.display = (code === 'ALL' || code === 'TEST_CHECK') ? '' : 'none';
+        }
+        document.getElementById('stateSelect').addEventListener('change', function() { applyState(this.value); });
+        applyState('ALL');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initDropdownMenus === 'function') initDropdownMenus();
+        });
+    </script>
+
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const SPEC_TBL = 'style="border-collapse:collapse;font-size:11.5px;width:100%;margin-top:4px;"';
+        const SPEC_TD = 'style="border:1px solid #e2e8f0;padding:3px 5px;text-align:left;vertical-align:top;"';
+        const stateTable =
+            '<table ' + SPEC_TBL + '>' +
+            '<tr><th ' + SPEC_TD + '>상태</th><th ' + SPEC_TD + '>보이는 섹션</th></tr>' +
+            '<tr><td ' + SPEC_TD + '>접수 · 모수 확인 중</td><td ' + SPEC_TD + '>요약, 스텝퍼, 신청 내용, 매체별(희망 건수), 안내, [신청 취소]</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>견적 안내</td><td ' + SPEC_TD + '>+ 매체별(가능 인원·확대안), 견적 [견적 확정][조건 변경 요청]</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>결제 대기</td><td ' + SPEC_TD + '>+ 견적(확정됨, 버튼 없음), 결제(가상계좌)</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>문구 검토</td><td ' + SPEC_TD + '>견적, 매체별(확정 건수·발송일)</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>문구 수정 필요</td><td ' + SPEC_TD + '>+ 문구 수정 요청 [수정본 제출]</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>테스트 확인 필요</td><td ' + SPEC_TD + '>+ 테스트 발송 확인 [이상 없음, 발송 진행][수정 요청]</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>발송 예정</td><td ' + SPEC_TD + '>테스트 발송본(읽기 전용)</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>발송 완료</td><td ' + SPEC_TD + '>+ 리포트(도착 전: 예정일 안내)</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>리포트 완료</td><td ' + SPEC_TD + '>+ 리포트(표·파일 받기)</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>보류 · 취소</td><td ' + SPEC_TD + '>보류·취소 안내, 신청 내용, 매체별, 안내</td></tr>' +
+            '</table>';
+
+        const specData = [
+            // 1. 상태 전환
+            {
+                selector: '#stateSwitcher',
+                title: '1. 상태별 섹션 표시 규칙 (설계 보기용)',
+                position: { top: '-12px', left: '-12px' },
+                description: '설계 보기용 셀렉트 (실제 화면에는 없음)',
+                function: '상태를 바꿔 가며 어떤 섹션이 보이는지 확인',
+                behavior: [
+                    '【상태별 보이는 섹션】' + stateTable,
+                    '• 고객이 누르는 버튼(견적 확정, 발송 진행 등)은 해당 상태일 때만 표시',
+                    '• 고객 차례인 상태(견적 안내, 결제 대기, 문구 수정 필요, 테스트 확인 필요)는 해당 섹션을 주황 테두리로 강조하고 맨 위 "다음 할 일"에서 바로 이동',
+                    '• 내부 상태 AUDIENCE_REPLIED 는 고객에게 "모수 확인 중", CLOSED 는 "리포트 완료"로 보임'
+                ]
+            },
+            // 2. 상단 요약
+            {
+                selector: '#detailHeader',
+                title: '2. 신청 요약 · 다음 할 일',
+                position: { top: '-12px', left: '-12px' },
+                description: '헤더 카드 (Header Card)',
+                function: '접수번호, 현장명, 상태 배지, 매체, 접수일과 지금 고객이 할 일을 보여 줌',
+                behavior: [
+                    '【데이터】 GET /target-ad/requests/:no → 정리본, 매체별 줄, 견적, 타임라인, 리포트, status, status_due_at',
+                    '• 본인 신청이 아니면 403 → 목록으로 이동',
+                    '【다음 할 일】 상태와 기한(status_due_at)으로 문구를 만듦. 예: "테스트 발송본을 확인해 주세요 · 11/17(화) 17시까지"',
+                    '• [확인하러 가기]는 해당 섹션으로 스크롤',
+                    '【신청 취소】 결제 전(접수 ~ 결제 대기)에만 표시 → 취소 모달',
+                    '• 결제 후 취소·환불 규칙은 〔결정〕 (CJ 선불 정책에 묶임) → 그 전까지는 질문으로 요청'
+                ]
+            },
+            // 3. 스텝퍼
+            {
+                selector: '#stepperSection',
+                title: '3. 진행 단계 (스텝퍼)',
+                position: { top: '-12px', left: '-12px' },
+                description: '스텝퍼 (Stepper)',
+                function: '접수 → 모수 확인 → 견적 → 결제 → 문구 검토 → 테스트 확인 → 발송 → 리포트 8단계',
+                behavior: [
+                    '【매핑】 RECEIVED=1, CJ_REQUESTED·AUDIENCE_REPLIED=2, QUOTED=3, PAYMENT_WAIT=4, CREATIVE_REVIEW·CREATIVE_FIX=5, TEST_CHECK=6, SCHEDULED=7, SENT=7 완료, REPORTED·CLOSED=전체 완료',
+                    '【날짜】 끝난 단계는 status_history 의 전이 날짜, 발송은 확정 발송일 + "예정"',
+                    '【보류·취소】 스텝퍼를 회색으로 두고 보류·취소 안내 섹션 표시',
+                    '• 서비스 소개(target-ad.html)의 진행 절차와 같은 단계 이름'
+                ]
+            },
+            // 4. 보류·취소
+            {
+                selector: '#holdSection',
+                title: '4. 보류·취소 안내',
+                position: { top: '-12px', left: '-12px' },
+                description: '안내 박스 (Notice)',
+                function: '보류·취소 사유와 시점 안내',
+                behavior: [
+                    '【표시 조건】 ON_HOLD, CANCELED 일 때만',
+                    '• 사유는 status_history.reason 중 고객에게 보낼 수 있게 승인된 문구만',
+                    '• 보류에서 다시 접수로 돌아가면 이 섹션은 사라지고 타임라인에 안내가 남음'
+                ]
+            },
+            // 5. 신청 정리본
+            {
+                selector: '#summarySection',
+                title: '5. 신청 내용 (정리본)',
+                position: { top: '-12px', left: '-12px' },
+                description: '정의 목록 (Description List)',
+                function: '챗봇 접수 시점의 정리본을 보여 줌',
+                behavior: [
+                    '【데이터】 target_ad_request.summary (접수 시점 원본)',
+                    '• 광고주, 광고(업종·현장명·시공사), 목적, 타겟(확대 허용 포함), 매체·규모, 발송 희망일 1~3순위, 메시지(문구 초안), 테스트 수신번호, 기타',
+                    '• 연락처·테스트 수신번호는 가운데 마스킹',
+                    '• 확인이 필요한 조건(unverified_conditions)은 "확인 필요" 꼬리표',
+                    '【변경】 접수 후 조건 변경은 견적 단계의 [조건 변경 요청] 또는 질문으로만 받음 (정리본 원본은 바꾸지 않음)'
+                ]
+            },
+            // 6. 매체별 표
+            {
+                selector: '#mediaSection',
+                title: '6. 매체별 진행 표',
+                position: { top: '-12px', left: '-12px' },
+                description: '테이블 (Table)',
+                function: '매체, 희망 건수, 가능 인원, 확대안, 확정 건수, 발송일',
+                behavior: [
+                    '【데이터】 target_ad_request_media: req_qty / available_qty / expand_note / confirmed_qty / send_date / msg_format_cd',
+                    '• 가능 인원·확대안은 CJ 모수 회신을 중계 에이전트가 뽑고 운영자가 확인한 값 (고객 화면에는 CJ 이름 없이 "매체가 확인한 인원")',
+                    '• 값이 아직 없으면 "—"',
+                    '• 확대안은 접수 때 허용한 범위(연령·지역)에서만 안내',
+                    '• 카드사는 "준법감시 심의" 표시',
+                    '【모바일】 표는 가로 스크롤'
+                ]
+            },
+            // 7. 견적
+            {
+                selector: '#quoteSection',
+                title: '7. 견적 카드',
+                position: { top: '-12px', left: '-12px' },
+                description: '견적표 + 버튼',
+                function: '매체별 공급가·부가세·합계와 견적 확정 / 조건 변경 요청',
+                behavior: [
+                    '【금액】 api QuoteService.calc: 공급가 = 판매 단가 × 확정 건수, 부가세 10%. 판매 단가는 〔결정〕 → 목업은 0,000원 자리표시',
+                    '• 수수료율은 고객 화면에 내보내지 않음',
+                    '• 견적 안내는 운영자 확인 후 발송(항상 확인)',
+                    '【견적 확정】 POST /target-ad/requests/:no/replies {type: CONFIRM_QUOTE} → PAYMENT_WAIT, 기존 inicis 모듈로 가상계좌 발급, 확인 창 후 실행',
+                    '【조건 변경 요청】 {type: CHANGE_REQUEST, text} → AUDIENCE_REPLIED 로 돌아가 다시 모수 확인',
+                    '【유효기간】 안내일 + 3일 (QUOTED 기한). 지나면 버튼 비활성 + "다시 견적 요청"',
+                    '【안내 문구】 부가세 별도, 성공 건 기준 정산, 선불, 성과 약속 없음'
+                ]
+            },
+            // 8. 결제
+            {
+                selector: '#paymentSection',
+                title: '8. 결제 (가상계좌)',
+                position: { top: '-12px', left: '-12px' },
+                description: '계좌 정보 (payment-virtual-account-issued.html 참고)',
+                function: '선불 결제용 가상계좌 안내',
+                behavior: [
+                    '【표시 조건】 PAYMENT_WAIT',
+                    '• 입금은행, 계좌번호, 예금주, 입금자명, 입금금액(부가세 포함), 입금기한',
+                    '• [계좌번호 문자로 받기] 기존 가상계좌 화면과 같은 기능 (sendVbankIssuedNotification)',
+                    '【입금 확인】 기존 vbank 웹훅 → CREATIVE_REVIEW 로 전이, 타임라인에 "입금 확인" 안내',
+                    '【기한 경과】 계좌 만료. 견적 유효기간 안이면 재발급 버튼',
+                    '【세금계산서】 톡벨 → 고객 발행 (결제 관리 > 세금계산서)'
+                ]
+            },
+            // 9. 문구 수정 요청
+            {
+                selector: '#creativeFixSection',
+                title: '9. 문구 수정 요청',
+                position: { top: '-12px', left: '-12px' },
+                description: '수정 요청 목록 + 입력 폼',
+                function: '매체 심의 결과(수정할 표현과 이유)를 보여 주고 수정본을 받음',
+                behavior: [
+                    '【표시 조건】 CREATIVE_FIX',
+                    '【데이터】 중계 분류 CREATIVE_FIX 의 creative_fix: [{original, reason}] → 운영자 확인(처음엔 확인) 후 표시',
+                    '【수정본 제출】 POST /target-ad/requests/:no/replies {type: CREATIVE_UPDATE, text, attachmentIds} → CREATIVE_REVIEW',
+                    '• 문구는 현재 문구로 미리 채움. 이미지 바꾸기는 첨부 업로드 후 attachmentIds',
+                    '• 빈 문구·변경 없음이면 제출 막음',
+                    '【기한】 status_due_at (2일). 넘기면 발송 일정이 밀릴 수 있다고 안내'
+                ]
+            },
+            // 10. 테스트 발송 확인
+            {
+                selector: '#testCheckSection',
+                title: '10. 테스트 발송 확인',
+                position: { top: '-12px', left: '-12px' },
+                description: '이미지 카드 + 동의 체크 + 버튼',
+                function: '매체별 테스트 발송본을 보여 주고 발송 진행 또는 수정 요청을 받음',
+                behavior: [
+                    '【표시 조건】 TEST_CHECK (버튼 표시), SCHEDULED·SENT·REPORTED (읽기 전용)',
+                    '【이미지】 target_ad_attachment kind=TEST_SEND, 클릭 시 확대',
+                    '【책임 안내】 "문구·데이터 오류 확인은 광고주 책임" 고정 문구 (매체 사례 문구 기반)',
+                    '• 확인 체크를 해야 [이상 없음, 발송 진행] 활성',
+                    '【이상 없음, 발송 진행】 {type: TEST_OK} → SCHEDULED, 체크 시각 기록, CJ 회신 초안 생성',
+                    '【수정 요청】 {type: TEST_FIX, text, attachmentIds} → CREATIVE_FIX',
+                    '【기한】 발송일 전날 (마감 시각 〔CJ〕). 넘기면 발송일 변경 안내'
+                ]
+            },
+            // 11. 리포트
+            {
+                selector: '#reportSection',
+                title: '11. 발송 결과 리포트',
+                position: { top: '-12px', left: '-12px' },
+                description: '요약 수치 + 매체별 표 + 파일 받기',
+                function: '발송·성공·클릭 수와 리포트 파일 제공',
+                behavior: [
+                    '【표시 조건】 SENT (도착 전: "발송 후 영업일 4일 안에 드립니다"만 표시), REPORTED',
+                    '【데이터】 리포트 엑셀 파싱 값: result_sent / result_success / result_click',
+                    '• 클릭 수 미제공 매체(click_report_yn = N: 신한·BC·하나·삼성·현대카드 등)는 "미제공" 표시, 합계는 제공 매체만',
+                    '• 링크가 없던 신청은 클릭 수 열 대신 "링크 없음"',
+                    '• 버퍼 발송 수치(매체 화면 캡처)는 기본 비표시 〔결정〕',
+                    '【파일 받기】 REPORT_XLSX, TEST_SEND·REPORT_PROOF 묶음 다운로드',
+                    '【알림】 리포트 도착 시 TA_REPORTED 메일'
+                ]
+            },
+            // 12. 타임라인
+            {
+                selector: '#timelineSection',
+                title: '12. 톡벨 안내 타임라인 · 질문',
+                position: { top: '-12px', left: '-12px' },
+                description: '타임라인 (Timeline)',
+                function: '이 신청으로 받은 안내 메시지와 내 답변 기록, 질문 보내기',
+                behavior: [
+                    '【데이터】 target_ad_message 중 고객에게 나간 OUT(채널 NOTI_ALIMTALK·NOTI_MAIL·MYPAGE, 승인 완료) + 고객 답변(MYPAGE IN)',
+                    '• CJ 원문, 운영자 메모, 승인 대기 메시지는 보이지 않음',
+                    '• 채널 꼬리표(알림톡/메일/마이페이지/내 답변), 최신순',
+                    '【질문 보내기】 POST /target-ad/requests/:no/replies {type: QUESTION, text} → 중계 에이전트가 규칙표로 답할 수 있으면 답 초안, 아니면 운영자에게',
+                    '• 답변은 영업일 기준으로 안내'
+                ]
+            },
+            // 13. 취소 모달
+            {
+                selector: '#cancelModalBox',
+                title: '13. 신청 취소 모달',
+                position: { top: '10px', left: '10px' },
+                description: '모달 (Modal)',
+                function: '결제 전 신청 취소',
+                behavior: [
+                    '【표시 조건】 RECEIVED ~ PAYMENT_WAIT 에서 [신청 취소]',
+                    '【입력】 취소 사유 셀렉트(필수) + 자세한 사유(선택)',
+                    '【취소 요청】 POST /target-ad/requests/:no/cancel {reason} → CANCELED, status_history 기록',
+                    '• 이미 CJ 에 모수 확인을 요청한 상태면 CJ 에 취소 회신 초안 생성 (운영자 확인)',
+                    '• 가상계좌가 발급된 상태면 계좌 만료 처리',
+                    '【결제 후】 버튼 숨김, 질문으로 요청 (환불 규칙 〔결정〕)'
+                ]
+            }
+        ];
+
+        initSpecOverlay(specData);
+    </script>
+</body>
+</html>

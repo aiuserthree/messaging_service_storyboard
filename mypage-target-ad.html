@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>타겟 광고 신청 내역 - 톡벨</title>
+    <script src="js/header.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* 마이페이지 LNB + 콘텐츠 (mypage.html 과 같은 모양) */
+        .mypage-layout { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; }
+        .mypage-lnb { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 12px 0; position: sticky; top: 88px; }
+        .mypage-lnb-item { display: block; width: 100%; padding: 12px 20px; text-align: left; font-size: 14px; font-weight: 500; color: var(--text-primary); text-decoration: none; border-left: 3px solid transparent; transition: all 0.2s; }
+        .mypage-lnb-item:hover { background: var(--bg-color); color: var(--primary-color); }
+        .mypage-lnb-item.active { background: rgba(37, 99, 235, 0.08); color: var(--primary-color); border-left-color: var(--primary-color); font-weight: 600; }
+        .mypage-lnb-new { font-size: 10px; font-weight: 800; color: #fff; background: var(--danger-color); border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: 1px; }
+        .mypage-content { min-width: 0; }
+
+        .list-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .list-head h3 { font-size: 20px; font-weight: 700; }
+        .list-head p { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+        /* 내가 할 일 */
+        .todo-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .todo-card { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 16px; cursor: pointer; text-align: left; transition: all .15s; font-family: inherit; }
+        .todo-card:hover { border-color: #93c5fd; box-shadow: 0 2px 8px rgba(37,99,235,.08); }
+        .todo-card .t { font-size: 12.5px; color: var(--text-secondary); }
+        .todo-card .n { font-size: 22px; font-weight: 800; color: var(--text-primary); margin-top: 2px; }
+        .todo-card .n small { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-left: 2px; }
+        .todo-card.hot { border-color: #fdba74; background: #fff7ed; }
+        .todo-card.hot .n { color: #ea580c; }
+
+        /* 필터 */
+        .filter-bar { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 16px; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-bottom: 14px; }
+        .filter-field { display: flex; align-items: center; gap: 8px; }
+        .filter-field > label { font-size: 13px; font-weight: 600; color: #475569; white-space: nowrap; }
+        .ta-select {
+            appearance: none; -webkit-appearance: none; cursor: pointer;
+            padding: 8px 36px 8px 12px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-family: inherit;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23777' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center / 10px 6px;
+        }
+        .ta-select:focus, .filter-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+        .period-btns { display: flex; gap: 4px; }
+        .period-btn { padding: 7px 11px; font-size: 12.5px; border: 1px solid var(--border-color); background: #fff; border-radius: 8px; cursor: pointer; font-family: inherit; }
+        .period-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+        .filter-input { padding: 8px 10px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; min-width: 0; }
+        .filter-dates { display: flex; align-items: center; gap: 6px; }
+        .filter-dates .filter-input { width: 132px; }
+        .filter-check { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #475569; cursor: pointer; }
+        .filter-check input { width: 16px; height: 16px; accent-color: var(--primary-color); }
+        .filter-spacer { flex: 1; }
+
+        /* 목록 */
+        .list-meta { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+        .req-table-wrap { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; }
+        .req-table th:first-child { border-top-left-radius: 14px; }
+        .req-table th:last-child { border-top-right-radius: 14px; }
+        .req-table { width: 100%; border-collapse: collapse; }
+        .req-table th { background: #f8fafc; font-size: 12.5px; color: #475569; font-weight: 600; padding: 11px 12px; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .req-table td { padding: 14px 12px; font-size: 13.5px; border-bottom: 1px solid #eef2f7; vertical-align: middle; }
+        .req-table tbody tr { cursor: pointer; transition: background .12s; }
+        .req-table tbody tr:hover { background: #f8fafc; }
+        .req-table tbody tr:last-child td { border-bottom: none; }
+        .req-no { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; color: #475569; white-space: nowrap; }
+        .req-name { font-weight: 600; }
+        .req-name small { display: block; font-size: 12px; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+        .req-date small { display: block; font-size: 11.5px; color: var(--text-muted); }
+
+        .st { display: inline-flex; align-items: center; padding: 4px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .st-received { background: #f1f5f9; color: #475569; }
+        .st-audience { background: #e0f2fe; color: #0369a1; }
+        .st-quoted { background: #ffedd5; color: #c2410c; }
+        .st-payment { background: #fef3c7; color: #b45309; }
+        .st-review { background: #ede9fe; color: #6d28d9; }
+        .st-fix { background: #fee2e2; color: #b91c1c; }
+        .st-test { background: #ffedd5; color: #c2410c; }
+        .st-scheduled { background: #dbeafe; color: #1d4ed8; }
+        .st-sent { background: #dcfce7; color: #15803d; }
+        .st-reported { background: #d1fae5; color: #047857; }
+        .st-hold { background: #f1f5f9; color: #64748b; border: 1px dashed #94a3b8; }
+        .st-canceled { background: #f8fafc; color: #94a3b8; text-decoration: line-through; }
+
+        .todo { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 700; color: #ea580c; white-space: nowrap; }
+        .todo::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #f97316; }
+        .todo.wait { color: var(--text-muted); font-weight: 500; }
+        .todo.wait::before { background: #cbd5e1; }
+        .todo.done { color: #047857; }
+        .todo.done::before { background: #10b981; }
+
+        .pagination { margin-top: 18px; }
+
+        /* 빈 상태 */
+        .example-label { font-size: 12px; font-weight: 700; color: #64748b; margin: 36px 0 8px; display: flex; align-items: center; gap: 8px; }
+        .example-label::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+        .empty-state { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; padding: 48px 24px; text-align: center; }
+        .empty-icon { width: 64px; height: 64px; border-radius: 50%; background: #f1f5f9; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; color: #94a3b8; }
+        .empty-icon svg { width: 30px; height: 30px; }
+        .empty-state h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+        .empty-state p { font-size: 13.5px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.6; }
+        .empty-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+        /* 상태 안내 */
+        .legend { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; padding: 16px 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 18px; }
+        .legend-item { display: flex; gap: 10px; align-items: flex-start; font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+        .legend-item .st { flex-shrink: 0; min-width: 92px; justify-content: center; }
+
+        @media (max-width: 1100px) {
+            .mypage-layout { grid-template-columns: 1fr; }
+            .mypage-lnb { position: static; display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; }
+            .mypage-lnb-item { width: auto; border-left: none; border-bottom: 3px solid transparent; padding: 8px 12px; }
+            .mypage-lnb-item.active { border-bottom-color: var(--primary-color); }
+            .legend { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            html, body, .app-container, .main-content, .header-content { min-width: 0 !important; }
+            .header-content { padding: 0 16px; gap: 8px; }
+            .header-content .main-nav { display: none; }
+            .header-actions .btn { white-space: nowrap; padding: 6px 10px; font-size: 12px; }
+            .main-content { padding: 20px 16px; }
+            .page-header h2 { font-size: 22px; }
+            .mypage-lnb { flex-wrap: nowrap; overflow-x: auto; }
+            .mypage-lnb-item { white-space: nowrap; }
+            .todo-summary { grid-template-columns: repeat(2, 1fr); }
+            .filter-bar { flex-direction: column; align-items: stretch; }
+            .filter-field { flex-wrap: wrap; }
+            .filter-field > label { width: 100%; }
+            .filter-field .ta-select, .filter-field .filter-input { flex: 1; }
+            .filter-dates { width: 100%; }
+            .filter-dates .filter-input { width: auto; flex: 1; }
+            .filter-spacer { display: none; }
+            /* 표 → 카드 */
+            .req-table thead { display: none; }
+            .req-table, .req-table tbody, .req-table tr, .req-table td { display: block; width: 100%; }
+            .req-table tr { padding: 14px 16px; border-bottom: 1px solid #eef2f7; position: relative; }
+            .req-table td { border: none; padding: 2px 0; }
+            .req-table td[data-label]::before { content: attr(data-label); display: inline-block; width: 72px; font-size: 12px; color: var(--text-muted); }
+            .req-table td.c-status { position: absolute; top: 14px; right: 16px; width: auto; }
+            .req-table td.c-status::before { display: none; }
+            .req-table td.c-name { padding: 4px 0 6px; padding-right: 110px; }
+            .req-table td.c-name::before { display: none; }
+            .req-table td.c-todo { padding-top: 6px; }
+            .req-date small, .req-name small { display: inline; margin-left: 6px; }
+            .legend { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>document.write(createHeader());</script>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h2>마이페이지</h2>
+                <p class="page-description">타겟 광고 신청의 진행 상태를 확인하고, 견적 확정·문구 수정·테스트 확인을 진행합니다</p>
+            </div>
+
+            <div class="mypage-layout">
+                <nav class="mypage-lnb" id="mypageLnb">
+                    <a href="mypage.html" class="mypage-lnb-item">마이페이지</a>
+                    <a href="mypage-profile.html" class="mypage-lnb-item">내정보수정</a>
+                    <a href="mypage-password.html" class="mypage-lnb-item">비밀번호변경</a>
+                    <a href="mypage-mfa.html" class="mypage-lnb-item">2차 인증 설정</a>
+                    <a href="mypage-caller-number.html" class="mypage-lnb-item">발신번호관리</a>
+                    <a href="mypage.html#history" class="mypage-lnb-item">이용내역</a>
+                    <a href="mypage-target-ad.html" class="mypage-lnb-item active">타겟 광고 신청 내역<span class="mypage-lnb-new">4</span></a>
+                </nav>
+
+                <div class="mypage-content">
+                    <div class="list-head" id="listHead">
+                        <div>
+                            <h3>타겟 광고 신청 내역</h3>
+                            <p>상담 챗봇으로 접수한 신청입니다. 행을 누르면 상세 화면으로 이동합니다.</p>
+                        </div>
+                        <a href="target-ad-chat.html" class="btn btn-primary btn-sm">+ 새 상담 시작</a>
+                    </div>
+
+                    <!-- 내가 할 일 -->
+                    <div class="todo-summary" id="todoSummary">
+                        <button type="button" class="todo-card hot" onclick="filterByStatus('QUOTED')"><div class="t">견적 확인 필요</div><div class="n">1<small>건</small></div></button>
+                        <button type="button" class="todo-card hot" onclick="filterByStatus('PAYMENT_WAIT')"><div class="t">입금 필요</div><div class="n">1<small>건</small></div></button>
+                        <button type="button" class="todo-card hot" onclick="filterByStatus('CREATIVE_FIX')"><div class="t">문구 수정 필요</div><div class="n">1<small>건</small></div></button>
+                        <button type="button" class="todo-card hot" onclick="filterByStatus('TEST_CHECK')"><div class="t">테스트 확인 필요</div><div class="n">1<small>건</small></div></button>
+                    </div>
+
+                    <!-- 필터 -->
+                    <div class="filter-bar" id="filterBar">
+                        <div class="filter-field">
+                            <label for="statusFilter">상태</label>
+                            <select class="ta-select" id="statusFilter">
+                                <option value="">전체</option>
+                                <option value="RECEIVED">접수</option>
+                                <option value="CJ_REQUESTED">모수 확인 중</option>
+                                <option value="QUOTED">견적 안내</option>
+                                <option value="PAYMENT_WAIT">결제 대기</option>
+                                <option value="CREATIVE_REVIEW">문구 검토</option>
+                                <option value="CREATIVE_FIX">문구 수정 필요</option>
+                                <option value="TEST_CHECK">테스트 확인 필요</option>
+                                <option value="SCHEDULED">발송 예정</option>
+                                <option value="SENT">발송 완료</option>
+                                <option value="REPORTED">리포트 완료</option>
+                                <option value="ON_HOLD">보류</option>
+                                <option value="CANCELED">취소</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label>접수일</label>
+                            <div class="period-btns">
+                                <button type="button" class="period-btn">1개월</button>
+                                <button type="button" class="period-btn active">3개월</button>
+                                <button type="button" class="period-btn">6개월</button>
+                                <button type="button" class="period-btn">1년</button>
+                            </div>
+                            <div class="filter-dates">
+                                <input type="date" class="filter-input" value="2026-08-13" aria-label="시작일">
+                                <span>~</span>
+                                <input type="date" class="filter-input" value="2026-11-13" aria-label="종료일">
+                            </div>
+                        </div>
+                        <div class="filter-field">
+                            <input type="text" class="filter-input" placeholder="현장·캠페인명, 접수번호" style="width:200px;" aria-label="검색어">
+                        </div>
+                        <label class="filter-check"><input type="checkbox" id="todoOnly">내가 할 일만</label>
+                        <div class="filter-spacer"></div>
+                        <button type="button" class="btn btn-primary btn-sm">조회</button>
+                    </div>
+
+                    <!-- 목록 -->
+                    <div class="list-meta"><span>총 <strong style="color:var(--text-primary);">9</strong>건</span><span>최근 접수순</span></div>
+                    <div class="req-table-wrap" id="requestTable">
+                        <table class="req-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:150px;">접수번호</th>
+                                    <th>현장·캠페인명</th>
+                                    <th style="width:150px;">매체</th>
+                                    <th style="width:110px;">발송 희망일</th>
+                                    <th style="width:120px;">상태</th>
+                                    <th style="width:150px;">다음 할 일</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-status="RECEIVED" onclick="goDetail('TA-20261113-001')">
+                                    <td class="req-no" data-label="접수번호">TA-20261113-001</td>
+                                    <td class="req-name c-name">고덕 한빛 리버뷰<small>분양(아파트) · 접수 11/13</small></td>
+                                    <td data-label="매체">SKT 또는 직방 (추천 요청)</td>
+                                    <td class="req-date" data-label="희망일">11/20(금)<small>외 2개 날짜</small></td>
+                                    <td class="c-status"><span class="st st-received">접수</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">견적 안내 대기 (11/16)</span></td>
+                                </tr>
+                                <tr data-status="QUOTED" onclick="goDetail('TA-20261110-003')">
+                                    <td class="req-no" data-label="접수번호">TA-20261110-003</td>
+                                    <td class="req-name c-name">평택 한빛 더퍼스트<small>분양(아파트) · 접수 11/10</small></td>
+                                    <td data-label="매체">직방, 카카오페이</td>
+                                    <td class="req-date" data-label="희망일">11/24(화)<small>외 1개 날짜</small></td>
+                                    <td class="c-status"><span class="st st-quoted">견적 안내</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">견적 확인 필요</span></td>
+                                </tr>
+                                <tr data-status="PAYMENT_WAIT" onclick="goDetail('TA-20261106-002')">
+                                    <td class="req-no" data-label="접수번호">TA-20261106-002</td>
+                                    <td class="req-name c-name">오산 세교 한빛뷰<small>분양(아파트) · 접수 11/06</small></td>
+                                    <td data-label="매체">KT</td>
+                                    <td class="req-date" data-label="희망일">11/19(목)</td>
+                                    <td class="c-status"><span class="st st-payment">결제 대기</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">입금 필요 · 11/14까지</span></td>
+                                </tr>
+                                <tr data-status="TEST_CHECK" onclick="goDetail('TA-20261104-001')">
+                                    <td class="req-no" data-label="접수번호">TA-20261104-001</td>
+                                    <td class="req-name c-name">동탄 한빛 오피스텔<small>분양(오피스텔) · 접수 11/04</small></td>
+                                    <td data-label="매체">SKT, 직방, 삼성카드</td>
+                                    <td class="req-date" data-label="희망일">11/18(수)<small>매체별 상이</small></td>
+                                    <td class="c-status"><span class="st st-test">테스트 확인 필요</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">테스트 확인 필요</span></td>
+                                </tr>
+                                <tr data-status="CREATIVE_FIX" onclick="goDetail('TA-20261103-004')">
+                                    <td class="req-no" data-label="접수번호">TA-20261103-004</td>
+                                    <td class="req-name c-name">봉담 한빛 민간임대<small>분양(민간임대) · 접수 11/03</small></td>
+                                    <td data-label="매체">BC카드</td>
+                                    <td class="req-date" data-label="희망일">11/20(금)</td>
+                                    <td class="c-status"><span class="st st-fix">문구 수정 필요</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">수정본 제출 필요</span></td>
+                                </tr>
+                                <tr data-status="CJ_REQUESTED" onclick="goDetail('TA-20261102-001')">
+                                    <td class="req-no" data-label="접수번호">TA-20261102-001</td>
+                                    <td class="req-name c-name">한빛 가구 전시장 오픈<small>매장·서비스 · 접수 11/02</small></td>
+                                    <td data-label="매체">CJ ONE</td>
+                                    <td class="req-date" data-label="희망일">12/01(화)<small>외 2개 날짜</small></td>
+                                    <td class="c-status"><span class="st st-audience">모수 확인 중</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">대상 인원 확인 중</span></td>
+                                </tr>
+                                <tr data-status="SCHEDULED" onclick="goDetail('TA-20261028-002')">
+                                    <td class="req-no" data-label="접수번호">TA-20261028-002</td>
+                                    <td class="req-name c-name">안성 공도 한빛<small>분양(아파트) · 접수 10/28</small></td>
+                                    <td data-label="매체">SKT</td>
+                                    <td class="req-date" data-label="희망일">11/14(토)<small>확정</small></td>
+                                    <td class="c-status"><span class="st st-scheduled">발송 예정</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">11/14 발송 예정</span></td>
+                                </tr>
+                                <tr data-status="REPORTED" onclick="goDetail('TA-20261020-001')">
+                                    <td class="req-no" data-label="접수번호">TA-20261020-001</td>
+                                    <td class="req-name c-name">천안 한빛 센트럴<small>분양(아파트) · 접수 10/20</small></td>
+                                    <td data-label="매체">BC카드, 직방</td>
+                                    <td class="req-date" data-label="희망일">10/30(금)<small>확정</small></td>
+                                    <td class="c-status"><span class="st st-reported">리포트 완료</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo done">리포트 보기</span></td>
+                                </tr>
+                                <tr data-status="CANCELED" onclick="goDetail('TA-20261015-003')">
+                                    <td class="req-no" data-label="접수번호">TA-20261015-003</td>
+                                    <td class="req-name c-name">한빛 중고차 연말 할인<small>자동차·중고차 · 접수 10/15</small></td>
+                                    <td data-label="매체">LGU+</td>
+                                    <td class="req-date" data-label="희망일">—</td>
+                                    <td class="c-status"><span class="st st-canceled">취소</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">—</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination">
+                        <button class="page-btn">‹</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">›</button>
+                    </div>
+
+                    <!-- 빈 상태 -->
+                    <div class="example-label">목록이 없을 때 (예시)</div>
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+                        <h4>아직 신청한 타겟 광고가 없어요</h4>
+                        <p>상담 챗봇과 대화로 현장·타겟·매체·일정을 정리하면<br>대상 인원과 견적을 안내드립니다.</p>
+                        <div class="empty-actions">
+                            <a href="target-ad.html" class="btn btn-outline btn-sm">서비스 소개 보기</a>
+                            <a href="target-ad-chat.html" class="btn btn-primary btn-sm">상담 시작</a>
+                        </div>
+                    </div>
+
+                    <!-- 상태 안내 -->
+                    <div class="example-label">상태 안내</div>
+                    <div class="legend" id="statusLegend">
+                        <div class="legend-item"><span class="st st-received">접수</span>상담 챗봇으로 접수됨. 톡벨이 매체에 대상 인원 확인을 요청합니다.</div>
+                        <div class="legend-item"><span class="st st-audience">모수 확인 중</span>매체에서 조건에 맞는 인원을 확인하고 있어요.</div>
+                        <div class="legend-item"><span class="st st-quoted">견적 안내</span>가능 인원과 견적이 도착했어요. 확정하거나 조건 변경을 요청하세요.</div>
+                        <div class="legend-item"><span class="st st-payment">결제 대기</span>가상계좌로 입금해 주세요. 입금되면 문구 검토를 시작합니다.</div>
+                        <div class="legend-item"><span class="st st-review">문구 검토</span>매체가 문구와 이미지를 심의하고 있어요.</div>
+                        <div class="legend-item"><span class="st st-fix">문구 수정 필요</span>심의에서 수정 요청이 왔어요. 수정본을 제출해 주세요.</div>
+                        <div class="legend-item"><span class="st st-test">테스트 확인 필요</span>테스트 발송본을 확인하고 발송 진행을 눌러 주세요.</div>
+                        <div class="legend-item"><span class="st st-scheduled">발송 예정</span>확정한 발송일에 매체가 발송합니다.</div>
+                        <div class="legend-item"><span class="st st-sent">발송 완료</span>발송이 끝났어요. 리포트는 영업일 4일 안에 드립니다.</div>
+                        <div class="legend-item"><span class="st st-reported">리포트 완료</span>결과 리포트를 볼 수 있어요.</div>
+                        <div class="legend-item"><span class="st st-hold">보류</span>확인이 필요한 사항이 있어 잠시 멈췄어요. 안내를 확인해 주세요.</div>
+                        <div class="legend-item"><span class="st st-canceled">취소</span>신청이 취소되었어요.</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="js/footer.js"></script>
+        <script>document.write(createFooter());</script>
+    </div>
+
+    <script>
+        function goDetail(no) {
+            location.href = 'mypage-target-ad-detail.html?no=' + encodeURIComponent(no);
+        }
+        // 상태 필터 (목업: 화면에서 행만 거름)
+        function applyFilter() {
+            const status = document.getElementById('statusFilter').value;
+            const todoOnly = document.getElementById('todoOnly').checked;
+            const todoStatuses = ['QUOTED', 'PAYMENT_WAIT', 'CREATIVE_FIX', 'TEST_CHECK'];
+            document.querySelectorAll('#requestTable tbody tr').forEach(function(tr) {
+                const s = tr.dataset.status;
+                const show = (!status || s === status) && (!todoOnly || todoStatuses.indexOf(s) > -1);
+                tr.style.display = show ? '' : 'none';
+            });
+        }
+        function filterByStatus(code) {
+            document.getElementById('statusFilter').value = code;
+            applyFilter();
+        }
+        document.getElementById('statusFilter').addEventListener('change', applyFilter);
+        document.getElementById('todoOnly').addEventListener('change', applyFilter);
+        document.querySelectorAll('.period-btn').forEach(function(b) {
+            b.addEventListener('click', function() {
+                document.querySelectorAll('.period-btn').forEach(function(x) { x.classList.remove('active'); });
+                b.classList.add('active');
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initDropdownMenus === 'function') initDropdownMenus();
+        });
+    </script>
+
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            // 1. LNB
+            {
+                selector: '#mypageLnb',
+                title: '1. 마이페이지 메뉴 (LNB)',
+                position: { top: '-12px', left: '-12px' },
+                description: '세로 메뉴 (LNB)',
+                function: '마이페이지 메뉴에 "타겟 광고 신청 내역" 추가',
+                behavior: [
+                    '【추가 메뉴】 타겟 광고 신청 내역 (mypage-target-ad.html)',
+                    '• 내가 할 일이 있는 신청 수를 빨간 숫자로 표시 (견적 안내·결제 대기·문구 수정 필요·테스트 확인 필요)',
+                    '• 신청이 한 건도 없는 회원도 메뉴는 보임 (빈 상태 화면)',
+                    '【공통 반영】 다른 마이페이지 화면 LNB 와 헤더 사용자 드롭다운에도 같은 메뉴 추가 필요 (header.js urlToMenuKey 에 이 페이지 등록)'
+                ]
+            },
+            // 2. 목록 머리
+            {
+                selector: '#listHead',
+                title: '2. 목록 제목 · 새 상담 시작',
+                position: { top: '-12px', left: '-12px' },
+                description: '제목 + 버튼',
+                function: '타겟 광고 신청 목록 화면 제목과 새 상담 진입',
+                behavior: [
+                    '【새 상담 시작】 target-ad-chat.html 이동',
+                    '• 접수 전 상담 세션이 있으면 상담 화면에서 이어하기 배너가 뜸',
+                    '【접근】 로그인 회원 본인의 신청만 조회'
+                ]
+            },
+            // 3. 내가 할 일
+            {
+                selector: '#todoSummary',
+                title: '3. 내가 할 일 요약',
+                position: { top: '-12px', left: '-12px' },
+                description: '요약 카드 (Summary Card)',
+                function: '고객이 답해야 진행되는 신청 수를 상태별로 보여 줌',
+                behavior: [
+                    '【항목】',
+                    '• 견적 확인 필요 = QUOTED',
+                    '• 입금 필요 = PAYMENT_WAIT',
+                    '• 문구 수정 필요 = CREATIVE_FIX',
+                    '• 테스트 확인 필요 = TEST_CHECK',
+                    '【동작】 카드를 누르면 상태 필터를 그 상태로 바꿔 목록을 거름',
+                    '• 0건인 카드는 회색으로 표시하고 누를 수 없음'
+                ]
+            },
+            // 4. 필터
+            {
+                selector: '#filterBar',
+                title: '4. 검색 필터',
+                position: { top: '-12px', left: '-12px' },
+                description: '필터 바 (Filter Bar)',
+                function: '상태, 접수 기간, 검색어, 내가 할 일만 보기로 목록을 거름',
+                behavior: [
+                    '【상태】 셀렉트: 전체 + 고객용 상태 12개 (접수 ~ 취소)',
+                    '• 셀렉트는 기본 화살표를 끄고 오른쪽 12px 안쪽에 직접 그린 화살표, padding-right 36px',
+                    '【접수일】 1개월 / 3개월(기본) / 6개월 / 1년 버튼 + 시작·종료일 직접 입력. 최대 1년',
+                    '【검색어】 현장·캠페인명, 접수번호 부분 일치',
+                    '【내가 할 일만】 3번 네 가지 상태만 표시',
+                    '【조회】 GET /target-ad/requests?status=&from=&to=&q=&todo=&page='
+                ]
+            },
+            // 5. 목록
+            {
+                selector: '#requestTable',
+                title: '5. 신청 목록',
+                position: { top: '-12px', left: '-12px' },
+                description: '테이블 (Table)',
+                function: '접수번호, 현장·캠페인명, 매체, 발송 희망일, 상태 배지, 다음 할 일 표시',
+                behavior: [
+                    '【데이터】 GET /target-ad/requests → [{requestNo, campaignName, industry, receivedAt, media[], sendDates, status, nextAction}]',
+                    '【열】',
+                    '• 접수번호 TA-YYYYMMDD-NNN',
+                    '• 현장·캠페인명 + 업종·접수일 (분양이면 현장명, 그 외 캠페인명)',
+                    '• 매체: 매체별 줄의 매체명, "추천받기"면 "추천 요청"',
+                    '• 발송 희망일: 확정 전 1순위 + "외 N개 날짜", 확정 후 확정일 (매체별로 다르면 가장 빠른 날 + "매체별 상이")',
+                    '• 상태 배지: 내부 상태 코드를 고객용 이름으로 바꿔 표시 (CJ_REQUESTED·AUDIENCE_REPLIED → 모수 확인 중, CLOSED → 리포트 완료)',
+                    '• 다음 할 일: 고객 차례면 주황 점 + 문구(견적 확인 필요, 입금 필요 · 기한, 수정본 제출 필요, 테스트 확인 필요), 톡벨 차례면 회색 문구',
+                    '【동작】 행 클릭 → mypage-target-ad-detail.html?no={접수번호}',
+                    '【정렬·페이지】 최근 접수순, 20건씩',
+                    '【모바일】 표를 카드 형태로 바꿔 표시'
+                ]
+            },
+            // 6. 빈 상태
+            {
+                selector: '#emptyState',
+                title: '6. 빈 상태',
+                position: { top: '-12px', left: '-12px' },
+                description: '빈 상태 (Empty State)',
+                function: '신청이 없거나 조건에 맞는 신청이 없을 때',
+                behavior: [
+                    '【신청이 한 건도 없음】 "아직 신청한 타겟 광고가 없어요" + [서비스 소개 보기] [상담 시작]',
+                    '【필터 결과 없음】 "조건에 맞는 신청이 없어요" + [필터 초기화] (버튼 구성만 다름)',
+                    '• 목록·페이지네이션 자리에 표시'
+                ]
+            },
+            // 7. 상태 안내
+            {
+                selector: '#statusLegend',
+                title: '7. 상태 배지 안내',
+                position: { top: '-12px', left: '-12px' },
+                description: '범례 (Legend)',
+                function: '고객용 상태 12개의 뜻을 안내',
+                behavior: [
+                    '【상태 매핑】 (설계서 3장 → 고객용 이름)',
+                    '• RECEIVED 접수 / CJ_REQUESTED·AUDIENCE_REPLIED 모수 확인 중 / QUOTED 견적 안내 / PAYMENT_WAIT 결제 대기',
+                    '• CREATIVE_REVIEW 문구 검토 / CREATIVE_FIX 문구 수정 필요 / TEST_CHECK 테스트 확인 필요 / SCHEDULED 발송 예정',
+                    '• SENT 발송 완료 / REPORTED·CLOSED 리포트 완료 / ON_HOLD 보류 / CANCELED 취소',
+                    '【색】 고객 차례(견적·테스트: 주황, 결제: 노랑, 수정: 빨강), 진행 중(파랑·보라), 완료(초록), 보류·취소(회색)',
+                    '• 고객 화면에는 CJ 이름을 쓰지 않고 "매체", "톡벨"로 표기'
+                ]
+            }
+        ];
+
+        initSpecOverlay(specData);
+    </script>
+</body>
+</html>
