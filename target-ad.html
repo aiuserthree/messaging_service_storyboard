@@ -7,19 +7,21 @@
     <title>타겟 광고 메시지 - 톡벨</title>
     <script src="js/header.js"></script>
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/tokbell-theme.css">
+    <script>if(/[?&]capture\b/.test(location.search))document.documentElement.classList.add('capture');</script>
     <style>
         /* ===== 공통 섹션 ===== */
         .ta-section { margin-bottom: 64px; }
         .ta-section-head { text-align: center; margin-bottom: 28px; }
-        .ta-eyebrow { display: inline-block; font-size: 12px; font-weight: 700; color: var(--primary-color); background: rgba(37,99,235,.08); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
+        .ta-eyebrow { display: inline-block; font-size: 12px; font-weight: 700; color: var(--primary-color); background: rgba(100,160,24,.08); padding: 4px 10px; border-radius: 999px; margin-bottom: 10px; }
         .ta-section-head h3 { font-size: 26px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 8px; }
         .ta-section-head p { font-size: 15px; color: var(--text-secondary); }
 
         /* ===== 히어로 ===== */
         .ta-hero {
             display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: center;
-            background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 55%, #f5f3ff 100%);
-            border: 1px solid #dbeafe; border-radius: 24px; padding: 48px 52px; margin-bottom: 28px;
+            background: linear-gradient(135deg, #f1f9ec 0%, #eef8fd 55%, #f2fafd 100%);
+            border: 1px solid #e2f5dc; border-radius: 24px; padding: 48px 52px; margin-bottom: 28px;
         }
         .ta-hero-badge { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; font-weight: 700; color: #4338ca; background: #fff; border: 1px solid #c7d2fe; padding: 5px 12px; border-radius: 999px; margin-bottom: 16px; }
         .ta-hero h2 { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; color: #0f172a; margin-bottom: 14px; }
@@ -50,8 +52,8 @@
         .ta-media-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.55; flex: 1; }
         .ta-tags { display: flex; flex-wrap: wrap; gap: 6px; }
         .ta-tag { font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 6px; background: #f1f5f9; color: #475569; }
-        .ta-tag.blue { background: rgba(37,99,235,.08); color: var(--primary-color); }
-        .ta-tag.purple { background: rgba(124,92,219,.1); color: #6d28d9; }
+        .ta-tag.blue { background: rgba(100,160,24,.08); color: var(--primary-color); }
+        .ta-tag.purple { background: rgba(124,92,219,.1); color: #0083c2; }
         .ta-tag.amber { background: #fffbeb; color: #b45309; }
 
         /* ===== 최소 건수 표 ===== */
@@ -81,7 +83,7 @@
         .ta-step-no { width: 32px; height: 32px; margin: 0 auto 10px; border-radius: 50%; background: var(--primary-color); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 14px; }
         .ta-step-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; word-break: keep-all; }
         .ta-step-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; word-break: keep-all; }
-        .ta-step-who { margin-top: 10px; font-size: 11px; font-weight: 700; color: #6d28d9; background: rgba(124,92,219,.08); border-radius: 999px; padding: 3px 8px; display: inline-block; }
+        .ta-step-who { margin-top: 10px; font-size: 11px; font-weight: 700; color: #0083c2; background: rgba(124,92,219,.08); border-radius: 999px; padding: 3px 8px; display: inline-block; }
         .ta-step-who.me { color: #b45309; background: #fffbeb; }
 
         /* ===== 알아 둘 점 ===== */
@@ -115,7 +117,7 @@
         .ta-faq-a { padding: 0 20px 18px 42px; font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
 
         /* ===== 하단 CTA ===== */
-        .ta-bottom-cta { text-align: center; background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%); color: #fff; border-radius: 24px; padding: 44px 24px; }
+        .ta-bottom-cta { text-align: center; background: linear-gradient(135deg, #64a018 0%, #4a7812 100%); color: #fff; border-radius: 24px; padding: 44px 24px; }
         .ta-bottom-cta h3 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
         .ta-bottom-cta p { font-size: 15px; opacity: .9; margin-bottom: 22px; }
         .ta-bottom-cta .btn { background: #fff; color: var(--primary-color); }

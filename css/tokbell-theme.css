@@ -1,0 +1,45 @@
+/*
+ * 톡벨 운영 사이트(tokbell.com) 톤앤매너 테마 — 타겟 광고 고객 화면 4종 전용
+ * 적용: target-ad.html, target-ad-chat.html, mypage-target-ad.html, mypage-target-ad-detail.html
+ * common.css 뒤에 불러와 공통 변수(파랑)를 톡벨 초록으로 덮어쓴다. 다른 페이지에는 영향 없음.
+ * 색 출처: tokbell.com CSS 변수 (--color-tokbell-*)
+ */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+
+:root {
+    --tb-green-500: #64a018;
+    --tb-green-700: #4a7812;
+    --tb-green-100: #e2f5dc;
+    --tb-green-50: #f1f9ec;
+    --tb-black: #171717;
+    --tb-blue-500: #009fe6;
+    --tb-blue-50: #eaf7fd;
+    --tb-orange-500: #e89500;
+    --tb-orange-100: #fff4ec;
+    --tb-gray-100: #f5f5f5;
+    --tb-bg-light: #f7f7f8;
+
+    --primary-color: var(--tb-green-500);
+    --primary-hover: var(--tb-green-700);
+    --bg-color: var(--tb-bg-light);
+}
+
+body {
+    font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    letter-spacing: -0.01em;
+}
+
+/* 공통 버튼: 톡벨은 초록 채움 버튼 + 검정 테두리 보조 버튼 */
+.btn-primary {
+    background-color: var(--tb-green-500);
+    box-shadow: 0 2px 8px rgba(100, 160, 24, 0.25);
+}
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--tb-green-700);
+    box-shadow: 0 4px 12px rgba(100, 160, 24, 0.35);
+}
+
+/* 캡처 모드(?capture): 화면설계 버튼 숨김, 내부 스크롤 영역을 펼쳐 전체 페이지가 한 번에 보이게 */
+html.capture .spec-toggle-btn { display: none !important; }
+html.capture .chat-log { height: auto !important; max-height: none !important; overflow: visible !important; }
+html.capture .summary-body { max-height: none !important; overflow: visible !important; }

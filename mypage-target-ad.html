@@ -7,13 +7,15 @@
     <title>타겟 광고 신청 내역 - 톡벨</title>
     <script src="js/header.js"></script>
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/tokbell-theme.css">
+    <script>if(/[?&]capture\b/.test(location.search))document.documentElement.classList.add('capture');</script>
     <style>
         /* 마이페이지 LNB + 콘텐츠 (mypage.html 과 같은 모양) */
         .mypage-layout { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; }
         .mypage-lnb { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 12px 0; position: sticky; top: 88px; }
         .mypage-lnb-item { display: block; width: 100%; padding: 12px 20px; text-align: left; font-size: 14px; font-weight: 500; color: var(--text-primary); text-decoration: none; border-left: 3px solid transparent; transition: all 0.2s; }
         .mypage-lnb-item:hover { background: var(--bg-color); color: var(--primary-color); }
-        .mypage-lnb-item.active { background: rgba(37, 99, 235, 0.08); color: var(--primary-color); border-left-color: var(--primary-color); font-weight: 600; }
+        .mypage-lnb-item.active { background: rgba(100,160,24, 0.08); color: var(--primary-color); border-left-color: var(--primary-color); font-weight: 600; }
         .mypage-lnb-new { font-size: 10px; font-weight: 800; color: #fff; background: var(--danger-color); border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: 1px; }
         .mypage-content { min-width: 0; }
 
@@ -24,7 +26,7 @@
         /* 내가 할 일 */
         .todo-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
         .todo-card { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 16px; cursor: pointer; text-align: left; transition: all .15s; font-family: inherit; }
-        .todo-card:hover { border-color: #93c5fd; box-shadow: 0 2px 8px rgba(37,99,235,.08); }
+        .todo-card:hover { border-color: #93c5fd; box-shadow: 0 2px 8px rgba(100,160,24,.08); }
         .todo-card .t { font-size: 12.5px; color: var(--text-secondary); }
         .todo-card .n { font-size: 22px; font-weight: 800; color: var(--text-primary); margin-top: 2px; }
         .todo-card .n small { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-left: 2px; }
@@ -40,7 +42,7 @@
             padding: 8px 36px 8px 12px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-family: inherit;
             background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23777' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center / 10px 6px;
         }
-        .ta-select:focus, .filter-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+        .ta-select:focus, .filter-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(100,160,24,.1); }
         .period-btns { display: flex; gap: 4px; }
         .period-btn { padding: 7px 11px; font-size: 12.5px; border: 1px solid var(--border-color); background: #fff; border-radius: 8px; cursor: pointer; font-family: inherit; }
         .period-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
@@ -72,10 +74,10 @@
         .st-audience { background: #e0f2fe; color: #0369a1; }
         .st-quoted { background: #ffedd5; color: #c2410c; }
         .st-payment { background: #fef3c7; color: #b45309; }
-        .st-review { background: #ede9fe; color: #6d28d9; }
+        .st-review { background: #eaf7fd; color: #0083c2; }
         .st-fix { background: #fee2e2; color: #b91c1c; }
         .st-test { background: #ffedd5; color: #c2410c; }
-        .st-scheduled { background: #dbeafe; color: #1d4ed8; }
+        .st-scheduled { background: #e2f5dc; color: #4a7812; }
         .st-sent { background: #dcfce7; color: #15803d; }
         .st-reported { background: #d1fae5; color: #047857; }
         .st-hold { background: #f1f5f9; color: #64748b; border: 1px dashed #94a3b8; }
