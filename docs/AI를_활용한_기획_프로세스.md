@@ -485,7 +485,7 @@ docs/
 ### 🔗 실제 결과물 확인
 
 - **사용자 사이트**: https://spec-pearl-mu.vercel.app/
-- **어드민 사이트**: https://admin-weld-ten.vercel.app/
+- **어드민 사이트**: https://tokbell-admin.vercel.app/
 
 ### ⏱️ 소요 기간
 
