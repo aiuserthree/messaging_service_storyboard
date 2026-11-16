@@ -79,6 +79,25 @@
         /* 입력 모드 예시 */
         .modes-title { font-size: 18px; font-weight: 700; margin: 32px 0 6px; }
         .modes-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+        .copy-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 10px; }
+        .copy-meta b { color: var(--text-primary); }
+        .copy-meta-note { color: var(--text-muted); }
+        .copy-box { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .copy-auto { font-size: 12px; color: var(--text-muted); background: #f8fafc; padding: 7px 12px; }
+        .copy-auto.top { border-bottom: 1px dashed var(--border-color); }
+        .copy-auto.bottom { border-top: 1px dashed var(--border-color); }
+        .copy-auto em { font-style: normal; color: #94a3b8; margin-left: 4px; }
+        .copy-text { display: block; width: 100%; border: none; resize: vertical; padding: 12px; font: inherit; font-size: 14px; line-height: 1.7; min-height: 140px; outline: none; }
+        .copy-count { text-align: right; font-size: 12.5px; color: var(--text-secondary); margin-top: 6px; }
+        .copy-count #copyCount { font-weight: 700; color: var(--text-primary); }
+        .copy-count.over #copyCount { color: #dc2626; }
+        .copy-count-note { color: var(--text-muted); }
+        .copy-checks { list-style: none; margin: 10px 0 0; padding: 0; font-size: 12.5px; line-height: 1.7; }
+        .copy-checks li { padding-left: 20px; position: relative; }
+        .copy-checks li::before { position: absolute; left: 0; font-weight: 700; }
+        .copy-checks li.ok::before { content: '✓'; color: #64a018; }
+        .copy-checks li.info::before { content: 'i'; color: #0083c2; left: 4px; }
+        .copy-checks li.warn::before { content: '!'; color: #e89500; left: 4px; }
         .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .mode-card { background: #fff; border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; }
         .mode-card.wide { grid-column: 1 / -1; }
@@ -459,6 +478,31 @@
                             </div>
                         </div>
 
+                        <!-- 문구 입력 -->
+                        <div class="mode-card wide" id="modeCopy">
+                            <div class="mode-label"><span class="mode-step">⑧ 메시지 · 문구</span><span class="mode-code">input_mode: copy</span></div>
+                            <div class="mode-q">광고 문구 초안이 있으면 붙여 넣어 주세요. 없으면 [작성 도움 필요]를 눌러 주세요.</div>
+                            <div class="widget">
+                                <div class="copy-meta"><span>메시지 형태 <b>장문 문자 (LMS)</b></span><span>매체 <b>SKT · 직방</b></span><span class="copy-meta-note">직방은 앱 메시지라 이미지와 버튼이 함께 나갑니다</span></div>
+                                <div class="copy-box">
+                                    <div class="copy-auto top">(광고)[매체명] <em>← 매체가 자동으로 붙임</em></div>
+                                    <textarea class="copy-text" id="copyText" rows="6" aria-label="광고 문구">고덕 한빛 리버뷰 잔여세대 분양
+고덕국제신도시 생활권, 84㎡ 선착순 계약
+모델하우스: 평택역 도보 5분
+분양 문의 1600-0000</textarea>
+                                    <div class="copy-auto bottom">무료 수신거부 080-○○○-○○○○ <em>← 매체가 자동으로 붙임</em></div>
+                                </div>
+                                <div class="copy-count" id="copyCountWrap"><span id="copyCount">118</span> / 2,000 byte <span class="copy-count-note">(장문 문자 기준, 한글 1자 = 2byte)</span></div>
+                                <ul class="copy-checks">
+                                    <li class="ok">문의 번호가 본문에 있어요 (1600-0000)</li>
+                                    <li class="info">맨 앞 (광고)[매체명]과 수신거부 번호는 매체가 붙이니 본문에 넣지 않아도 돼요</li>
+                                    <li class="info">문구는 매체 심의에서 일부 표현이 바뀔 수 있어요. 카드사는 준법감시 심의가 있어요</li>
+                                    <li class="warn">'최저가', '100%', '보장' 같은 표현은 심의에서 반려될 수 있어요</li>
+                                </ul>
+                                <div class="widget-actions"><button class="btn btn-sm btn-outline">작성 도움 필요</button><button class="btn btn-sm btn-outline">이미지 첨부로</button><button class="btn btn-sm btn-primary">문구 입력 완료</button></div>
+                            </div>
+                        </div>
+
                         <!-- 동의 -->
                         <div class="mode-card wide" id="modeConsent">
                             <div class="mode-label"><span class="mode-step">⑩ 동의</span><span class="mode-code">input_mode: consent</span></div>
@@ -680,6 +724,18 @@
         });
     </script>
 
+    <script>
+        // 문구 바이트 수(장문 문자 기준, 한글 등 2byte) — 설계 보기용
+        (function () {
+            var ta = document.getElementById('copyText'), out = document.getElementById('copyCount'), wrap = document.getElementById('copyCountWrap');
+            if (!ta) return;
+            function count() {
+                var n = 0; for (var i = 0; i < ta.value.length; i++) n += ta.value.charCodeAt(i) > 127 ? 2 : 1;
+                out.textContent = n.toLocaleString(); wrap.classList.toggle('over', n > 2000);
+            }
+            ta.addEventListener('input', count); count();
+        })();
+    </script>
     <!-- 화면설계 오버레이 -->
     <script src="js/spec-overlay.js"></script>
     <script>
@@ -842,6 +898,7 @@
                 description: '텍스트 입력 + 첨부 버튼',
                 function: '고객 입력을 보내고 이미지를 첨부',
                 behavior: [
+                    '【단계별로 바뀜】 지역·날짜·이미지·동의·문구 단계에서는 이 일반 입력칸 대신 단계 전용 입력 도구가 뜸(아래 예시 11~15). 광고 문구는 ⑧ 문구 입력(input_mode: copy)에서 받음',
                     '【전송】',
                     '• POST /target-ad/chat/sessions/:id/messages {text?, quickReply?, attachmentIds?} → 응답은 SSE (delta: 글자 조각, final: state_patch·step·quick_replies·input_mode·show_review·guard_flags)',
                     '• Enter 전송, Shift+Enter 줄바꿈, 한글 조합 중 Enter 는 무시',
@@ -902,10 +959,29 @@
                     '• 발송 전 테스트 문자를 보내며 문구·데이터 오류 확인은 광고주 책임이라고 안내'
                 ]
             },
-            // 14. 동의
+            // 14. 문구 입력
+            {
+                selector: '#modeCopy',
+                title: '14. ⑧ 문구 입력 (input_mode: copy)',
+                position: { top: '-12px', left: '-12px' },
+                description: '여러 줄 입력 (Textarea) + 바이트 수 + 안내',
+                function: '광고 문구 초안을 붙여 넣는 전용 입력. 이 단계에서는 대화창 아래 일반 입력칸 대신 이 입력칸이 뜸',
+                behavior: [
+                    '【표시 조건】 ⑧ 메시지 단계에서 메시지 형태를 고른 뒤 (state.step = S8, 항목 message.draft)',
+                    '• 위에 고른 메시지 형태와 매체를 보여 줌. 앱 메시지 매체(직방·호갱노노·카카오페이)가 있으면 이미지·버튼이 함께 나간다고 안내',
+                    '【입력칸】 위·아래 회색 줄은 매체가 자동으로 붙이는 부분: 맨 앞 (광고)[매체명], 끝 무료 수신거부 번호 (CJ 발송 사례 기준). 고객은 본문만 씀',
+                    '【바이트 수】 장문 문자 기준 2,000byte, 한글 등 2byte · 영문·숫자 1byte로 셈. 넘으면 숫자를 빨갛게 표시하고 줄이도록 안내',
+                    '• 매체가 붙이는 머리·끝 문구가 차지하는 몫과 앱 메시지 글자 수 한도는 〔CJ 확인〕',
+                    '【자동 확인 (코드)】 문의 번호가 본문에 있는지, (광고)·수신거부를 고객이 직접 넣었는지(중복 안내), 심의에서 문제될 수 있는 표현(최저가·100%·보장 등) 알림',
+                    '• 확인은 안내일 뿐 접수를 막지 않음. 최종 문구는 CJ 1차 검토와 매체 심의에서 정해짐',
+                    '【버튼】 [작성 도움 필요] → message.needs_writing_help = true, 담당 검토 때 문구 제안 · [이미지 첨부로] → ⑧ 이미지(input_mode: file) · [문구 입력 완료] → 다음 항목(링크·문의 번호·테스트 수신번호)',
+                    '【API】 POST /target-ad/chat/sessions/:id/messages {text: 문구, quickReply?} → state.message.draft 저장'
+                ]
+            },
+            // 15. 동의
             {
                 selector: '#modeConsent',
-                title: '14. ⑩ 동의 (input_mode: consent)',
+                title: '15. ⑩ 동의 (input_mode: consent)',
                 position: { top: '-12px', left: '-12px' },
                 description: '체크박스 (Checkbox)',
                 function: '개인정보 수집·이용(필수), 제3자 제공, 마케팅(선택) 동의',
@@ -918,10 +994,10 @@
                     '【보기】 약관 전문 모달'
                 ]
             },
-            // 15. 요약 확인
+            // 16. 요약 확인
             {
                 selector: '#reviewCard',
-                title: '15. 요약 확인 카드 (show_review)',
+                title: '16. 요약 확인 카드 (show_review)',
                 position: { top: '-12px', left: '-12px' },
                 description: '요약 카드 + 버튼',
                 function: '정리본을 보여 주고 버튼으로만 접수',
@@ -936,10 +1012,10 @@
                     '【표시】 연락처는 마스킹, 테스트 수신번호는 "외 N개"'
                 ]
             },
-            // 16. 단계 진행 표시
+            // 17. 단계 진행 표시
             {
                 selector: '#stepProgress',
-                title: '16. 단계 진행 표시 ①~⑩',
+                title: '17. 단계 진행 표시 ①~⑩',
                 position: { top: '-12px', left: '-12px' },
                 description: '진행 바 + 단계 목록',
                 function: '지금 몇 단계인지, 어디까지 끝났는지 표시',
@@ -949,10 +1025,10 @@
                     '• 고객이 한 번에 여러 항목을 말하면(C03) 여러 단계가 한꺼번에 끝남으로 바뀜'
                 ]
             },
-            // 17. 항목별 값
+            // 18. 항목별 값
             {
                 selector: '#summaryFields',
-                title: '17. 지금까지 정리 (항목별 값)',
+                title: '18. 지금까지 정리 (항목별 값)',
                 position: { top: '-12px', left: '-12px' },
                 description: '정의 목록 (Summary)',
                 function: '대화에서 채워진 값을 단계별로 실시간 표시',
@@ -967,10 +1043,10 @@
                     '【모바일】 대화창 위로 올라오고 접어 둘 수 있음'
                 ]
             },
-            // 18. 챗봇 메모
+            // 19. 챗봇 메모
             {
                 selector: '#botMemo',
-                title: '18. 챗봇 메모',
+                title: '19. 챗봇 메모',
                 position: { top: '-12px', left: '-12px' },
                 description: '메모 박스 (Memo)',
                 function: '확인이 필요한 점과 바뀐 내용을 모아 보여 줌',
@@ -981,10 +1057,10 @@
                     '• 고객에게도 보여 주어 무엇을 확인할지 알 수 있게 함 (내부 판단·수수료 등은 넣지 않음)'
                 ]
             },
-            // 19. 접수 완료 모달
+            // 20. 접수 완료 모달
             {
                 selector: '#doneModalBox',
-                title: '19. 접수 완료 모달',
+                title: '20. 접수 완료 모달',
                 position: { top: '10px', left: '10px' },
                 description: '모달 (Modal)',
                 function: '접수번호와 다음 안내 시점을 알리고 마이페이지로 안내',
