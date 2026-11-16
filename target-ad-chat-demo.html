@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>타겟 광고 상담 시연 - 톡벨</title>
+    <script src="js/header.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/tokbell-theme.css">
+    <script>if(/[?&]capture\b/.test(location.search))document.documentElement.classList.add('capture');</script>
+    <style>
+        .page-header { margin-bottom: 16px; }
+        .page-header-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+        .page-header-row a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+        .page-header-row a:hover { color: var(--primary-color); }
+
+        /* 시연 도구 막대 */
+        .demo-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: #1e293b; color: #e2e8f0; border-radius: 14px; padding: 10px 14px; margin-bottom: 16px; }
+        .demo-badge { font-size: 12px; font-weight: 800; color: #1e293b; background: #fde047; border-radius: 6px; padding: 3px 9px; letter-spacing: .02em; flex-shrink: 0; }
+        .demo-now { font-size: 13.5px; min-width: 0; flex: 1; }
+        .demo-now b { color: #fff; font-weight: 700; }
+        .demo-now span { color: #94a3b8; margin-left: 6px; font-size: 12.5px; }
+        .demo-hint { font-size: 12px; color: #94a3b8; }
+        .demo-actions { display: flex; gap: 6px; margin-left: auto; }
+        .demo-btn { border: 1px solid #475569; background: #334155; color: #fff; border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+        .demo-btn:hover:not(:disabled) { background: #475569; }
+        .demo-btn:disabled { opacity: .4; cursor: not-allowed; }
+        .demo-btn.primary { background: #64a018; border-color: #64a018; }
+        .demo-btn.primary:hover { background: #4a7812; }
+
+        /* 레이아웃 */
+        .chat-layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: start; }
+
+        /* 대화창 */
+        .chat-panel { background: #fff; border: 1px solid var(--border-color); border-radius: 20px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; }
+        .chat-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border-color); }
+        .chat-avatar { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #64a018, #009fe6); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+        .chat-head-name { font-size: 15px; font-weight: 700; }
+        .chat-head-sub { font-size: 12px; color: var(--text-secondary); }
+        .chat-head-sub i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #64a018; margin-right: 5px; }
+        .chat-head-actions { margin-left: auto; display: flex; gap: 6px; }
+
+        .chat-log { background: #f8fafc; padding: 20px; height: clamp(460px, calc(100vh - 330px), 720px); overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+        .chat-log > * { flex-shrink: 0; }
+        .chat-step-divider { align-self: center; font-size: 11.5px; font-weight: 700; color: #64748b; background: #e2e8f0; border-radius: 999px; padding: 3px 12px; }
+        .msg { display: flex; gap: 10px; max-width: 88%; animation: msgIn .25s ease-out; }
+        @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+        .msg.bot { align-self: flex-start; }
+        .msg.me { align-self: flex-end; flex-direction: row-reverse; }
+        .msg-avatar { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, #64a018, #009fe6); color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .bubble { background: #fff; border: 1px solid var(--border-color); border-radius: 4px 16px 16px 16px; padding: 12px 14px; font-size: 14px; line-height: 1.65; color: var(--text-primary); min-width: 0; }
+        .msg.me .bubble { background: var(--primary-color); color: #fff; border-color: var(--primary-color); border-radius: 16px 4px 16px 16px; white-space: pre-line; word-break: keep-all; }
+        .bubble ul { padding-left: 18px; margin: 6px 0; }
+        .bubble strong { font-weight: 700; }
+        .bubble.warn { border-color: #fcd34d; background: #fffbeb; }
+        .info-card { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 12px; margin: 8px 0; font-size: 13px; }
+        .info-card div { display: flex; gap: 10px; }
+        .info-card .k { color: var(--text-secondary); width: 56px; flex-shrink: 0; }
+        .me-chips { display: flex; flex-wrap: wrap; gap: 6px; white-space: normal; }
+        .me-chips span { background: rgba(255,255,255,.18); border-radius: 6px; padding: 2px 8px; font-size: 13px; }
+
+        /* 입력 중 표시 */
+        .typing .bubble { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 13px; padding: 10px 14px; }
+        .typing-dots { display: inline-flex; gap: 4px; }
+        .typing-dots i { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; animation: dot 1s infinite ease-in-out; }
+        .typing-dots i:nth-child(2) { animation-delay: .15s; }
+        .typing-dots i:nth-child(3) { animation-delay: .3s; }
+        @keyframes dot { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+
+        /* 빠른 답 버튼 */
+        .qr-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .qr { border: 1px solid #c5e6b4; background: #fff; color: var(--primary-color); border-radius: 999px; padding: 6px 13px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; font-family: inherit; }
+        .qr:hover { background: #f1f9ec; }
+        .qr.selected { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+        .qr.next:not(.selected) { box-shadow: 0 0 0 3px rgba(100,160,24,.22); animation: nextPulse 1.6s infinite; }
+        @keyframes nextPulse { 0%, 100% { box-shadow: 0 0 0 2px rgba(100,160,24,.15); } 50% { box-shadow: 0 0 0 5px rgba(100,160,24,.28); } }
+        .qr-group.done .qr { cursor: default; opacity: .55; animation: none; box-shadow: none; }
+        .qr-group.done .qr.selected { opacity: 1; }
+        .qr-group.alt { flex-direction: column; align-items: stretch; }
+        .qr-group.alt .qr { text-align: left; border-radius: 10px; padding: 10px 14px; }
+        .qr-done { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+        .qr-done:hover { background: #4a7812; }
+        .qr-hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+        .qr-nudge { font-size: 12px; color: #b45309; margin-top: 6px; }
+
+        /* 입력 도구 카드 (대화창 안) */
+        .msg.tool { max-width: 92%; width: 560px; padding-left: 40px; }
+        .msg.tool .widget { flex: 1; min-width: 0; }
+        .widget { background: #fff; border: 1px solid #c5e6b4; border-radius: 12px; padding: 14px; box-shadow: 0 2px 10px rgba(100,160,24,.08); }
+        .widget-title { display: flex; gap: 6px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+        .widget-step { font-size: 12px; font-weight: 700; color: #fff; background: #475569; border-radius: 6px; padding: 2px 8px; }
+        .widget-code { font-size: 11.5px; font-family: ui-monospace, Menlo, monospace; color: #0083c2; background: rgba(0,131,194,.08); border-radius: 6px; padding: 2px 8px; }
+        .widget-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+        /* 문구 입력 */
+        .copy-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 10px; }
+        .copy-meta b { color: var(--text-primary); }
+        .copy-meta-note { color: var(--text-muted); }
+        .copy-box { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .copy-auto { font-size: 12px; color: var(--text-muted); background: #f8fafc; padding: 7px 12px; }
+        .copy-auto.top { border-bottom: 1px dashed var(--border-color); }
+        .copy-auto.bottom { border-top: 1px dashed var(--border-color); }
+        .copy-auto em { font-style: normal; color: #94a3b8; margin-left: 4px; }
+        .copy-text { display: block; width: 100%; border: none; resize: vertical; padding: 12px; font: inherit; font-size: 14px; line-height: 1.7; min-height: 150px; outline: none; }
+        .copy-count { text-align: right; font-size: 12.5px; color: var(--text-secondary); margin-top: 6px; }
+        .copy-count .n { font-weight: 700; color: var(--text-primary); }
+        .copy-count.over .n { color: #dc2626; }
+        .copy-count-note { color: var(--text-muted); }
+        .copy-checks { list-style: none; margin: 10px 0 0; padding: 0; font-size: 12.5px; line-height: 1.7; }
+        .copy-checks li { padding-left: 20px; position: relative; }
+        .copy-checks li::before { position: absolute; left: 0; font-weight: 700; }
+        .copy-checks li.ok::before { content: '✓'; color: #64a018; }
+        .copy-checks li.info::before { content: 'i'; color: #0083c2; left: 4px; }
+        .copy-checks li.warn::before { content: '!'; color: #e89500; left: 4px; }
+        .btn-ai { color: #4a7812; border-color: #c5e6b4; background: #f1f9ec; }
+        .copy-ai-note { margin-top: 8px; font-size: 12.5px; color: #4a7812; background: #f1f9ec; border: 1px solid #c5e6b4; border-radius: 8px; padding: 7px 10px; }
+
+        /* 날짜 */
+        .date-row { display: grid; grid-template-columns: 64px 1fr; gap: 10px; align-items: center; margin-bottom: 8px; }
+        .date-row label { font-size: 13px; font-weight: 600; }
+        .date-row label em { font-style: normal; color: var(--danger-color); }
+        .date-row input { padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background: #fff; min-width: 0; width: 100%; font-family: inherit; }
+        .date-warn { font-size: 12.5px; color: #b45309; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 8px 10px; margin-top: 4px; line-height: 1.55; }
+
+        /* 지역 칩 */
+        .chip-row-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin: 2px 0 6px; }
+        .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .chip { border: 1px solid var(--border-color); background: #fff; border-radius: 8px; padding: 6px 11px; font-size: 13px; cursor: pointer; font-family: inherit; color: var(--text-primary); }
+        .chip.on { border-color: var(--primary-color); background: rgba(100,160,24,.08); color: var(--primary-color); font-weight: 600; }
+        .chip.next:not(.on) { box-shadow: 0 0 0 3px rgba(100,160,24,.22); animation: nextPulse 1.6s infinite; }
+        .chip .cnt { font-size: 11px; color: var(--primary-color); margin-left: 4px; }
+        .region-empty { font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px; }
+        .picked { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; border-top: 1px dashed #cbd5e1; min-height: 34px; }
+        .picked span { background: var(--primary-color); color: #fff; border-radius: 999px; padding: 4px 10px; font-size: 12.5px; }
+        .picked span b { margin-left: 6px; font-weight: 400; opacity: .8; cursor: pointer; }
+        .picked .none { background: none; color: var(--text-muted); padding: 4px 0; }
+
+        /* 파일 */
+        .dropzone { border: 2px dashed #cbd5e1; border-radius: 12px; padding: 18px; text-align: center; font-size: 13px; color: var(--text-secondary); background: #fff; }
+        .dropzone button { border: none; background: none; color: var(--primary-color); font-weight: 700; cursor: pointer; font: inherit; font-weight: 700; text-decoration: underline; }
+        .file-row { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 10px; margin-top: 10px; font-size: 13px; }
+        .file-thumb { width: 40px; height: 40px; border-radius: 6px; background: repeating-linear-gradient(45deg,#e2e8f0,#e2e8f0 6px,#eef2f7 6px,#eef2f7 12px); flex-shrink: 0; }
+        .file-row .meta { flex: 1; min-width: 0; }
+        .file-row .meta div:last-child { font-size: 11.5px; color: var(--text-muted); }
+        .file-row button { border: none; background: none; color: var(--text-muted); cursor: pointer; font-size: 13px; font-family: inherit; }
+        .file-progress { height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden; margin-top: 4px; }
+        .file-progress i { display: block; height: 100%; width: 0; background: var(--primary-color); transition: width .5s ease-out; }
+
+        /* 동의 */
+        .consent-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #eef2f7; font-size: 13.5px; }
+        .consent-row:last-of-type { border-bottom: none; }
+        .consent-row.all { font-weight: 700; border-bottom: 1px solid var(--border-color); }
+        .consent-row input { width: 18px; height: 18px; accent-color: var(--primary-color); flex-shrink: 0; }
+        .consent-row label { flex: 1; cursor: pointer; }
+        .consent-tag { font-size: 11px; font-weight: 700; border-radius: 4px; padding: 1px 6px; margin-right: 4px; }
+        .consent-tag.req { background: #fee2e2; color: #dc2626; }
+        .consent-tag.opt { background: #f1f5f9; color: #64748b; }
+        .consent-row a { font-size: 12px; color: var(--text-secondary); }
+
+        /* 요약 확인 카드 */
+        .review-table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: #fff; border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; }
+        .review-table th { width: 96px; text-align: left; background: #f8fafc; color: #475569; font-weight: 600; padding: 9px 12px; border-bottom: 1px solid var(--border-color); vertical-align: top; }
+        .review-table td { padding: 9px 12px; border-bottom: 1px solid var(--border-color); line-height: 1.55; word-break: keep-all; }
+        .review-table tr:last-child th, .review-table tr:last-child td { border-bottom: none; }
+        .review-actions { display: flex; gap: 8px; margin-top: 12px; }
+        .review-actions .btn { flex: 1; }
+
+        /* 입력창 */
+        .chat-input-area { border-top: 1px solid var(--border-color); padding: 12px 14px 10px; background: #fff; border-radius: 0 0 20px 20px; }
+        .chat-input-row { display: flex; align-items: flex-end; gap: 8px; }
+        .icon-btn { width: 42px; height: 42px; border-radius: 10px; border: 1px solid var(--border-color); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #475569; }
+        .icon-btn:disabled { opacity: .45; cursor: not-allowed; }
+        .icon-btn svg { width: 20px; height: 20px; }
+        .chat-textarea { flex: 1; min-width: 0; resize: none; height: 42px; max-height: 120px; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit; line-height: 1.5; }
+        .chat-textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(100,160,24,.1); }
+        .chat-textarea:disabled { background: #f1f5f9; color: var(--text-muted); cursor: not-allowed; }
+        .send-btn { height: 42px; padding: 0 18px; flex-shrink: 0; }
+        .chat-input-note { font-size: 11.5px; color: var(--text-muted); margin-top: 8px; }
+
+        /* 지금까지 정리 */
+        .summary-panel { position: sticky; top: 88px; background: #fff; border: 1px solid var(--border-color); border-radius: 20px; box-shadow: var(--shadow-card); }
+        .summary-head { padding: 16px 18px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+        .summary-head h3 { font-size: 16px; font-weight: 700; }
+        .summary-head span { font-size: 12px; color: var(--text-secondary); }
+        .summary-toggle { display: none; border: 1px solid var(--border-color); background: #fff; border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; }
+        .summary-body { padding: 16px 18px; max-height: calc(100vh - 170px); overflow-y: auto; }
+        .step-progress { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; margin-bottom: 6px; }
+        .sp { height: 6px; border-radius: 3px; background: #e2e8f0; transition: background .3s; }
+        .sp.done { background: var(--primary-color); }
+        .sp.cur { background: #93c5fd; }
+        .step-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; margin: 10px 0 16px; padding: 0; }
+        .step-list li { font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+        .step-list li b { width: 18px; height: 18px; border-radius: 50%; border: 1px solid #cbd5e1; font-size: 10px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+        .step-list li.done { color: var(--text-primary); }
+        .step-list li.done b { background: var(--primary-color); border-color: var(--primary-color); color: #fff; }
+        .step-list li.cur { color: var(--primary-color); font-weight: 700; }
+        .step-list li.cur b { border-color: var(--primary-color); color: var(--primary-color); box-shadow: 0 0 0 3px rgba(100,160,24,.15); }
+        .sum-group { border-top: 1px solid #eef2f7; padding: 12px 0; }
+        .sum-group-title { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; }
+        .sum-row { display: flex; gap: 8px; font-size: 13px; padding: 3px 0; line-height: 1.5; }
+        .sum-row .k { width: 78px; color: var(--text-secondary); flex-shrink: 0; }
+        .sum-row .v { flex: 1; min-width: 0; word-break: keep-all; }
+        .sum-row .v.empty { color: var(--text-muted); }
+        .sum-row .v.err { color: var(--danger-color); font-weight: 600; }
+        .sum-row .v.fresh { animation: fresh 1.4s ease-out; }
+        @keyframes fresh { from { background: #fef9c3; } to { background: transparent; } }
+        .sum-flag { font-size: 11px; font-weight: 700; color: #b45309; background: #fef3c7; border-radius: 4px; padding: 0 5px; margin-left: 4px; }
+        .memo-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 12px 14px; margin-top: 4px; }
+        .memo-box h4 { font-size: 13px; font-weight: 700; color: #92400e; margin-bottom: 6px; }
+        .memo-box ul { padding-left: 16px; font-size: 12.5px; color: #92400e; line-height: 1.6; margin: 0; }
+        .memo-box .memo-empty { list-style: none; margin-left: -16px; color: #b8a06a; }
+
+        /* 접수 완료 모달 */
+        .done-modal { max-width: 460px; padding: 36px 32px 28px; text-align: center; }
+        .done-icon { width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(135deg, #64a018, #4a7812); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+        .done-icon svg { width: 34px; height: 34px; }
+        .done-title { font-size: 21px; font-weight: 800; margin-bottom: 14px; }
+        .done-no { background: #f1f5f9; border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+        .done-no span { display: block; font-size: 12px; color: var(--text-secondary); }
+        .done-no strong { font-size: 20px; font-family: ui-monospace, Menlo, monospace; letter-spacing: .02em; }
+        .done-list { text-align: left; font-size: 13.5px; color: #475569; line-height: 1.7; padding-left: 18px; margin-bottom: 22px; }
+        .done-actions { display: flex; gap: 8px; }
+        .done-actions .btn { flex: 1; }
+
+        @media (max-width: 1100px) {
+            .chat-layout { grid-template-columns: minmax(0, 1fr) 300px; }
+        }
+        @media (max-width: 768px) {
+            html, body, .app-container, .main-content, .header-content { min-width: 0 !important; }
+            .header-content { padding: 0 16px; gap: 8px; }
+            .header-content .main-nav { display: none; }
+            .header-actions .btn { white-space: nowrap; padding: 6px 10px; font-size: 12px; }
+            .main-content { padding: 20px 16px; }
+            .page-header h2 { font-size: 22px; }
+            .demo-bar { gap: 8px; padding: 10px 12px; }
+            .demo-hint { display: none; }
+            .demo-now { flex-basis: calc(100% - 80px); }
+            .demo-actions { width: 100%; margin-left: 0; }
+            .demo-actions .demo-btn { flex: 1; }
+            .chat-layout { grid-template-columns: 1fr; }
+            .summary-panel { position: static; order: -1; }
+            .summary-body { max-height: none; }
+            .summary-saved { display: none; }
+            .summary-toggle { display: inline-block; }
+            .summary-panel:not(.open) #summaryFields, .summary-panel:not(.open) #botMemo { display: none; }
+            .summary-panel:not(.open) .step-list { margin-bottom: 0; }
+            .spec-overlay-active .summary-panel #summaryFields, .spec-overlay-active .summary-panel #botMemo { display: block; }
+            .chat-log { height: 560px; padding: 14px 12px; }
+            .msg { max-width: 96%; }
+            .msg.tool { max-width: 100%; width: 100%; padding-left: 0; }
+            .chat-head-actions { display: none; }
+            .review-table th { width: 72px; padding: 8px; }
+            .review-table td { padding: 8px; }
+            .send-btn { padding: 0 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <script>
+            document.write(createHeader(''));
+        </script>
+
+        <main class="main-content">
+            <div class="page-header" id="chatPageHeader">
+                <div class="page-header-row">
+                    <div>
+                        <h2>타겟 광고 상담</h2>
+                        <p class="page-description">대화로 조건을 정리해 접수합니다. 대상 인원과 견적은 접수 후 영업일 기준으로 안내드립니다.</p>
+                    </div>
+                    <a href="target-ad-chat.html">설계 상세 보기 (전체 단계 모아 보기) ›</a>
+                </div>
+            </div>
+
+            <!-- 시연 도구 막대 -->
+            <div class="demo-bar" id="demoBar">
+                <span class="demo-badge">시연 화면</span>
+                <div class="demo-now" id="demoNow"><b id="demoStage">시작 안내</b><span id="demoTurn">1 / 33 차례</span></div>
+                <span class="demo-hint">빠른 답을 누르거나 입력칸에서 Enter</span>
+                <div class="demo-actions">
+                    <button type="button" class="demo-btn" id="demoBack" onclick="demoBackOne()">한 단계 뒤로</button>
+                    <button type="button" class="demo-btn primary" id="demoReset" onclick="demoRestart()">처음부터</button>
+                </div>
+            </div>
+
+            <div class="chat-layout">
+                <div>
+                    <!-- 대화창 -->
+                    <section class="chat-panel" id="chatPanel">
+                        <div class="chat-head" id="chatHead">
+                            <div class="chat-avatar">톡</div>
+                            <div>
+                                <div class="chat-head-name">톡벨 타겟 광고 상담</div>
+                                <div class="chat-head-sub"><i></i>24시간 접수 · 회신은 영업일 기준</div>
+                            </div>
+                            <div class="chat-head-actions">
+                                <a href="mypage-target-ad.html" class="btn btn-sm btn-outline">신청 내역</a>
+                            </div>
+                        </div>
+
+                        <div class="chat-log" id="chatLog" aria-live="polite"></div>
+
+                        <!-- 입력창 -->
+                        <div class="chat-input-area" id="chatInputArea">
+                            <div class="chat-input-row">
+                                <button type="button" class="icon-btn" id="attachBtn" title="이미지 첨부" disabled>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                                </button>
+                                <textarea class="chat-textarea" id="chatText" rows="1" aria-label="메시지 입력" placeholder="메시지를 입력하세요 (Enter 전송, Shift+Enter 줄바꿈)" disabled></textarea>
+                                <button type="button" class="btn btn-primary send-btn" id="sendBtn" onclick="sendFromInput()" disabled>전송</button>
+                            </div>
+                            <div class="chat-input-note">접수·동의·결제는 화면의 버튼으로만 진행됩니다. 대화 내용은 상담과 집행 안내에만 씁니다.</div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- 지금까지 정리 -->
+                <aside class="summary-panel" id="summaryPanel">
+                    <div class="summary-head"><h3>지금까지 정리</h3><span class="summary-saved">자동 저장됨</span><button type="button" class="summary-toggle" onclick="document.getElementById('summaryPanel').classList.toggle('open'); this.textContent = this.textContent === '펼치기' ? '접기' : '펼치기';">펼치기</button></div>
+                    <div class="summary-body">
+                        <div id="stepProgress">
+                            <div class="step-progress" id="stepBars">
+                                <div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div>
+                            </div>
+                            <ol class="step-list" id="stepList">
+                                <li><b>1</b>광고주</li>
+                                <li><b>2</b>목적·업종</li>
+                                <li><b>3</b>업종 추가</li>
+                                <li><b>4</b>타겟</li>
+                                <li><b>5</b>매체</li>
+                                <li><b>6</b>규모</li>
+                                <li><b>7</b>일정</li>
+                                <li><b>8</b>메시지</li>
+                                <li><b>9</b>기타</li>
+                                <li><b>10</b>동의</li>
+                            </ol>
+                        </div>
+
+                        <div id="summaryFields"></div>
+
+                        <div class="memo-box" id="botMemo">
+                            <h4>챗봇 메모 · 확인이 필요한 점</h4>
+                            <ul id="memoList"></ul>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+
+        <!-- 푸터 -->
+        <script src="js/footer.js"></script>
+        <script>
+            document.write(createFooter());
+        </script>
+    </div>
+
+    <!-- 접수 완료 모달 -->
+    <div class="modal-overlay" id="doneModal">
+        <div class="modal done-modal" id="doneModalBox" role="dialog" aria-modal="true" aria-labelledby="doneTitle">
+            <div class="done-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+            <h3 class="done-title" id="doneTitle">접수했습니다</h3>
+            <div class="done-no"><span>접수번호</span><strong>TA-20261116-001</strong></div>
+            <ul class="done-list">
+                <li>다음 영업일인 <strong>11월 17일(화)</strong>까지 톡벨이 대상 인원과 견적을 안내드립니다.</li>
+                <li>안내는 알림톡과 메일로 보내 드리고, 마이페이지에서도 볼 수 있어요.</li>
+                <li>진행 상태는 마이페이지 &gt; 타겟 광고 신청 내역에서 확인하세요.</li>
+            </ul>
+            <div class="done-actions">
+                <button type="button" class="btn btn-outline" onclick="closeModal('doneModal')">닫기</button>
+                <a href="mypage-target-ad.html" class="btn btn-primary" id="doneGoBtn">신청 내역 보기</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 모달 열기·닫기 (spec-overlay 가 이 함수를 감싸 모달 안 마커를 다시 그림)
+        window.openModal = function(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        window.closeModal = function(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        document.getElementById('doneModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal('doneModal');
+        });
+    </script>
+
+    <script>
+    /* ================================================================
+       타겟 광고 상담 챗봇 시연 엔진
+       - STEPS: 차례(챗봇 질문 + 고객 답 1회)의 배열. 대본 기준은
+         「1111 타겟 광고 상담 챗봇 대화 예시 (분양)」 + 항목 초안 v0.2
+       - 한 단계 뒤로: 처음부터 직전 차례까지 대본 답으로 즉시 다시 돌림
+       ================================================================ */
+    (function () {
+        var chatLog = document.getElementById('chatLog');
+        var ta = document.getElementById('chatText');
+        var sendBtn = document.getElementById('sendBtn');
+        var attachBtn = document.getElementById('attachBtn');
+
+        var TODAY = '2026-11-16';
+        var AI_DRAFT = '고덕 한빛 리버뷰 잔여세대 분양 안내\n평택 고덕 신축 아파트, 84㎡ 위주 잔여세대를 분양합니다.\n\n■ 모델하우스: 평택역 인근\n■ 방문 전 전화 상담: 1600-0000';
+        var PH_DEFAULT = '메시지를 입력하세요 (Enter 전송, Shift+Enter 줄바꿈)';
+        var PH_TOOL = '위 입력 도구를 사용해 주세요';
+        var STAGE_NAMES = ['시작 안내', '① 광고주', '② 목적·업종', '③ 분양 추가 질문', '④ 타겟', '⑤ 매체', '⑥ 규모', '⑦ 일정', '⑧ 메시지', '⑨ 기타', '⑩ 동의', '요약 확인', '접수 완료'];
+
+        // ---------- 상태 ----------
+        var R;   // run state
+        function freshState() {
+            return {
+                gen: (R ? R.gen : 0) + 1, idx: 0, fastUntil: 0, active: null,
+                st: {}, memo: [], fresh: {}
+            };
+        }
+
+        // ---------- 유틸 ----------
+        function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+        function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+        function bytesOf(s) { var n = 0; for (var i = 0; i < s.length; i++) n += s.charCodeAt(i) > 127 ? 2 : 1; return n; }
+        function fmtDate(v) {
+            if (!v) return '';
+            var d = new Date(v + 'T00:00:00');
+            return (d.getMonth() + 1) + '/' + d.getDate() + '(' + '일월화수목금토'[d.getDay()] + ')';
+        }
+        function daysFromToday(v) { return Math.round((new Date(v + 'T00:00:00') - new Date(TODAY + 'T00:00:00')) / 86400000); }
+        function isFast() { return R.idx < R.fastUntil; }
+        function scrollBottom() {
+            chatLog.scrollTo({ top: chatLog.scrollHeight, behavior: isFast() ? 'auto' : 'smooth' });
+        }
+        function el(html) { var d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstChild; }
+        function focusSoft(node) { if (node && !isFast()) { try { node.focus({ preventScroll: true }); } catch (e) { node.focus(); } } }
+
+        // ---------- 말풍선 ----------
+        function addDivider(text) { chatLog.appendChild(el('<div class="chat-step-divider">' + esc(text) + '</div>')); scrollBottom(); }
+        function addBot(html, warn) {
+            var m = el('<div class="msg bot"><div class="msg-avatar">톡</div><div class="bubble' + (warn ? ' warn' : '') + '"></div></div>');
+            m.querySelector('.bubble').innerHTML = html;
+            chatLog.appendChild(m); scrollBottom();
+            return m.querySelector('.bubble');
+        }
+        function addMe(html) {
+            var m = el('<div class="msg me"><div class="bubble"></div></div>');
+            m.querySelector('.bubble').innerHTML = html;
+            chatLog.appendChild(m); scrollBottom();
+        }
+        function addTool(html) {
+            var m = el('<div class="msg tool"><div class="widget"></div></div>');
+            m.querySelector('.widget').innerHTML = html;
+            chatLog.appendChild(m); scrollBottom();
+            return m;
+        }
+        async function typing(g, ms) {
+            var t = el('<div class="msg bot typing"><div class="msg-avatar">톡</div><div class="bubble"><span class="typing-dots"><i></i><i></i><i></i></span>입력 중…</div></div>');
+            chatLog.appendChild(t); scrollBottom();
+            await sleep(ms || (600 + Math.random() * 300));
+            t.remove();
+            return g === R.gen;
+        }
+        function meChips(list) { return '<div class="me-chips">' + list.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') + '</div>'; }
+
+        // ---------- 입력칸 ----------
+        function setInput(mode, value) {
+            // mode: 'text' | 'tool' | 'off'
+            if (mode === 'text') {
+                ta.disabled = false; sendBtn.disabled = false; attachBtn.disabled = true;
+                ta.placeholder = PH_DEFAULT; ta.value = value || '';
+                autoGrow();
+                focusSoft(ta);
+                if (!isFast()) { ta.setSelectionRange(ta.value.length, ta.value.length); }
+            } else {
+                ta.value = ''; ta.disabled = true; sendBtn.disabled = true; attachBtn.disabled = true;
+                ta.placeholder = mode === 'tool' ? PH_TOOL : (mode === 'done' ? '접수가 끝났습니다. [처음부터]로 다시 시연할 수 있어요' : '챗봇이 답하는 중…');
+                autoGrow();
+            }
+        }
+        function autoGrow() { ta.style.height = '42px'; if (ta.value) ta.style.height = Math.min(ta.scrollHeight + 2, 120) + 'px'; }
+        ta.addEventListener('input', autoGrow);
+        ta.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); sendFromInput(); }
+        });
+        window.sendFromInput = function () {
+            var a = R.active;
+            if (!a || ta.disabled || !a.onSend) return;
+            a.onSend(ta.value.trim());
+        };
+
+        // ---------- 정리 패널 ----------
+        var GROUPS = [
+            { t: '① 광고주', rows: [['company', '상호'], ['person', '담당자'], ['email', '이메일'], ['contactTime', '연락 시간']] },
+            { t: '②③ 광고', rows: [['industry', '업종·목적'], ['product', '상품'], ['site', '현장명'], ['typeBuilder', '유형·시공'], ['modelHouse', '모델하우스']] },
+            { t: '④ 타겟', rows: [['region', '지역'], ['ageGender', '연령·성별'], ['widen', '부족 시'], ['extra', '추가 조건']] },
+            { t: '⑤⑥ 매체·규모', rows: [['media', '매체'], ['qty', '건수'], ['qtyAdjust', '규모 조정']] },
+            { t: '⑦ 일정', rows: [['dates', '희망일'], ['timeSlot', '시간대']] },
+            { t: '⑧ 메시지', rows: [['msgType', '형태'], ['copy', '문구'], ['image', '이미지'], ['link', '링크'], ['phone', '문의 번호'], ['testNo', '테스트 수신']] },
+            { t: '⑨⑩ 기타·동의', rows: [['exp', '경험'], ['request', '추가 요청'], ['consent', '동의']] }
+        ];
+        function setF(key, html, cls) { R.st[key] = { html: html, cls: cls || '' }; R.fresh[key] = true; }
+        function addMemo(text, id) {
+            if (id) { for (var i = 0; i < R.memo.length; i++) if (R.memo[i].id === id) { R.memo[i].text = text; return; } }
+            R.memo.push({ id: id, text: text });
+        }
+        function renderSummary() {
+            var h = '';
+            GROUPS.forEach(function (g) {
+                h += '<div class="sum-group"><div class="sum-group-title">' + g.t + '</div>';
+                g.rows.forEach(function (r) {
+                    var f = R.st[r[0]];
+                    var cls = f ? f.cls : 'empty';
+                    if (f && R.fresh[r[0]] && !isFast()) cls += ' fresh';
+                    h += '<div class="sum-row"><span class="k">' + r[1] + '</span><span class="v ' + cls + '">' + (f ? f.html : '아직 안 받음') + '</span></div>';
+                });
+                h += '</div>';
+            });
+            document.getElementById('summaryFields').innerHTML = h;
+            R.fresh = {};
+            document.getElementById('memoList').innerHTML = R.memo.length
+                ? R.memo.map(function (m) { return '<li>' + esc(m.text) + '</li>'; }).join('')
+                : '<li class="memo-empty">아직 없음</li>';
+        }
+        function renderProgress(stage) {
+            document.querySelectorAll('#stepBars .sp').forEach(function (b, i) {
+                var n = i + 1;
+                b.className = 'sp' + (n < stage ? ' done' : n === stage ? ' cur' : '');
+            });
+            document.querySelectorAll('#stepList li').forEach(function (li, i) {
+                var n = i + 1;
+                li.className = n < stage ? 'done' : n === stage ? 'cur' : '';
+            });
+            document.getElementById('demoStage').textContent = STAGE_NAMES[stage] || '';
+            var total = STEPS.length - 1;
+            document.getElementById('demoTurn').textContent = R.idx >= total ? '시연 끝' : (R.idx + 1) + ' / ' + total + ' 차례';
+            document.getElementById('demoBack').disabled = R.idx === 0;
+        }
+
+        // ---------- 차례 진행 ----------
+        async function runStep(i) {
+            var g = R.gen;
+            R.idx = i; R.active = null;
+            var step = STEPS[i];
+            setInput('off');
+            renderProgress(step.stage);
+            var bots = step.bot || [];
+            var bubble = null;
+            for (var k = 0; k < bots.length; k++) {
+                var b = bots[k];
+                if (typeof b === 'function') b = b(R.st, R);
+                if (!b) continue;
+                if (b.divider) { addDivider(b.divider); continue; }
+                if (!isFast()) { if (!(await typing(g))) return; }
+                bubble = addBot(b.warn || b, !!b.warn);
+            }
+            if (g !== R.gen) return;
+            if (step.ui) step.ui(bubble, g);
+        }
+        function finish(meHtml, apply) {
+            var step = STEPS[R.idx];
+            R.active = null;
+            if (meHtml) addMe(meHtml);
+            if (apply) apply();
+            if (step.apply) step.apply();
+            renderSummary();
+            var next = R.idx + 1;
+            if (next < STEPS.length) runStep(next);
+        }
+
+        // 빠른 답(한 개)
+        function chips(options, pick, opts) {
+            opts = opts || {};
+            return function (bubble) {
+                var grp = el('<div class="qr-group' + (opts.alt ? ' alt' : '') + '"></div>');
+                var nudge = null;
+                options.forEach(function (o) {
+                    var btn = el('<button type="button" class="qr' + (o === pick ? ' next' : '') + '">' + esc(o) + '</button>');
+                    btn.addEventListener('click', function () {
+                        if (grp.classList.contains('done')) return;
+                        if (o !== pick) {
+                            if (!nudge) { nudge = el('<div class="qr-nudge"></div>'); grp.after(nudge); }
+                            nudge.textContent = '시연 대본은 [' + pick + ']로 진행돼요. 표시된 버튼을 누르거나 Enter를 눌러 주세요.';
+                            return;
+                        }
+                        choose();
+                    });
+                    grp.appendChild(btn);
+                });
+                bubble.appendChild(grp);
+                if (opts.hint) bubble.appendChild(el('<div class="qr-hint">' + opts.hint + '</div>'));
+                scrollBottom();
+                function choose() {
+                    grp.querySelectorAll('.qr').forEach(function (b) { if (b.textContent === pick) b.classList.add('selected'); });
+                    grp.classList.add('done');
+                    if (nudge) nudge.remove();
+                    finish(esc(opts.me || pick));
+                }
+                R.active = { onSend: function () { choose(); } };
+                setInput('text', pick);
+                if (isFast()) choose();
+            };
+        }
+        // 빠른 답(여러 개) + [선택 완료]
+        function multi(options, picks, opts) {
+            opts = opts || {};
+            return function (bubble) {
+                var grp = el('<div class="qr-group"></div>');
+                options.forEach(function (o) {
+                    var btn = el('<button type="button" class="qr' + (picks.indexOf(o) >= 0 ? ' next' : '') + '">' + esc(o) + '</button>');
+                    btn.addEventListener('click', function () { if (!grp.classList.contains('done')) btn.classList.toggle('selected'); });
+                    grp.appendChild(btn);
+                });
+                var doneBtn = el('<button type="button" class="qr qr-done">선택 완료</button>');
+                doneBtn.addEventListener('click', function () { choose(); });
+                grp.appendChild(doneBtn);
+                bubble.appendChild(grp);
+                bubble.appendChild(el('<div class="qr-hint">여러 개를 누른 뒤 [선택 완료]를 눌러 주세요.</div>'));
+                scrollBottom();
+                function choose() {
+                    if (grp.classList.contains('done')) return;
+                    // 시연은 대본 선택으로 맞춤
+                    grp.querySelectorAll('.qr').forEach(function (b) { b.classList.toggle('selected', picks.indexOf(b.textContent) >= 0); });
+                    doneBtn.classList.remove('selected');
+                    grp.classList.add('done');
+                    finish(meChips(picks));
+                }
+                R.active = { onSend: choose };
+                setInput('text', picks.join(', '));
+                if (isFast()) choose();
+            };
+        }
+        // 자유 입력 (입력칸에 대본 답을 미리 채움)
+        function text(value) {
+            return function () {
+                R.active = { onSend: function (t) { finish(esc(t || value)); } };
+                setInput('text', value);
+                if (isFast()) R.active.onSend(value);
+            };
+        }
+
+        // ---------- 입력 도구 ----------
+        function toolRegion() {
+            var SIDO = ['서울', '경기', '인천', '부산', '대구', '대전', '충남', '충북', '강원', '경남', '전국'];
+            var GG = ['전체', '수원시', '용인시', '평택시', '오산시', '화성시', '안성시', '성남시', '고양시'];
+            var SCRIPT = ['평택시', '오산시', '화성시'];
+            var picked = [];
+            var card = addTool(
+                '<div class="widget-title"><span class="widget-step">④ 타겟 · 지역</span><span class="widget-code">input_mode: region</span></div>' +
+                '<div class="chip-row-label">시·도</div><div class="chip-row" data-sido></div>' +
+                '<div data-sgg-wrap><div class="region-empty">시·도를 먼저 고르세요.</div></div>' +
+                '<div class="picked" data-picked></div>' +
+                '<div class="widget-actions"><button type="button" class="btn btn-sm btn-outline" data-direct>직접 입력</button><button type="button" class="btn btn-sm btn-primary" data-ok>선택 완료</button></div>');
+            var sidoRow = card.querySelector('[data-sido]'), sggWrap = card.querySelector('[data-sgg-wrap]');
+            var pickedEl = card.querySelector('[data-picked]'), ok = card.querySelector('[data-ok]');
+            SIDO.forEach(function (s) {
+                var c = el('<button type="button" class="chip' + (s === '경기' ? ' next' : '') + '">' + s + '</button>');
+                c.addEventListener('click', function () { openSido(s); });
+                sidoRow.appendChild(c);
+            });
+            function openSido(s) {
+                sidoRow.querySelectorAll('.chip').forEach(function (c) { c.classList.toggle('on', c.firstChild.textContent === s || (c.firstChild.textContent === '경기' && picked.length)); });
+                if (s !== '경기') {
+                    sggWrap.innerHTML = '<div class="region-empty">시연에서는 경기만 펼쳐 보여 드려요. [경기]를 눌러 주세요.</div>';
+                    return;
+                }
+                sggWrap.innerHTML = '<div class="chip-row-label">시·군·구 (경기)</div><div class="chip-row" data-sgg></div>';
+                var row = sggWrap.querySelector('[data-sgg]');
+                GG.forEach(function (n) {
+                    var c = el('<button type="button" class="chip' + (picked.indexOf(n) >= 0 ? ' on' : '') + (SCRIPT.indexOf(n) >= 0 ? ' next' : '') + '">' + n + '</button>');
+                    c.addEventListener('click', function () { toggle(n); });
+                    row.appendChild(c);
+                });
+                scrollBottom();
+            }
+            function toggle(n) {
+                var i = picked.indexOf(n);
+                if (i >= 0) picked.splice(i, 1); else picked.push(n);
+                paint();
+            }
+            function paint() {
+                sggWrap.querySelectorAll('[data-sgg] .chip').forEach(function (c) { c.classList.toggle('on', picked.indexOf(c.textContent) >= 0); });
+                var gg = sidoRow.querySelectorAll('.chip')[1];
+                gg.innerHTML = '경기' + (picked.length ? '<span class="cnt">' + picked.length + '</span>' : '');
+                gg.classList.toggle('on', picked.length > 0 || !!sggWrap.querySelector('[data-sgg]'));
+                pickedEl.innerHTML = picked.length ? '' : '<span class="none">고른 지역이 여기에 모여요</span>';
+                picked.forEach(function (n) {
+                    var t = el('<span>경기 ' + esc(n) + '<b title="빼기">✕</b></span>');
+                    t.querySelector('b').addEventListener('click', function () { toggle(n); });
+                    pickedEl.appendChild(t);
+                });
+                ok.textContent = picked.length ? picked.length + '곳 선택 완료' : '선택 완료';
+            }
+            card.querySelector('[data-direct]').addEventListener('click', function () {
+                sggWrap.insertAdjacentHTML('beforeend', '<div class="region-empty">동 단위(예: 화성시 동탄)는 직접 입력으로 받아 메모합니다. (시연에서는 생략)</div>');
+            });
+            ok.addEventListener('click', submit);
+            function submit() {
+                if (!picked.length) { openSido('경기'); picked = SCRIPT.slice(); paint(); }
+                var list = picked.map(function (n) { return '경기 ' + n; });
+                card.remove();
+                finish(meChips(list), function () { setF('region', esc(list.join(', '))); });
+            }
+            paint();
+            setInput('tool');
+            R.active = {};
+            focusSoft(ok);
+            if (isFast()) { picked = SCRIPT.slice(); submit(); }
+        }
+
+        function toolDate() {
+            var card = addTool(
+                '<div class="widget-title"><span class="widget-step">⑦ 일정</span><span class="widget-code">input_mode: date</span></div>' +
+                '<div class="date-row"><label>1순위 <em>*</em></label><input type="date" data-d1 value="2026-11-20" min="2026-11-17"></div>' +
+                '<div class="date-row"><label>2순위</label><input type="date" data-d2 value="2026-11-24" min="2026-11-17"></div>' +
+                '<div class="date-row"><label>3순위</label><input type="date" data-d3 value="2026-11-25" min="2026-11-17"></div>' +
+                '<div class="chip-row-label" style="margin-top:10px;">시간대</div>' +
+                '<div class="chip-row" style="margin-bottom:8px;" data-slot><button type="button" class="chip on">오전</button><button type="button" class="chip">오후</button><button type="button" class="chip">무관</button></div>' +
+                '<div class="date-warn" data-warn hidden></div>' +
+                '<div class="widget-actions"><button type="button" class="btn btn-sm btn-primary" data-ok>날짜 선택 완료</button></div>');
+            var d1 = card.querySelector('[data-d1]'), warn = card.querySelector('[data-warn]');
+            card.querySelectorAll('[data-slot] .chip').forEach(function (c) {
+                c.addEventListener('click', function () { card.querySelectorAll('[data-slot] .chip').forEach(function (x) { x.classList.toggle('on', x === c); }); });
+            });
+            function check() {
+                var tight = d1.value && daysFromToday(d1.value) < 7;
+                warn.hidden = !tight;
+                if (tight) warn.textContent = '1순위 ' + fmtDate(d1.value) + '은 접수 후 시간이 많지 않아 일정이 빠듯할 수 있어요. 보통 발송일 일주일 전쯤 접수를 권합니다.';
+            }
+            d1.addEventListener('input', check); check();
+            var ok = card.querySelector('[data-ok]');
+            ok.addEventListener('click', function () {
+                var v1 = d1.value || '2026-11-20';
+                var ds = [v1, card.querySelector('[data-d2]').value, card.querySelector('[data-d3]').value];
+                var slot = card.querySelector('[data-slot] .chip.on').textContent;
+                var parts = ds.map(function (v, i) { return v ? (i + 1) + '순위 ' + fmtDate(v) : null; }).filter(Boolean);
+                var tight = daysFromToday(v1) < 7;
+                card.remove();
+                finish(esc(parts.join(' · ') + ' · ' + slot), function () {
+                    R.tight = tight; R.d1 = v1;
+                    setF('dates', esc(parts.join(' · ')) + (tight ? '<span class="sum-flag">빠듯</span>' : ''));
+                    setF('timeSlot', esc(slot));
+                    if (tight) addMemo('1순위 ' + fmtDate(v1) + ': 일정 빠듯, 2·3순위 함께 받음', 'date');
+                });
+            });
+            setInput('tool'); R.active = {};
+            focusSoft(ok);
+            if (isFast()) ok.click();
+        }
+
+        function toolCopy() {
+            var card = addTool(
+                '<div class="widget-title"><span class="widget-step">⑧ 메시지 · 문구</span><span class="widget-code">input_mode: copy</span></div>' +
+                '<div class="copy-meta"><span>메시지 형태 <b>장문 문자 (LMS)</b></span><span>매체 <b>SKT 또는 직방·호갱노노 중 한 곳</b></span><span class="copy-meta-note">직방·호갱노노로 정해지면 앱 메시지라 이미지와 버튼이 함께 나갑니다</span></div>' +
+                '<div class="copy-box">' +
+                    '<div class="copy-auto top">(광고)[매체명] <em>← 매체가 자동으로 붙임</em></div>' +
+                    '<textarea class="copy-text" rows="6" aria-label="광고 문구" placeholder="문구 초안을 붙여 넣거나 [AI로 초안 쓰기]를 누르세요"></textarea>' +
+                    '<div class="copy-auto bottom">무료 수신거부 080-○○○-○○○○ <em>← 매체가 자동으로 붙임</em></div>' +
+                '</div>' +
+                '<div class="copy-count"><span class="n">0</span> / 2,000 byte <span class="copy-count-note">(장문 문자 기준, 한글 1자 = 2byte)</span></div>' +
+                '<div class="copy-ai-note" hidden>✦ AI 초안입니다. 상품 설명·현장명·모델하우스 위치·문의 번호로 썼어요. 사실과 다른 곳이 없는지 확인하고 고쳐 주세요.</div>' +
+                '<ul class="copy-checks"></ul>' +
+                '<div class="widget-actions"><button type="button" class="btn btn-sm btn-outline btn-ai" data-ai>✦ AI로 초안 쓰기</button><button type="button" class="btn btn-sm btn-primary" data-ok>문구 입력 완료</button></div>');
+            var box = card.querySelector('.copy-text'), cnt = card.querySelector('.copy-count'), note = card.querySelector('.copy-ai-note');
+            var checks = card.querySelector('.copy-checks'), ai = card.querySelector('[data-ai]'), ok = card.querySelector('[data-ok]');
+            var source = '직접 입력';
+            function update() {
+                var v = box.value, n = bytesOf(v);
+                cnt.querySelector('.n').textContent = n.toLocaleString();
+                cnt.classList.toggle('over', n > 2000);
+                var hasPhone = /1600-0000/.test(v);
+                var hasAuto = /\(광고\)|수신거부/.test(v);
+                var risky = /(최저가|100%|보장|반드시|확실히)/.test(v);
+                checks.innerHTML =
+                    (v ? (hasPhone ? '<li class="ok">문의 번호가 본문에 있어요 (1600-0000)</li>' : '<li class="warn">문의 번호(1600-0000)가 본문에 없어요. 발신은 매체 명의라 본문에 넣어 주세요</li>') : '') +
+                    (hasAuto ? '<li class="warn">(광고)·수신거부는 매체가 붙이니 본문에서 빼 주세요</li>' : '<li class="info">맨 앞 (광고)[매체명]과 수신거부 번호는 매체가 붙이니 본문에 넣지 않아도 돼요</li>') +
+                    '<li class="info">문구는 매체 심의에서 일부 표현이 바뀔 수 있어요</li>' +
+                    (risky ? '<li class="warn">심의에서 반려될 수 있는 표현이 있어요 (최저가·100%·보장 등)</li>' : '<li class="warn">\'최저가\', \'100%\', \'보장\' 같은 표현은 심의에서 반려될 수 있어요</li>');
+            }
+            box.addEventListener('input', function () { if (source === 'AI 초안') source = 'AI 초안 수정'; update(); });
+            async function draft(g) {
+                ai.disabled = true; ai.textContent = '초안 쓰는 중…';
+                if (!isFast()) { await sleep(800); if (g !== R.gen) return; }
+                box.value = AI_DRAFT; source = 'AI 초안'; note.hidden = false;
+                ai.disabled = false; ai.textContent = '✦ 다시 쓰기';
+                update(); scrollBottom();
+                focusSoft(ok);
+            }
+            ai.addEventListener('click', function () { draft(R.gen); });
+            ok.addEventListener('click', function () {
+                if (!box.value.trim()) { draft(R.gen); return; }
+                var v = box.value.trim(), n = bytesOf(v);
+                card.remove();
+                finish('<strong>문구 입력 완료</strong>\n' + esc(v), function () {
+                    setF('copy', esc(source) + ' · ' + n.toLocaleString() + 'byte');
+                });
+            });
+            update();
+            setInput('tool'); R.active = {};
+            focusSoft(ai);
+            if (isFast()) { box.value = AI_DRAFT; source = 'AI 초안'; ok.click(); }
+        }
+
+        function toolFile() {
+            var card = addTool(
+                '<div class="widget-title"><span class="widget-step">⑧ 메시지 · 이미지</span><span class="widget-code">input_mode: file</span></div>' +
+                '<div class="dropzone">이미지를 여기에 끌어다 놓거나 <button type="button" data-pick>파일 선택</button><br><span style="font-size:12px;">JPG·PNG, 한 장 10MB 이하, 최대 3장</span></div>' +
+                '<div data-files></div>' +
+                '<div class="widget-actions"><button type="button" class="btn btn-sm btn-outline" data-skip>건너뛰기</button><button type="button" class="btn btn-sm btn-primary" data-ok>첨부 완료</button></div>');
+            var files = card.querySelector('[data-files]'), has = false;
+            function upload(cb) {
+                if (has) { if (cb) cb(); return; }
+                has = true;
+                var row = el('<div class="file-row"><div class="file-thumb"></div><div class="meta"><div>고덕리버뷰_전단.jpg</div><div data-st>1.2MB · 올리는 중…</div><div class="file-progress"><i></i></div></div><button type="button">삭제</button></div>');
+                files.appendChild(row); scrollBottom();
+                row.querySelector('button').addEventListener('click', function () { row.remove(); has = false; });
+                var g = R.gen;
+                var done = function () {
+                    if (g !== R.gen) return;
+                    row.querySelector('[data-st]').textContent = '1.2MB · 업로드 완료';
+                    var p = row.querySelector('.file-progress'); if (p) p.remove();
+                    focusSoft(ok);
+                    if (cb) cb();
+                };
+                if (isFast()) { done(); return; }
+                requestAnimationFrame(function () { var bar = row.querySelector('.file-progress i'); if (bar) bar.style.width = '100%'; });
+                setTimeout(done, 600);
+            }
+            card.querySelector('[data-pick]').addEventListener('click', function () { upload(); });
+            var ok = card.querySelector('[data-ok]');
+            ok.addEventListener('click', function () {
+                upload(function () {
+                    card.remove();
+                    finish('이미지 첨부: 고덕리버뷰_전단.jpg', function () { setF('image', '고덕리버뷰_전단.jpg (1장)'); });
+                });
+            });
+            card.querySelector('[data-skip]').addEventListener('click', function () {
+                card.remove();
+                finish('이미지 없이 진행할게요', function () { setF('image', '없음'); });
+            });
+            setInput('tool'); R.active = {};
+            focusSoft(ok);
+            if (isFast()) ok.click();
+        }
+
+        function toolConsent() {
+            var card = addTool(
+                '<div class="widget-title"><span class="widget-step">⑩ 동의</span><span class="widget-code">input_mode: consent</span></div>' +
+                '<div class="consent-row all"><input type="checkbox" id="dmAll"><label for="dmAll">전체 동의</label></div>' +
+                '<div class="consent-row"><input type="checkbox" class="dm-item" id="dmCollect" data-req><label for="dmCollect"><span class="consent-tag req">필수</span>개인정보 수집·이용 동의 (상담·집행 안내)</label><a href="#" onclick="return false;">보기</a></div>' +
+                '<div class="consent-row"><input type="checkbox" class="dm-item" id="dmMarketing"><label for="dmMarketing"><span class="consent-tag opt">선택</span>마케팅 정보 수신 동의</label><a href="#" onclick="return false;">보기</a></div>' +
+                '<div class="widget-actions"><button type="button" class="btn btn-sm btn-primary" data-ok disabled>동의하고 계속</button></div>');
+            var all = card.querySelector('#dmAll'), req = card.querySelector('#dmCollect'), mk = card.querySelector('#dmMarketing'), ok = card.querySelector('[data-ok]');
+            function sync() { ok.disabled = !req.checked; all.checked = req.checked && mk.checked; }
+            all.addEventListener('change', function () { req.checked = mk.checked = all.checked; sync(); });
+            [req, mk].forEach(function (c) {
+                c.addEventListener('change', sync);
+                // 시연 편의: 체크박스에서 Enter 로도 체크
+                c.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); c.checked = !c.checked; sync(); if (req.checked) focusSoft(ok); } });
+            });
+            ok.addEventListener('click', function () {
+                if (!req.checked) return;
+                var m = mk.checked;
+                card.remove();
+                finish(esc('필수 동의' + (m ? ' · 마케팅 동의' : ' · 마케팅 미동의')), function () {
+                    setF('consent', '수집·이용 동의 · 마케팅 ' + (m ? '동의' : '미동의'));
+                });
+            });
+            setInput('tool'); R.active = {};
+            focusSoft(req);
+            if (isFast()) { req.checked = true; sync(); ok.click(); }
+        }
+
+        function reviewRows() {
+            var s = R.st, v = function (k) { return s[k] ? s[k].html.replace(/<span class="sum-flag">.*?<\/span>/g, '') : '-'; };
+            return [
+                ['광고주', '(주)한빛분양마케팅 · 법인 · 김민수 · ' + v('contactTime') + ' 연락 희망'],
+                ['광고', '부동산·분양(아파트) · 고덕 한빛 리버뷰 (경기 평택시 고덕동) · 시공 한빛건설 · 모델하우스 평택역 인근'],
+                ['목적', '모델하우스 방문, 전화 문의'],
+                ['타겟', v('region') + ' · 30~55세 · 전체<br>부족하면 연령 확대 가능 · 부동산 앱 이용 · 무주택자 (가능 여부 확인)'],
+                ['매체·규모', 'SKT 또는 직방·호갱노노 중 한 곳 · 2만 건 (매체 추천 요청) · 규모 조정 가능'],
+                ['일정', v('dates') + ' · ' + v('timeSlot')],
+                ['메시지', '장문 문자 · 문구 ' + v('copy') + ' · 이미지 ' + v('image') + ' · 문의 1600-0000 · 링크 없음 (클릭 수 집계 안 됨)'],
+                ['테스트 수신', '010-****-0000'],
+                ['기타', '타겟 광고 첫 이용 · 결과·방문 인원 문의 (약속 불가 안내함)'],
+                ['동의', v('consent')]
+            ];
+        }
+        function toolReview() {
+            var card = addTool(
+                '<div class="widget-title"><span class="widget-step">요약 확인</span><span class="widget-code">show_review: true</span></div>' +
+                '<table class="review-table">' + reviewRows().map(function (r) { return '<tr><th>' + r[0] + '</th><td>' + r[1] + '</td></tr>'; }).join('') + '</table>' +
+                '<div class="review-actions"><button type="button" class="btn btn-primary" data-ok>이대로 접수</button><button type="button" class="btn btn-outline" data-fix>고칠 항목 있음</button></div>');
+            var ok = card.querySelector('[data-ok]');
+            ok.addEventListener('click', function () {
+                card.remove();
+                finish('이대로 접수');
+            });
+            card.querySelector('[data-fix]').addEventListener('click', function () {
+                card.remove();
+                addMe('고칠 항목 있음');
+                fixFlow(R.gen);
+            });
+            setInput('tool'); R.active = {};
+            focusSoft(ok);
+            if (isFast()) ok.click();
+        }
+        async function fixFlow(g) {
+            if (!(await typing(g))) return;
+            var b = addBot('어떤 항목을 고칠까요? 고른 항목만 다시 여쭤봅니다.');
+            var grp = el('<div class="qr-group"></div>');
+            ['광고주', '광고', '타겟', '매체·규모', '일정', '메시지', '테스트 수신', '고칠 것 없음'].forEach(function (o) {
+                var btn = el('<button type="button" class="qr">' + o + '</button>');
+                btn.addEventListener('click', async function () {
+                    if (grp.classList.contains('done')) return;
+                    btn.classList.add('selected'); grp.classList.add('done');
+                    addMe(esc(o));
+                    if (!(await typing(g))) return;
+                    addBot(o === '고칠 것 없음'
+                        ? '알겠습니다. 정리한 내용을 다시 보여 드릴게요.'
+                        : '실제 상담에서는 \'' + esc(o) + '\' 항목만 다시 여쭤보고 요약으로 돌아옵니다. 시연에서는 내용을 그대로 두고 요약으로 돌아갈게요.');
+                    if (!(await typing(g))) return;
+                    addBot('정리한 내용입니다. <strong>이대로 접수할까요?</strong>');
+                    toolReview();
+                });
+                grp.appendChild(btn);
+            });
+            b.appendChild(grp); scrollBottom();
+            setInput('tool'); R.active = {};
+        }
+
+        function stepDone() {
+            setInput('done');
+            R.active = null;
+            renderProgress(12);
+            setTimeout(function () { openModal('doneModal'); try { document.getElementById('doneGoBtn').focus({ preventScroll: true }); } catch (e) {} }, isFast() ? 0 : 500);
+        }
+
+        // ---------- 대본 ----------
+        var STEPS = [
+            // 0 시작 안내
+            { stage: 0, bot: [{ divider: '2026.11.16 (월)' },
+                '안녕하세요, 톡벨 타겟 광고 메시지 상담입니다.<br>' +
+                '통신사·카드사·멤버십·앱 회원 중 <strong>광고 수신에 동의한 분들</strong>에게 조건을 골라 보내는 광고 메시지예요.<br><br>' +
+                '진행은 <strong>접수 → 대상 인원·견적 안내 → 확정·결제 → 문구 검토 → 테스트 발송 확인 → 발송 → 결과 리포트</strong> 순서입니다.<br><br>' +
+                '미리 알려 드릴 것이 세 가지 있어요.<ul><li>매체마다 최소 발송 건수가 있고, 가장 적은 기준은 2만 건입니다.</li><li>정산은 성공 건 기준이고, 금액은 부가세 별도입니다.</li><li>업종과 문구는 매체 심의를 거칩니다.</li></ul>시작할까요?'],
+              ui: chips(['시작하기', '서비스 소개 먼저 보기'], '시작하기') },
+            // 1 ① 회원 정보
+            { stage: 1, bot: [{ divider: '① 광고주' },
+                '회원 정보로 아래와 같이 채웠습니다. 맞는지 확인해 주세요.' +
+                '<div class="info-card"><div><span class="k">상호</span>(주)한빛분양마케팅</div><div><span class="k">담당자</span>김민수</div><div><span class="k">연락처</span>010-****-0000</div><div><span class="k">이메일</span>mi***@example.com</div></div>'],
+              ui: chips(['맞아요', '정보 수정'], '맞아요'),
+              apply: function () { setF('company', '(주)한빛분양마케팅'); setF('person', '김민수 · 010-****-0000'); setF('email', 'mi***@example.com'); } },
+            { stage: 1, bot: ['사업자 유형도 알려 주세요. 세금계산서 발행에 씁니다.'],
+              ui: chips(['법인', '개인사업자'], '법인'),
+              apply: function () { setF('company', '(주)한빛분양마케팅 · 법인'); } },
+            { stage: 1, bot: ['대상 인원과 견적을 안내드릴 때 연락받기 좋은 시간이 있나요?'],
+              ui: chips(['오전', '오후', '무관'], '오후'),
+              apply: function () { setF('contactTime', '오후'); } },
+            // 4 ② 업종
+            { stage: 2, bot: [{ divider: '② 목적·업종' }, '어떤 광고인가요?'],
+              ui: chips(['부동산·분양', '금융·대출', '자동차·중고차', '커머스·쇼핑', '숙박·여행', '건강기능식품', '패션·의류', '교육', '매장·서비스', '기타'], '부동산·분양'),
+              apply: function () { setF('industry', '부동산·분양'); } },
+            { stage: 2, bot: ['광고로 얻고 싶은 것은 무엇인가요? 여러 개를 고를 수 있어요.'],
+              ui: multi(['모델하우스 방문', '전화 문의', '홈페이지·상담 신청', '앱 설치', '이벤트·할인 안내', '기타'], ['모델하우스 방문', '전화 문의']),
+              apply: function () { setF('industry', '부동산·분양 · 모델하우스 방문, 전화 문의'); } },
+            { stage: 2, bot: ['상품을 한 줄로 설명해 주세요.'],
+              ui: text('평택 고덕 신축 아파트 잔여세대 분양이에요. 84㎡ 위주.'),
+              apply: function () { setF('product', '평택 고덕 신축 아파트 잔여세대, 84㎡ 위주'); } },
+            // 7 ③ 분양 추가 질문
+            { stage: 3, bot: [{ divider: '③ 분양 추가 질문' }, '분양 광고라 몇 가지 더 여쭤볼게요. 현장명이 무엇인가요?'],
+              ui: text('고덕 한빛 리버뷰'),
+              apply: function () { setF('site', '고덕 한빛 리버뷰'); } },
+            { stage: 3, bot: ['현장 위치(시·구)도 알려 주세요.'],
+              ui: text('경기 평택시 고덕동'),
+              apply: function () { setF('site', '고덕 한빛 리버뷰 (경기 평택시 고덕동)'); } },
+            { stage: 3, bot: ['분양 유형을 골라 주세요.'],
+              ui: chips(['아파트', '오피스텔', '상가', '민간임대', '지역주택조합', '기타'], '아파트'),
+              apply: function () { setF('typeBuilder', '아파트'); } },
+            { stage: 3, bot: ['시공사는 어디인가요? 매체마다 시공사 도급 순위 기준이 있어서 여쭤봅니다.'],
+              ui: text('한빛건설이요. 1군은 아니에요.'),
+              apply: function () { setF('typeBuilder', '아파트 · 한빛건설<span class="sum-flag">확인</span>'); addMemo('시공사 한빛건설(1군 아님): 매체별 도급 순위 확인 필요', 'builder'); } },
+            { stage: 3, bot: ['알겠습니다. 도급 순위에 따라 일부 매체는 진행이 어려울 수 있어서, 매체별로 확인해 안내드릴게요. 참고로 직방·호갱노노는 도급 순위 기준이 없습니다.',
+                '모델하우스 위치도 알려 주시겠어요? 방문 유도 문구와 타겟 지역을 잡는 데 씁니다.'],
+              ui: text('평택역 근처요'),
+              apply: function () { setF('modelHouse', '평택역 인근'); } },
+            // 12 ④ 타겟
+            { stage: 4, bot: [{ divider: '④ 타겟' }, '어느 지역 분들에게 보낼까요? 아래에서 여러 곳을 고를 수 있어요.'],
+              ui: toolRegion },
+            { stage: 4, bot: ['연령대는 어떻게 할까요? (예: 30~55세)'],
+              ui: text('30~55'),
+              apply: function () { setF('ageGender', '30~55세'); } },
+            { stage: 4, bot: ['성별은요?'],
+              ui: chips(['전체', '남', '여'], '전체'),
+              apply: function () { setF('ageGender', '30~55세 · 전체'); } },
+            { stage: 4, bot: ['조건에 맞는 분이 모자랄 때 넓혀도 되는 것이 있나요?'],
+              ui: chips(['연령', '지역', '둘 다', '넓히지 않음'], '연령'),
+              apply: function () { setF('widen', '연령 확대 가능 · 지역 확대 불가'); } },
+            { stage: 4, bot: ['더 좁히고 싶은 조건이 있나요? 없으면 건너뛰셔도 됩니다.<br>예: 최근 부동산 앱 이용, 특정 업종 결제 이력'],
+              ui: text('무주택자만 됐으면 좋겠는데 가능해요? 부동산 앱 쓰는 사람이면 좋겠어요'),
+              apply: function () { setF('extra', '부동산 앱 이용 · 무주택자<span class="sum-flag">확인</span>'); addMemo('무주택자 조건: 매체에서 가능한지 확인 필요', 'nohouse'); } },
+            // 17 ⑤ 매체
+            { stage: 5, bot: ['\'부동산 앱 이용\'은 조건으로 넣었습니다.<br>무주택 여부로 고를 수 있는지는 제가 판단할 수 없어요. 요청 조건으로 넣어 두고, <strong>가능한 매체와 비슷한 조건을 확인해 안내드릴게요.</strong>',
+                { divider: '⑤ 매체' },
+                '원하는 매체가 있나요? 분양 광고에서 많이 쓰는 매체를 먼저 보여 드려요. 여러 개를 고를 수 있습니다.'],
+              ui: multi(['추천받기', '직방·호갱노노', 'SKT', 'KT', 'LGU+', '카드사', '카카오페이', '멤버십', 'T-MAP'], ['SKT', '직방·호갱노노']),
+              apply: function () { setF('media', 'SKT, 직방·호갱노노 (매체마다 따로 발송)'); } },
+            // 18 ⑥ 규모
+            { stage: 6, bot: ['SKT와 직방·호갱노노로 넣었습니다.<br>두 매체는 합쳐서 보낼 수 없어서 <strong>매체마다 따로 발송</strong>됩니다. 두 매체에 모두 들어 있는 분은 메시지를 두 번 받을 수 있어요.',
+                { divider: '⑥ 규모' },
+                '매체별로 몇 건 보내고 싶으세요? 예산이 정해져 있으면 참고용으로 함께 알려 주세요.'],
+              ui: text('1만 건 정도요'),
+              apply: function () { setF('qty', '1만 건 · 매체별 최소 2만 건 미달', 'err'); addMemo('1만 건 요청 → 매체별 최소 2만 건 미달 안내 (변경 대기)', 'qty'); } },
+            { stage: 6, bot: [{ warn: 'SKT와 직방·호갱노노는 <strong>매체마다 최소 2만 건</strong>부터 진행할 수 있어서, 1만 건으로는 두 매체 모두 어렵습니다. 다른 광고주와 합쳐서 기준을 채우는 것도 안 돼요.<br>이렇게 바꿀 수 있습니다.' }],
+              ui: chips(['한 매체에 2만 건 (어느 매체가 나을지 추천 요청)', '두 매체에 각 2만 건, 모두 4만 건', '확인 후 안내받기'], '한 매체에 2만 건 (어느 매체가 나을지 추천 요청)', { alt: true, hint: '버튼을 누르거나 직접 입력해 주세요.' }),
+              apply: function () {
+                  setF('media', 'SKT 또는 직방·호갱노노 중 한 곳 (추천 요청)');
+                  setF('qty', '2만 건 (한 매체)');
+                  addMemo('1만 건 요청(최소 미달) → 한 매체 2만 건으로 변경, 매체 추천 요청', 'qty');
+              } },
+            { stage: 6, bot: ['알겠습니다. <strong>SKT 또는 직방·호갱노노 중 한 곳, 2만 건</strong>으로 적고 매체 추천을 요청해 둘게요. 어느 매체가 나을지는 현장과 타겟을 보고 확인해 안내드립니다.<br>규모는 고정인가요, 조정할 수 있나요?'],
+              ui: chips(['고정', '조정 가능'], '조정 가능'),
+              apply: function () { setF('qtyAdjust', '조정 가능'); } },
+            // 21 ⑦ 일정
+            { stage: 7, bot: [{ divider: '⑦ 일정' }, '언제 보내고 싶으세요? 가능하면 2·3순위도 알려 주세요.'],
+              ui: toolDate },
+            // 22 ⑧ 메시지 형태
+            { stage: 8, bot: [
+                function () {
+                    return R.tight
+                        ? { warn: '1순위 ' + fmtDate(R.d1) + '은 일정이 빠듯할 수 있어요. 대상 확인, 문구 검토, 매체 심의, 테스트 발송 확인을 거치느라 보통 <strong>발송일 일주일 전쯤 접수</strong>를 권합니다.<br>1순위가 어려우면 2·3순위로 진행할 수 있게 함께 적어 둘게요.' }
+                        : '희망일을 적어 두었습니다. 대상 확인, 문구 검토, 매체 심의, 테스트 발송 확인을 거쳐 진행돼요.';
+                },
+                { divider: '⑧ 메시지' },
+                '어떤 형태로 보낼까요? 고른 매체에 맞춰 보여 드려요.'],
+              ui: chips(['장문 문자', '앱 메시지(이미지+버튼)', '모름'], '장문 문자'),
+              apply: function () { setF('msgType', '장문 문자 (LMS)'); } },
+            { stage: 8, bot: ['문의 받을 전화번호가 있나요? 메시지는 매체 명의로 나가서, 광고주 문의 번호는 문구 본문에 넣어야 해요.'],
+              ui: text('1600-0000'),
+              apply: function () { setF('phone', '1600-0000'); } },
+            { stage: 8, bot: ['광고 문구 초안이 있으면 아래에 붙여 넣어 주세요. 없으면 [AI로 초안 쓰기]를 누르세요. 앞에서 알려 주신 내용으로 초안을 써서 채워 드려요.'],
+              ui: toolCopy },
+            { stage: 8, bot: ['문구를 받았습니다. 문구는 매체 심의 대상이라 일부 표현이 바뀔 수 있어요.<br>이미지 파일이 있으면 첨부해 주세요. 직방·호갱노노처럼 앱 메시지로 나가는 매체는 이미지가 꼭 필요해요.'],
+              ui: toolFile },
+            { stage: 8, bot: ['연결할 홈페이지 링크가 있나요?'],
+              ui: chips(['없어요', '링크 입력'], '없어요'),
+              apply: function () { setF('link', '없음 (클릭 수 집계 안 됨)'); } },
+            { stage: 8, bot: ['알겠습니다. 링크가 없으면 클릭 수는 리포트에 나오지 않아요.<br>문의 번호는 문구에 넣은 <strong>1600-0000</strong>으로 적겠습니다.',
+                '발송 전에 테스트 문자를 보내 드려요. 문구와 데이터에 오류가 없는지 확인하는 것은 광고주 책임이라, 테스트 문자를 받아 보실 휴대폰 번호를 알려 주세요.'],
+              ui: text('010-0000-0000'),
+              apply: function () { setF('testNo', '010-****-0000'); } },
+            // 28 ⑨ 기타
+            { stage: 9, bot: [{ divider: '⑨ 기타' }, '타겟 광고를 해 본 적이 있나요?'],
+              ui: chips(['있음', '없음'], '없음'),
+              apply: function () { setF('exp', '없음 (첫 이용)'); addMemo('타겟 광고 첫 이용', 'exp'); } },
+            { stage: 9, bot: ['그 밖에 전할 말이 있나요?'],
+              ui: text('문자 보내면 다 나가는 거죠? 몇 명이나 방문할지 궁금해요.'),
+              apply: function () { setF('request', '결과·방문 인원 문의'); } },
+            { stage: 9, bot: ['발송 결과와 방문 인원은 미리 약속드릴 수 없어요. 대신 정산은 <strong>성공 건 기준</strong>이라 실패한 건은 비용에 들어가지 않습니다.<br>발송 결과는 보통 발송 후 1~2시간 뒤에 확인할 수 있고(일부 카드사는 2~3일), 정식 리포트는 발송 후 영업일 4일 안에 드립니다.<br>더 전할 말이 있나요?'],
+              ui: chips(['없어요', '더 적을게요'], '없어요'),
+              apply: function () { setF('request', '결과·방문 인원 문의 (약속 불가 안내함)'); } },
+            // 31 ⑩ 동의
+            { stage: 10, bot: [{ divider: '⑩ 동의' }, '접수하려면 아래 필수 항목에 동의해 주세요. 동의는 체크박스와 버튼으로만 받습니다.'],
+              ui: toolConsent },
+            // 32 요약 확인
+            { stage: 11, bot: [{ divider: '요약 확인' }, '필요한 항목을 모두 받았습니다. 정리한 내용입니다. 대상 인원과 견적(부가세 별도)은 접수 후 안내드려요.<br><strong>이대로 접수할까요?</strong>'],
+              ui: toolReview },
+            // 33 접수 완료
+            { stage: 12, bot: [{ divider: '접수 완료' }, '접수했습니다. 접수번호는 <strong>TA-20261116-001</strong> 입니다.<ul><li>다음 영업일인 11월 17일(화)까지 대상 인원과 견적을 안내드립니다.</li><li>진행 상태는 마이페이지 &gt; 타겟 광고 신청 내역에서 볼 수 있어요.</li></ul>'],
+              ui: stepDone }
+        ];
+
+        // ---------- 시연 제어 ----------
+        function start(fastUntil) {
+            R = freshState();
+            R.fastUntil = fastUntil || 0;
+            closeModal('doneModal');
+            chatLog.innerHTML = '';
+            renderSummary();
+            runStep(0);
+            if (fastUntil) chatLog.scrollTop = chatLog.scrollHeight;
+        }
+        window.demoRestart = function () { start(0); };
+        window.demoBackOne = function () {
+            var target = Math.max(0, R.idx - 1);
+            start(target);
+        };
+        // 자동 진행 테스트용: 대본 차례 n 까지 바로 이동
+        window.demoJump = function (n) { start(Math.max(0, Math.min(n, STEPS.length - 1))); };
+        window.demoState = function () { return { idx: R.idx, total: STEPS.length, stage: STEPS[R.idx].stage }; };
+
+        R = null;
+        start(0);
+    })();
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof initDropdownMenus === 'function') {
+            initDropdownMenus();
+        }
+    });
+    </script>
+
+    <!-- 화면설계 오버레이 -->
+    <script src="js/spec-overlay.js"></script>
+    <script>
+        const specData = [
+            {
+                selector: '#demoBar',
+                title: '1. 시연 도구 막대',
+                position: { top: '-12px', left: '-12px' },
+                description: '시연 전용 도구 (Demo Toolbar)',
+                function: '회의 시연용. 현재 단계와 차례를 보여 주고 처음부터 / 한 단계 뒤로 진행을 제어',
+                behavior: [
+                    '【이 페이지는 시연용】 설계 상세(API·상태·검사 규칙)는 target-ad-chat.html 을 본다. 실제 서비스 화면에는 이 막대가 없음',
+                    '【현재 단계】 ①~⑩, 요약 확인, 접수 완료 + "N / 33 차례"',
+                    '【처음부터】 대화·정리 패널·메모를 비우고 시작 안내부터 다시',
+                    '【한 단계 뒤로】 처음부터 직전 차례까지 대본 답으로 즉시 다시 돌린 뒤, 직전 차례의 질문에서 멈춤',
+                    '【대본】 1111 대화 예시(분양, 고덕 한빛 리버뷰)를 항목 초안 v0.2 기준으로 다듬음. 회사·사람·번호는 가상'
+                ]
+            },
+            {
+                selector: '#chatHead',
+                title: '2. 대화창',
+                position: { top: '-12px', left: '-12px' },
+                description: '채팅 (Chat)',
+                function: '챗봇·고객 말풍선과 단계 구분선, 단계 전용 입력 도구를 차례대로 보여 줌',
+                behavior: [
+                    '【이 페이지는 시연용】 설계 상세는 target-ad-chat.html',
+                    '【챗봇 말풍선】 0.6~0.9초 "입력 중…" 표시 뒤에 나타남. 새 메시지마다 맨 아래로 자동 스크롤',
+                    '【빠른 답】 대본 답 버튼이 은은하게 깜박임. 다른 버튼을 누르면 "시연 대본은 [ ]로 진행돼요" 안내만 하고 넘어가지 않음. 여러 개 고르는 단계는 [선택 완료] 시 대본 선택으로 맞춤',
+                    '【입력 도구】 지역(region)·일정(date)·문구(copy)·이미지(file)·동의(consent)·요약 확인은 해당 차례에만 말풍선 아래 카드로 뜨고, 완료하면 접혀서 고객 말풍선으로 바뀜',
+                    '【AI로 초안 쓰기】 0.8초 "초안 쓰는 중…" 뒤 받은 정보(상품 설명·현장명·모델하우스·문의 번호)만으로 쓴 초안을 채움. 없는 숫자·혜택·가격·보장 표현은 넣지 않음',
+                    '【고칠 항목 있음】 항목 칩을 보여 주고, 고르면 요약 확인으로 돌아옴(시연은 내용 그대로)'
+                ]
+            },
+            {
+                selector: '#chatInputArea',
+                title: '3. 입력칸',
+                position: { top: '-12px', left: '-12px' },
+                description: '텍스트 입력 (Textarea)',
+                function: '발표자가 Enter 만으로 진행하도록 다음 고객 답을 미리 채워 둠',
+                behavior: [
+                    '【이 페이지는 시연용】 실제 전송·SSE·첨부 규칙은 target-ad-chat.html 10번',
+                    '【미리 채움】 자유 입력 차례는 대본의 고객 답을 입력칸 값(value)으로 채움. 빠른 답 차례도 대본 답을 채워 Enter 로 고를 수 있음',
+                    '• 발표자가 다른 글을 써도 그 글을 말풍선으로 보이고, 이후 진행과 정리는 대본대로',
+                    '【비활성】 입력 도구가 떠 있는 동안은 "위 입력 도구를 사용해 주세요"로 막힘. 입력 도구의 주 버튼에 초점이 가 있어 Enter 로도 누를 수 있음',
+                    '• Enter 전송, Shift+Enter 줄바꿈, 한글 조합 중 Enter 무시'
+                ]
+            },
+            {
+                selector: '#stepProgress',
+                title: '4. 단계 진행 표시 ①~⑩',
+                position: { top: '-12px', left: '-12px' },
+                description: '진행 바 + 단계 목록',
+                function: '답할 때마다 끝난 단계·현재 단계를 실시간으로 바꿈',
+                behavior: [
+                    '【표시】 끝난 단계(초록 원), 현재 단계(테두리 강조), 남은 단계(회색). 11칸 바 = ①~⑩ + 요약 확인',
+                    '【이 페이지는 시연용】 데이터 출처(final.step)는 target-ad-chat.html 17번'
+                ]
+            },
+            {
+                selector: '#summaryPanel',
+                title: '5. 지금까지 정리 · 챗봇 메모',
+                position: { top: '-12px', left: '-12px' },
+                description: '정리 패널 (Summary)',
+                function: '고객 답이 들어올 때마다 항목 값과 챗봇 메모를 실시간으로 채움',
+                behavior: [
+                    '【항목】 빈 값 "아직 안 받음", 방금 바뀐 값은 노랗게 잠깐 강조, 확인 필요 값은 "확인" 꼬리표, 최소 미달은 빨간 글씨',
+                    '【챗봇 메모】 시연 시점에 추가: 시공사 도급 순위 확인 → 무주택자 확인 필요 → 1만 건 최소 미달(변경 대기) → 한 매체 2만 건으로 변경 → 일정 빠듯 → 첫 이용',
+                    '【모바일】 대화창 위로 올라오고 [펼치기]로 항목·메모를 엶',
+                    '【이 페이지는 시연용】 표시 규칙 상세는 target-ad-chat.html 18·19번'
+                ]
+            },
+            {
+                selector: '#doneModalBox',
+                title: '6. 접수 완료 모달',
+                position: { top: '10px', left: '10px' },
+                description: '모달 (Modal)',
+                function: '[이대로 접수] 뒤 접수번호와 다음 안내 시점을 알림',
+                behavior: [
+                    '【내용】 접수번호 TA-20261116-001, 다음 영업일 11월 17일(화)까지 대상 인원·견적 안내',
+                    '【버튼】 닫기 / 신청 내역 보기(mypage-target-ad.html)',
+                    '• 닫은 뒤 입력칸은 막히고 [처음부터]로 다시 시연'
+                ]
+            }
+        ];
+
+        initSpecOverlay(specData);
+    </script>
+</body>
+</html>
