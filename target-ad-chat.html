@@ -428,26 +428,6 @@
                     <h3 class="modes-title">이후 단계 입력 화면 예시</h3>
                     <p class="modes-desc">챗봇이 단계에 맞춰 대화창 안에 띄우는 입력 도구입니다. (설계 보기용으로 한곳에 모아 그림)</p>
                     <div class="mode-grid" id="modeExamples">
-                        <!-- 지역 선택 -->
-                        <div class="mode-card wide" id="modeRegion">
-                            <div class="mode-label"><span class="mode-step">④ 타겟 · 지역</span><span class="mode-code">input_mode: region</span></div>
-                            <div class="mode-q">어느 지역 분들에게 보낼까요? 여러 곳을 고를 수 있어요.</div>
-                            <div class="widget">
-                                <div class="chip-row-label">시·도</div>
-                                <div class="chip-row">
-                                    <button class="chip">서울</button><button class="chip on">경기<span class="cnt">3</span></button><button class="chip">인천</button><button class="chip">부산</button><button class="chip">대구</button><button class="chip">대전</button><button class="chip">충남</button><button class="chip">충북</button><button class="chip">강원</button><button class="chip">경남</button><button class="chip">전국</button>
-                                </div>
-                                <div class="chip-row-label">시·군·구 (경기)</div>
-                                <div class="chip-row" id="regionSigungu">
-                                    <button class="chip">전체</button><button class="chip">수원시</button><button class="chip">용인시</button><button class="chip on">평택시</button><button class="chip on">오산시</button><button class="chip on">화성시</button><button class="chip">안성시</button><button class="chip">성남시</button><button class="chip">고양시</button><button class="chip">…</button>
-                                </div>
-                                <div class="picked">
-                                    <span>경기 평택시<b>✕</b></span><span>경기 오산시<b>✕</b></span><span>경기 화성시 (동탄)<b>✕</b></span>
-                                </div>
-                                <div class="widget-actions"><button class="btn btn-sm btn-outline">직접 입력</button><button class="btn btn-sm btn-primary">3곳 선택 완료</button></div>
-                            </div>
-                        </div>
-
                         <!-- 문구 입력 -->
                         <div class="mode-card wide" id="modeCopy">
                             <div class="mode-label"><span class="mode-step">⑧ 메시지 · 문구</span><span class="mode-code">input_mode: copy</span></div>
@@ -470,6 +450,26 @@
                                     <li class="warn">'최저가', '100%', '보장' 같은 표현은 심의에서 반려될 수 있어요</li>
                                 </ul>
                                 <div class="widget-actions"><button class="btn btn-sm btn-outline">작성 도움 필요</button><button class="btn btn-sm btn-outline">이미지 첨부로</button><button class="btn btn-sm btn-primary">문구 입력 완료</button></div>
+                            </div>
+                        </div>
+
+                        <!-- 지역 선택 -->
+                        <div class="mode-card wide" id="modeRegion">
+                            <div class="mode-label"><span class="mode-step">④ 타겟 · 지역</span><span class="mode-code">input_mode: region</span></div>
+                            <div class="mode-q">어느 지역 분들에게 보낼까요? 여러 곳을 고를 수 있어요.</div>
+                            <div class="widget">
+                                <div class="chip-row-label">시·도</div>
+                                <div class="chip-row">
+                                    <button class="chip">서울</button><button class="chip on">경기<span class="cnt">3</span></button><button class="chip">인천</button><button class="chip">부산</button><button class="chip">대구</button><button class="chip">대전</button><button class="chip">충남</button><button class="chip">충북</button><button class="chip">강원</button><button class="chip">경남</button><button class="chip">전국</button>
+                                </div>
+                                <div class="chip-row-label">시·군·구 (경기)</div>
+                                <div class="chip-row" id="regionSigungu">
+                                    <button class="chip">전체</button><button class="chip">수원시</button><button class="chip">용인시</button><button class="chip on">평택시</button><button class="chip on">오산시</button><button class="chip on">화성시</button><button class="chip">안성시</button><button class="chip">성남시</button><button class="chip">고양시</button><button class="chip">…</button>
+                                </div>
+                                <div class="picked">
+                                    <span>경기 평택시<b>✕</b></span><span>경기 오산시<b>✕</b></span><span>경기 화성시 (동탄)<b>✕</b></span>
+                                </div>
+                                <div class="widget-actions"><button class="btn btn-sm btn-outline">직접 입력</button><button class="btn btn-sm btn-primary">3곳 선택 완료</button></div>
                             </div>
                         </div>
 
@@ -910,27 +910,10 @@
                     '【오류】 SSE 끊김 시 "연결이 끊겼어요. 다시 보내기" 버튼, 같은 입력 재전송'
                 ]
             },
-            // 11. 지역 선택기
-            {
-                selector: '#modeRegion',
-                title: '11. ④ 지역 선택기 (input_mode: region)',
-                position: { top: '-12px', left: '-12px' },
-                description: '칩 선택기 (Chip Picker)',
-                function: '시·도 → 시·군·구 칩으로 여러 지역을 고름',
-                behavior: [
-                    '【동작】',
-                    '• 시·도 칩을 누르면 아래에 그 시·도의 시·군·구 칩 표시, 시·도 칩에 고른 개수 표시',
-                    '• 고른 지역은 하단에 "시·도 시·군·구" 태그로 모이고 ✕ 로 뺄 수 있음',
-                    '• "전체" 칩 = 시·도 전체. 동 단위(예: 화성시 동탄)는 [직접 입력]으로 받아 메모',
-                    '• [선택 완료] → quickReply 로 지역 배열 전송, 고객 말풍선에 태그로 표시',
-                    '【데이터】 시·군·구 코드는 기존 데이터 확인 후 결정 (설계서 11장)',
-                    '【필수】 지역 1곳 이상'
-                ]
-            },
-            // 12. 문구 입력
+            // 11. 문구 입력
             {
                 selector: '#modeCopy',
-                title: '12. ⑧ 문구 입력 (input_mode: copy)',
+                title: '11. ⑧ 문구 입력 (input_mode: copy)',
                 position: { top: '-12px', left: '-12px' },
                 description: '여러 줄 입력 (Textarea) + 바이트 수 + 안내',
                 function: '광고 문구 초안을 붙여 넣는 전용 입력. 이 단계에서는 대화창 아래 일반 입력칸 대신 이 입력칸이 뜸',
@@ -944,6 +927,23 @@
                     '• 확인은 안내일 뿐 접수를 막지 않음. 최종 문구는 CJ 1차 검토와 매체 심의에서 정해짐',
                     '【버튼】 [작성 도움 필요] → message.needs_writing_help = true, 담당 검토 때 문구 제안 · [이미지 첨부로] → ⑧ 이미지(input_mode: file) · [문구 입력 완료] → 다음 항목(링크·문의 번호·테스트 수신번호)',
                     '【API】 POST /target-ad/chat/sessions/:id/messages {text: 문구, quickReply?} → state.message.draft 저장'
+                ]
+            },
+            // 12. 지역 선택기
+            {
+                selector: '#modeRegion',
+                title: '12. ④ 지역 선택기 (input_mode: region)',
+                position: { top: '-12px', left: '-12px' },
+                description: '칩 선택기 (Chip Picker)',
+                function: '시·도 → 시·군·구 칩으로 여러 지역을 고름',
+                behavior: [
+                    '【동작】',
+                    '• 시·도 칩을 누르면 아래에 그 시·도의 시·군·구 칩 표시, 시·도 칩에 고른 개수 표시',
+                    '• 고른 지역은 하단에 "시·도 시·군·구" 태그로 모이고 ✕ 로 뺄 수 있음',
+                    '• "전체" 칩 = 시·도 전체. 동 단위(예: 화성시 동탄)는 [직접 입력]으로 받아 메모',
+                    '• [선택 완료] → quickReply 로 지역 배열 전송, 고객 말풍선에 태그로 표시',
+                    '【데이터】 시·군·구 코드는 기존 데이터 확인 후 결정 (설계서 11장)',
+                    '【필수】 지역 1곳 이상'
                 ]
             },
             // 13. 날짜 선택
