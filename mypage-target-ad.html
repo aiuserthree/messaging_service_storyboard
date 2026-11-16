@@ -70,18 +70,20 @@
         .req-date small { display: block; font-size: 11.5px; color: var(--text-muted); }
 
         .st { display: inline-flex; align-items: center; padding: 4px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .st-draft { background: #fff; color: #64748b; border: 1px dashed #94a3b8; }
         .st-received { background: #f1f5f9; color: #475569; }
-        .st-audience { background: #e0f2fe; color: #0369a1; }
-        .st-quoted { background: #ffedd5; color: #c2410c; }
-        .st-payment { background: #fef3c7; color: #b45309; }
-        .st-review { background: #eaf7fd; color: #0083c2; }
-        .st-fix { background: #fee2e2; color: #b91c1c; }
-        .st-test { background: #ffedd5; color: #c2410c; }
-        .st-scheduled { background: #e2f5dc; color: #4a7812; }
+        .st-quoteprep { background: #e0f2fe; color: #0369a1; }
+        .st-quote { background: #fef3c7; color: #b45309; }
+        .st-copy { background: #ffedd5; color: #c2410c; }
+        .st-ready { background: #e2f5dc; color: #4a7812; }
         .st-sent { background: #dcfce7; color: #15803d; }
         .st-reported { background: #d1fae5; color: #047857; }
-        .st-hold { background: #f1f5f9; color: #64748b; border: 1px dashed #94a3b8; }
+        .st-rejected { background: #fee2e2; color: #b91c1c; }
+        .st-cancelreq { background: #fdf2f8; color: #be185d; }
         .st-canceled { background: #f8fafc; color: #94a3b8; text-decoration: line-through; }
+
+        .new-apply { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .new-apply-note { font-size: 12.5px; color: #b45309; background: #fffbeb; border: 1px solid #fde68a; border-radius: 999px; padding: 4px 10px; }
 
         .todo { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 700; color: #ea580c; white-space: nowrap; }
         .todo::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #f97316; }
@@ -154,7 +156,7 @@
         <main class="main-content">
             <div class="page-header">
                 <h2>마이페이지</h2>
-                <p class="page-description">타겟 광고 신청의 진행 상태를 확인하고, 견적 확정·문구 수정·테스트 확인을 진행합니다</p>
+                <p class="page-description">타겟 광고 신청의 진행 상태를 확인하고, 견적 결제·수정 문구 확인·테스트 확인을 진행합니다</p>
             </div>
 
             <div class="mypage-layout">
@@ -172,17 +174,20 @@
                     <div class="list-head" id="listHead">
                         <div>
                             <h3>타겟 광고 신청 내역</h3>
-                            <p>상담 챗봇으로 접수한 신청입니다. 행을 누르면 상세 화면으로 이동합니다.</p>
+                            <p>신청 양식으로 접수한 신청입니다. 행을 누르면 상세 화면으로 이동합니다.</p>
                         </div>
-                        <a href="target-ad-chat.html" class="btn btn-primary btn-sm">+ 새 상담 시작</a>
+                        <div class="new-apply">
+                            <span class="new-apply-note">진행 중 신청 1건 · 이어서 작성</span>
+                            <a href="target-ad-apply.html" class="btn btn-primary btn-sm">+ 새 신청</a>
+                        </div>
                     </div>
 
                     <!-- 내가 할 일 -->
                     <div class="todo-summary" id="todoSummary">
-                        <button type="button" class="todo-card hot" onclick="filterByStatus('QUOTED')"><div class="t">견적 확인 필요</div><div class="n">1<small>건</small></div></button>
-                        <button type="button" class="todo-card hot" onclick="filterByStatus('PAYMENT_WAIT')"><div class="t">입금 필요</div><div class="n">1<small>건</small></div></button>
-                        <button type="button" class="todo-card hot" onclick="filterByStatus('CREATIVE_FIX')"><div class="t">문구 수정 필요</div><div class="n">1<small>건</small></div></button>
-                        <button type="button" class="todo-card hot" onclick="filterByStatus('TEST_CHECK')"><div class="t">테스트 확인 필요</div><div class="n">1<small>건</small></div></button>
+                        <button type="button" class="todo-card hot" onclick="filterByStatus('DRAFT')"><div class="t">작성 중 (이어서 작성)</div><div class="n">1<small>건</small></div></button>
+                        <button type="button" class="todo-card hot" onclick="filterByStatus('QUOTE_READY')"><div class="t">견적 확인·결제 필요</div><div class="n">1<small>건</small></div></button>
+                        <button type="button" class="todo-card hot" onclick="filterByStatus('COPY_CONFIRM')"><div class="t">수정 문구 확인 필요</div><div class="n">1<small>건</small></div></button>
+                        <button type="button" class="todo-card hot" onclick="filterByStatus('REJECTED')"><div class="t">반려 사유 확인</div><div class="n">1<small>건</small></div></button>
                     </div>
 
                     <!-- 필터 -->
@@ -191,17 +196,16 @@
                             <label for="statusFilter">상태</label>
                             <select class="ta-select" id="statusFilter">
                                 <option value="">전체</option>
+                                <option value="DRAFT">작성 중 (임시저장)</option>
                                 <option value="RECEIVED">접수</option>
-                                <option value="CJ_REQUESTED">모수 확인 중</option>
-                                <option value="QUOTED">견적 안내</option>
-                                <option value="PAYMENT_WAIT">결제 대기</option>
-                                <option value="CREATIVE_REVIEW">문구 검토</option>
-                                <option value="CREATIVE_FIX">문구 수정 필요</option>
-                                <option value="TEST_CHECK">테스트 확인 필요</option>
-                                <option value="SCHEDULED">발송 예정</option>
+                                <option value="QUOTE_PREPARING">견적 준비 중</option>
+                                <option value="QUOTE_READY">견적 확인·결제 대기</option>
+                                <option value="COPY_CONFIRM">문구 확인 필요</option>
+                                <option value="SEND_READY">발송 준비</option>
                                 <option value="SENT">발송 완료</option>
-                                <option value="REPORTED">리포트 완료</option>
-                                <option value="ON_HOLD">보류</option>
+                                <option value="REPORTED">리포트 도착</option>
+                                <option value="REJECTED">반려</option>
+                                <option value="CANCEL_REQUESTED">취소 요청</option>
                                 <option value="CANCELED">취소</option>
                             </select>
                         </div>
@@ -228,7 +232,7 @@
                     </div>
 
                     <!-- 목록 -->
-                    <div class="list-meta"><span>총 <strong style="color:var(--text-primary);">9</strong>건</span><span>최근 접수순</span></div>
+                    <div class="list-meta"><span>총 <strong style="color:var(--text-primary);">11</strong>건</span><span>최근 접수순</span></div>
                     <div class="req-table-wrap" id="requestTable">
                         <table class="req-table">
                             <thead>
@@ -237,79 +241,95 @@
                                     <th>현장·캠페인명</th>
                                     <th style="width:150px;">매체</th>
                                     <th style="width:110px;">발송 희망일</th>
-                                    <th style="width:120px;">상태</th>
+                                    <th style="width:140px;">상태</th>
                                     <th style="width:150px;">다음 할 일</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr data-status="RECEIVED" onclick="goDetail('TA-20261113-001')">
-                                    <td class="req-no" data-label="접수번호">TA-20261113-001</td>
-                                    <td class="req-name c-name">고덕 한빛 리버뷰<small>분양(아파트) · 접수 11/13</small></td>
-                                    <td data-label="매체">SKT 또는 직방 (추천 요청)</td>
-                                    <td class="req-date" data-label="희망일">11/20(금)<small>외 2개 날짜</small></td>
-                                    <td class="c-status"><span class="st st-received">접수</span></td>
-                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">견적 안내 대기 (11/16)</span></td>
-                                </tr>
-                                <tr data-status="QUOTED" onclick="goDetail('TA-20261110-003')">
-                                    <td class="req-no" data-label="접수번호">TA-20261110-003</td>
-                                    <td class="req-name c-name">평택 한빛 더퍼스트<small>분양(아파트) · 접수 11/10</small></td>
-                                    <td data-label="매체">직방, 카카오페이</td>
-                                    <td class="req-date" data-label="희망일">11/24(화)<small>외 1개 날짜</small></td>
-                                    <td class="c-status"><span class="st st-quoted">견적 안내</span></td>
-                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">견적 확인 필요</span></td>
-                                </tr>
-                                <tr data-status="PAYMENT_WAIT" onclick="goDetail('TA-20261106-002')">
-                                    <td class="req-no" data-label="접수번호">TA-20261106-002</td>
-                                    <td class="req-name c-name">오산 세교 한빛뷰<small>분양(아파트) · 접수 11/06</small></td>
-                                    <td data-label="매체">KT</td>
-                                    <td class="req-date" data-label="희망일">11/19(목)</td>
-                                    <td class="c-status"><span class="st st-payment">결제 대기</span></td>
-                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">입금 필요 · 11/14까지</span></td>
-                                </tr>
-                                <tr data-status="TEST_CHECK" onclick="goDetail('TA-20261104-001')">
-                                    <td class="req-no" data-label="접수번호">TA-20261104-001</td>
-                                    <td class="req-name c-name">동탄 한빛 오피스텔<small>분양(오피스텔) · 접수 11/04</small></td>
-                                    <td data-label="매체">SKT, 직방, 삼성카드</td>
-                                    <td class="req-date" data-label="희망일">11/18(수)<small>매체별 상이</small></td>
-                                    <td class="c-status"><span class="st st-test">테스트 확인 필요</span></td>
-                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">테스트 확인 필요</span></td>
-                                </tr>
-                                <tr data-status="CREATIVE_FIX" onclick="goDetail('TA-20261103-004')">
-                                    <td class="req-no" data-label="접수번호">TA-20261103-004</td>
-                                    <td class="req-name c-name">봉담 한빛 민간임대<small>분양(민간임대) · 접수 11/03</small></td>
-                                    <td data-label="매체">BC카드</td>
-                                    <td class="req-date" data-label="희망일">11/20(금)</td>
-                                    <td class="c-status"><span class="st st-fix">문구 수정 필요</span></td>
-                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">수정본 제출 필요</span></td>
-                                </tr>
-                                <tr data-status="CJ_REQUESTED" onclick="goDetail('TA-20261102-001')">
-                                    <td class="req-no" data-label="접수번호">TA-20261102-001</td>
-                                    <td class="req-name c-name">한빛 가구 전시장 오픈<small>매장·서비스 · 접수 11/02</small></td>
-                                    <td data-label="매체">CJ ONE</td>
-                                    <td class="req-date" data-label="희망일">12/01(화)<small>외 2개 날짜</small></td>
-                                    <td class="c-status"><span class="st st-audience">모수 확인 중</span></td>
-                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">대상 인원 확인 중</span></td>
-                                </tr>
-                                <tr data-status="SCHEDULED" onclick="goDetail('TA-20261028-002')">
-                                    <td class="req-no" data-label="접수번호">TA-20261028-002</td>
-                                    <td class="req-name c-name">안성 공도 한빛<small>분양(아파트) · 접수 10/28</small></td>
+                                <tr data-status="DRAFT" onclick="location.href='target-ad-apply.html'">
+                                    <td class="req-no" data-label="접수번호">—</td>
+                                    <td class="req-name c-name">고덕 한빛 리버뷰<small>임시저장 11/16</small></td>
                                     <td data-label="매체">SKT</td>
-                                    <td class="req-date" data-label="희망일">11/14(토)<small>확정</small></td>
-                                    <td class="c-status"><span class="st st-scheduled">발송 예정</span></td>
-                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">11/14 발송 예정</span></td>
+                                    <td class="req-date" data-label="희망일">11/27(금)<small>외 1개 날짜</small></td>
+                                    <td class="c-status"><span class="st st-draft">작성 중</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">이어서 작성</span></td>
+                                </tr>
+                                <tr data-status="RECEIVED" onclick="goDetail('TA-20261116-002')">
+                                    <td class="req-no" data-label="접수번호">TA-20261116-002</td>
+                                    <td class="req-name c-name">평택 한빛 더퍼스트<small>접수 11/16</small></td>
+                                    <td data-label="매체">직방/호갱노노</td>
+                                    <td class="req-date" data-label="희망일">12/03(목)<small>외 2개 날짜</small></td>
+                                    <td class="c-status"><span class="st st-received">접수</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">담당자 확인 대기</span></td>
+                                </tr>
+                                <tr data-status="QUOTE_PREPARING" onclick="goDetail('TA-20261113-001')">
+                                    <td class="req-no" data-label="접수번호">TA-20261113-001</td>
+                                    <td class="req-name c-name">오산 세교 한빛뷰<small>접수 11/13</small></td>
+                                    <td data-label="매체">KT</td>
+                                    <td class="req-date" data-label="희망일">12/01(화)<small>외 1개 날짜</small></td>
+                                    <td class="c-status"><span class="st st-quoteprep">견적 준비 중</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">모수·견적 확인 중</span></td>
+                                </tr>
+                                <tr data-status="QUOTE_READY" onclick="goDetail('TA-20261110-003')">
+                                    <td class="req-no" data-label="접수번호">TA-20261110-003</td>
+                                    <td class="req-name c-name">동탄 한빛 오피스텔<small>접수 11/10</small></td>
+                                    <td data-label="매체">SKT</td>
+                                    <td class="req-date" data-label="희망일">11/27(금)<small>외 2개 날짜</small></td>
+                                    <td class="c-status"><span class="st st-quote">견적 확인·결제 대기</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">견적 확인 후 결제</span></td>
+                                </tr>
+                                <tr data-status="COPY_CONFIRM" onclick="goDetail('TA-20261106-002')">
+                                    <td class="req-no" data-label="접수번호">TA-20261106-002</td>
+                                    <td class="req-name c-name">봉담 한빛 민간임대<small>접수 11/06</small></td>
+                                    <td data-label="매체">BC카드</td>
+                                    <td class="req-date" data-label="희망일">11/24(화)<small>확정</small></td>
+                                    <td class="c-status"><span class="st st-copy">문구 확인 필요</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">수정 문구 확인</span></td>
+                                </tr>
+                                <tr data-status="SEND_READY" onclick="goDetail('TA-20261104-001')">
+                                    <td class="req-no" data-label="접수번호">TA-20261104-001</td>
+                                    <td class="req-name c-name">안성 공도 한빛<small>접수 11/04</small></td>
+                                    <td data-label="매체">삼성카드</td>
+                                    <td class="req-date" data-label="희망일">11/20(금)<small>확정</small></td>
+                                    <td class="c-status"><span class="st st-ready">발송 준비</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">테스트 발송 확인</span></td>
+                                </tr>
+                                <tr data-status="SENT" onclick="goDetail('TA-20261103-004')">
+                                    <td class="req-no" data-label="접수번호">TA-20261103-004</td>
+                                    <td class="req-name c-name">한빛 가구 전시장 오픈<small>접수 11/03</small></td>
+                                    <td data-label="매체">CJ ONE</td>
+                                    <td class="req-date" data-label="희망일">11/16(월)<small>발송</small></td>
+                                    <td class="c-status"><span class="st st-sent">발송 완료</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">리포트 대기 (영업일 4일 내)</span></td>
                                 </tr>
                                 <tr data-status="REPORTED" onclick="goDetail('TA-20261020-001')">
                                     <td class="req-no" data-label="접수번호">TA-20261020-001</td>
-                                    <td class="req-name c-name">천안 한빛 센트럴<small>분양(아파트) · 접수 10/20</small></td>
-                                    <td data-label="매체">BC카드, 직방</td>
-                                    <td class="req-date" data-label="희망일">10/30(금)<small>확정</small></td>
-                                    <td class="c-status"><span class="st st-reported">리포트 완료</span></td>
+                                    <td class="req-name c-name">천안 한빛 센트럴<small>접수 10/20</small></td>
+                                    <td data-label="매체">SKT</td>
+                                    <td class="req-date" data-label="희망일">10/30(금)<small>발송</small></td>
+                                    <td class="c-status"><span class="st st-reported">리포트 도착</span></td>
                                     <td class="c-todo" data-label="다음 할 일"><span class="todo done">리포트 보기</span></td>
+                                </tr>
+                                <tr data-status="REJECTED" onclick="goDetail('TA-20261028-002')">
+                                    <td class="req-no" data-label="접수번호">TA-20261028-002</td>
+                                    <td class="req-name c-name">한빛 지역주택조합 2차<small>접수 10/28</small></td>
+                                    <td data-label="매체">신한카드</td>
+                                    <td class="req-date" data-label="희망일">11/12(목)</td>
+                                    <td class="c-status"><span class="st st-rejected">반려</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo">반려 사유 확인</span></td>
+                                </tr>
+                                <tr data-status="CANCEL_REQUESTED" onclick="goDetail('TA-20261022-003')">
+                                    <td class="req-no" data-label="접수번호">TA-20261022-003</td>
+                                    <td class="req-name c-name">평택 고덕 한빛 상가<small>접수 10/22</small></td>
+                                    <td data-label="매체">KT</td>
+                                    <td class="req-date" data-label="희망일">11/19(목)<small>확정</small></td>
+                                    <td class="c-status"><span class="st st-cancelreq">취소 요청</span></td>
+                                    <td class="c-todo" data-label="다음 할 일"><span class="todo wait">담당자 확인 중</span></td>
                                 </tr>
                                 <tr data-status="CANCELED" onclick="goDetail('TA-20261015-003')">
                                     <td class="req-no" data-label="접수번호">TA-20261015-003</td>
-                                    <td class="req-name c-name">한빛 중고차 연말 할인<small>자동차·중고차 · 접수 10/15</small></td>
-                                    <td data-label="매체">LGU+</td>
+                                    <td class="req-name c-name">한빛 중고차 연말 할인<small>접수 10/15</small></td>
+                                    <td data-label="매체">LG U+</td>
                                     <td class="req-date" data-label="희망일">—</td>
                                     <td class="c-status"><span class="st st-canceled">취소</span></td>
                                     <td class="c-todo" data-label="다음 할 일"><span class="todo wait">—</span></td>
@@ -328,27 +348,26 @@
                     <div class="empty-state" id="emptyState">
                         <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
                         <h4>아직 신청한 타겟 광고가 없어요</h4>
-                        <p>상담 챗봇과 대화로 현장·타겟·매체·일정을 정리하면<br>대상 인원과 견적을 안내드립니다.</p>
+                        <p>신청서에 매체·타겟·일정·문구를 적어 주시면<br>담당자가 대상 인원과 견적을 안내드립니다.</p>
                         <div class="empty-actions">
                             <a href="target-ad.html" class="btn btn-outline btn-sm">서비스 소개 보기</a>
-                            <a href="target-ad-chat.html" class="btn btn-primary btn-sm">상담 시작</a>
+                            <a href="target-ad-apply.html" class="btn btn-primary btn-sm">신청하기</a>
                         </div>
                     </div>
 
                     <!-- 상태 안내 -->
                     <div class="example-label">상태 안내</div>
                     <div class="legend" id="statusLegend">
-                        <div class="legend-item"><span class="st st-received">접수</span>상담 챗봇으로 접수됨. 톡벨이 매체에 대상 인원 확인을 요청합니다.</div>
-                        <div class="legend-item"><span class="st st-audience">모수 확인 중</span>매체에서 조건에 맞는 인원을 확인하고 있어요.</div>
-                        <div class="legend-item"><span class="st st-quoted">견적 안내</span>가능 인원과 견적이 도착했어요. 확정하거나 조건 변경을 요청하세요.</div>
-                        <div class="legend-item"><span class="st st-payment">결제 대기</span>가상계좌로 입금해 주세요. 입금되면 문구 검토를 시작합니다.</div>
-                        <div class="legend-item"><span class="st st-review">문구 검토</span>매체가 문구와 이미지를 심의하고 있어요.</div>
-                        <div class="legend-item"><span class="st st-fix">문구 수정 필요</span>심의에서 수정 요청이 왔어요. 수정본을 제출해 주세요.</div>
-                        <div class="legend-item"><span class="st st-test">테스트 확인 필요</span>테스트 발송본을 확인하고 발송 진행을 눌러 주세요.</div>
-                        <div class="legend-item"><span class="st st-scheduled">발송 예정</span>확정한 발송일에 매체가 발송합니다.</div>
+                        <div class="legend-item"><span class="st st-draft">작성 중</span>임시저장한 신청서예요. 이어서 작성하고 접수해 주세요. 한 번에 한 건만 둘 수 있어요.</div>
+                        <div class="legend-item"><span class="st st-received">접수</span>신청이 접수됐어요. 담당자가 내용을 확인하고 매체에 대상 인원 확인을 요청합니다.</div>
+                        <div class="legend-item"><span class="st st-quoteprep">견적 준비 중</span>매체가 대상 인원을 확인하고, 담당자가 견적을 확인하고 있어요.</div>
+                        <div class="legend-item"><span class="st st-quote">견적 확인·결제 대기</span>담당자가 승인한 견적이 도착했어요. 확인하고 포인트로 결제해 주세요.</div>
+                        <div class="legend-item"><span class="st st-copy">문구 확인 필요</span>매체 가이드에 맞춰 고친 문구가 왔어요. 확정하거나 다시 수정을 요청해 주세요.</div>
+                        <div class="legend-item"><span class="st st-ready">발송 준비</span>매체 예약이 끝났어요. 테스트 문자가 오면 확인해 주세요.</div>
                         <div class="legend-item"><span class="st st-sent">발송 완료</span>발송이 끝났어요. 리포트는 영업일 4일 안에 드립니다.</div>
-                        <div class="legend-item"><span class="st st-reported">리포트 완료</span>결과 리포트를 볼 수 있어요.</div>
-                        <div class="legend-item"><span class="st st-hold">보류</span>확인이 필요한 사항이 있어 잠시 멈췄어요. 안내를 확인해 주세요.</div>
+                        <div class="legend-item"><span class="st st-reported">리포트 도착</span>결과 리포트를 볼 수 있어요.</div>
+                        <div class="legend-item"><span class="st st-rejected">반려</span>진행할 수 없는 신청이에요. 담당자가 적은 사유를 확인하고 다시 신청할 수 있어요.</div>
+                        <div class="legend-item"><span class="st st-cancelreq">취소 요청</span>결제 후 취소를 요청했어요. 담당자가 매체와 확인한 뒤 결과를 안내합니다.</div>
                         <div class="legend-item"><span class="st st-canceled">취소</span>신청이 취소되었어요.</div>
                     </div>
                 </div>
@@ -367,7 +386,7 @@
         function applyFilter() {
             const status = document.getElementById('statusFilter').value;
             const todoOnly = document.getElementById('todoOnly').checked;
-            const todoStatuses = ['QUOTED', 'PAYMENT_WAIT', 'CREATIVE_FIX', 'TEST_CHECK'];
+            const todoStatuses = ['DRAFT', 'QUOTE_READY', 'COPY_CONFIRM', 'SEND_READY', 'REJECTED'];
             document.querySelectorAll('#requestTable tbody tr').forEach(function(tr) {
                 const s = tr.dataset.status;
                 const show = (!status || s === status) && (!todoOnly || todoStatuses.indexOf(s) > -1);
@@ -395,51 +414,42 @@
     <script src="js/spec-overlay.js"></script>
     <script>
         const specData = [
-            // 1. LNB
             {
                 selector: '#mypageLnb',
                 title: '1. 마이페이지 메뉴 (LNB)',
                 position: { top: '-12px', left: '-12px' },
                 description: '세로 메뉴 (LNB)',
-                function: '마이페이지 메뉴에 "타겟 광고 신청 내역" 추가',
+                function: '마이페이지 메뉴의 "타겟 광고 신청 내역"',
                 behavior: [
-                    '【추가 메뉴】 타겟 광고 신청 내역 (mypage-target-ad.html)',
-                    '• 내가 할 일이 있는 신청 수를 빨간 숫자로 표시 (견적 안내·결제 대기·문구 수정 필요·테스트 확인 필요)',
+                    '• 내가 할 일이 있는 신청 수를 빨간 숫자로 표시 (작성 중·견적 확인·결제 대기·문구 확인 필요·반려)',
                     '• 신청이 한 건도 없는 회원도 메뉴는 보임 (빈 상태 화면)',
                     '【공통 반영】 다른 마이페이지 화면 LNB 와 헤더 사용자 드롭다운에도 같은 메뉴 추가 필요 (header.js urlToMenuKey 에 이 페이지 등록)'
                 ]
             },
-            // 2. 목록 머리
             {
                 selector: '#listHead',
-                title: '2. 목록 제목 · 새 상담 시작',
+                title: '2. 목록 제목 · 새 신청',
                 position: { top: '-12px', left: '-12px' },
                 description: '제목 + 버튼',
-                function: '타겟 광고 신청 목록 화면 제목과 새 상담 진입',
+                function: '타겟 광고 신청 목록 제목과 새 신청 진입',
                 behavior: [
-                    '【새 상담 시작】 target-ad-chat.html 이동',
-                    '• 접수 전 상담 세션이 있으면 상담 화면에서 이어하기 배너가 뜸',
+                    '【새 신청】 target-ad-apply.html 이동 (상담 챗봇이 아니라 신청 양식, 11/16 회의)',
+                    '【진행 중 신청 1건】 작성 중(DRAFT) 신청이 있으면 버튼 옆에 "진행 중 신청 1건 · 이어서 작성" 표시 → 신청 화면이 그 신청서를 불러옴',
+                    '• 진행 중 신청은 한 건만 (11/16 잠정). 접수 후 진행 건이 있을 때 새 신청 허용 여부는 〔결정〕',
                     '【접근】 로그인 회원 본인의 신청만 조회'
                 ]
             },
-            // 3. 내가 할 일
             {
                 selector: '#todoSummary',
                 title: '3. 내가 할 일 요약',
                 position: { top: '-12px', left: '-12px' },
                 description: '요약 카드 (Summary Card)',
-                function: '고객이 답해야 진행되는 신청 수를 상태별로 보여 줌',
+                function: '고객이 움직여야 진행되는 신청 수를 상태별로 보여 줌',
                 behavior: [
-                    '【항목】',
-                    '• 견적 확인 필요 = QUOTED',
-                    '• 입금 필요 = PAYMENT_WAIT',
-                    '• 문구 수정 필요 = CREATIVE_FIX',
-                    '• 테스트 확인 필요 = TEST_CHECK',
-                    '【동작】 카드를 누르면 상태 필터를 그 상태로 바꿔 목록을 거름',
-                    '• 0건인 카드는 회색으로 표시하고 누를 수 없음'
+                    '• 작성 중 = DRAFT / 견적 확인·결제 필요 = QUOTE_READY / 수정 문구 확인 필요 = COPY_CONFIRM / 반려 사유 확인 = REJECTED (확인 전)',
+                    '【동작】 카드를 누르면 상태 필터를 그 상태로 바꿔 목록을 거름. 0건 카드는 회색, 누를 수 없음'
                 ]
             },
-            // 4. 필터
             {
                 selector: '#filterBar',
                 title: '4. 검색 필터',
@@ -447,36 +457,30 @@
                 description: '필터 바 (Filter Bar)',
                 function: '상태, 접수 기간, 검색어, 내가 할 일만 보기로 목록을 거름',
                 behavior: [
-                    '【상태】 셀렉트: 전체 + 고객용 상태 12개 (접수 ~ 취소)',
+                    '【상태】 셀렉트: 전체 + 고객용 상태 11개 (작성 중 ~ 취소)',
                     '• 셀렉트는 기본 화살표를 끄고 오른쪽 12px 안쪽에 직접 그린 화살표, padding-right 36px',
-                    '【접수일】 1개월 / 3개월(기본) / 6개월 / 1년 버튼 + 시작·종료일 직접 입력. 최대 1년',
+                    '【접수일】 1개월 / 3개월(기본) / 6개월 / 1년 + 시작·종료일. 최대 1년',
                     '【검색어】 현장·캠페인명, 접수번호 부분 일치',
-                    '【내가 할 일만】 3번 네 가지 상태만 표시',
+                    '【내가 할 일만】 작성 중·견적 확인·결제 대기·문구 확인 필요·발송 준비(테스트 확인)·반려',
                     '【조회】 GET /target-ad/requests?status=&from=&to=&q=&todo=&page='
                 ]
             },
-            // 5. 목록
             {
                 selector: '#requestTable',
                 title: '5. 신청 목록',
                 position: { top: '-12px', left: '-12px' },
                 description: '테이블 (Table)',
-                function: '접수번호, 현장·캠페인명, 매체, 발송 희망일, 상태 배지, 다음 할 일 표시',
+                function: '접수번호, 현장·캠페인명, 매체(하나), 발송 희망일, 상태 배지, 다음 할 일',
                 behavior: [
-                    '【데이터】 GET /target-ad/requests → [{requestNo, campaignName, industry, receivedAt, media[], sendDates, status, nextAction}]',
-                    '【열】',
-                    '• 접수번호 TA-YYYYMMDD-NNN',
-                    '• 현장·캠페인명 + 업종·접수일 (분양이면 현장명, 그 외 캠페인명)',
-                    '• 매체: 매체별 줄의 매체명, "추천받기"면 "추천 요청"',
-                    '• 발송 희망일: 확정 전 1순위 + "외 N개 날짜", 확정 후 확정일 (매체별로 다르면 가장 빠른 날 + "매체별 상이")',
-                    '• 상태 배지: 내부 상태 코드를 고객용 이름으로 바꿔 표시 (CJ_REQUESTED·AUDIENCE_REPLIED → 모수 확인 중, CLOSED → 리포트 완료)',
-                    '• 다음 할 일: 고객 차례면 주황 점 + 문구(견적 확인 필요, 입금 필요 · 기한, 수정본 제출 필요, 테스트 확인 필요), 톡벨 차례면 회색 문구',
+                    '【데이터】 GET /target-ad/requests → [{requestNo, campaignName, receivedAt, media, sendDates, status, nextAction}]',
+                    '• 신청 하나에 매체 하나 (매체마다 따로 신청)',
+                    '• 작성 중 건은 접수번호 없이 "—", 행 클릭 시 target-ad-apply.html (이어서 작성)',
+                    '• 발송 희망일: 확정 전 1순위 + "외 N개 날짜", 확정 후 확정일',
+                    '• 다음 할 일: 고객 차례면 주황 점(이어서 작성, 견적 확인 후 결제, 수정 문구 확인, 테스트 발송 확인, 반려 사유 확인), 톡벨 차례면 회색',
                     '【동작】 행 클릭 → mypage-target-ad-detail.html?no={접수번호}',
-                    '【정렬·페이지】 최근 접수순, 20건씩',
-                    '【모바일】 표를 카드 형태로 바꿔 표시'
+                    '【정렬·페이지】 최근 접수순(작성 중 건은 맨 위), 20건씩. 모바일은 카드 형태'
                 ]
             },
-            // 6. 빈 상태
             {
                 selector: '#emptyState',
                 title: '6. 빈 상태',
@@ -484,25 +488,25 @@
                 description: '빈 상태 (Empty State)',
                 function: '신청이 없거나 조건에 맞는 신청이 없을 때',
                 behavior: [
-                    '【신청이 한 건도 없음】 "아직 신청한 타겟 광고가 없어요" + [서비스 소개 보기] [상담 시작]',
-                    '【필터 결과 없음】 "조건에 맞는 신청이 없어요" + [필터 초기화] (버튼 구성만 다름)',
-                    '• 목록·페이지네이션 자리에 표시'
+                    '【신청이 한 건도 없음】 [서비스 소개 보기] [신청하기(target-ad-apply.html)]',
+                    '【필터 결과 없음】 "조건에 맞는 신청이 없어요" + [필터 초기화]'
                 ]
             },
-            // 7. 상태 안내
             {
                 selector: '#statusLegend',
-                title: '7. 상태 배지 안내',
+                title: '7. 상태 배지 (새 흐름)',
                 position: { top: '-12px', left: '-12px' },
                 description: '범례 (Legend)',
-                function: '고객용 상태 12개의 뜻을 안내',
+                function: '고객용 상태 11개의 뜻',
                 behavior: [
-                    '【상태 매핑】 (설계서 3장 → 고객용 이름)',
-                    '• RECEIVED 접수 / CJ_REQUESTED·AUDIENCE_REPLIED 모수 확인 중 / QUOTED 견적 안내 / PAYMENT_WAIT 결제 대기',
-                    '• CREATIVE_REVIEW 문구 검토 / CREATIVE_FIX 문구 수정 필요 / TEST_CHECK 테스트 확인 필요 / SCHEDULED 발송 예정',
-                    '• SENT 발송 완료 / REPORTED·CLOSED 리포트 완료 / ON_HOLD 보류 / CANCELED 취소',
-                    '【색】 고객 차례(견적·테스트: 주황, 결제: 노랑, 수정: 빨강), 진행 중(파랑·보라), 완료(초록), 보류·취소(회색)',
-                    '• 고객 화면에는 CJ 이름을 쓰지 않고 "매체", "톡벨"로 표기'
+                    '【상태 코드】 DRAFT 작성 중(임시저장) / RECEIVED 접수 / QUOTE_PREPARING 견적 준비 중 / QUOTE_READY 견적 확인·결제 대기 / COPY_CONFIRM 문구 확인 필요 / SEND_READY 발송 준비 / SENT 발송 완료 / REPORTED 리포트 도착 / REJECTED 반려 / CANCEL_REQUESTED 취소 요청 / CANCELED 취소',
+                    '【전이】 RECEIVED → (Slack으로 CJ 모수확인 요청) QUOTE_PREPARING → (CJ 회신, 관리자 승인) QUOTE_READY → (포인트 결제 = 최종 승인, Slack으로 CJ 결제 승인 전달) SEND_READY',
+                    '• SEND_READY 중 CJ 수정 문구가 오면 COPY_CONFIRM → 고객 확정 시 SEND_READY 로 복귀',
+                    '• 테스트 발송 확인은 SEND_READY 안에서 진행 → 발송되면 SENT → 리포트 반영 REPORTED',
+                    '• REJECTED: 관리자가 CJ 회신을 보고 수동 처리, 사유는 담당자가 적은 문장. 메일·문자 알림 (11/16 잠정)',
+                    '• CANCEL_REQUESTED: 결제 후 취소 요청 → 담당자 확인 후 CANCELED 또는 원래 상태로',
+                    '【색】 고객 차례(결제: 노랑, 문구: 주황, 반려: 빨강), 진행 중(파랑·초록), 완료(초록), 취소(회색)',
+                    '• 고객 화면에는 CJ 이름을 쓰지 않고 "매체", "담당자"로 표기'
                 ]
             }
         ];
