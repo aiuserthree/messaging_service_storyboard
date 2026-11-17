@@ -50,23 +50,40 @@
         /* ① 매체 */
         .one-notice { display: flex; gap: 10px; align-items: flex-start; background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #92400e; line-height: 1.6; margin-bottom: 14px; }
         .one-notice b { font-weight: 700; }
-        .media-group-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin: 14px 0 8px; }
-        .media-group-label:first-child { margin-top: 0; }
-        .media-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .media-opt { position: relative; display: block; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 12px 10px 38px; cursor: pointer; background: #fff; transition: border-color .12s, background .12s; }
-        .media-opt:hover { border-color: #a3d17c; }
-        .media-opt input { position: absolute; left: 12px; top: 14px; width: 16px; height: 16px; accent-color: var(--primary-color); margin: 0; }
-        .media-opt.on { border-color: var(--primary-color); background: rgba(100,160,24,.06); box-shadow: 0 0 0 2px rgba(100,160,24,.15); }
-        .mo-name { font-size: 14.5px; font-weight: 700; display: block; }
-        .mo-group { font-size: 11.5px; color: var(--text-muted); }
-        .mo-facts { display: grid; grid-template-columns: auto 1fr; gap: 1px 8px; margin-top: 6px; font-size: 12px; color: var(--text-secondary); }
-        .mo-facts b { color: var(--text-primary); font-weight: 700; text-align: right; }
-        .media-foot { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+        .media-picker { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+        .media-list { border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; background: #fcfdfb; }
+        .ml-group + .ml-group { margin-top: 12px; padding-top: 12px; border-top: 1px solid #eef2f7; }
+        .ml-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; }
+        .ml-items { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ml-item { position: relative; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border-color); border-radius: 999px; padding: 6px 12px; font-size: 13.5px; font-weight: 600; color: #334155; background: #fff; cursor: pointer; white-space: nowrap; transition: border-color .12s, background .12s, color .12s; }
+        .ml-item input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+        .ml-item:hover { border-color: #a3d17c; color: #3d6410; }
+        .ml-item:has(input:focus-visible) { outline: 2px solid rgba(100,160,24,.45); outline-offset: 2px; }
+        .ml-item.on { border-color: var(--primary-color); background: var(--primary-color); color: #fff; }
+        .ml-item.on::before { content: ''; width: 9px; height: 5px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translateY(-1px); }
 
-        .cancel-rule { margin-top: 14px; border: 1px solid #c5e6b4; background: #f7fbf3; border-radius: 12px; padding: 14px 16px; font-size: 13px; line-height: 1.65; color: #334155; }
-        .cancel-rule h4 { font-size: 13.5px; font-weight: 700; color: #2f4f0c; margin-bottom: 4px; }
-        .cancel-rule .cr-line { font-weight: 600; color: var(--text-primary); margin: 6px 0; padding: 8px 10px; background: #fff; border-radius: 8px; border: 1px solid #e2f5dc; }
-        .cancel-rule .cr-foot { font-size: 12px; color: var(--text-muted); }
+        .media-panel { position: relative; border: 1px solid var(--border-color); border-radius: 12px; padding: 18px 20px; background: #fff; min-width: 0; }
+        .media-panel.is-on { border-color: #c5e6b4; }
+        .mp-empty { height: 100%; min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-secondary); font-size: 13px; line-height: 1.6; gap: 6px; }
+        .mp-empty strong { font-size: 15px; color: var(--text-primary); }
+        .mp-empty-icon { width: 40px; height: 40px; border-radius: 50%; background: #f1f9ec; color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+        .mp-empty .dir-m { display: none; }
+        .mp-empty[hidden], .mp-body[hidden] { display: none; }
+        .mp-body { display: flex; flex-direction: column; height: 100%; }
+        .mp-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .mp-name { font-size: 20px; font-weight: 800; color: var(--text-primary); }
+        .mp-badge { font-size: 11.5px; font-weight: 700; color: #3d6410; background: #eaf5df; border-radius: 999px; padding: 2px 9px; }
+        .mp-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+        .mp-stat { background: #f8fafc; border-radius: 10px; padding: 12px 12px 10px; min-width: 0; }
+        .mp-stat-k { display: block; font-size: 12px; color: var(--text-secondary); }
+        .mp-stat-v { display: block; margin-top: 4px; font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -.01em; line-height: 1.2; white-space: nowrap; }
+        .mp-stat-v small { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-left: 2px; }
+        .mp-formula { font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.55; }
+        .mp-cancel { margin: 14px 0 12px; border-top: 1px dashed #dfe6dc; padding-top: 12px; font-size: 13px; line-height: 1.65; color: #334155; }
+        .mp-cancel h4 { font-size: 13px; font-weight: 700; color: #2f4f0c; margin: 0 0 4px; }
+        .mp-cancel .cr-line { font-weight: 600; color: var(--text-primary); }
+        .mp-cancel .cr-foot { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        .mp-more { margin-top: auto; font-size: 12.5px; color: #475569; background: #f8fafc; border-radius: 8px; padding: 8px 10px; line-height: 1.55; }
 
         /* ③ 타겟 */
         .region-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; }
@@ -157,8 +174,11 @@
         .done-actions { display: flex; gap: 8px; }
         .done-actions .btn { flex: 1; }
 
-        @media (max-width: 1100px) {
-            .media-grid { grid-template-columns: repeat(3, 1fr); }
+        @media (max-width: 900px) {
+            .media-picker { grid-template-columns: minmax(0, 1fr); }
+            .mp-empty { min-height: 150px; }
+            .mp-empty .dir-d { display: none; }
+            .mp-empty .dir-m { display: inline; }
         }
         @media (max-width: 768px) {
             html, body, .app-container, .main-content, .header-content { min-width: 0 !important; }
@@ -168,7 +188,19 @@
             .main-content { padding: 20px 16px; }
             .page-header h2 { font-size: 22px; }
             .ap-sec { padding: 18px 16px; }
-            .media-grid { grid-template-columns: 1fr 1fr; }
+            .media-list { padding: 12px 0 12px 12px; }
+            .ml-group + .ml-group { margin-top: 8px; padding-top: 8px; }
+            .ml-label { margin-bottom: 6px; }
+            .ml-items { flex-wrap: nowrap; overflow-x: auto; padding: 2px 12px 2px 2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+            .ml-items::-webkit-scrollbar { display: none; }
+            .ml-item { padding: 6px 11px; font-size: 13px; flex-shrink: 0; }
+            .media-panel { padding: 16px 14px; }
+            .mp-name { font-size: 18px; }
+            .mp-stats { gap: 6px; }
+            .mp-stat { padding: 10px 8px 8px; }
+            .mp-stat-k { font-size: 11.5px; }
+            .mp-stat-v { font-size: 17px; }
+            .mp-stat-v small { font-size: 11.5px; }
             .region-row { grid-template-columns: 1fr 1fr; }
             .region-row .btn { grid-column: 1 / -1; }
             .grid-2 { grid-template-columns: 1fr; }
@@ -215,15 +247,32 @@
             <form id="applyForm" novalidate onsubmit="return false;">
             <!-- ① 매체 -->
             <section class="ap-sec" id="secMedia">
-                <div class="ap-sec-head"><div class="ap-sec-title">① 매체 선택<span class="req">*</span></div><span class="ap-sec-sub">발송단가·최소 건수·최소 금액을 보고 한 곳을 골라 주세요 (금액은 부가세 별도)</span></div>
-                <div class="one-notice"><span>ⓘ</span><div><b>한 번에 매체 하나만 신청할 수 있어요.</b> 매체를 여러 개 쓰려면 매체마다 따로 신청해 주세요. 매체끼리 합쳐서 보내거나 겹치는 분을 빼 드릴 수 없습니다.</div></div>
-                <div id="mediaGroups"></div>
-                <div class="media-foot">최소 금액 = 발송단가 × 최소 건수. 실제 금액은 담당자가 대상 인원을 확인한 뒤 견적으로 안내드립니다.</div>
-                <div class="cancel-rule" id="cancelRule">
-                    <h4>선택한 매체의 취소 기준</h4>
-                    <div>결제 후 부득이하게 취소를 요청하시는 경우 아래 기준으로 위약금이 생깁니다. ('D-3'은 발송일 3일 전을 뜻합니다)</div>
-                    <div class="cr-line" id="cancelRuleLine">매체를 고르면 그 매체의 취소 기준이 여기에 나옵니다.</div>
-                    <div class="cr-foot">위약금 기준은 매체 사정에 따라 바뀔 수 있으며, 바뀌면 안내해 드립니다.</div>
+                <div class="ap-sec-head"><div class="ap-sec-title">① 매체 선택<span class="req">*</span></div><span class="ap-sec-sub">매체를 고르면 발송단가·최소 건수·최소 금액과 취소 기준이 함께 나와요 (금액은 부가세 별도)</span></div>
+                <div class="one-notice"><span>ⓘ</span><div><b>한 번에 매체 하나만 신청할 수 있어요.</b> 매체끼리 합쳐서 보내거나 겹치는 분을 빼 드릴 수 없습니다.</div></div>
+                <div class="media-picker">
+                    <div class="media-list" id="mediaList" role="radiogroup" aria-label="매체"></div>
+                    <div class="media-panel" id="mediaPanel" aria-live="polite">
+                        <div class="mp-empty" id="mpEmpty">
+                            <span class="mp-empty-icon">?</span>
+                            <strong><span class="dir-d">왼쪽에서</span><span class="dir-m">위에서</span> 매체를 골라 주세요</strong>
+                            <span>고른 매체의 발송단가·최소 건수·최소 금액과<br>취소 기준을 여기에서 보여 드려요.</span>
+                        </div>
+                        <div class="mp-body" id="mpBody" hidden>
+                            <div class="mp-head"><span class="mp-name" id="mpName"></span><span class="mp-badge" id="mpGroup"></span></div>
+                            <div class="mp-stats">
+                                <div class="mp-stat"><span class="mp-stat-k">발송단가</span><span class="mp-stat-v" id="mpPrice"></span></div>
+                                <div class="mp-stat"><span class="mp-stat-k">최소 건수</span><span class="mp-stat-v" id="mpMinQty"></span></div>
+                                <div class="mp-stat"><span class="mp-stat-k">최소 금액</span><span class="mp-stat-v" id="mpMinAmt"></span></div>
+                            </div>
+                            <div class="mp-formula">최소 금액 = 발송단가 × 최소 건수 (부가세 별도). 실제 금액은 담당자가 대상 인원을 확인한 뒤 견적으로 안내드립니다.</div>
+                            <div class="mp-cancel" id="cancelRule">
+                                <h4>선택한 매체의 취소 기준</h4>
+                                <div class="cr-line" id="cancelRuleLine"></div>
+                                <div class="cr-foot">결제 후 부득이하게 취소를 요청하시면 이 기준으로 위약금이 생깁니다. ('D-3'은 발송일 3일 전) 기준은 매체 사정에 따라 바뀔 수 있으며, 바뀌면 안내해 드립니다.</div>
+                            </div>
+                            <div class="mp-more">다른 매체도 쓰려면 매체마다 따로 신청해 주세요.</div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -349,7 +398,7 @@
                         <li>타겟 광고는 접수 후 매체와 대상 인원·발송 일정을 협의해 예약(부킹)하는 상품입니다.</li>
                         <li><b>견적을 확인하고 결제하기 전까지는 언제든 신청을 취소할 수 있고, 비용은 들지 않습니다.</b></li>
                         <li><b>결제(최종 승인) 후에는 매체 예약이 진행되므로, 고객 사정에 따른 취소·환불은 받지 않는 것을 원칙으로 합니다.</b></li>
-                        <li>부득이한 사정으로 취소를 요청하시면, 선택하신 매체의 위약금 기준에 따라 위약금을 뺀 금액을 환불해 드립니다. 위약금 기준은 매체마다 다르며, 위 '선택한 매체의 취소 기준'에서 확인하실 수 있습니다.</li>
+                        <li>부득이한 사정으로 취소를 요청하시면, 선택하신 매체의 위약금 기준에 따라 위약금을 뺀 금액을 환불해 드립니다. 위약금 기준은 매체마다 다르며, ① 매체 선택의 '선택한 매체의 취소 기준'에서 확인하실 수 있습니다.</li>
                         <li>LG U+처럼 예약이 확정된 뒤에는 취소할 수 없는 매체도 있습니다.</li>
                         <li>결제는 발송일 ○일 전까지 마쳐 주셔야 합니다.<span class="tag-tbd">결정</span> 기한이 지나면 발송일이 바뀔 수 있습니다.</li>
                         <li>매체 검토 과정에서 문구가 바뀔 수 있습니다. 바뀐 문구는 고객님께 확인을 받은 뒤 발송합니다.</li>
@@ -439,26 +488,32 @@
         (function renderMedia() {
             const groups = [];
             MEDIA.forEach(m => { if (groups.indexOf(m.group) < 0) groups.push(m.group); });
-            const html = groups.map(g =>
-                '<div class="media-group-label">' + g + '</div><div class="media-grid">' +
+            document.getElementById('mediaList').innerHTML = groups.map(g =>
+                '<div class="ml-group"><div class="ml-label">' + g + '</div><div class="ml-items">' +
                 MEDIA.filter(m => m.group === g).map(m =>
-                    '<label class="media-opt" data-code="' + m.code + '">' +
-                    '<input type="radio" name="media" value="' + m.code + '">' +
-                    '<span class="mo-name">' + m.name + '</span><span class="mo-group">' + m.group + '</span>' +
-                    '<span class="mo-facts"><span>발송단가</span><b>건당 ' + m.price + '원</b><span>최소 건수</span><b>' + fmt(m.minQty) + '건</b><span>최소 금액</span><b>' + manWon(m.minAmt) + '</b></span>' +
-                    '</label>').join('') +
-                '</div>').join('');
-            document.getElementById('mediaGroups').innerHTML = html;
+                    '<label class="ml-item" data-code="' + m.code + '"><input type="radio" name="media" value="' + m.code + '">' + m.name + '</label>'
+                ).join('') + '</div></div>').join('');
             document.querySelectorAll('input[name="media"]').forEach(r => r.addEventListener('change', () => selectMedia(r.value)));
         })();
 
         function selectMedia(code) {
             selectedMedia = MEDIA.find(m => m.code === code) || null;
-            document.querySelectorAll('.media-opt').forEach(el => el.classList.toggle('on', el.dataset.code === code));
+            document.querySelectorAll('.ml-item').forEach(el => el.classList.toggle('on', !!selectedMedia && el.dataset.code === code));
             const radio = document.querySelector('input[name="media"][value="' + code + '"]');
             if (radio) radio.checked = true;
-            document.getElementById('cancelRuleLine').textContent = selectedMedia ? '[' + selectedMedia.name + '] ' + selectedMedia.cancel : '매체를 고르면 그 매체의 취소 기준이 여기에 나옵니다.';
-            document.getElementById('appMsgNote').hidden = !(selectedMedia && selectedMedia.app);
+            const m = selectedMedia;
+            document.getElementById('mpEmpty').hidden = !!m;
+            document.getElementById('mpBody').hidden = !m;
+            document.getElementById('mediaPanel').classList.toggle('is-on', !!m);
+            if (m) {
+                document.getElementById('mpName').textContent = m.name;
+                document.getElementById('mpGroup').textContent = m.group;
+                document.getElementById('mpPrice').innerHTML = m.price + '<small>원/건</small>';
+                document.getElementById('mpMinQty').innerHTML = fmt(m.minQty) + '<small>건</small>';
+                document.getElementById('mpMinAmt').innerHTML = (m.minAmt / 10000).toLocaleString('ko-KR') + '<small>만 원</small>';
+                document.getElementById('cancelRuleLine').textContent = m.cancel;
+            }
+            document.getElementById('appMsgNote').hidden = !(m && m.app);
             checkQty();
         }
 
@@ -666,23 +721,39 @@
                 ]
             },
             {
-                selector: '#secMedia',
-                title: '3. ① 매체 선택 (하나만) — CJ 양식 "매체사"',
+                selector: '#mediaList',
+                title: '3. ① 매체 선택 — 왼쪽 매체 목록 (하나만, CJ 양식 "매체사")',
                 position: { top: '-12px', left: '-12px' },
-                description: '라디오 카드 (Radio Card)',
-                function: '매체 하나를 고름. 고르기 전에 발송단가·최소 건수·최소 금액을 카드에 보여 줌',
+                description: '그룹별 라디오 목록 (Radio Chip List)',
+                function: '그룹(통신사 / 카드사 / 멤버십 / 유틸리티 / 부동산)별로 매체 이름만 보여 주고 하나를 고름. 숫자는 목록에 넣지 않고 오른쪽 패널에서 보여 줌',
                 behavior: [
-                    '【단일 선택】 라디오. 여러 매체를 쓰려면 매체마다 따로 신청 (매체 결합·중복 제거 불가)',
-                    '【카드 값】 GET /target-ad/media → 이용신청서 서비스 이용요금표 17개 매체: 그룹, 발송단가, 최소 건수, 최소 금액 (수수료율은 내려보내지 않음)',
-                    '• 예: KT·SKT 100원·2만 건·200만 원 / LG U+ 5만 건·500만 원 / L.Point 80원·3만 건·240만 원 / 직방/호갱노노 150원·2만 건·300만 원',
+                    '【단일 선택】 라디오(name=media). 여러 매체를 쓰려면 매체마다 따로 신청 (매체 결합·중복 제거 불가) — 영역 머리 노란 안내 한 줄',
+                    '【목록 값】 GET /target-ad/media → 11/16 CJ 이용신청서 서비스 이용요금표 17개 매체: 코드, 이름, 그룹, 발송단가, 최소 건수, 최소 금액, 취소 기준 (수수료율은 내려보내지 않음)',
                     '• NICE는 요금표에 없어 넣지 않음',
+                    '【선택 표시】 고른 매체는 톡벨 초록(#64a018) 채움 + 체크. 키보드 방향키로 이동 가능 (라디오 기본 동작)',
+                    '【동작】 고르면 → 오른쪽 정보 패널 · 취소 기준 갱신 → ⑤ 발송 건수 최소 건수 다시 검사 → 앱 메시지 매체면 ⑥ 이미지 필요 안내',
+                    '【기본값】 임시저장본이 있으면 그 매체(목업은 SKT). 없으면 아무것도 고르지 않은 상태로 시작',
+                    '• 900px 이하: 목록이 위, 정보 패널이 아래. 768px 이하: 그룹마다 한 줄 가로 스크롤 칩 (페이지 가로 넘침 없음)'
+                ]
+            },
+            {
+                selector: '#mediaPanel',
+                title: '4. 선택한 매체 정보 패널 · 취소 기준',
+                position: { top: '-12px', left: '-12px' },
+                description: '정보 패널 (Info Panel)',
+                function: '고른 매체의 이름 · 그룹 배지, 발송단가 · 최소 건수 · 최소 금액(큰 숫자 3칸), 취소 기준 한 줄, 매체별 따로 신청 안내',
+                behavior: [
+                    '【숫자】 요금표 값 그대로. 예: KT·SKT 100원 · 2만 건 · 200만 원 / LG U+ 100원 · 5만 건 · 500만 원 / L.Point 80원 · 3만 건 · 240만 원 / 직방/호갱노노 150원 · 2만 건 · 300만 원',
+                    '• 최소 금액 = 발송단가 × 최소 건수 (부가세 별도). 실제 금액은 담당자 견적',
                     '• 표시 단가는 요금표 값. 톡벨 판매 단가가 정해지면 그 값으로 교체 〔결정〕',
-                    '【취소 기준】 고르면 아래 박스에 그 매체 한 줄만 표시 (고지 문구 파일 2장. 하나·롯데·현대카드·L.Point·직방/호갱노노는 "그 밖의 매체" 문구)'
+                    '【취소 기준】 고른 매체 한 줄만 표시 (고지 문구 파일 2장. 하나·롯데·현대카드·L.Point·직방/호갱노노는 "그 밖의 매체" 문구: D-3까지 취소, 이후 20%)',
+                    '• ⑦ 고지의 "선택한 매체의 취소 기준"은 이 패널을 가리킴',
+                    '【빈 상태】 아무것도 안 골랐으면 "왼쪽에서 매체를 골라 주세요"(모바일은 "위에서") 안내만 표시. 접수 검증에서도 "① 매체를 골라 주세요"'
                 ]
             },
             {
                 selector: '#secName',
-                title: '4. ② 현장명 또는 캠페인명 — CJ 양식 같은 칸',
+                title: '5. ② 현장명 또는 캠페인명 — CJ 양식 같은 칸',
                 position: { top: '-12px', left: '-12px' },
                 description: '텍스트 입력 (Input)',
                 function: 'CJ 양식의 "현장명(분양) 또는 캠페인명"',
@@ -693,7 +764,7 @@
             },
             {
                 selector: '#secTarget',
-                title: '5. ③ 타겟 — CJ 양식 "타겟 연령" · "지역" (각 확대 니즈 포함)',
+                title: '6. ③ 타겟 — CJ 양식 "타겟 연령" · "지역" (각 확대 니즈 포함)',
                 position: { top: '-12px', left: '-12px' },
                 description: '셀렉트 + 칩 + 라디오',
                 function: '연령 범위와 연령 확대 여부, 지역 여러 곳과 지역 확대 여부',
@@ -709,7 +780,7 @@
             },
             {
                 selector: '#secSchedule',
-                title: '6. ④ 발송 희망일 1~3순위 · 희망 발송 시각 1·2순위',
+                title: '7. ④ 발송 희망일 1~3순위 · 희망 발송 시각 1·2순위',
                 position: { top: '-12px', left: '-12px' },
                 description: '날짜 입력 + 셀렉트',
                 function: 'CJ 양식 "발송가망일(2·3순위)"과 희망 발송 시각 1·2순위',
@@ -726,7 +797,7 @@
             },
             {
                 selector: '#secQty',
-                title: '7. ⑤ 발송 건수 — CJ 양식 "발송건수"',
+                title: '8. ⑤ 발송 건수 — CJ 양식 "발송건수"',
                 position: { top: '-12px', left: '-12px' },
                 description: '숫자 입력 (Input)',
                 function: '발송 건수를 받고 선택 매체 최소 건수 이상인지 검사',
@@ -739,7 +810,7 @@
             },
             {
                 selector: '#secMessage',
-                title: '8. ⑥ 메시지 (제목 · 문구 · 이미지 · 링크)',
+                title: '9. ⑥ 메시지 (제목 · 문구 · 이미지 · 링크)',
                 position: { top: '-12px', left: '-12px' },
                 description: '입력 카드 (target-ad-chat.html 문구 카드 재사용)',
                 function: '광고 제목과 본문, 있으면 이미지·링크',
@@ -755,7 +826,7 @@
             },
             {
                 selector: '#secAgree',
-                title: '9. ⑦ 고지 · 동의 (데이터 아님)',
+                title: '10. ⑦ 고지 · 동의 (데이터 아님)',
                 position: { top: '-12px', left: '-12px' },
                 description: '고지 박스 + 필수 체크',
                 function: '취소·환불 고지(고지 문구 파일 1장 전체)와 필수 동의 체크',
@@ -769,7 +840,7 @@
             },
             {
                 selector: '#submitBar',
-                title: '10. 신청 접수 · 검증 규칙 · CJ 양식 변환',
+                title: '11. 신청 접수 · 검증 규칙 · CJ 양식 변환',
                 position: { top: '-12px', left: '-12px' },
                 description: '버튼 (Button)',
                 function: '검증 후 접수. 접수한 내용은 CJ 모수확인 요청 양식으로 그대로 변환',
@@ -783,7 +854,7 @@
             },
             {
                 selector: '#doneModalBox',
-                title: '11. 접수 완료 모달',
+                title: '12. 접수 완료 모달',
                 position: { top: '10px', left: '10px' },
                 description: '모달 (Modal)',
                 function: '접수번호와 다음 단계 안내',
