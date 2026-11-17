@@ -94,6 +94,9 @@
         .date-row { display: grid; grid-template-columns: 64px minmax(0, 220px); gap: 8px; align-items: center; margin-bottom: 8px; }
         .date-row > span { font-size: 13px; font-weight: 700; }
         .date-row > span em { font-style: normal; color: var(--danger-color); }
+        .time-row { display: grid; grid-template-columns: 64px minmax(0, 220px); gap: 8px; align-items: center; margin-bottom: 8px; }
+        .time-row > span { font-size: 13px; font-weight: 700; }
+        .time-row > span em { font-style: normal; color: var(--danger-color); }
         .night-note { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; color: #92400e; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 8px 10px; margin-top: 6px; line-height: 1.55; }
 
         /* ⑥ 메시지 (target-ad-chat.html 문구 입력 카드 스타일) */
@@ -169,7 +172,7 @@
             .region-row { grid-template-columns: 1fr 1fr; }
             .region-row .btn { grid-column: 1 / -1; }
             .grid-2 { grid-template-columns: 1fr; }
-            #timeBand { width: 100% !important; }
+            .time-row { grid-template-columns: 52px minmax(0, 1fr); }
             .date-row { grid-template-columns: 52px minmax(0, 1fr); }
             .qty-row .ta-input { width: 100%; }
             .phone-row .ta-input { max-width: none; }
@@ -266,18 +269,21 @@
                 </div>
             </section>
 
-            <!-- ④ 발송 희망일·희망 발송 시간대 -->
+            <!-- ④ 발송 희망일·희망 발송 시각 -->
             <section class="ap-sec" id="secSchedule">
-                <div class="ap-sec-head"><div class="ap-sec-title">④ 발송 희망일 · 희망 발송 시간대<span class="req">*</span></div><span class="ap-sec-sub">2·3순위까지 적어 주시면 일정 잡기가 쉬워져요</span></div>
+                <div class="ap-sec-head"><div class="ap-sec-title">④ 발송 희망일 · 희망 발송 시각<span class="req">*</span></div><span class="ap-sec-sub">2·3순위까지 적어 주시면 일정 잡기가 쉬워져요</span></div>
                 <div class="date-row"><span>1순위 <em>*</em></span><input type="date" class="ta-input" id="date1" value="2026-11-27" min="2026-11-18" aria-label="1순위 날짜"></div>
                 <div class="date-row"><span>2순위</span><input type="date" class="ta-input" id="date2" value="2026-11-30" min="2026-11-18" aria-label="2순위 날짜"></div>
                 <div class="date-row"><span>3순위</span><input type="date" class="ta-input" id="date3" min="2026-11-18" aria-label="3순위 날짜"></div>
-                <div id="timeBandWrap">
-                    <span class="ap-label">희망 발송 시간대<span class="req">*</span></span>
-                    <select class="ta-select" id="timeBand" aria-label="희망 발송 시간대" style="width:240px;max-width:100%;"></select>
-                    <div class="ap-help">희망 시간대이며, 매체 일정에 따라 조정될 수 있습니다.</div>
+                <div id="sendTimeWrap" style="margin-top:14px;">
+                    <span class="ap-label">희망 발송 시각<span class="req">*</span></span>
+                    <div class="time-row"><span>1순위 <em>*</em></span><select class="ta-select" id="sendTime1" aria-label="희망 발송 시각 1순위"></select></div>
+                    <div class="time-row"><span>2순위</span><select class="ta-select" id="sendTime2" aria-label="희망 발송 시각 2순위"></select></div>
+                    <div class="ap-help" id="sendTimeDupHelp" style="display:none;color:#b91c1c;">1순위와 다른 시각을 골라 주세요.</div>
+                    <div class="ap-help">원하는 시각이 마감되면 가까운 시각으로 예약하고 안내드립니다.</div>
+                    <div class="ap-help">목·금요일 11시 전후는 많이 찾는 시간대라 일찍 마감될 수 있어요.</div>
                 </div>
-                <div class="night-note"><span>⚠</span><div>야간(21시~다음 날 8시) 광고 발송은 법령상 할 수 없어서, 시간대는 08시~21시 안에서만 고를 수 있어요.</div></div>
+                <div class="night-note"><span>⚠</span><div>야간(21시~다음 날 8시) 광고 발송은 법령상 할 수 없어서, 시각은 08:00~20:30 안에서 30분 단위로만 고를 수 있어요.</div></div>
                 <div class="ap-help">발송일 약 일주일 전에 신청하시길 권합니다. 견적 결제는 발송일 ○일 전까지 마쳐 주셔야 해요.<span class="tag-tbd">결정</span></div>
             </section>
 
@@ -528,12 +534,24 @@
         }
         ageFrom.addEventListener('change', checkAge); ageTo.addEventListener('change', checkAge);
 
-        // ===== ④ 희망 발송 시간대 (08~21시 안) =====
+        // ===== ④ 희망 발송 시각 1·2순위 (08:00~20:30, 30분 단위) =====
         (function () {
-            const bands = [['ANY', '08~21시 중 아무 때나'], ['08-10', '08~10시'], ['10-12', '10~12시'], ['12-14', '12~14시'], ['14-16', '14~16시'], ['16-18', '16~18시'], ['18-21', '18~21시']];
-            const sel = document.getElementById('timeBand');
-            sel.innerHTML = '<option value="">시간대 선택</option>' + bands.map(b => '<option value="' + b[0] + '">' + b[1] + '</option>').join('');
-            sel.value = '10-12';
+            const times = [];
+            for (let h = 8; h <= 20; h++) { const hh = String(h).padStart(2, '0'); times.push(hh + ':00', hh + ':30'); }
+            const t1 = document.getElementById('sendTime1'), t2 = document.getElementById('sendTime2');
+            const opts = times.map(t => '<option value="' + t + '">' + t + '</option>').join('');
+            t1.innerHTML = '<option value="">시각 선택</option>' + opts;
+            t2.innerHTML = '<option value="">선택 안 함</option>' + opts;
+            t1.value = '11:00'; t2.value = '11:30';
+            // 같은 시각 중복 선택 막기: 상대편에서 고른 시각은 비활성
+            function syncTimes() {
+                Array.from(t2.options).forEach(o => { o.disabled = !!o.value && o.value === t1.value; });
+                Array.from(t1.options).forEach(o => { o.disabled = !!o.value && o.value === t2.value; });
+                const dup = t1.value && t1.value === t2.value;
+                if (dup) t2.value = '';
+                document.getElementById('sendTimeDupHelp').style.display = dup ? '' : 'none';
+            }
+            t1.addEventListener('change', syncTimes); t2.addEventListener('change', syncTimes); syncTimes();
         })();
 
         // ===== ⑥ 문구 바이트 수 · 건너뛰기 =====
@@ -572,7 +590,8 @@
             if (!checkAge()) errs.push(['secTarget', '③ 연령 범위를 확인해 주세요.']);
             if (selectedMedia && !checkQty()) errs.push(['secQty', '⑤ 발송 건수가 ' + selectedMedia.name + ' 최소 ' + fmt(selectedMedia.minQty) + '건보다 적어요.']);
             if (!v('date1')) errs.push(['secSchedule', '④ 1순위 발송 희망일을 골라 주세요.']);
-            if (!v('timeBand')) errs.push(['secSchedule', '④ 희망 발송 시간대를 골라 주세요.']);
+            if (!v('sendTime1')) errs.push(['secSchedule', '④ 희망 발송 시각 1순위를 골라 주세요.']);
+            else if (v('sendTime1') === v('sendTime2')) errs.push(['secSchedule', '④ 희망 발송 시각 2순위는 1순위와 다른 시각으로 골라 주세요.']);
             if (!v('titleInput')) errs.push(['secMessage', '⑥ 제목을 적어 주세요.']);
             if (!v('copyText')) errs.push(['secMessage', '⑥ 문구를 적어 주세요.']);
             else if (bytesOf(document.getElementById('copyText').value) > 2000) errs.push(['secMessage', '⑥ 문구가 2,000byte를 넘어요.']);
@@ -609,9 +628,9 @@
             '<tr><td ' + SPEC_TD + '>현장명(분양) 또는 캠페인명</td><td ' + SPEC_TD + '>② campaign_name</td></tr>' +
             '<tr><td ' + SPEC_TD + '>타겟 연령 (부족 시 연령 확대 니즈)</td><td ' + SPEC_TD + '>③ age_from~age_to + expand_age(Y/N)</td></tr>' +
             '<tr><td ' + SPEC_TD + '>지역 (부족 시 지역 확대 니즈)</td><td ' + SPEC_TD + '>③ regions[] + expand_region(Y/N)</td></tr>' +
-            '<tr><td ' + SPEC_TD + '>발송가망일 (2·3순위)</td><td ' + SPEC_TD + '>④ send_dates[1~3]</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>발송가망일 (2·3순위)</td><td ' + SPEC_TD + '>④ 발송가망일 + 희망 시각 1·2순위 — send_dates[1~3] + send_times[1~2] (예: 11/27 OR 11/30 / 1) 11:00 2) 11:30)</td></tr>' +
             '<tr><td ' + SPEC_TD + '>발송건수</td><td ' + SPEC_TD + '>⑤ qty</td></tr>' +
-            '<tr><td ' + SPEC_TD + '>(양식에 칸 없음)</td><td ' + SPEC_TD + '>④ time_band — 회의에서 받기로 함, 〔CJ 확인〕 / ⑥ 제목·문구·이미지·링크 — 문구 검토·발송용</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>(양식에 칸 없음)</td><td ' + SPEC_TD + '>⑥ 제목·문구·이미지·링크 — 문구 검토·발송용</td></tr>' +
             '</table>';
 
         const specData = [
@@ -623,7 +642,7 @@
                 function: '대화형 챗봇 대신 CJ 처리에 필요한 항목만 받는 신청 양식',
                 behavior: [
                     '【원칙】 CJ 모수확인 요청 양식 항목만 받음 (11/16 회의: "CJ한테 주는 것만 폼으로 받으면 된다")',
-                    '• 받는 것: 매체, 현장·캠페인명, 연령+연령 확대, 지역+지역 확대, 희망일 1~3순위, 희망 발송 시간대, 건수, 제목·문구(이미지·링크 선택), 고지 동의',
+                    '• 받는 것: 매체, 현장·캠페인명, 연령+연령 확대, 지역+지역 확대, 희망일 1~3순위, 희망 발송 시각 1·2순위, 건수, 제목·문구(이미지·링크 선택), 고지 동의',
                     '【회의에서 제외】 광고 목적, 사업자 유형, 연락받기 좋은 시간, 업종별 추가 질문(시공사·평수 등), 성별, 테스트 문자 받을 번호',
                     '• 연락처는 받지 않고 회원 정보로 처리. 위 항목에 개인정보가 없어 개인정보 수집·이용 동의도 받지 않음',
                     '• 테스트 발송 번호는 회원 휴대폰 번호로 하고, 다른 번호가 필요하면 상세 화면에서 요청 〔CJ 확인〕',
@@ -690,15 +709,17 @@
             },
             {
                 selector: '#secSchedule',
-                title: '6. ④ 발송 희망일 1~3순위 · 희망 발송 시간대',
+                title: '6. ④ 발송 희망일 1~3순위 · 희망 발송 시각 1·2순위',
                 position: { top: '-12px', left: '-12px' },
                 description: '날짜 입력 + 셀렉트',
-                function: 'CJ 양식 "발송가망일(2·3순위)"과 희망 발송 시간대',
+                function: 'CJ 양식 "발송가망일(2·3순위)"과 희망 발송 시각 1·2순위',
                 behavior: [
                     '【희망일】 1순위 필수, 2·3순위 선택. 내일부터 고를 수 있음. 최소 접수 기간(리드타임)은 〔결정〕',
-                    '【희망 발송 시간대】 08~21시 안의 시간대(08~10 ~ 18~21시, 또는 "아무 때나") 하나, 필수',
-                    '• 바로 아래 "희망 시간대이며, 매체 일정에 따라 조정될 수 있습니다." 고정 안내',
-                    '• CJ 모수확인 양식에는 시간 칸 없음, 시간 지정 가능 여부 CJ 확인 전 〔CJ 확인〕 (11/16 회의에서 받기로 함)',
+                    '【희망 발송 시각】 1순위 필수(기본 11:00), 2순위 선택(기본 11:30). 30분 단위 셀렉트 08:00 ~ 20:30',
+                    '• 같은 시각 중복 선택 막기: 한쪽에서 고른 시각은 다른 쪽에서 비활성, 접수 검증에서도 확인',
+                    '• CJ 회신(11/17): 30분 간격 우선순위로 전달, 마감 시 근처 시간대 부킹 후 안내',
+                    '• 안내 "원하는 시각이 마감되면 가까운 시각으로 예약하고 안내드립니다." + 도움말 "목·금요일 11시 전후는 많이 찾는 시간대라 일찍 마감될 수 있어요." (CJ: 보통 목/금 11시대 선호)',
+                    '• CJ 전달 형식: 발송가망일 1~3순위 / 희망 시각 1) 11:00 2) 11:30',
                     '• 21시~다음 날 8시는 선택지에 없음 — 이용약관 제12조: 야간 광고 전송은 이용 정지 사유',
                     '【결제 기한】 발송일 ○일 전 〔결정〕 (CJ 입금 기한 발송 D-3보다 앞)'
                 ]
@@ -753,9 +774,9 @@
                 description: '버튼 (Button)',
                 function: '검증 후 접수. 접수한 내용은 CJ 모수확인 요청 양식으로 그대로 변환',
                 behavior: [
-                    '【검증】 매체 선택 / 현장·캠페인명 / 연령 시작 ≤ 끝 / 지역 1곳 이상 / 1순위 희망일 / 희망 발송 시간대 / 건수 ≥ 매체 최소 건수 / 제목·문구(≤2,000byte) / 링크 형식 / 필수 동의',
+                    '【검증】 매체 선택 / 현장·캠페인명 / 연령 시작 ≤ 끝 / 지역 1곳 이상 / 1순위 희망일 / 희망 발송 시각 1순위(2순위는 1순위와 달라야 함) / 건수 ≥ 매체 최소 건수 / 제목·문구(≤2,000byte) / 링크 형식 / 필수 동의',
                     '• 실패하면 아래에 항목 목록을 띄우고 첫 항목으로 스크롤',
-                    '【접수】 POST /target-ad/requests {media_cd, campaign_name, age_from, age_to, expand_age, regions[], expand_region, send_dates[], time_band, qty, title, body, image_id, link_url, agreed_at} → {requestNo} → 상태 RECEIVED, 작성 중 신청 삭제',
+                    '【접수】 POST /target-ad/requests {media_cd, campaign_name, age_from, age_to, expand_age, regions[], expand_region, send_dates[], send_times[], qty, title, body, image_id, link_url, agreed_at} → {requestNo} → 상태 RECEIVED, 작성 중 신청 삭제',
                     '【CJ 양식 변환】' + cjMapTable,
                     '【결제】 접수 때는 결제하지 않음. 관리자 승인 견적이 나오면 마이페이지에서 결제(카드·가상계좌·전용계좌, 이니시스 PG 견적 금액 고정). 포인트·마일리지 사용 여부는 회계 확인 후 결정 (11/16 회의)'
                 ]
