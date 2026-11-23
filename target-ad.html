@@ -347,8 +347,8 @@
                     <div class="ta-step"><div class="ta-step-no">1</div><div class="ta-step-title">신청</div><div class="ta-step-desc">신청서에 매체·타겟·일정·문구를 적어 접수</div><span class="ta-step-who me">고객</span></div>
                     <div class="ta-step"><div class="ta-step-no">2</div><div class="ta-step-title">모수·견적 안내</div><div class="ta-step-desc">담당자가 대상 인원과 견적을 확인한 뒤 마이페이지로 안내</div><span class="ta-step-who">톡벨</span></div>
                     <div class="ta-step"><div class="ta-step-no">3</div><div class="ta-step-title">결제</div><div class="ta-step-desc">견적 확인 후 결제(카드·가상계좌·전용계좌, 포인트 사용은 검토 중). 발송일 ○일 전까지<span class="tag-tbd">결정</span></div><span class="ta-step-who me">고객</span></div>
-                    <div class="ta-step"><div class="ta-step-no">4</div><div class="ta-step-title">문구 검토·수정 문구 확인</div><div class="ta-step-desc">매체 가이드에 맞춰 고친 문구가 오면 확인</div><span class="ta-step-who me">톡벨·고객</span></div>
-                    <div class="ta-step"><div class="ta-step-no">5</div><div class="ta-step-title">테스트 발송 확인</div><div class="ta-step-desc">테스트 발송본(캡처·원문)을 보고 발송 7일 전까지 확인</div><span class="ta-step-who me">고객</span></div>
+                    <div class="ta-step"><div class="ta-step-no">4</div><div class="ta-step-title">문구 검토·수정 문구 확인</div><div class="ta-step-desc">매체 가이드에 맞춰 고친 문구를 발송 7일 전까지 확정 (확정 뒤에는 오타만 수정)</div><span class="ta-step-who me">톡벨·고객</span></div>
+                    <div class="ta-step"><div class="ta-step-no">5</div><div class="ta-step-title">테스트 발송 확인</div><div class="ta-step-desc">확정한 문구가 그대로 나갔는지 테스트 발송본(캡처·원문)으로 최종 확인 (늦어도 발송 1~2일 전에 옴)</div><span class="ta-step-who me">고객</span></div>
                     <div class="ta-step"><div class="ta-step-no">6</div><div class="ta-step-title">발송</div><div class="ta-step-desc">확정한 발송일에 매체가 발송 (08~21시)</div><span class="ta-step-who">매체</span></div>
                     <div class="ta-step"><div class="ta-step-no">7</div><div class="ta-step-title">결과 리포트</div><div class="ta-step-desc">발송 후 영업일 4일 안에 마이페이지로</div><span class="ta-step-who">톡벨</span></div>
                 </div>
@@ -541,7 +541,8 @@
                 function: '신청부터 리포트까지 7단계와 단계별 주체',
                 behavior: [
                     '【단계】 신청 → 모수·견적 안내(담당자 확인 후) → 견적 확인 후 결제(카드·가상계좌·전용계좌, 이니시스 PG에 견적 금액 고정) → 문구 검토·수정 문구 확인 → 테스트 발송 확인 → 발송 → 결과 리포트(영업일 4일 내)',
-                    '• 5단계 설명: CJ 11/23 회신으로 테스트는 문자 수신이 아니라 CJ가 주는 문구 캡처본+원문으로 확인. 확인·수정 요청은 발송 7일 전까지 (11/23 내부 결정 D-7)',
+                    '• 4단계 설명: 고친 문구는 발송 7일 전까지 확정, 확정 뒤에는 오타만 수정 — 근거: CJ 11/23 회신(수정은 발송 4~5일 전까지, 테스트는 확정 후 D-1~2까지) + 11/23 내부 결정 D-7',
+                    '• 5단계 설명: 테스트는 문자 수신이 아니라 CJ가 주는 문구 캡처본+원문으로, 확정한 문구가 그대로 나갔는지 보는 최종 확인. 늦어도 발송 1~2일 전에 옴 (CJ 11/23 16:12 "보통 D-1~2일전까지 발송됩니다")',
                     '• 견적은 관리자가 확인·승인한 뒤에만 마이페이지에 노출 (11/16 회의)',
                     '• 결제 기한: 발송일 ○일 전 〔결정〕 — CJ 광고비 입금 기한(발송 D-3)보다 앞',
                     '• 결제가 끝나면 추가 검수 없이 Slack으로 CJ에 결제 승인 전달',
