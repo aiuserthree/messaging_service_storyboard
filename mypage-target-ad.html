@@ -363,7 +363,7 @@
                         <div class="legend-item"><span class="st st-quoteprep">견적 준비 중</span>매체가 대상 인원을 확인하고, 담당자가 견적을 확인하고 있어요.</div>
                         <div class="legend-item"><span class="st st-quote">견적 확인·결제 대기</span>담당자가 승인한 견적이 도착했어요. 확인하고 결제해 주세요 (카드·가상계좌·전용계좌).</div>
                         <div class="legend-item"><span class="st st-copy">문구 확인 필요</span>매체 가이드에 맞춰 고친 문구가 왔어요. 확정하거나 다시 수정을 요청해 주세요.</div>
-                        <div class="legend-item"><span class="st st-ready">발송 준비</span>매체 예약이 끝났어요. 테스트 문자가 오면 확인해 주세요.</div>
+                        <div class="legend-item"><span class="st st-ready">발송 준비</span>매체 예약이 끝났어요. 테스트 발송본(캡처·원문)이 올라오면 발송 7일 전까지 확인해 주세요.</div>
                         <div class="legend-item"><span class="st st-sent">발송 완료</span>발송이 끝났어요. 리포트는 영업일 4일 안에 드립니다.</div>
                         <div class="legend-item"><span class="st st-reported">리포트 도착</span>결과 리포트를 볼 수 있어요.</div>
                         <div class="legend-item"><span class="st st-rejected">반려</span>진행할 수 없는 신청이에요. 담당자가 적은 사유를 확인하고 다시 신청할 수 있어요.</div>
@@ -504,6 +504,7 @@
                     '• RECEIVED 안내 문구: 접수되면 사람 확인 없이 Slack으로 CJ에 모수 확인 요청이 자동(배치) 전달되므로 "매체에 대상 인원 확인을 요청했고, 대상 인원과 견적이 나오면 담당자가 확인한 뒤 알려 드립니다."',
                     '• SEND_READY 중 CJ 수정 문구가 오면 COPY_CONFIRM → 고객 확정 시 SEND_READY 로 복귀',
                     '• 테스트 발송 확인은 SEND_READY 안에서 진행 → 발송되면 SENT → 리포트 반영 REPORTED',
+                    '• 발송 준비 안내 문구: 테스트 문자 수신이 아니라 테스트 발송본(캡처·원문) 확인, 발송 7일 전까지 — CJ 11/23 회신(캡처본+원문 전달, 발송 4~5일 전까지 수정 반영) + 11/23 내부 결정 D-7',
                     '• REJECTED: 관리자가 CJ 회신을 보고 수동 처리, 사유는 담당자가 적은 문장. 메일·문자 알림 (11/16 잠정)',
                     '• CANCEL_REQUESTED: 결제 후 취소 요청 → 담당자 확인 후 CANCELED 또는 원래 상태로',
                     '【색】 고객 차례(결제: 노랑, 문구: 주황, 반려: 빨강), 진행 중(파랑·초록), 완료(초록), 취소(회색)',

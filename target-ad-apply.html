@@ -99,6 +99,22 @@
         .seg input { accent-color: var(--primary-color); margin: 0; }
         .seg label:has(input:checked) { border-color: var(--primary-color); background: rgba(100,160,24,.06); color: #3d6410; font-weight: 600; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+        /* ③ 대상이 모자랄 때 넓히기 (CJ 11/23 회신) */
+        .expand-box { margin-top: 18px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; background: #fcfdfb; }
+        .expand-box > .ap-label { margin-top: 0; }
+        .exp-guide { font-size: 12.5px; color: #3d6410; background: #f1f9ec; border-radius: 8px; padding: 8px 10px; line-height: 1.6; margin-bottom: 10px; }
+        .exp-item + .exp-item { margin-top: 12px; padding-top: 12px; border-top: 1px dashed #e2e8f0; }
+        .exp-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .exp-head > b { font-size: 13.5px; min-width: 40px; }
+        .exp-body { margin-top: 8px; font-size: 13px; color: #334155; }
+        .exp-body[hidden], .exp-item[hidden] { display: none; }
+        .exp-order { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+        .exp-order li { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border-color); border-radius: 8px; padding: 6px 8px 6px 10px; background: #fff; font-size: 13px; }
+        .exp-order li .no { width: 20px; height: 20px; border-radius: 50%; background: var(--primary-color); color: #fff; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+        .exp-order li .nm { flex: 1; min-width: 0; }
+        .exp-order li button { border: 1px solid var(--border-color); background: #fff; border-radius: 6px; width: 26px; height: 26px; font-size: 12px; cursor: pointer; color: #475569; }
+        .exp-order .empty { border-style: dashed; color: var(--text-muted); }
+        .exp-order li button:disabled { opacity: .35; cursor: default; }
 
         /* ④ 건수 */
         .qty-row { display: flex; align-items: center; gap: 8px; }
@@ -295,11 +311,6 @@
                         <select class="ta-select" id="ageTo" aria-label="끝 연령"></select>
                     </div>
                     <div class="ap-help" id="ageHelp">시작 연령이 끝 연령보다 클 수 없어요.</div>
-                    <span class="ap-label">대상이 부족하면 연령을 넓혀도 될까요?<span class="req">*</span></span>
-                    <div class="seg">
-                        <label><input type="radio" name="expandAge" value="Y" checked>넓혀도 됨</label>
-                        <label><input type="radio" name="expandAge" value="N">넓히지 않음</label>
-                    </div>
                 </div>
 
                 <div id="targetRegion">
@@ -310,12 +321,55 @@
                         <button type="button" class="btn btn-outline" onclick="addRegion()">지역 추가</button>
                     </div>
                     <div class="picked" id="pickedRegions"></div>
-                    <span class="ap-label">대상이 부족하면 지역을 넓혀도 될까요?<span class="req">*</span></span>
-                    <div class="seg">
-                        <label><input type="radio" name="expandRegion" value="Y">넓혀도 됨</label>
-                        <label><input type="radio" name="expandRegion" value="N" checked>넓히지 않음</label>
+                </div>
+
+                <div class="expand-box" id="targetExpand">
+                    <span class="ap-label">대상이 모자라면 넓혀도 될까요?<span class="req">*</span></span>
+                    <div class="exp-guide">조건에 맞는 분이 매체 최소 건수(예: 5만 건)보다 적으면, 아래에 적어 주신 범위와 순서대로 넓혀 봅니다. 넓힌 조건과 건수는 <b>견적에서 먼저 보여 드리고, 확인하신 뒤에 예약</b>합니다.</div>
+                    <div class="exp-item">
+                        <div class="exp-head"><b>연령</b>
+                            <div class="seg">
+                                <label><input type="radio" name="expandAge" value="Y" checked>넓혀도 됨</label>
+                                <label><input type="radio" name="expandAge" value="N">넓히지 않음</label>
+                            </div>
+                        </div>
+                        <div class="exp-body" id="expAgeBody">
+                            <div class="age-row">모자라면
+                                <select class="ta-select" id="ageFromWide" aria-label="넓힐 때 시작 연령"></select>
+                                <span>~</span>
+                                <select class="ta-select" id="ageToWide" aria-label="넓힐 때 끝 연령"></select>
+                                까지
+                            </div>
+                            <div class="ap-help" id="ageWideHelp">위 연령(기본 범위)을 포함하도록 골라 주세요. 예: 30~65세로 찾고, 모자라면 25~70세까지</div>
+                        </div>
                     </div>
-                    <div class="ap-help">조건에 맞는 분이 모자라면 담당자가 여기서 허용한 범위 안에서만 넓히는 안을 드리고, 고객님 확인을 받은 뒤 진행합니다.</div>
+                    <div class="exp-item">
+                        <div class="exp-head"><b>지역</b>
+                            <div class="seg">
+                                <label><input type="radio" name="expandRegion" value="Y" checked>넓혀도 됨</label>
+                                <label><input type="radio" name="expandRegion" value="N">넓히지 않음</label>
+                            </div>
+                        </div>
+                        <div class="exp-body" id="expRegionBody">
+                            <div>넓힐 지역을 <b>먼저 넓힐 순서대로</b> 추가해 주세요.</div>
+                            <div class="region-row" style="margin-top:8px;">
+                                <select class="ta-select" id="sidoWide" aria-label="넓힐 지역 시·도"></select>
+                                <select class="ta-select" id="sigunguWide" aria-label="넓힐 지역 시·군·구"></select>
+                                <button type="button" class="btn btn-outline" onclick="addWideRegion()">순서에 추가</button>
+                            </div>
+                            <ol class="exp-order" id="wideRegionList"></ol>
+                            <div class="ap-help">예: 수원시 권선구로 찾고, 모자라면 장안구 → 팔달구 → 화성시 순서로. ↑↓ 로 순서를 바꿀 수 있어요.</div>
+                        </div>
+                    </div>
+                    <div class="exp-item" id="expFirstWrap">
+                        <div class="exp-head"><b>먼저</b>
+                            <div class="seg">
+                                <label><input type="radio" name="expandFirst" value="REGION" checked>지역부터 넓히기</label>
+                                <label><input type="radio" name="expandFirst" value="AGE">연령부터 넓히기</label>
+                            </div>
+                        </div>
+                        <div class="ap-help">연령과 지역을 모두 넓혀도 될 때, 어느 쪽을 먼저 넓힐지 골라 주세요.</div>
+                    </div>
                 </div>
             </section>
 
@@ -403,6 +457,7 @@
                         <li>LG U+처럼 예약이 확정된 뒤에는 취소할 수 없는 매체도 있습니다.</li>
                         <li>결제는 발송일 ○일 전까지 마쳐 주셔야 합니다.<span class="tag-tbd">결정</span> 기한이 지나면 발송일이 바뀔 수 있습니다.</li>
                         <li>매체 검토 과정에서 문구가 바뀔 수 있습니다. 바뀐 문구는 고객님께 확인을 받은 뒤 발송합니다.</li>
+                        <li>발송 전에 테스트 발송본(문구 캡처와 원문)을 마이페이지로 보내 드립니다. <b>확인과 수정 요청은 발송 7일 전까지</b> 해 주세요. 수정은 오타만 가능하고, 금액·문구 추가는 대부분의 매체에서 할 수 없습니다.</li>
                     </ul>
                 </div>
                 <div style="margin-top:6px;">
@@ -590,6 +645,55 @@
         }
         ageFrom.addEventListener('change', checkAge); ageTo.addEventListener('change', checkAge);
 
+        // ===== ③ 대상이 모자랄 때 넓히기 (CJ 11/23 회신: 지역 우선순위 · 연령 기본/부족 시 범위 · 먼저 넓힐 것) =====
+        const ageFromWide = document.getElementById('ageFromWide'), ageToWide = document.getElementById('ageToWide');
+        ageFromWide.innerHTML = ageFrom.innerHTML; ageToWide.innerHTML = ageTo.innerHTML;
+        ageFromWide.value = '25'; ageToWide.value = '60';
+        function checkAgeWide() {
+            if (radioVal('expandAge') !== 'Y') return true;
+            const bad = Number(ageFromWide.value) > Number(ageFrom.value) || Number(ageToWide.value) < Number(ageTo.value) || Number(ageFromWide.value) > Number(ageToWide.value);
+            ageFromWide.classList.toggle('err', bad); ageToWide.classList.toggle('err', bad);
+            document.getElementById('ageWideHelp').style.color = bad ? '#b91c1c' : '';
+            return !bad;
+        }
+        [ageFrom, ageTo, ageFromWide, ageToWide].forEach(el => el.addEventListener('change', checkAgeWide));
+        const sidoWide = document.getElementById('sidoWide'), sigunguWide = document.getElementById('sigunguWide');
+        sidoWide.innerHTML = sido.innerHTML;
+        function fillSigunguWide() {
+            const list = REGIONS[sidoWide.value] || [];
+            sigunguWide.innerHTML = '<option value="">시·군·구 선택</option>' + list.map(k => '<option>' + k + '</option>').join('');
+            sigunguWide.disabled = !list.length;
+        }
+        sidoWide.addEventListener('change', fillSigunguWide);
+        let wideRegions = ['경기 안성시', '경기 화성시'];
+        function renderWideRegions() {
+            const box = document.getElementById('wideRegionList');
+            box.innerHTML = wideRegions.length
+                ? wideRegions.map((r, i) => '<li><span class="no">' + (i + 1) + '</span><span class="nm">' + r + '</span>' +
+                    '<button type="button" aria-label="' + r + ' 순서 올리기" onclick="moveWide(' + i + ',-1)"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
+                    '<button type="button" aria-label="' + r + ' 순서 내리기" onclick="moveWide(' + i + ',1)"' + (i === wideRegions.length - 1 ? ' disabled' : '') + '>↓</button>' +
+                    '<button type="button" aria-label="' + r + ' 빼기" onclick="removeWide(' + i + ')">✕</button></li>').join('')
+                : '<li class="empty">아직 넓힐 지역이 없어요.</li>';
+        }
+        function addWideRegion() {
+            if (!sidoWide.value || !sigunguWide.value) return;
+            const label = sigunguWide.value === '전체' ? sidoWide.value + ' 전체' : sidoWide.value + ' ' + sigunguWide.value;
+            if (regions.indexOf(label) < 0 && wideRegions.indexOf(label) < 0) wideRegions.push(label);
+            renderWideRegions();
+        }
+        function moveWide(i, d) { const j = i + d; if (j < 0 || j >= wideRegions.length) return; const t = wideRegions[i]; wideRegions[i] = wideRegions[j]; wideRegions[j] = t; renderWideRegions(); }
+        function removeWide(i) { wideRegions.splice(i, 1); renderWideRegions(); }
+        function radioVal(name) { const r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : ''; }
+        function syncExpand() {
+            const a = radioVal('expandAge') === 'Y', r = radioVal('expandRegion') === 'Y';
+            document.getElementById('expAgeBody').hidden = !a;
+            document.getElementById('expRegionBody').hidden = !r;
+            document.getElementById('expFirstWrap').hidden = !(a && r);
+            checkAgeWide();
+        }
+        document.querySelectorAll('input[name="expandAge"], input[name="expandRegion"]').forEach(el => el.addEventListener('change', syncExpand));
+        sidoWide.value = '경기'; fillSigunguWide(); renderWideRegions(); syncExpand();
+
         // ===== ④ 희망 발송 시각 1·2순위 (08:00~20:30, 30분 단위) =====
         (function () {
             const times = [];
@@ -644,6 +748,8 @@
             if (!v('campaignName')) errs.push(['secName', '② 현장명 또는 캠페인명을 적어 주세요.']);
             if (!regions.length) errs.push(['secTarget', '③ 지역을 한 곳 이상 골라 주세요.']);
             if (!checkAge()) errs.push(['secTarget', '③ 연령 범위를 확인해 주세요.']);
+            if (!checkAgeWide()) errs.push(['secTarget', '③ 넓힐 연령 범위가 기본 연령을 포함하도록 골라 주세요.']);
+            if (radioVal('expandRegion') === 'Y' && !wideRegions.length) errs.push(['secTarget', '③ 넓힐 지역을 한 곳 이상 순서대로 추가하거나 [넓히지 않음]을 골라 주세요.']);
             if (selectedMedia && !checkQty()) errs.push(['secQty', '⑤ 발송 건수가 ' + selectedMedia.name + ' 최소 ' + fmt(selectedMedia.minQty) + '건보다 적어요.']);
             if (!v('date1')) errs.push(['secSchedule', '④ 1순위 발송 희망일을 골라 주세요.']);
             if (!v('sendTime1')) errs.push(['secSchedule', '④ 희망 발송 시각 1순위를 골라 주세요.']);
@@ -682,8 +788,9 @@
             '<tr><th ' + SPEC_TD + '>CJ 모수확인 요청 양식 칸</th><th ' + SPEC_TD + '>이 양식</th></tr>' +
             '<tr><td ' + SPEC_TD + '>매체사</td><td ' + SPEC_TD + '>① 매체 (media_cd)</td></tr>' +
             '<tr><td ' + SPEC_TD + '>현장명(분양) 또는 캠페인명</td><td ' + SPEC_TD + '>② campaign_name</td></tr>' +
-            '<tr><td ' + SPEC_TD + '>타겟 연령 (부족 시 연령 확대 니즈)</td><td ' + SPEC_TD + '>③ age_from~age_to + expand_age(Y/N)</td></tr>' +
-            '<tr><td ' + SPEC_TD + '>지역 (부족 시 지역 확대 니즈)</td><td ' + SPEC_TD + '>③ regions[] + expand_region(Y/N)</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>타겟 연령 (부족 시 연령 확대 니즈)</td><td ' + SPEC_TD + '>③ age_from~age_to + expand_age(Y/N) + 부족 시 범위 age_wide_from~age_wide_to (예: 3065, 부족시 2569)</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>지역 (부족 시 지역 확대 니즈)</td><td ' + SPEC_TD + '>③ regions[] + expand_region(Y/N) + 넓힐 지역 우선순위 wide_regions[] (예: 권선구>장안구>팔달구)</td></tr>' +
+            '<tr><td ' + SPEC_TD + '>(양식 칸 없음, CJ 11/23 "지역/연령도 우선 적용 확인 필요")</td><td ' + SPEC_TD + '>③ expand_first (REGION/AGE) — 둘 다 넓혀도 될 때만</td></tr>' +
             '<tr><td ' + SPEC_TD + '>발송가망일 (2·3순위)</td><td ' + SPEC_TD + '>④ 발송가망일 + 희망 시각 1·2순위 — send_dates[1~3] + send_times[1~2] (예: 11/27 OR 11/30 / 1) 11:00 2) 11:30)</td></tr>' +
             '<tr><td ' + SPEC_TD + '>발송건수</td><td ' + SPEC_TD + '>⑤ qty</td></tr>' +
             '<tr><td ' + SPEC_TD + '>(양식에 칸 없음)</td><td ' + SPEC_TD + '>⑥ 제목·문구·이미지·링크 — 문구 검토·발송용</td></tr>' +
@@ -698,10 +805,10 @@
                 function: '대화형 챗봇 대신 CJ 처리에 필요한 항목만 받는 신청 양식',
                 behavior: [
                     '【원칙】 CJ 모수확인 요청 양식 항목만 받음 (11/16 회의: "CJ한테 주는 것만 폼으로 받으면 된다")',
-                    '• 받는 것: 매체, 현장·캠페인명, 연령+연령 확대, 지역+지역 확대, 희망일 1~3순위, 희망 발송 시각 1·2순위, 건수, 제목·문구(이미지·링크 선택), 고지 동의',
+                    '• 받는 것: 매체, 현장·캠페인명, 연령, 지역, 대상이 모자랄 때 넓히는 범위(연령 부족 시 범위 · 지역 우선순위 · 먼저 넓힐 것), 희망일 1~3순위, 희망 발송 시각 1·2순위, 건수, 제목·문구(이미지·링크 선택), 고지 동의',
                     '【회의에서 제외】 광고 목적, 사업자 유형, 연락받기 좋은 시간, 업종별 추가 질문(시공사·평수 등), 성별, 테스트 문자 받을 번호',
                     '• 연락처는 받지 않고 회원 정보로 처리. 위 항목에 개인정보가 없어 개인정보 수집·이용 동의도 받지 않음',
-                    '• 테스트 발송 번호는 회원 휴대폰 번호로 하고, 다른 번호가 필요하면 상세 화면에서 요청 〔CJ 확인〕',
+                    '• 테스트 발송 번호는 받지 않음 — CJ 11/23 회신: CJ가 확인한 뒤 문구 캡처본 + 원문을 메일/메신저(Slack)로 전달. 고객은 마이페이지 「테스트 발송본 확인」에서 확인',
                     '【접근】 로그인 회원만. 진입 시 GET /target-ad/requests/draft → 작성 중 신청이 있으면 값을 채우고 2번 배너 표시',
                     '【운영 흐름】 접수(DB 저장) → 모수확인 요청 양식으로 변환해 Slack으로 CJ 전달 → CJ 회신은 담당자가 확인·승인 → 마이페이지 견적 노출',
                     '• AI 초안 쓰기 버튼은 넣지 않음 (내부 결정 전). 챗봇 화면은 시연용으로 분리'
@@ -765,18 +872,34 @@
             },
             {
                 selector: '#secTarget',
-                title: '6. ③ 타겟 — CJ 양식 "타겟 연령" · "지역" (각 확대 니즈 포함)',
+                title: '6. ③ 타겟 — CJ 양식 "타겟 연령" · "지역" (기본 조건)',
                 position: { top: '-12px', left: '-12px' },
-                description: '셀렉트 + 칩 + 라디오',
-                function: '연령 범위와 연령 확대 여부, 지역 여러 곳과 지역 확대 여부',
+                description: '셀렉트 + 칩',
+                function: '기본 연령 범위와 지역 여러 곳. 넓히는 범위는 6-1번 박스',
                 behavior: [
                     '【연령】 직접 입력 대신 시작·끝 셀렉트 (20~70세 5세 단위, 끝은 "70세 이상" 포함). 시작 > 끝이면 오류',
                     '• 매체별로 고를 수 있는 연령 단위가 다르면 〔CJ 확인〕',
-                    '【연령 확대】 넓혀도 됨 / 넓히지 않음 (필수) → CJ 양식 "부족 시 연령 확대 니즈"',
                     '【지역】 시·도 → 시·군·구 셀렉트 + [지역 추가] → 칩. 시·군·구 "전체" = 시·도 전체. 1곳 이상 필수. 데이터 GET /regions (목업은 일부)',
-                    '【지역 확대】 넓혀도 됨 / 넓히지 않음 (필수) → CJ 양식 "부족 시 지역 확대 니즈"',
                     '• 성별은 CJ 양식에 없어 받지 않음',
                     '• 셀렉트: appearance none, 화살표 오른쪽 12px 안쪽, padding-right 36px'
+                ]
+            },
+            {
+                selector: '#targetExpand',
+                title: '6-1. 대상이 모자랄 때 넓히기 (CJ 11/23 회신)',
+                position: { top: '-12px', left: '-12px' },
+                description: '라디오 + 셀렉트 + 순서 목록',
+                function: '연령·지역을 각각 넓혀도 되는지, 넓힐 연령 범위, 넓힐 지역 우선순위, 둘 다면 먼저 넓힐 것',
+                behavior: [
+                    '【근거】 CJ 11/23 회신: "연령/지역이 너무 한정적인 경우 우선 순위 등으로 전달주시면 확인해 전달드리겠습니다" · "보통 최소건수 5만건등에 미달일 경우 확장합니다" · 예시 "지역: 수원 권선구>장안구>팔달구>화성시 효행구>만세구 (우선순위)", "연령: 3065, (부족시 2569)", "** 지역/연령도 우선 적용 확인 필요"',
+                    '• 넓히는 범위는 CJ가 정하지 않고 우리가(광고주에게 받아) 우선순위로 전달 → CJ 확인 후 회신',
+                    '【안내 문구】 "조건에 맞는 분이 매체 최소 건수(예: 5만 건)보다 적으면 적어 주신 범위와 순서대로 넓혀 봅니다. 넓힌 조건과 건수는 견적에서 먼저 보여 드리고, 확인하신 뒤에 예약합니다." — CJ "광고주 최종 모수 조건 및 일정 확인 후 부킹 진행합니다"',
+                    '【연령】 넓혀도 됨 / 넓히지 않음 (필수, 기본 넓혀도 됨). 넓혀도 됨이면 "모자라면 ○~○세까지" 셀렉트 2개 (같은 5세 단위). 기본 연령을 포함해야 함(시작 ≤ 기본 시작, 끝 ≥ 기본 끝) → 아니면 빨간 도움말 + 접수 막음',
+                    '【지역】 넓혀도 됨 / 넓히지 않음 (필수, 기본 넓혀도 됨). 넓혀도 됨이면 시·도·시·군·구로 넓힐 지역을 [순서에 추가] → 번호 붙은 목록, ↑↓로 순서 변경, ✕로 빼기. 1곳 이상 필수. 기본 지역과 중복이면 추가 안 됨',
+                    '【먼저 넓힐 것】 연령·지역 둘 다 넓혀도 됨일 때만: 지역부터 / 연령부터 (기본 지역부터 — 목업 기본값, 운영 기본값은 〔결정〕)',
+                    '【CJ 전달】 "타겟 연령: 30~55 (부족 시 25~60까지 확대 가능)" / "지역: 경기 평택시, 경기 오산시 (부족 시 경기 안성시 > 경기 화성시 순서로 확대 가능)" / "확대 순서: 지역 먼저"',
+                    '【저장】 expand_age, age_wide_from, age_wide_to, expand_region, wide_regions[] (순서 유지), expand_first',
+                    '• 셀렉트: appearance none, 화살표 오른쪽 12px 안쪽, padding-right 36px (기존 .ta-select)'
                 ]
             },
             {
@@ -833,6 +956,7 @@
                 function: '취소·환불 고지(고지 문구 파일 1장 전체)와 필수 동의 체크',
                 behavior: [
                     '【고지】 1장 문구 그대로. "결제는 발송일 ○일 전까지"의 ○은 〔결정〕',
+                    '• 마지막 줄 추가: 테스트 발송본(캡처·원문) 확인·수정 요청은 발송 7일 전까지, 수정은 오타만(금액·문구 추가는 대부분 매체 불가) — 근거: CJ 11/23 회신("오타가 있을 경우에는 수정 가능하나, 금액 및 일부 워딩 추가 등의 수정은 특정 매체 제외하고 불가", "최종 발송 4~5일전까지 수정 사항 전달시에는 반영이 가능") + 11/23 내부 결정 D-7',
                     '【필수 동의】 결제 후 고객 사정 취소 불가 동의 — 체크해야 접수',
                     '• 동의 시각·고지 문구 버전을 신청에 같이 저장 (분쟁 대비)',
                     '• 개인정보 수집·이용 동의는 받는 항목에 개인정보가 없어 넣지 않음',
@@ -846,9 +970,9 @@
                 description: '버튼 (Button)',
                 function: '검증 후 접수. 접수한 내용은 CJ 모수확인 요청 양식으로 그대로 변환',
                 behavior: [
-                    '【검증】 매체 선택 / 현장·캠페인명 / 연령 시작 ≤ 끝 / 지역 1곳 이상 / 1순위 희망일 / 희망 발송 시각 1순위(2순위는 1순위와 달라야 함) / 건수 ≥ 매체 최소 건수 / 제목·문구(≤2,000byte) / 링크 형식 / 필수 동의',
+                    '【검증】 매체 선택 / 현장·캠페인명 / 연령 시작 ≤ 끝 / 지역 1곳 이상 / 연령 넓혀도 됨이면 넓힐 범위가 기본 연령 포함 / 지역 넓혀도 됨이면 넓힐 지역 1곳 이상 / 1순위 희망일 / 희망 발송 시각 1순위(2순위는 1순위와 달라야 함) / 건수 ≥ 매체 최소 건수 / 제목·문구(≤2,000byte) / 링크 형식 / 필수 동의',
                     '• 실패하면 아래에 항목 목록을 띄우고 첫 항목으로 스크롤',
-                    '【접수】 POST /target-ad/requests {media_cd, campaign_name, age_from, age_to, expand_age, regions[], expand_region, send_dates[], send_times[], qty, title, body, image_id, link_url, agreed_at} → {requestNo} → 상태 RECEIVED, 작성 중 신청 삭제',
+                    '【접수】 POST /target-ad/requests {media_cd, campaign_name, age_from, age_to, expand_age, age_wide_from, age_wide_to, regions[], expand_region, wide_regions[], expand_first, send_dates[], send_times[], qty, title, body, image_id, link_url, agreed_at} → {requestNo} → 상태 RECEIVED, 작성 중 신청 삭제',
                     '【CJ 양식 변환】' + cjMapTable,
                     '【결제】 접수 때는 결제하지 않음. 관리자 승인 견적이 나오면 마이페이지에서 결제(카드·가상계좌·전용계좌, 이니시스 PG 견적 금액 고정). 포인트·마일리지 사용 여부는 회계 확인 후 결정 (11/16 회의)'
                 ]
